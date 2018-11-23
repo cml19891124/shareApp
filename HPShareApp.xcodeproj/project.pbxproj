@@ -1,0 +1,1327 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		786E617DDD64F9CC68E4049B /* Pods_HPShareAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C508ECCC8CC2C9D9701839BE /* Pods_HPShareAppTests.framework */; };
+		CAA2DAE424EC650C0D26D3DA /* Pods_HPShareApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */; };
+		DB490D1FA8BCD64C224C403A /* Pods_HPShareAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */; };
+		E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E611563B219AC8D7003A29C5 /* HPBaseViewController.m */; };
+		E6292136219AA83000BEF16C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292135219AA83000BEF16C /* AppDelegate.m */; };
+		E629213C219AA83100BEF16C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E629213A219AA83100BEF16C /* Main.storyboard */; };
+		E629213E219AA83A00BEF16C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E629213D219AA83A00BEF16C /* Assets.xcassets */; };
+		E6292141219AA83A00BEF16C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E629213F219AA83A00BEF16C /* LaunchScreen.storyboard */; };
+		E6292144219AA83A00BEF16C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292143219AA83A00BEF16C /* main.m */; };
+		E629214E219AA83B00BEF16C /* HPShareAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E629214D219AA83B00BEF16C /* HPShareAppTests.m */; };
+		E6292159219AA83B00BEF16C /* HPShareAppUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292158219AA83B00BEF16C /* HPShareAppUITests.m */; };
+		E629216B219AAAB900BEF16C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E629216A219AAAB900BEF16C /* Default-568h@2x.png */; };
+		E6292172219AB28700BEF16C /* HPGlobalVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292171219AB28700BEF16C /* HPGlobalVariable.m */; };
+		E6292175219AB32000BEF16C /* HPScreenAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292174219AB32000BEF16C /* HPScreenAdapter.m */; };
+		E6292179219AB7B800BEF16C /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292178219AB7B800BEF16C /* UIColor+Hex.m */; };
+		E629217C219AB84200BEF16C /* UIViewController+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = E629217B219AB84200BEF16C /* UIViewController+Helper.m */; };
+		E629217F219ABD6D00BEF16C /* UIView + Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = E629217E219ABD6D00BEF16C /* UIView + Tag.m */; };
+		E6292182219ABE6500BEF16C /* HPImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292181219ABE6500BEF16C /* HPImageUtil.m */; };
+		E6292185219ABF4400BEF16C /* HPGradientUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292184219ABF4400BEF16C /* HPGradientUtil.m */; };
+		E629218A219AC19D00BEF16C /* HPMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292189219AC19D00BEF16C /* HPMainTabBarController.m */; };
+		E661B094219BACE900C86CF5 /* HPShareController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B093219BACE900C86CF5 /* HPShareController.m */; };
+		E661B097219BAD5000C86CF5 /* HPIdeaController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B096219BAD5000C86CF5 /* HPIdeaController.m */; };
+		E661B09A219BADB200C86CF5 /* HPInteractiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B099219BADB200C86CF5 /* HPInteractiveController.m */; };
+		E661B09D219BADDD00C86CF5 /* HPMyController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B09C219BADDD00C86CF5 /* HPMyController.m */; };
+		E661B0A0219BC59E00C86CF5 /* HPAlignCenterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B09F219BC59E00C86CF5 /* HPAlignCenterButton.m */; };
+		E661B0A4219C0B5600C86CF5 /* HPBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0A3219C0B5600C86CF5 /* HPBaseView.m */; };
+		E661B0A7219C0B9800C86CF5 /* HPBaseControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0A6219C0B9800C86CF5 /* HPBaseControl.m */; };
+		E661B0AA219C1AE800C86CF5 /* HPBaseModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0A9219C1AE800C86CF5 /* HPBaseModalView.m */; };
+		E661B0AD219C1CE100C86CF5 /* HPBaseDialogView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0AC219C1CE100C86CF5 /* HPBaseDialogView.m */; };
+		E661B0B3219C2B1300C86CF5 /* HPTextDialogView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0B2219C2B1300C86CF5 /* HPTextDialogView.m */; };
+		E661B0B6219C2C0400C86CF5 /* HPCheckDialogView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0B5219C2C0400C86CF5 /* HPCheckDialogView.m */; };
+		E661B0BA219C2C6300C86CF5 /* HPCheckDialogLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0B9219C2C6300C86CF5 /* HPCheckDialogLayout.m */; };
+		E661B0BD219C2DF700C86CF5 /* HPLinkageSheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0BC219C2DF700C86CF5 /* HPLinkageSheetView.m */; };
+		E661B0C0219CFDEA00C86CF5 /* HPBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0BF219CFDEA00C86CF5 /* HPBaseTableViewCell.m */; };
+		E661B0C4219CFE6D00C86CF5 /* HPCheckTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0C3219CFE6D00C86CF5 /* HPCheckTableCell.m */; };
+		E661B0C7219CFF1800C86CF5 /* HPProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0C6219CFF1800C86CF5 /* HPProgressHUD.m */; };
+		E661B0CA219D114300C86CF5 /* HPBaseTextInputController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0C9219D114300C86CF5 /* HPBaseTextInputController.m */; };
+		E661B0CD219D1B9200C86CF5 /* HPRowPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0CC219D1B9200C86CF5 /* HPRowPanel.m */; };
+		E661B0D0219D24A500C86CF5 /* HPSelectTable.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0CF219D24A500C86CF5 /* HPSelectTable.m */; };
+		E661B0D3219D3BF500C86CF5 /* HPSelectTableLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0D2219D3BF500C86CF5 /* HPSelectTableLayout.m */; };
+		E661B0D6219D436900C86CF5 /* HPAlertSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0D5219D436900C86CF5 /* HPAlertSheet.m */; };
+		E661B0D9219D43A200C86CF5 /* HPAlertAction.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0D8219D43A200C86CF5 /* HPAlertAction.m */; };
+		E661B0DC219D49D000C86CF5 /* HPStartUpCardDefineController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0DB219D49D000C86CF5 /* HPStartUpCardDefineController.m */; };
+		E661B0DF219D4C8E00C86CF5 /* HPLinkageData.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0DE219D4C8E00C86CF5 /* HPLinkageData.m */; };
+		E661B0E2219D7BA100C86CF5 /* HPOwnerCardDefineController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0E1219D7BA100C86CF5 /* HPOwnerCardDefineController.m */; };
+		E661B0E6219E53A500C86CF5 /* HPTagDialogView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0E5219E53A500C86CF5 /* HPTagDialogView.m */; };
+		E661B0EA219EBF3600C86CF5 /* HPShareRecommendCard.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0E9219EBF3600C86CF5 /* HPShareRecommendCard.m */; };
+		E661B0ED219EDCC800C86CF5 /* HPBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0EC219EDCC800C86CF5 /* HPBanner.m */; };
+		E661B0F1219EE85000C86CF5 /* HPShareListController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0F0219EE85000C86CF5 /* HPShareListController.m */; };
+		E661B0F4219FC13E00C86CF5 /* HPShareListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0F3219FC13E00C86CF5 /* HPShareListCell.m */; };
+		E661B0F7219FEBDC00C86CF5 /* HPShareDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0F6219FEBDC00C86CF5 /* HPShareDetailController.m */; };
+		E661B12321A28E8500C86CF5 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = E661B0FD21A28E8500C86CF5 /* LICENSE */; };
+		E661B12421A28E8500C86CF5 /* JTCalendarSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0FF21A28E8500C86CF5 /* JTCalendarSettings.m */; };
+		E661B12521A28E8500C86CF5 /* JTDateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B10021A28E8500C86CF5 /* JTDateHelper.m */; };
+		E661B12621A28E8500C86CF5 /* JTCalendarScrollManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B10621A28E8500C86CF5 /* JTCalendarScrollManager.m */; };
+		E661B12721A28E8500C86CF5 /* JTCalendarDelegateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B10721A28E8500C86CF5 /* JTCalendarDelegateManager.m */; };
+		E661B12821A28E8500C86CF5 /* JTCalendarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B10921A28E8500C86CF5 /* JTCalendarManager.m */; };
+		E661B12921A28E8500C86CF5 /* JTVerticalCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B10E21A28E8500C86CF5 /* JTVerticalCalendarView.m */; };
+		E661B12A21A28E8500C86CF5 /* JTCalendarWeekDayView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B11121A28E8500C86CF5 /* JTCalendarWeekDayView.m */; };
+		E661B12B21A28E8500C86CF5 /* JTHorizontalCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B11321A28E8500C86CF5 /* JTHorizontalCalendarView.m */; };
+		E661B12C21A28E8500C86CF5 /* JTCalendarWeekView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B11421A28E8500C86CF5 /* JTCalendarWeekView.m */; };
+		E661B12D21A28E8500C86CF5 /* JTCalendarDayView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B11621A28E8500C86CF5 /* JTCalendarDayView.m */; };
+		E661B12E21A28E8500C86CF5 /* JTCalendarPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B11721A28E8500C86CF5 /* JTCalendarPageView.m */; };
+		E661B12F21A28E8500C86CF5 /* JTCalendarMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B11921A28E8500C86CF5 /* JTCalendarMenuView.m */; };
+		E661B13021A28E8500C86CF5 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E661B12221A28E8500C86CF5 /* README.md */; };
+		E661B13321A2C4F500C86CF5 /* HPCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B13221A2C4F500C86CF5 /* HPCalendarView.m */; };
+		E661B13A21A3D2D500C86CF5 /* HPCalendarModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B13921A3D2D500C86CF5 /* HPCalendarModalView.m */; };
+		E661B13D21A3DFD600C86CF5 /* HPReleaseModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B13C21A3DFD600C86CF5 /* HPReleaseModalView.m */; };
+		E661B14021A6355E00C86CF5 /* HPMyCardController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B13F21A6355E00C86CF5 /* HPMyCardController.m */; };
+		E661B14321A679E200C86CF5 /* UIScrollView+GestureConflict.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B14221A679E200C86CF5 /* UIScrollView+GestureConflict.m */; };
+		E661B14621A68BE300C86CF5 /* HPPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B14521A68BE300C86CF5 /* HPPageControl.m */; };
+		E661B14A21A6986B00C86CF5 /* StyledPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B14921A6986B00C86CF5 /* StyledPageControl.m */; };
+		E6D75F1321A78AD300B2067C /* HPSharePersonCard.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */; };
+		E6D75F1721A811E500B2067C /* HPHowToPlayController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1621A811E500B2067C /* HPHowToPlayController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E629214A219AA83B00BEF16C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E6292129219AA83000BEF16C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6292130219AA83000BEF16C;
+			remoteInfo = HPShareApp;
+		};
+		E6292155219AA83B00BEF16C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E6292129219AA83000BEF16C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6292130219AA83000BEF16C;
+			remoteInfo = HPShareApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		06EA7A43D7F8724E22A20923 /* Pods-HPShareApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp.release.xcconfig"; sourceTree = "<group>"; };
+		4C331797FB3D3545F43D2258 /* Pods-HPShareAppUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareAppUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareAppUITests/Pods-HPShareAppUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		60E49D55A6BBD2F7A38A310D /* Pods-HPShareAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareAppTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareAppTests/Pods-HPShareAppTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6362C162C2AF8A13DF7D21FE /* Pods-HPShareAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareAppTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareAppTests/Pods-HPShareAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		68AA020221DAA8B9DA354FFA /* Pods-HPShareAppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareAppUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareAppUITests/Pods-HPShareAppUITests.release.xcconfig"; sourceTree = "<group>"; };
+		7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareAppUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4F1B350A3EBD7380C3F015D /* Pods-HPShareApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp.debug.xcconfig"; sourceTree = "<group>"; };
+		C508ECCC8CC2C9D9701839BE /* Pods_HPShareAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E611563A219AC8D7003A29C5 /* HPBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBaseViewController.h; sourceTree = "<group>"; };
+		E611563B219AC8D7003A29C5 /* HPBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBaseViewController.m; sourceTree = "<group>"; };
+		E6292131219AA83000BEF16C /* HPShareApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HPShareApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6292134219AA83000BEF16C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		E6292135219AA83000BEF16C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E629213B219AA83100BEF16C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E629213D219AA83A00BEF16C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E6292140219AA83A00BEF16C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E6292142219AA83A00BEF16C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E6292143219AA83A00BEF16C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E6292149219AA83B00BEF16C /* HPShareAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HPShareAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E629214D219AA83B00BEF16C /* HPShareAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareAppTests.m; sourceTree = "<group>"; };
+		E629214F219AA83B00BEF16C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E6292154219AA83B00BEF16C /* HPShareAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HPShareAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6292158219AA83B00BEF16C /* HPShareAppUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareAppUITests.m; sourceTree = "<group>"; };
+		E629215A219AA83B00BEF16C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E629216A219AAAB900BEF16C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		E629216F219AB23100BEF16C /* Macro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
+		E6292170219AB28700BEF16C /* HPGlobalVariable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPGlobalVariable.h; sourceTree = "<group>"; };
+		E6292171219AB28700BEF16C /* HPGlobalVariable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPGlobalVariable.m; sourceTree = "<group>"; };
+		E6292173219AB32000BEF16C /* HPScreenAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPScreenAdapter.h; sourceTree = "<group>"; };
+		E6292174219AB32000BEF16C /* HPScreenAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPScreenAdapter.m; sourceTree = "<group>"; };
+		E6292177219AB7B800BEF16C /* UIColor+Hex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+Hex.h"; sourceTree = "<group>"; };
+		E6292178219AB7B800BEF16C /* UIColor+Hex.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Hex.m"; sourceTree = "<group>"; };
+		E629217A219AB84200BEF16C /* UIViewController+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Helper.h"; sourceTree = "<group>"; };
+		E629217B219AB84200BEF16C /* UIViewController+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Helper.m"; sourceTree = "<group>"; };
+		E629217D219ABD6D00BEF16C /* UIView + Tag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView + Tag.h"; sourceTree = "<group>"; };
+		E629217E219ABD6D00BEF16C /* UIView + Tag.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView + Tag.m"; sourceTree = "<group>"; };
+		E6292180219ABE6500BEF16C /* HPImageUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPImageUtil.h; sourceTree = "<group>"; };
+		E6292181219ABE6500BEF16C /* HPImageUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPImageUtil.m; sourceTree = "<group>"; };
+		E6292183219ABF4400BEF16C /* HPGradientUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPGradientUtil.h; sourceTree = "<group>"; };
+		E6292184219ABF4400BEF16C /* HPGradientUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPGradientUtil.m; sourceTree = "<group>"; };
+		E6292188219AC19D00BEF16C /* HPMainTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPMainTabBarController.h; sourceTree = "<group>"; };
+		E6292189219AC19D00BEF16C /* HPMainTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPMainTabBarController.m; sourceTree = "<group>"; };
+		E661B092219BACE900C86CF5 /* HPShareController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareController.h; sourceTree = "<group>"; };
+		E661B093219BACE900C86CF5 /* HPShareController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareController.m; sourceTree = "<group>"; };
+		E661B095219BAD5000C86CF5 /* HPIdeaController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaController.h; sourceTree = "<group>"; };
+		E661B096219BAD5000C86CF5 /* HPIdeaController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaController.m; sourceTree = "<group>"; };
+		E661B098219BADB200C86CF5 /* HPInteractiveController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPInteractiveController.h; sourceTree = "<group>"; };
+		E661B099219BADB200C86CF5 /* HPInteractiveController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPInteractiveController.m; sourceTree = "<group>"; };
+		E661B09B219BADDD00C86CF5 /* HPMyController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPMyController.h; sourceTree = "<group>"; };
+		E661B09C219BADDD00C86CF5 /* HPMyController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPMyController.m; sourceTree = "<group>"; };
+		E661B09E219BC59E00C86CF5 /* HPAlignCenterButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAlignCenterButton.h; sourceTree = "<group>"; };
+		E661B09F219BC59E00C86CF5 /* HPAlignCenterButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAlignCenterButton.m; sourceTree = "<group>"; };
+		E661B0A2219C0B5600C86CF5 /* HPBaseView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBaseView.h; sourceTree = "<group>"; };
+		E661B0A3219C0B5600C86CF5 /* HPBaseView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBaseView.m; sourceTree = "<group>"; };
+		E661B0A5219C0B9800C86CF5 /* HPBaseControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBaseControl.h; sourceTree = "<group>"; };
+		E661B0A6219C0B9800C86CF5 /* HPBaseControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBaseControl.m; sourceTree = "<group>"; };
+		E661B0A8219C1AE800C86CF5 /* HPBaseModalView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBaseModalView.h; sourceTree = "<group>"; };
+		E661B0A9219C1AE800C86CF5 /* HPBaseModalView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBaseModalView.m; sourceTree = "<group>"; };
+		E661B0AB219C1CE100C86CF5 /* HPBaseDialogView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBaseDialogView.h; sourceTree = "<group>"; };
+		E661B0AC219C1CE100C86CF5 /* HPBaseDialogView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBaseDialogView.m; sourceTree = "<group>"; };
+		E661B0B1219C2B1300C86CF5 /* HPTextDialogView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPTextDialogView.h; sourceTree = "<group>"; };
+		E661B0B2219C2B1300C86CF5 /* HPTextDialogView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPTextDialogView.m; sourceTree = "<group>"; };
+		E661B0B4219C2C0400C86CF5 /* HPCheckDialogView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCheckDialogView.h; sourceTree = "<group>"; };
+		E661B0B5219C2C0400C86CF5 /* HPCheckDialogView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCheckDialogView.m; sourceTree = "<group>"; };
+		E661B0B8219C2C6300C86CF5 /* HPCheckDialogLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCheckDialogLayout.h; sourceTree = "<group>"; };
+		E661B0B9219C2C6300C86CF5 /* HPCheckDialogLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCheckDialogLayout.m; sourceTree = "<group>"; };
+		E661B0BB219C2DF700C86CF5 /* HPLinkageSheetView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPLinkageSheetView.h; sourceTree = "<group>"; };
+		E661B0BC219C2DF700C86CF5 /* HPLinkageSheetView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPLinkageSheetView.m; sourceTree = "<group>"; };
+		E661B0BE219CFDEA00C86CF5 /* HPBaseTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBaseTableViewCell.h; sourceTree = "<group>"; };
+		E661B0BF219CFDEA00C86CF5 /* HPBaseTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBaseTableViewCell.m; sourceTree = "<group>"; };
+		E661B0C2219CFE6D00C86CF5 /* HPCheckTableCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCheckTableCell.h; sourceTree = "<group>"; };
+		E661B0C3219CFE6D00C86CF5 /* HPCheckTableCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCheckTableCell.m; sourceTree = "<group>"; };
+		E661B0C5219CFF1800C86CF5 /* HPProgressHUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPProgressHUD.h; sourceTree = "<group>"; };
+		E661B0C6219CFF1800C86CF5 /* HPProgressHUD.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPProgressHUD.m; sourceTree = "<group>"; };
+		E661B0C8219D114300C86CF5 /* HPBaseTextInputController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBaseTextInputController.h; sourceTree = "<group>"; };
+		E661B0C9219D114300C86CF5 /* HPBaseTextInputController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBaseTextInputController.m; sourceTree = "<group>"; };
+		E661B0CB219D1B9200C86CF5 /* HPRowPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRowPanel.h; sourceTree = "<group>"; };
+		E661B0CC219D1B9200C86CF5 /* HPRowPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRowPanel.m; sourceTree = "<group>"; };
+		E661B0CE219D24A500C86CF5 /* HPSelectTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSelectTable.h; sourceTree = "<group>"; };
+		E661B0CF219D24A500C86CF5 /* HPSelectTable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSelectTable.m; sourceTree = "<group>"; };
+		E661B0D1219D3BF500C86CF5 /* HPSelectTableLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSelectTableLayout.h; sourceTree = "<group>"; };
+		E661B0D2219D3BF500C86CF5 /* HPSelectTableLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSelectTableLayout.m; sourceTree = "<group>"; };
+		E661B0D4219D436900C86CF5 /* HPAlertSheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAlertSheet.h; sourceTree = "<group>"; };
+		E661B0D5219D436900C86CF5 /* HPAlertSheet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAlertSheet.m; sourceTree = "<group>"; };
+		E661B0D7219D43A200C86CF5 /* HPAlertAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HPAlertAction.h; path = Layout/HPAlertAction.h; sourceTree = "<group>"; };
+		E661B0D8219D43A200C86CF5 /* HPAlertAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HPAlertAction.m; path = Layout/HPAlertAction.m; sourceTree = "<group>"; };
+		E661B0DA219D49D000C86CF5 /* HPStartUpCardDefineController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPStartUpCardDefineController.h; sourceTree = "<group>"; };
+		E661B0DB219D49D000C86CF5 /* HPStartUpCardDefineController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPStartUpCardDefineController.m; sourceTree = "<group>"; };
+		E661B0DD219D4C8E00C86CF5 /* HPLinkageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPLinkageData.h; sourceTree = "<group>"; };
+		E661B0DE219D4C8E00C86CF5 /* HPLinkageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPLinkageData.m; sourceTree = "<group>"; };
+		E661B0E0219D7BA100C86CF5 /* HPOwnerCardDefineController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOwnerCardDefineController.h; sourceTree = "<group>"; };
+		E661B0E1219D7BA100C86CF5 /* HPOwnerCardDefineController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOwnerCardDefineController.m; sourceTree = "<group>"; };
+		E661B0E4219E53A500C86CF5 /* HPTagDialogView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPTagDialogView.h; sourceTree = "<group>"; };
+		E661B0E5219E53A500C86CF5 /* HPTagDialogView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPTagDialogView.m; sourceTree = "<group>"; };
+		E661B0E8219EBF3600C86CF5 /* HPShareRecommendCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareRecommendCard.h; sourceTree = "<group>"; };
+		E661B0E9219EBF3600C86CF5 /* HPShareRecommendCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareRecommendCard.m; sourceTree = "<group>"; };
+		E661B0EB219EDCC800C86CF5 /* HPBanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBanner.h; sourceTree = "<group>"; };
+		E661B0EC219EDCC800C86CF5 /* HPBanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBanner.m; sourceTree = "<group>"; };
+		E661B0EF219EE85000C86CF5 /* HPShareListController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareListController.h; sourceTree = "<group>"; };
+		E661B0F0219EE85000C86CF5 /* HPShareListController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareListController.m; sourceTree = "<group>"; };
+		E661B0F2219FC13E00C86CF5 /* HPShareListCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareListCell.h; sourceTree = "<group>"; };
+		E661B0F3219FC13E00C86CF5 /* HPShareListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareListCell.m; sourceTree = "<group>"; };
+		E661B0F5219FEBDC00C86CF5 /* HPShareDetailController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareDetailController.h; sourceTree = "<group>"; };
+		E661B0F6219FEBDC00C86CF5 /* HPShareDetailController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareDetailController.m; sourceTree = "<group>"; };
+		E661B0FD21A28E8500C86CF5 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		E661B0FF21A28E8500C86CF5 /* JTCalendarSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTCalendarSettings.m; sourceTree = "<group>"; };
+		E661B10021A28E8500C86CF5 /* JTDateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTDateHelper.m; sourceTree = "<group>"; };
+		E661B10121A28E8500C86CF5 /* JTCalendarManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarManager.h; sourceTree = "<group>"; };
+		E661B10221A28E8500C86CF5 /* JTCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendar.h; sourceTree = "<group>"; };
+		E661B10421A28E8500C86CF5 /* JTCalendarDelegateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarDelegateManager.h; sourceTree = "<group>"; };
+		E661B10521A28E8500C86CF5 /* JTCalendarScrollManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarScrollManager.h; sourceTree = "<group>"; };
+		E661B10621A28E8500C86CF5 /* JTCalendarScrollManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTCalendarScrollManager.m; sourceTree = "<group>"; };
+		E661B10721A28E8500C86CF5 /* JTCalendarDelegateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTCalendarDelegateManager.m; sourceTree = "<group>"; };
+		E661B10821A28E8500C86CF5 /* JTCalendarSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarSettings.h; sourceTree = "<group>"; };
+		E661B10921A28E8500C86CF5 /* JTCalendarManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTCalendarManager.m; sourceTree = "<group>"; };
+		E661B10A21A28E8500C86CF5 /* JTDateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTDateHelper.h; sourceTree = "<group>"; };
+		E661B10B21A28E8500C86CF5 /* JTCalendarDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarDelegate.h; sourceTree = "<group>"; };
+		E661B10D21A28E8500C86CF5 /* JTCalendarDayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarDayView.h; sourceTree = "<group>"; };
+		E661B10E21A28E8500C86CF5 /* JTVerticalCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTVerticalCalendarView.m; sourceTree = "<group>"; };
+		E661B10F21A28E8500C86CF5 /* JTCalendarWeekView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarWeekView.h; sourceTree = "<group>"; };
+		E661B11021A28E8500C86CF5 /* JTCalendarPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarPageView.h; sourceTree = "<group>"; };
+		E661B11121A28E8500C86CF5 /* JTCalendarWeekDayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTCalendarWeekDayView.m; sourceTree = "<group>"; };
+		E661B11221A28E8500C86CF5 /* JTCalendarMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarMenuView.h; sourceTree = "<group>"; };
+		E661B11321A28E8500C86CF5 /* JTHorizontalCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTHorizontalCalendarView.m; sourceTree = "<group>"; };
+		E661B11421A28E8500C86CF5 /* JTCalendarWeekView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTCalendarWeekView.m; sourceTree = "<group>"; };
+		E661B11521A28E8500C86CF5 /* JTVerticalCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTVerticalCalendarView.h; sourceTree = "<group>"; };
+		E661B11621A28E8500C86CF5 /* JTCalendarDayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTCalendarDayView.m; sourceTree = "<group>"; };
+		E661B11721A28E8500C86CF5 /* JTCalendarPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTCalendarPageView.m; sourceTree = "<group>"; };
+		E661B11821A28E8500C86CF5 /* JTHorizontalCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTHorizontalCalendarView.h; sourceTree = "<group>"; };
+		E661B11921A28E8500C86CF5 /* JTCalendarMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTCalendarMenuView.m; sourceTree = "<group>"; };
+		E661B11A21A28E8500C86CF5 /* JTCalendarWeekDayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarWeekDayView.h; sourceTree = "<group>"; };
+		E661B11C21A28E8500C86CF5 /* JTCalendarWeek.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarWeek.h; sourceTree = "<group>"; };
+		E661B11D21A28E8500C86CF5 /* JTContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTContent.h; sourceTree = "<group>"; };
+		E661B11E21A28E8500C86CF5 /* JTCalendarPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarPage.h; sourceTree = "<group>"; };
+		E661B11F21A28E8500C86CF5 /* JTCalendarWeekDay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarWeekDay.h; sourceTree = "<group>"; };
+		E661B12021A28E8500C86CF5 /* JTCalendarDay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTCalendarDay.h; sourceTree = "<group>"; };
+		E661B12121A28E8500C86CF5 /* JTMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTMenu.h; sourceTree = "<group>"; };
+		E661B12221A28E8500C86CF5 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E661B13121A2C4F500C86CF5 /* HPCalendarView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCalendarView.h; sourceTree = "<group>"; };
+		E661B13221A2C4F500C86CF5 /* HPCalendarView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCalendarView.m; sourceTree = "<group>"; };
+		E661B13821A3D2D500C86CF5 /* HPCalendarModalView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCalendarModalView.h; sourceTree = "<group>"; };
+		E661B13921A3D2D500C86CF5 /* HPCalendarModalView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCalendarModalView.m; sourceTree = "<group>"; };
+		E661B13B21A3DFD600C86CF5 /* HPReleaseModalView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPReleaseModalView.h; sourceTree = "<group>"; };
+		E661B13C21A3DFD600C86CF5 /* HPReleaseModalView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPReleaseModalView.m; sourceTree = "<group>"; };
+		E661B13E21A6355E00C86CF5 /* HPMyCardController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPMyCardController.h; sourceTree = "<group>"; };
+		E661B13F21A6355E00C86CF5 /* HPMyCardController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPMyCardController.m; sourceTree = "<group>"; };
+		E661B14121A679E200C86CF5 /* UIScrollView+GestureConflict.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+GestureConflict.h"; sourceTree = "<group>"; };
+		E661B14221A679E200C86CF5 /* UIScrollView+GestureConflict.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+GestureConflict.m"; sourceTree = "<group>"; };
+		E661B14421A68BE300C86CF5 /* HPPageControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPageControl.h; sourceTree = "<group>"; };
+		E661B14521A68BE300C86CF5 /* HPPageControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPPageControl.m; sourceTree = "<group>"; };
+		E661B14821A6986B00C86CF5 /* StyledPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyledPageControl.h; sourceTree = "<group>"; };
+		E661B14921A6986B00C86CF5 /* StyledPageControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyledPageControl.m; sourceTree = "<group>"; };
+		E6D75F1121A78AD300B2067C /* HPSharePersonCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSharePersonCard.h; sourceTree = "<group>"; };
+		E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSharePersonCard.m; sourceTree = "<group>"; };
+		E6D75F1521A811E500B2067C /* HPHowToPlayController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHowToPlayController.h; sourceTree = "<group>"; };
+		E6D75F1621A811E500B2067C /* HPHowToPlayController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHowToPlayController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E629212E219AA83000BEF16C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CAA2DAE424EC650C0D26D3DA /* Pods_HPShareApp.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6292146219AA83B00BEF16C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				786E617DDD64F9CC68E4049B /* Pods_HPShareAppTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6292151219AA83B00BEF16C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB490D1FA8BCD64C224C403A /* Pods_HPShareAppUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D29D226676E10B1AF5705590 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */,
+				C508ECCC8CC2C9D9701839BE /* Pods_HPShareAppTests.framework */,
+				AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E0D081E35F5E5030FDE0CBE3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B4F1B350A3EBD7380C3F015D /* Pods-HPShareApp.debug.xcconfig */,
+				06EA7A43D7F8724E22A20923 /* Pods-HPShareApp.release.xcconfig */,
+				60E49D55A6BBD2F7A38A310D /* Pods-HPShareAppTests.debug.xcconfig */,
+				6362C162C2AF8A13DF7D21FE /* Pods-HPShareAppTests.release.xcconfig */,
+				4C331797FB3D3545F43D2258 /* Pods-HPShareAppUITests.debug.xcconfig */,
+				68AA020221DAA8B9DA354FFA /* Pods-HPShareAppUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		E6115639219AC803003A29C5 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				E611563A219AC8D7003A29C5 /* HPBaseViewController.h */,
+				E611563B219AC8D7003A29C5 /* HPBaseViewController.m */,
+				E661B0C8219D114300C86CF5 /* HPBaseTextInputController.h */,
+				E661B0C9219D114300C86CF5 /* HPBaseTextInputController.m */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		E6292128219AA83000BEF16C = {
+			isa = PBXGroup;
+			children = (
+				E6292133219AA83000BEF16C /* HPShareApp */,
+				E629214C219AA83B00BEF16C /* HPShareAppTests */,
+				E6292157219AA83B00BEF16C /* HPShareAppUITests */,
+				E6292132219AA83000BEF16C /* Products */,
+				E0D081E35F5E5030FDE0CBE3 /* Pods */,
+				D29D226676E10B1AF5705590 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E6292132219AA83000BEF16C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E6292131219AA83000BEF16C /* HPShareApp.app */,
+				E6292149219AA83B00BEF16C /* HPShareAppTests.xctest */,
+				E6292154219AA83B00BEF16C /* HPShareAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E6292133219AA83000BEF16C /* HPShareApp */ = {
+			isa = PBXGroup;
+			children = (
+				E629216E219AB1DD00BEF16C /* Common */,
+				E6292176219AB76B00BEF16C /* Categories */,
+				E629216D219AB17500BEF16C /* Utility */,
+				E629216C219AB16800BEF16C /* Helper */,
+				E661B0FB21A28D7F00C86CF5 /* Vendors */,
+				E6292169219AAA2B00BEF16C /* Controllers */,
+				E6292187219AC11000BEF16C /* Views */,
+				E6292168219AA9FF00BEF16C /* Resource */,
+				E6292167219AA9DB00BEF16C /* Storyboard */,
+				E6292166219AA99D00BEF16C /* Supporting Files */,
+				E6292134219AA83000BEF16C /* AppDelegate.h */,
+				E6292135219AA83000BEF16C /* AppDelegate.m */,
+			);
+			path = HPShareApp;
+			sourceTree = "<group>";
+		};
+		E629214C219AA83B00BEF16C /* HPShareAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				E629214D219AA83B00BEF16C /* HPShareAppTests.m */,
+				E629214F219AA83B00BEF16C /* Info.plist */,
+			);
+			path = HPShareAppTests;
+			sourceTree = "<group>";
+		};
+		E6292157219AA83B00BEF16C /* HPShareAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				E6292158219AA83B00BEF16C /* HPShareAppUITests.m */,
+				E629215A219AA83B00BEF16C /* Info.plist */,
+			);
+			path = HPShareAppUITests;
+			sourceTree = "<group>";
+		};
+		E6292166219AA99D00BEF16C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E6292142219AA83A00BEF16C /* Info.plist */,
+				E6292143219AA83A00BEF16C /* main.m */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E6292167219AA9DB00BEF16C /* Storyboard */ = {
+			isa = PBXGroup;
+			children = (
+				E629213A219AA83100BEF16C /* Main.storyboard */,
+				E629213F219AA83A00BEF16C /* LaunchScreen.storyboard */,
+			);
+			path = Storyboard;
+			sourceTree = "<group>";
+		};
+		E6292168219AA9FF00BEF16C /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				E629213D219AA83A00BEF16C /* Assets.xcassets */,
+				E629216A219AAAB900BEF16C /* Default-568h@2x.png */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		E6292169219AAA2B00BEF16C /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E6115639219AC803003A29C5 /* Base */,
+				E661B091219BAC4300C86CF5 /* Main */,
+				E661B0EE219EE82300C86CF5 /* Share */,
+				E6D75F1421A811A600B2067C /* Idea */,
+				E661B0DA219D49D000C86CF5 /* HPStartUpCardDefineController.h */,
+				E661B0DB219D49D000C86CF5 /* HPStartUpCardDefineController.m */,
+				E661B0E0219D7BA100C86CF5 /* HPOwnerCardDefineController.h */,
+				E661B0E1219D7BA100C86CF5 /* HPOwnerCardDefineController.m */,
+				E661B13E21A6355E00C86CF5 /* HPMyCardController.h */,
+				E661B13F21A6355E00C86CF5 /* HPMyCardController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		E629216C219AB16800BEF16C /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0B7219C2C4E00C86CF5 /* Layout */,
+				E661B0D7219D43A200C86CF5 /* HPAlertAction.h */,
+				E661B0D8219D43A200C86CF5 /* HPAlertAction.m */,
+				E661B0DD219D4C8E00C86CF5 /* HPLinkageData.h */,
+				E661B0DE219D4C8E00C86CF5 /* HPLinkageData.m */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		E629216D219AB17500BEF16C /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				E6292173219AB32000BEF16C /* HPScreenAdapter.h */,
+				E6292174219AB32000BEF16C /* HPScreenAdapter.m */,
+				E6292180219ABE6500BEF16C /* HPImageUtil.h */,
+				E6292181219ABE6500BEF16C /* HPImageUtil.m */,
+				E6292183219ABF4400BEF16C /* HPGradientUtil.h */,
+				E6292184219ABF4400BEF16C /* HPGradientUtil.m */,
+				E661B0C5219CFF1800C86CF5 /* HPProgressHUD.h */,
+				E661B0C6219CFF1800C86CF5 /* HPProgressHUD.m */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		E629216E219AB1DD00BEF16C /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				E629216F219AB23100BEF16C /* Macro.h */,
+				E6292170219AB28700BEF16C /* HPGlobalVariable.h */,
+				E6292171219AB28700BEF16C /* HPGlobalVariable.m */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		E6292176219AB76B00BEF16C /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				E6292177219AB7B800BEF16C /* UIColor+Hex.h */,
+				E6292178219AB7B800BEF16C /* UIColor+Hex.m */,
+				E629217A219AB84200BEF16C /* UIViewController+Helper.h */,
+				E629217B219AB84200BEF16C /* UIViewController+Helper.m */,
+				E629217D219ABD6D00BEF16C /* UIView + Tag.h */,
+				E629217E219ABD6D00BEF16C /* UIView + Tag.m */,
+				E661B14121A679E200C86CF5 /* UIScrollView+GestureConflict.h */,
+				E661B14221A679E200C86CF5 /* UIScrollView+GestureConflict.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		E6292187219AC11000BEF16C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0A1219C0B3C00C86CF5 /* Base */,
+				E661B0AF219C2AD600C86CF5 /* Common */,
+				E661B0C1219CFE1200C86CF5 /* TableViewCell */,
+				E661B0E3219E538800C86CF5 /* Modal */,
+				E661B0E7219EBEAA00C86CF5 /* Share */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E661B091219BAC4300C86CF5 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				E6292188219AC19D00BEF16C /* HPMainTabBarController.h */,
+				E6292189219AC19D00BEF16C /* HPMainTabBarController.m */,
+				E661B092219BACE900C86CF5 /* HPShareController.h */,
+				E661B093219BACE900C86CF5 /* HPShareController.m */,
+				E661B095219BAD5000C86CF5 /* HPIdeaController.h */,
+				E661B096219BAD5000C86CF5 /* HPIdeaController.m */,
+				E661B098219BADB200C86CF5 /* HPInteractiveController.h */,
+				E661B099219BADB200C86CF5 /* HPInteractiveController.m */,
+				E661B09B219BADDD00C86CF5 /* HPMyController.h */,
+				E661B09C219BADDD00C86CF5 /* HPMyController.m */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		E661B0A1219C0B3C00C86CF5 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0A2219C0B5600C86CF5 /* HPBaseView.h */,
+				E661B0A3219C0B5600C86CF5 /* HPBaseView.m */,
+				E661B0A5219C0B9800C86CF5 /* HPBaseControl.h */,
+				E661B0A6219C0B9800C86CF5 /* HPBaseControl.m */,
+				E661B0BE219CFDEA00C86CF5 /* HPBaseTableViewCell.h */,
+				E661B0BF219CFDEA00C86CF5 /* HPBaseTableViewCell.m */,
+				E661B0A8219C1AE800C86CF5 /* HPBaseModalView.h */,
+				E661B0A9219C1AE800C86CF5 /* HPBaseModalView.m */,
+				E661B0AB219C1CE100C86CF5 /* HPBaseDialogView.h */,
+				E661B0AC219C1CE100C86CF5 /* HPBaseDialogView.m */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		E661B0AF219C2AD600C86CF5 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0B0219C2AE700C86CF5 /* Modal */,
+				E661B09E219BC59E00C86CF5 /* HPAlignCenterButton.h */,
+				E661B09F219BC59E00C86CF5 /* HPAlignCenterButton.m */,
+				E661B0CB219D1B9200C86CF5 /* HPRowPanel.h */,
+				E661B0CC219D1B9200C86CF5 /* HPRowPanel.m */,
+				E661B0CE219D24A500C86CF5 /* HPSelectTable.h */,
+				E661B0CF219D24A500C86CF5 /* HPSelectTable.m */,
+				E661B0EB219EDCC800C86CF5 /* HPBanner.h */,
+				E661B0EC219EDCC800C86CF5 /* HPBanner.m */,
+				E661B13121A2C4F500C86CF5 /* HPCalendarView.h */,
+				E661B13221A2C4F500C86CF5 /* HPCalendarView.m */,
+				E661B14421A68BE300C86CF5 /* HPPageControl.h */,
+				E661B14521A68BE300C86CF5 /* HPPageControl.m */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		E661B0B0219C2AE700C86CF5 /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0B1219C2B1300C86CF5 /* HPTextDialogView.h */,
+				E661B0B2219C2B1300C86CF5 /* HPTextDialogView.m */,
+				E661B0B4219C2C0400C86CF5 /* HPCheckDialogView.h */,
+				E661B0B5219C2C0400C86CF5 /* HPCheckDialogView.m */,
+				E661B0BB219C2DF700C86CF5 /* HPLinkageSheetView.h */,
+				E661B0BC219C2DF700C86CF5 /* HPLinkageSheetView.m */,
+				E661B0D4219D436900C86CF5 /* HPAlertSheet.h */,
+				E661B0D5219D436900C86CF5 /* HPAlertSheet.m */,
+				E661B13821A3D2D500C86CF5 /* HPCalendarModalView.h */,
+				E661B13921A3D2D500C86CF5 /* HPCalendarModalView.m */,
+			);
+			path = Modal;
+			sourceTree = "<group>";
+		};
+		E661B0B7219C2C4E00C86CF5 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0B8219C2C6300C86CF5 /* HPCheckDialogLayout.h */,
+				E661B0B9219C2C6300C86CF5 /* HPCheckDialogLayout.m */,
+				E661B0D1219D3BF500C86CF5 /* HPSelectTableLayout.h */,
+				E661B0D2219D3BF500C86CF5 /* HPSelectTableLayout.m */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		E661B0C1219CFE1200C86CF5 /* TableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0C2219CFE6D00C86CF5 /* HPCheckTableCell.h */,
+				E661B0C3219CFE6D00C86CF5 /* HPCheckTableCell.m */,
+				E661B0F2219FC13E00C86CF5 /* HPShareListCell.h */,
+				E661B0F3219FC13E00C86CF5 /* HPShareListCell.m */,
+			);
+			path = TableViewCell;
+			sourceTree = "<group>";
+		};
+		E661B0E3219E538800C86CF5 /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0E4219E53A500C86CF5 /* HPTagDialogView.h */,
+				E661B0E5219E53A500C86CF5 /* HPTagDialogView.m */,
+				E661B13B21A3DFD600C86CF5 /* HPReleaseModalView.h */,
+				E661B13C21A3DFD600C86CF5 /* HPReleaseModalView.m */,
+			);
+			path = Modal;
+			sourceTree = "<group>";
+		};
+		E661B0E7219EBEAA00C86CF5 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0E8219EBF3600C86CF5 /* HPShareRecommendCard.h */,
+				E661B0E9219EBF3600C86CF5 /* HPShareRecommendCard.m */,
+				E6D75F1121A78AD300B2067C /* HPSharePersonCard.h */,
+				E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */,
+			);
+			path = Share;
+			sourceTree = "<group>";
+		};
+		E661B0EE219EE82300C86CF5 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0EF219EE85000C86CF5 /* HPShareListController.h */,
+				E661B0F0219EE85000C86CF5 /* HPShareListController.m */,
+				E661B0F5219FEBDC00C86CF5 /* HPShareDetailController.h */,
+				E661B0F6219FEBDC00C86CF5 /* HPShareDetailController.m */,
+			);
+			path = Share;
+			sourceTree = "<group>";
+		};
+		E661B0FB21A28D7F00C86CF5 /* Vendors */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0FC21A28E8500C86CF5 /* JTCalendar */,
+				E661B14721A6986B00C86CF5 /* StyledPageControl */,
+			);
+			path = Vendors;
+			sourceTree = "<group>";
+		};
+		E661B0FC21A28E8500C86CF5 /* JTCalendar */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0FE21A28E8500C86CF5 /* JTCalendar */,
+				E661B0FD21A28E8500C86CF5 /* LICENSE */,
+				E661B12221A28E8500C86CF5 /* README.md */,
+			);
+			path = JTCalendar;
+			sourceTree = "<group>";
+		};
+		E661B0FE21A28E8500C86CF5 /* JTCalendar */ = {
+			isa = PBXGroup;
+			children = (
+				E661B0FF21A28E8500C86CF5 /* JTCalendarSettings.m */,
+				E661B10021A28E8500C86CF5 /* JTDateHelper.m */,
+				E661B10121A28E8500C86CF5 /* JTCalendarManager.h */,
+				E661B10221A28E8500C86CF5 /* JTCalendar.h */,
+				E661B10321A28E8500C86CF5 /* Managers */,
+				E661B10821A28E8500C86CF5 /* JTCalendarSettings.h */,
+				E661B10921A28E8500C86CF5 /* JTCalendarManager.m */,
+				E661B10A21A28E8500C86CF5 /* JTDateHelper.h */,
+				E661B10B21A28E8500C86CF5 /* JTCalendarDelegate.h */,
+				E661B10C21A28E8500C86CF5 /* Views */,
+				E661B11B21A28E8500C86CF5 /* Protocols */,
+			);
+			path = JTCalendar;
+			sourceTree = "<group>";
+		};
+		E661B10321A28E8500C86CF5 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				E661B10421A28E8500C86CF5 /* JTCalendarDelegateManager.h */,
+				E661B10521A28E8500C86CF5 /* JTCalendarScrollManager.h */,
+				E661B10621A28E8500C86CF5 /* JTCalendarScrollManager.m */,
+				E661B10721A28E8500C86CF5 /* JTCalendarDelegateManager.m */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		E661B10C21A28E8500C86CF5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E661B10D21A28E8500C86CF5 /* JTCalendarDayView.h */,
+				E661B10E21A28E8500C86CF5 /* JTVerticalCalendarView.m */,
+				E661B10F21A28E8500C86CF5 /* JTCalendarWeekView.h */,
+				E661B11021A28E8500C86CF5 /* JTCalendarPageView.h */,
+				E661B11121A28E8500C86CF5 /* JTCalendarWeekDayView.m */,
+				E661B11221A28E8500C86CF5 /* JTCalendarMenuView.h */,
+				E661B11321A28E8500C86CF5 /* JTHorizontalCalendarView.m */,
+				E661B11421A28E8500C86CF5 /* JTCalendarWeekView.m */,
+				E661B11521A28E8500C86CF5 /* JTVerticalCalendarView.h */,
+				E661B11621A28E8500C86CF5 /* JTCalendarDayView.m */,
+				E661B11721A28E8500C86CF5 /* JTCalendarPageView.m */,
+				E661B11821A28E8500C86CF5 /* JTHorizontalCalendarView.h */,
+				E661B11921A28E8500C86CF5 /* JTCalendarMenuView.m */,
+				E661B11A21A28E8500C86CF5 /* JTCalendarWeekDayView.h */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E661B11B21A28E8500C86CF5 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				E661B11C21A28E8500C86CF5 /* JTCalendarWeek.h */,
+				E661B11D21A28E8500C86CF5 /* JTContent.h */,
+				E661B11E21A28E8500C86CF5 /* JTCalendarPage.h */,
+				E661B11F21A28E8500C86CF5 /* JTCalendarWeekDay.h */,
+				E661B12021A28E8500C86CF5 /* JTCalendarDay.h */,
+				E661B12121A28E8500C86CF5 /* JTMenu.h */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		E661B14721A6986B00C86CF5 /* StyledPageControl */ = {
+			isa = PBXGroup;
+			children = (
+				E661B14821A6986B00C86CF5 /* StyledPageControl.h */,
+				E661B14921A6986B00C86CF5 /* StyledPageControl.m */,
+			);
+			path = StyledPageControl;
+			sourceTree = "<group>";
+		};
+		E6D75F1421A811A600B2067C /* Idea */ = {
+			isa = PBXGroup;
+			children = (
+				E6D75F1521A811E500B2067C /* HPHowToPlayController.h */,
+				E6D75F1621A811E500B2067C /* HPHowToPlayController.m */,
+			);
+			path = Idea;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E6292130219AA83000BEF16C /* HPShareApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E629215D219AA83B00BEF16C /* Build configuration list for PBXNativeTarget "HPShareApp" */;
+			buildPhases = (
+				18DE82D0C9ED36FBBD6672F4 /* [CP] Check Pods Manifest.lock */,
+				E629212D219AA83000BEF16C /* Sources */,
+				E629212E219AA83000BEF16C /* Frameworks */,
+				E629212F219AA83000BEF16C /* Resources */,
+				70D9735B568E410427B2682C /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HPShareApp;
+			productName = HPShareApp;
+			productReference = E6292131219AA83000BEF16C /* HPShareApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E6292148219AA83B00BEF16C /* HPShareAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E6292160219AA83B00BEF16C /* Build configuration list for PBXNativeTarget "HPShareAppTests" */;
+			buildPhases = (
+				C2A269E698D48B3BDE8A8CF8 /* [CP] Check Pods Manifest.lock */,
+				E6292145219AA83B00BEF16C /* Sources */,
+				E6292146219AA83B00BEF16C /* Frameworks */,
+				E6292147219AA83B00BEF16C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E629214B219AA83B00BEF16C /* PBXTargetDependency */,
+			);
+			name = HPShareAppTests;
+			productName = HPShareAppTests;
+			productReference = E6292149219AA83B00BEF16C /* HPShareAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		E6292153219AA83B00BEF16C /* HPShareAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E6292163219AA83B00BEF16C /* Build configuration list for PBXNativeTarget "HPShareAppUITests" */;
+			buildPhases = (
+				B342B99A66A5FA78560C45ED /* [CP] Check Pods Manifest.lock */,
+				E6292150219AA83B00BEF16C /* Sources */,
+				E6292151219AA83B00BEF16C /* Frameworks */,
+				E6292152219AA83B00BEF16C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E6292156219AA83B00BEF16C /* PBXTargetDependency */,
+			);
+			name = HPShareAppUITests;
+			productName = HPShareAppUITests;
+			productReference = E6292154219AA83B00BEF16C /* HPShareAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E6292129219AA83000BEF16C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = "Shenzhen Qianhai Hepai technology co.,ltd.";
+				TargetAttributes = {
+					E6292130219AA83000BEF16C = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					E6292148219AA83B00BEF16C = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = E6292130219AA83000BEF16C;
+					};
+					E6292153219AA83B00BEF16C = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = E6292130219AA83000BEF16C;
+					};
+				};
+			};
+			buildConfigurationList = E629212C219AA83000BEF16C /* Build configuration list for PBXProject "HPShareApp" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E6292128219AA83000BEF16C;
+			productRefGroup = E6292132219AA83000BEF16C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E6292130219AA83000BEF16C /* HPShareApp */,
+				E6292148219AA83B00BEF16C /* HPShareAppTests */,
+				E6292153219AA83B00BEF16C /* HPShareAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E629212F219AA83000BEF16C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E661B13021A28E8500C86CF5 /* README.md in Resources */,
+				E6292141219AA83A00BEF16C /* LaunchScreen.storyboard in Resources */,
+				E629216B219AAAB900BEF16C /* Default-568h@2x.png in Resources */,
+				E629213E219AA83A00BEF16C /* Assets.xcassets in Resources */,
+				E629213C219AA83100BEF16C /* Main.storyboard in Resources */,
+				E661B12321A28E8500C86CF5 /* LICENSE in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6292147219AA83B00BEF16C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6292152219AA83B00BEF16C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		18DE82D0C9ED36FBBD6672F4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HPShareApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		70D9735B568E410427B2682C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
+				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B342B99A66A5FA78560C45ED /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HPShareAppUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C2A269E698D48B3BDE8A8CF8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HPShareAppTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E629212D219AA83000BEF16C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E661B12921A28E8500C86CF5 /* JTVerticalCalendarView.m in Sources */,
+				E6292172219AB28700BEF16C /* HPGlobalVariable.m in Sources */,
+				E629217F219ABD6D00BEF16C /* UIView + Tag.m in Sources */,
+				E661B0BD219C2DF700C86CF5 /* HPLinkageSheetView.m in Sources */,
+				E661B12E21A28E8500C86CF5 /* JTCalendarPageView.m in Sources */,
+				E6292179219AB7B800BEF16C /* UIColor+Hex.m in Sources */,
+				E661B0C7219CFF1800C86CF5 /* HPProgressHUD.m in Sources */,
+				E661B0CD219D1B9200C86CF5 /* HPRowPanel.m in Sources */,
+				E661B14621A68BE300C86CF5 /* HPPageControl.m in Sources */,
+				E661B12721A28E8500C86CF5 /* JTCalendarDelegateManager.m in Sources */,
+				E661B0AA219C1AE800C86CF5 /* HPBaseModalView.m in Sources */,
+				E661B0D6219D436900C86CF5 /* HPAlertSheet.m in Sources */,
+				E661B12B21A28E8500C86CF5 /* JTHorizontalCalendarView.m in Sources */,
+				E661B0E2219D7BA100C86CF5 /* HPOwnerCardDefineController.m in Sources */,
+				E661B14A21A6986B00C86CF5 /* StyledPageControl.m in Sources */,
+				E661B12F21A28E8500C86CF5 /* JTCalendarMenuView.m in Sources */,
+				E661B0ED219EDCC800C86CF5 /* HPBanner.m in Sources */,
+				E661B0D0219D24A500C86CF5 /* HPSelectTable.m in Sources */,
+				E661B13321A2C4F500C86CF5 /* HPCalendarView.m in Sources */,
+				E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */,
+				E6D75F1721A811E500B2067C /* HPHowToPlayController.m in Sources */,
+				E661B0B3219C2B1300C86CF5 /* HPTextDialogView.m in Sources */,
+				E661B09A219BADB200C86CF5 /* HPInteractiveController.m in Sources */,
+				E6D75F1321A78AD300B2067C /* HPSharePersonCard.m in Sources */,
+				E661B0E6219E53A500C86CF5 /* HPTagDialogView.m in Sources */,
+				E629218A219AC19D00BEF16C /* HPMainTabBarController.m in Sources */,
+				E6292182219ABE6500BEF16C /* HPImageUtil.m in Sources */,
+				E661B0CA219D114300C86CF5 /* HPBaseTextInputController.m in Sources */,
+				E661B0D3219D3BF500C86CF5 /* HPSelectTableLayout.m in Sources */,
+				E661B14021A6355E00C86CF5 /* HPMyCardController.m in Sources */,
+				E661B12A21A28E8500C86CF5 /* JTCalendarWeekDayView.m in Sources */,
+				E661B0D9219D43A200C86CF5 /* HPAlertAction.m in Sources */,
+				E661B12421A28E8500C86CF5 /* JTCalendarSettings.m in Sources */,
+				E661B13D21A3DFD600C86CF5 /* HPReleaseModalView.m in Sources */,
+				E661B12C21A28E8500C86CF5 /* JTCalendarWeekView.m in Sources */,
+				E661B12621A28E8500C86CF5 /* JTCalendarScrollManager.m in Sources */,
+				E661B094219BACE900C86CF5 /* HPShareController.m in Sources */,
+				E661B0DC219D49D000C86CF5 /* HPStartUpCardDefineController.m in Sources */,
+				E6292175219AB32000BEF16C /* HPScreenAdapter.m in Sources */,
+				E661B097219BAD5000C86CF5 /* HPIdeaController.m in Sources */,
+				E661B12521A28E8500C86CF5 /* JTDateHelper.m in Sources */,
+				E661B0C4219CFE6D00C86CF5 /* HPCheckTableCell.m in Sources */,
+				E661B12821A28E8500C86CF5 /* JTCalendarManager.m in Sources */,
+				E661B0EA219EBF3600C86CF5 /* HPShareRecommendCard.m in Sources */,
+				E661B0DF219D4C8E00C86CF5 /* HPLinkageData.m in Sources */,
+				E6292185219ABF4400BEF16C /* HPGradientUtil.m in Sources */,
+				E6292144219AA83A00BEF16C /* main.m in Sources */,
+				E661B14321A679E200C86CF5 /* UIScrollView+GestureConflict.m in Sources */,
+				E661B0F4219FC13E00C86CF5 /* HPShareListCell.m in Sources */,
+				E661B0F7219FEBDC00C86CF5 /* HPShareDetailController.m in Sources */,
+				E661B0C0219CFDEA00C86CF5 /* HPBaseTableViewCell.m in Sources */,
+				E661B0AD219C1CE100C86CF5 /* HPBaseDialogView.m in Sources */,
+				E661B0A7219C0B9800C86CF5 /* HPBaseControl.m in Sources */,
+				E661B0B6219C2C0400C86CF5 /* HPCheckDialogView.m in Sources */,
+				E661B0A4219C0B5600C86CF5 /* HPBaseView.m in Sources */,
+				E661B0A0219BC59E00C86CF5 /* HPAlignCenterButton.m in Sources */,
+				E661B0BA219C2C6300C86CF5 /* HPCheckDialogLayout.m in Sources */,
+				E661B13A21A3D2D500C86CF5 /* HPCalendarModalView.m in Sources */,
+				E661B09D219BADDD00C86CF5 /* HPMyController.m in Sources */,
+				E661B0F1219EE85000C86CF5 /* HPShareListController.m in Sources */,
+				E6292136219AA83000BEF16C /* AppDelegate.m in Sources */,
+				E629217C219AB84200BEF16C /* UIViewController+Helper.m in Sources */,
+				E661B12D21A28E8500C86CF5 /* JTCalendarDayView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6292145219AA83B00BEF16C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E629214E219AA83B00BEF16C /* HPShareAppTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6292150219AA83B00BEF16C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6292159219AA83B00BEF16C /* HPShareAppUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E629214B219AA83B00BEF16C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6292130219AA83000BEF16C /* HPShareApp */;
+			targetProxy = E629214A219AA83B00BEF16C /* PBXContainerItemProxy */;
+		};
+		E6292156219AA83B00BEF16C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6292130219AA83000BEF16C /* HPShareApp */;
+			targetProxy = E6292155219AA83B00BEF16C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		E629213A219AA83100BEF16C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E629213B219AA83100BEF16C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		E629213F219AA83A00BEF16C /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6292140219AA83A00BEF16C /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E629215B219AA83B00BEF16C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		E629215C219AA83B00BEF16C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E629215E219AA83B00BEF16C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B4F1B350A3EBD7380C3F015D /* Pods-HPShareApp.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = V5T6X5QWH2;
+				INFOPLIST_FILE = "HPShareApp/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hepaicn.HPShareApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
+			};
+			name = Debug;
+		};
+		E629215F219AA83B00BEF16C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 06EA7A43D7F8724E22A20923 /* Pods-HPShareApp.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = V5T6X5QWH2;
+				INFOPLIST_FILE = "HPShareApp/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hepaicn.HPShareApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
+			};
+			name = Release;
+		};
+		E6292161219AA83B00BEF16C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 60E49D55A6BBD2F7A38A310D /* Pods-HPShareAppTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9NZMMG62D7;
+				INFOPLIST_FILE = HPShareAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hepaicn.HPShareAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HPShareApp.app/HPShareApp";
+			};
+			name = Debug;
+		};
+		E6292162219AA83B00BEF16C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6362C162C2AF8A13DF7D21FE /* Pods-HPShareAppTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9NZMMG62D7;
+				INFOPLIST_FILE = HPShareAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hepaicn.HPShareAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HPShareApp.app/HPShareApp";
+			};
+			name = Release;
+		};
+		E6292164219AA83B00BEF16C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C331797FB3D3545F43D2258 /* Pods-HPShareAppUITests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9NZMMG62D7;
+				INFOPLIST_FILE = HPShareAppUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hepaicn.HPShareAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HPShareApp;
+			};
+			name = Debug;
+		};
+		E6292165219AA83B00BEF16C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 68AA020221DAA8B9DA354FFA /* Pods-HPShareAppUITests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9NZMMG62D7;
+				INFOPLIST_FILE = HPShareAppUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hepaicn.HPShareAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HPShareApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E629212C219AA83000BEF16C /* Build configuration list for PBXProject "HPShareApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E629215B219AA83B00BEF16C /* Debug */,
+				E629215C219AA83B00BEF16C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E629215D219AA83B00BEF16C /* Build configuration list for PBXNativeTarget "HPShareApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E629215E219AA83B00BEF16C /* Debug */,
+				E629215F219AA83B00BEF16C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E6292160219AA83B00BEF16C /* Build configuration list for PBXNativeTarget "HPShareAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6292161219AA83B00BEF16C /* Debug */,
+				E6292162219AA83B00BEF16C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E6292163219AA83B00BEF16C /* Build configuration list for PBXNativeTarget "HPShareAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6292164219AA83B00BEF16C /* Debug */,
+				E6292165219AA83B00BEF16C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E6292129219AA83000BEF16C /* Project object */;
+}
