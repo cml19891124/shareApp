@@ -6,13 +6,13 @@
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPHowToPlayController.h"
+#import "HPWhatIsShareSpaceController.h"
 
-@interface HPHowToPlayController ()
+@interface HPWhatIsShareSpaceController ()
 
 @end
 
-@implementation HPHowToPlayController
+@implementation HPWhatIsShareSpaceController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,7 +46,6 @@
     [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(scrollView).with.offset(-g_statusBarHeight);
         make.left.and.and.width.equalTo(scrollView);
-        make.height.mas_equalTo(173.f * g_rateWidth);
     }];
     
     UIImageView *backIcon = [[UIImageView alloc] init];

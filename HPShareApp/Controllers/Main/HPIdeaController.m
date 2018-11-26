@@ -7,7 +7,8 @@
 //
 
 #import "HPIdeaController.h"
-#import "HPHowToPlayController.h"
+#import "HPWhatIsShareSpaceController.h"
+#import "HPHowToPlayShareSpaceController.h"
 
 @interface HPIdeaController ()
 
@@ -50,7 +51,7 @@
     [searchView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.view);
         make.top.equalTo(self.view).with.offset(g_statusBarHeight + 8.f * g_rateHeight);
-        make.size.mas_equalTo(CGSizeMake(345.f, 39.f));
+        make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 39.f * g_rateWidth));
     }];
     [self setupSearchView:searchView];
     
@@ -256,10 +257,10 @@
     UIViewController *vc;
     
     if (ctrl.tag == 0) {
-        vc = [[HPHowToPlayController alloc] init];
+        vc = [[HPWhatIsShareSpaceController alloc] init];
     }
     else if (ctrl.tag == 1) {
-        
+        vc = [[HPHowToPlayShareSpaceController alloc] init];
     }
     
     if (vc) {

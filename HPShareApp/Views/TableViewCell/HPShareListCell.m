@@ -108,13 +108,15 @@
         make.height.mas_equalTo(tradeLabel.font.pointSize);
     }];
     
+    CGFloat space = ((345.f - 26.f - 26.f) * g_rateWidth - 40.f * 4)/3;
+    
     UILabel *rentTimeDescLabel = [[UILabel alloc] init];
     [rentTimeDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:10.f]];
     [rentTimeDescLabel setTextColor:COLOR_BLACK_6E7980];
     [rentTimeDescLabel setText:@"可租档期"];
     [bgView addSubview:rentTimeDescLabel];
     [rentTimeDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(tradeDescLabel.mas_right).with.offset(46.f * g_rateWidth);
+        make.left.equalTo(tradeDescLabel.mas_right).with.offset(space);
         make.centerY.equalTo(tradeDescLabel);
         make.height.mas_equalTo(rentTimeDescLabel.font.pointSize);
     }];
@@ -137,7 +139,7 @@
     [areaDescLabel setText:@"期望面积"];
     [bgView addSubview:areaDescLabel];
     [areaDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(rentTimeLabel.mas_right).with.offset(46.f * g_rateWidth);
+        make.left.equalTo(rentTimeDescLabel.mas_right).with.offset(space);
         make.centerY.equalTo(tradeDescLabel);
         make.height.mas_equalTo(areaDescLabel.font.pointSize);
     }];
@@ -170,7 +172,7 @@
     [priceDescLabel setText:@"期望价格"];
     [bgView addSubview:priceDescLabel];
     [priceDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(areaDescLabel.mas_right).with.offset(46.f * g_rateWidth);
+        make.left.equalTo(areaDescLabel.mas_right).with.offset(space);
         make.centerY.equalTo(tradeDescLabel);
         make.height.mas_equalTo(priceDescLabel.font.pointSize);
     }];
@@ -203,6 +205,11 @@
     [tagIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(bgView).with.offset(-6.f);
         make.right.equalTo(bgView).with.offset(-18.f);
+        make.size.mas_equalTo(CGSizeMake(37.f, 50.f));
+    }];
+    
+    [titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(tagIcon.mas_left).with.offset(-5.f * g_rateWidth);
     }];
 }
 

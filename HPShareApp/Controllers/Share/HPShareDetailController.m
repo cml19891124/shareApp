@@ -437,7 +437,7 @@
         make.right.equalTo(priceDescLabel).with.offset(3.f);
         make.top.equalTo(priceDescLabel.mas_bottom).with.offset(12.f);
         make.height.mas_equalTo(priceUnitLabel.font.pointSize);
-        make.width.mas_equalTo(25.f * g_rateWidth);
+        make.width.mas_equalTo(25.f);
     }];
     
     UILabel *priceLabel = [[UILabel alloc] init];
@@ -496,6 +496,7 @@
         make.left.equalTo(titleLabel);
         make.top.equalTo(titleLabel.mas_bottom).with.offset(19.f * g_rateWidth);
         make.width.mas_equalTo(324.f * g_rateWidth);
+        make.bottom.equalTo(view).with.offset(-20.f * g_rateWidth);
     }];
 }
 

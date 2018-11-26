@@ -131,6 +131,7 @@
         make.left.equalTo(signatureLabel);
         make.top.equalTo(signatureIcon.mas_bottom).with.offset(13.f * g_rateWidth);
         make.width.mas_equalTo(226.f * g_rateWidth);
+        make.bottom.equalTo(self).with.offset(-16.f * g_rateWidth);
     }];
 }
 
