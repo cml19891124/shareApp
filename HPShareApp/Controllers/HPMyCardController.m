@@ -87,6 +87,15 @@
         make.top.equalTo(scrollView).with.offset(15.f);
     }];
     
+    UIButton *backBtn = [[UIButton alloc] init];
+    [backBtn addTarget:self action:@selector(onClickBackBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:backBtn];
+    [backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(scrollView);
+        make.top.equalTo(scrollView);
+        make.size.mas_equalTo(CGSizeMake(44.f, 44.f));
+    }];
+    
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [titleLabel setTextColor:UIColor.whiteColor];
@@ -108,7 +117,7 @@
     [cardPanel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(backIcon.mas_bottom).with.offset(33.f * g_rateWidth);
         make.centerX.equalTo(scrollView);
-        make.size.mas_equalTo(CGSizeMake(335.f, 215.f));
+        make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 215.f * g_rateWidth));
     }];
     [self setupCardPanel:cardPanel];
     
@@ -122,7 +131,7 @@
     [infoRegion mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(scrollView);
         make.top.equalTo(cardPanel.mas_bottom).with.offset(15.f * g_rateWidth);
-        make.height.mas_equalTo(225.f);
+        make.height.mas_equalTo(225.f * g_rateWidth);
     }];
     [self setupInfoRegion:infoRegion];
     
@@ -192,7 +201,7 @@
     [line mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(portraitView.mas_bottom).with.offset(18.f * g_rateWidth);
         make.centerX.equalTo(view);
-        make.size.mas_equalTo(CGSizeMake(301.f, 1.f));
+        make.size.mas_equalTo(CGSizeMake(301.f * g_rateWidth, 1.f));
     }];
     
     UIImageView *signatureIcon = [[UIImageView alloc] init];
@@ -424,6 +433,13 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return _dataArray.count;
+}
+
+
+#pragma mark - OnClick
+
+- (void)onClickBackBtn:(UIButton *)btn {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end
