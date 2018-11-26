@@ -152,7 +152,6 @@
     [todayShareRegion mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(menuPanel.mas_bottom);
         make.left.and.width.equalTo(scrollView);
-        make.height.mas_equalTo(305.f);
     }];
     [self setupTodayShareRegion:todayShareRegion];
     
@@ -161,7 +160,6 @@
     [nearbyShareRegion mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(todayShareRegion.mas_bottom);
         make.left.and.width.equalTo(scrollView);
-        make.height.mas_equalTo(181.f);
     }];
     [self setupNearbyShareRegion:nearbyShareRegion];
     
@@ -170,7 +168,6 @@
     [shareRecommendRegion mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(nearbyShareRegion.mas_bottom);
         make.left.and.width.equalTo(scrollView);
-        make.height.mas_equalTo(247.f);
     }];
     [self setupShareRecommendRegion:shareRecommendRegion];
     
@@ -179,8 +176,7 @@
     [shareProcessRegion mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(shareRecommendRegion.mas_bottom);
         make.left.and.width.equalTo(scrollView);
-        make.height.mas_equalTo(204.f);
-        make.bottom.equalTo(scrollView);
+        make.bottom.equalTo(scrollView).with.offset(-25.f * g_rateWidth);
     }];
     [self setupShareProcessRegion:shareProcessRegion];
 }
@@ -324,6 +320,7 @@
         make.top.equalTo(shareCard_1.mas_bottom).with.offset(15.f * g_rateWidth);
         make.centerX.equalTo(view);
         make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 115.f * g_rateWidth));
+        make.bottom.equalTo(view).with.offset(-5.f * g_rateWidth);
     }];
 }
 
@@ -338,6 +335,7 @@
         make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f);
         make.centerX.equalTo(view);
         make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 121.f * g_rateWidth));
+        make.bottom.equalTo(view).with.offset(-5.f * g_rateWidth);
     }];
 }
 
@@ -353,6 +351,7 @@
         make.left.and.right.equalTo(view);
         make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f);
         make.height.mas_equalTo(187.f * g_rateWidth);
+        make.bottom.equalTo(view).with.offset(-5.f * g_rateWidth);
     }];
 }
 
@@ -410,6 +409,7 @@
         make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f);
         make.centerX.equalTo(view);
         make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 124.f * g_rateWidth));
+        make.bottom.equalTo(view);
     }];
     
     UIImageView *processIcon = [[UIImageView alloc] init];
