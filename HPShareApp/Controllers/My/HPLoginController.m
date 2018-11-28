@@ -1,0 +1,260 @@
+//
+//  HPLoginController.m
+//  HPShareApp
+//
+//  Created by HP on 2018/11/27.
+//  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
+//
+
+#import "HPLoginController.h"
+#import "HPLoginByPasswordController.h"
+#import "HPRegisterController.h"
+
+@interface HPLoginController ()
+
+@end
+
+@implementation HPLoginController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    [self setupUI];
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+- (void)setupUI {
+    [self.view setBackgroundColor:UIColor.whiteColor];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"登录"];
+    
+    UIButton *registerBtn = [[UIButton alloc] init];
+    [registerBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];
+    [registerBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];\
+    [registerBtn setTitle:@"注册" forState:UIControlStateNormal];
+    [registerBtn addTarget:self action:@selector(onClickRegisterBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [navigationView addSubview:registerBtn];
+    [registerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(navigationView).with.offset(- 20.f * g_rateWidth);
+        make.centerY.equalTo(navigationView);
+    }];
+    
+    UILabel *titleLabel = [[UILabel alloc] init];
+    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:23.f]];
+    [titleLabel setTextColor:COLOR_BLACK_444444];
+    [titleLabel setText:@"手机快捷登录"];
+    [self.view addSubview:titleLabel];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(navigationView.mas_bottom).with.offset(55.f * g_rateWidth);
+        make.left.equalTo(self.view).with.offset(25.f * g_rateWidth);
+        make.height.mas_equalTo(titleLabel.font.pointSize);
+    }];
+    
+    UILabel *descLabel = [[UILabel alloc] init];
+    [descLabel setFont:[UIFont fontWithName:FONT_REGULAR size:12.f]];
+    [descLabel setTextColor:COLOR_BLACK_666666];
+    [descLabel setText:@"未注册的手机号将自动注册账号"];
+    [self.view addSubview:descLabel];
+    [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f * g_rateWidth);
+        make.left.equalTo(titleLabel);
+        make.height.mas_equalTo(descLabel.font.pointSize);
+    }];
+    
+    UITextField *phoneNumTextField = [[UITextField alloc] init];
+    [phoneNumTextField setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];
+    [phoneNumTextField setTextColor:COLOR_BLACK_333333];
+    [phoneNumTextField setTintColor:COLOR_RED_FF3C5E];
+    [phoneNumTextField setKeyboardType:UIKeyboardTypeNumberPad];
+    NSMutableAttributedString *phoneNumPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"请输入手机号"];
+    [phoneNumPlaceholder addAttribute:NSForegroundColorAttributeName
+                        value:COLOR_GRAY_CCCCCC
+                        range:NSMakeRange(0, 5)];
+    [phoneNumPlaceholder addAttribute:NSFontAttributeName
+                        value:[UIFont fontWithName:FONT_MEDIUM size:16.f]
+                        range:NSMakeRange(0, 5)];
+    [phoneNumTextField setAttributedPlaceholder:phoneNumPlaceholder];
+    [self.view addSubview:phoneNumTextField];
+    [phoneNumTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(titleLabel);
+        make.top.equalTo(descLabel.mas_bottom).with.offset(57.f * g_rateWidth);
+    }];
+    
+    UIView *phoneNumLine = [[UIView alloc] init];
+    [phoneNumLine setBackgroundColor:COLOR_GRAY_EEEEEE];
+    [self.view addSubview:phoneNumLine];
+    [phoneNumLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(phoneNumTextField.mas_bottom).with.offset(5.f);
+        make.centerX.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 1.f));
+    }];
+    
+    UIButton *codeBtn = [[UIButton alloc] init];
+    [codeBtn.titleLabel setFont:[UIFont fontWithName:FONT_REGULAR size:15.f]];
+    [codeBtn setTitleColor:COLOR_BLACK_666666 forState:UIControlStateNormal];
+    [codeBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
+    [codeBtn addTarget:self action:@selector(onClickCodeBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:codeBtn];
+    [codeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(phoneNumLine);
+        make.centerY.equalTo(phoneNumTextField);
+        make.width.mas_equalTo(80.f);
+    }];
+    
+    [phoneNumTextField mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(codeBtn.mas_left).with.offset(-5.f);
+    }];
+    
+    UITextField *codeTextField = [[UITextField alloc] init];
+    [codeTextField setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];
+    [codeTextField setTextColor:COLOR_BLACK_333333];
+    [codeTextField setTintColor:COLOR_RED_FF3C5E];
+    [codeTextField setKeyboardType:UIKeyboardTypeNumberPad];
+    NSMutableAttributedString *codePlaceholder = [[NSMutableAttributedString alloc] initWithString:@"请输入验证码"];
+    [codePlaceholder addAttribute:NSForegroundColorAttributeName
+                                value:COLOR_GRAY_CCCCCC
+                                range:NSMakeRange(0, 5)];
+    [codePlaceholder addAttribute:NSFontAttributeName
+                                value:[UIFont fontWithName:FONT_MEDIUM size:16.f]
+                                range:NSMakeRange(0, 5)];
+    [codeTextField setAttributedPlaceholder:codePlaceholder];
+    [self.view addSubview:codeTextField];
+    [codeTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(phoneNumTextField);
+        make.top.equalTo(phoneNumLine.mas_bottom).with.offset(35.f * g_rateWidth);
+        make.right.equalTo(phoneNumTextField);
+    }];
+    
+    UIView *codeLine = [[UIView alloc] init];
+    [codeLine setBackgroundColor:COLOR_GRAY_EEEEEE];
+    [self.view addSubview:codeLine];
+    [codeLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(codeTextField.mas_bottom).with.offset(5.f);;
+        make.centerX.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 1.f));
+    }];
+    
+    UIButton *loginBtn = [[UIButton alloc] init];
+    [loginBtn.layer setCornerRadius:24.f * g_rateWidth];
+    [loginBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
+    [loginBtn setTitleColor:COLOR_PINK_FFEFF2 forState:UIControlStateNormal];
+    [loginBtn setTitle:@"登录" forState:UIControlStateNormal];
+    [loginBtn setBackgroundColor:COLOR_RED_FF3C5E];
+    [loginBtn addTarget:self action:@selector(onClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:loginBtn];
+    [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(codeLine.mas_bottom).with.offset(25.f * g_rateWidth);
+        make.centerX.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 47.f * g_rateWidth));
+    }];
+    
+    UIButton *switchBtn = [[UIButton alloc] init];
+    [switchBtn.titleLabel setFont:[UIFont fontWithName:FONT_REGULAR size:13.f]];
+    [switchBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+    [switchBtn setTitle:@"使用账号密码登录" forState:UIControlStateNormal];
+    [switchBtn addTarget:self action:@selector(onClickSwitchBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:switchBtn];
+    [switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(loginBtn.mas_bottom).with.offset(20.f * g_rateWidth);
+        make.centerX.equalTo(self.view);
+    }];
+    
+    UILabel *thirdPartLabel = [[UILabel alloc] init];
+    [thirdPartLabel setFont:[UIFont fontWithName:FONT_REGULAR size:13.f]];
+    [thirdPartLabel setTextColor:COLOR_GRAY_999999];
+    [thirdPartLabel setText:@"使用第三方账号登录"];
+    [self.view addSubview:thirdPartLabel];
+    [thirdPartLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.view).with.offset(- g_bottomSafeAreaHeight - 42.f * g_rateWidth);
+        make.centerX.equalTo(self.view);
+        make.height.mas_equalTo(thirdPartLabel.font.pointSize);
+    }];
+    
+    UIView *thirdPartView = [[UIView alloc] init];
+    [self.view addSubview:thirdPartView];
+    [thirdPartView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(thirdPartLabel.mas_top).with.offset(-20.f * g_rateWidth);
+        make.centerX.equalTo(self.view);
+    }];
+    [self setupThirdPartView:thirdPartView];
+}
+
+- (void)setupThirdPartView:(UIView *)view {
+    UIButton *qqBtn = [[UIButton alloc] init];
+    [qqBtn setTag:0];
+    [qqBtn setImage:[UIImage imageNamed:@"my_qq_icon"] forState:UIControlStateNormal];
+    [qqBtn addTarget:self action:@selector(onClickThirdPartBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:qqBtn];
+    [qqBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.top.and.bottom.equalTo(view);
+        make.size.mas_equalTo(CGSizeMake(36.f, 36.f));
+    }];
+    
+    UIButton *wechatBtn = [[UIButton alloc] init];
+    [wechatBtn setTag:1];
+    [wechatBtn setImage:[UIImage imageNamed:@"my_wechat_icon"] forState:UIControlStateNormal];
+    [wechatBtn addTarget:self action:@selector(onClickThirdPartBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:wechatBtn];
+    [wechatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(qqBtn.mas_right).with.offset(40.f * g_rateWidth);
+        make.top.and.bottom.equalTo(view);
+        make.size.mas_equalTo(CGSizeMake(36.f, 36.f));
+    }];
+    
+    UIButton *sinaBtn = [[UIButton alloc] init];
+    [sinaBtn setTag:2];
+    [sinaBtn setImage:[UIImage imageNamed:@"my_sina_icon"] forState:UIControlStateNormal];
+    [sinaBtn addTarget:self action:@selector(onClickThirdPartBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:sinaBtn];
+    [sinaBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(wechatBtn.mas_right).with.offset(40.f * g_rateWidth);
+        make.top.and.bottom.equalTo(view);
+        make.size.mas_equalTo(CGSizeMake(36.f, 36.f));
+        make.right.equalTo(view);
+    }];
+}
+
+#pragma mark - OnClick
+
+- (void)onClickLoginBtn:(UIButton *)btn {
+    NSLog(@"nClickLoginBtn");
+}
+
+- (void)onClickRegisterBtn:(UIButton *)btn {
+    HPRegisterController *vc = [[HPRegisterController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)onClickCodeBtn:(UIButton *)btn {
+    NSLog(@"onClickCodeBtn");
+}
+
+- (void)onClickSwitchBtn:(UIButton *)btn {
+    HPLoginByPasswordController *vc = [[HPLoginByPasswordController alloc] init];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
+    [navigationController setNavigationBarHidden:YES];
+    [self presentViewController:navigationController animated:YES completion:nil];
+}
+
+- (void)onClickThirdPartBtn:(UIButton *)btn {
+    if (btn.tag == 0) {
+        NSLog(@"onClickThirdPartBtn: QQ");
+    }
+    else if (btn.tag == 1) {
+        NSLog(@"onClickThirdPartBtn: WeChat");
+    }
+    else if (btn.tag == 2) {
+        NSLog(@"onClickThirdPartBtn: Sina");
+    }
+}
+
+@end

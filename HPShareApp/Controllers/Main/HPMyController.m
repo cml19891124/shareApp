@@ -7,8 +7,27 @@
 //
 
 #import "HPMyController.h"
+#import "HPAlignCenterButton.h"
+#import "HPProgressHUD.h"
+#import "HPLoginController.h"
 
 @interface HPMyController ()
+
+@property (nonatomic, weak) UIButton *portraitBtn;
+
+@property (nonatomic, weak) UIButton *loginBtn;
+
+@property (nonatomic, weak) UILabel *descLabel;
+
+@property (nonatomic, weak) UIButton *certificateBtn;
+
+@property (nonatomic, weak) UIView *certificationView;
+
+@property (nonatomic, weak) UILabel *keepNumLabel;
+
+@property (nonatomic, weak) UILabel *followNumLabel;
+
+@property (nonatomic, weak) UILabel *historyNumLabel;
 
 @end
 
@@ -19,6 +38,37 @@
     // Do any additional setup after loading the view.
     
     [self setupUI];
+    
+//    g_isLogin = YES;
+//    g_isCertified = YES;
+    
+    if (g_isLogin) {
+        [_portraitBtn setImage:[UIImage imageNamed:@"personal_center_login_head"] forState:UIControlStateSelected];
+        [_portraitBtn setSelected:YES];
+        [_loginBtn setTitle:@"早上好，董晓丽" forState:UIControlStateDisabled];
+        [_loginBtn setEnabled:NO];
+        [_keepNumLabel setText:@"1,390"];
+        [_followNumLabel setText:@"364"];
+        [_historyNumLabel setText:@"1,280"];
+        [_descLabel setHidden:YES];
+        
+        if (g_isCertified) {
+            [_certificationView setHidden:NO];
+        }
+        else {
+            [_certificateBtn setHidden:NO];
+        }
+    }
+    else {
+        [_certificationView setHidden:YES];
+        [_certificateBtn setHidden:YES];
+        [_descLabel setHidden:NO];
+        [_loginBtn setEnabled:YES];
+        [_portraitBtn setSelected:NO];
+        [_keepNumLabel setText:@"--"];
+        [_followNumLabel setText:@"--"];
+        [_historyNumLabel setText:@"--"];
+    }
 }
 
 /*
@@ -59,7 +109,9 @@
     UIButton *portraitBtn = [[UIButton alloc] init];
     [portraitBtn.layer setCornerRadius:36.f * g_rateWidth];
     [portraitBtn setImage:[UIImage imageNamed:@"personal_center_not_login_head"] forState:UIControlStateNormal];
+    [portraitBtn addTarget:self action:@selector(onClickConfigBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:portraitBtn];
+    _portraitBtn = portraitBtn;
     [portraitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).with.offset(g_statusBarHeight + 48.f * g_rateWidth);
         make.centerX.equalTo(self.view);
@@ -70,9 +122,11 @@
     [loginBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
     [loginBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [loginBtn setTitle:@"登录/注册" forState:UIControlStateNormal];
+    [loginBtn addTarget:self action:@selector(onClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:loginBtn];
+    _loginBtn = loginBtn;
     [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(portraitBtn.mas_bottom).with.offset(15.f);
+        make.top.equalTo(portraitBtn.mas_bottom).with.offset(5.f);
         make.centerX.equalTo(portraitBtn);
     }];
     
@@ -81,16 +135,375 @@
     [descLabel setTextColor:COLOR_PINK_FFC5C4];
     [descLabel setText:@"登录即可免费发布共享信息"];
     [self.view addSubview:descLabel];
+    _descLabel = descLabel;
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(loginBtn.mas_bottom).with.offset(11.f * g_rateWidth);
+        make.top.equalTo(loginBtn.mas_bottom).with.offset(5.f);
         make.centerX.equalTo(loginBtn);
+        make.height.mas_equalTo(descLabel.font.pointSize);
     }];
+    
+    UIButton *certificateBtn = [[UIButton alloc] init];
+    [certificateBtn.titleLabel setFont:[UIFont fontWithName:FONT_REGULAR size:12.f]];
+    [certificateBtn setTitleColor:COLOR_PINK_FFC5C4 forState:UIControlStateNormal];
+    [certificateBtn setTitle:@"完成实名认证，提高共享成功率" forState:UIControlStateNormal];
+    [certificateBtn setImage:[UIImage imageNamed:@"personal_center_towards_the_right"] forState:UIControlStateNormal];
+    [certificateBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, 176.f, 0.f, -176.f)];
+    [certificateBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -5.f, 0.f, 5.f)];
+    [certificateBtn addTarget:self action:@selector(onClickCertificateBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:certificateBtn];
+    _certificateBtn = certificateBtn;
+    [certificateBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.and.centerY.equalTo(descLabel);
+    }];
+    [certificateBtn setHidden:YES];
+    
+    UIView *certificationView = [self setupCertificationView];
+    [self.view addSubview:certificationView];
+    _certificationView = certificationView;
+    [certificationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.and.centerY.equalTo(descLabel);
+    }];
+    [certificationView setHidden:YES];
+    
+    UIView *collectionPanel = [[UIView alloc] init];
+    [collectionPanel.layer setCornerRadius:10.f];
+    [collectionPanel.layer setShadowColor:COLOR_GRAY_E5E5E5.CGColor];
+    [collectionPanel.layer setShadowOffset:CGSizeMake(0.f, 2.f)];
+    [collectionPanel.layer setShadowRadius:15.f];
+    [collectionPanel.layer setShadowOpacity:0.45f];
+    [collectionPanel setBackgroundColor:UIColor.whiteColor];
+    [self.view addSubview:collectionPanel];
+    [collectionPanel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(descLabel.mas_bottom).with.offset(20.f * g_rateWidth);
+        make.centerX.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 90.f * g_rateWidth));
+    }];
+    [self setupCollectioinPanel:collectionPanel];
+    
+    UIView *functionPanel = [[UIView alloc] init];
+    [functionPanel.layer setCornerRadius:10.f];
+    [functionPanel.layer setShadowColor:COLOR_GRAY_E5E5E5.CGColor];
+    [functionPanel.layer setShadowOffset:CGSizeMake(0.f, 2.f)];
+    [functionPanel.layer setShadowRadius:15.f];
+    [functionPanel.layer setShadowOpacity:0.45f];
+    [functionPanel setBackgroundColor:UIColor.whiteColor];
+    [self.view addSubview:functionPanel];
+    [functionPanel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(collectionPanel.mas_bottom).with.offset(20.f * g_rateWidth);
+        make.centerX.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 260.f * g_rateWidth));
+    }];
+    [self setupFunctionPanel:functionPanel];
+}
+
+- (UIView *)setupCertificationView {
+    UIView *view = [[UIView alloc] init];
+    
+    UIView *verifiedView = [[UIView alloc] init];
+    [verifiedView.layer setCornerRadius:9.f];
+    [verifiedView setBackgroundColor:[COLOR_BLACK_333333 colorWithAlphaComponent:0.25f]];
+    [view addSubview:verifiedView];
+    [verifiedView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.top.and.bottom.equalTo(view);
+        make.size.mas_equalTo(CGSizeMake(95.f, 17.f));
+    }];
+    
+    UIImageView *verifiedIcon = [[UIImageView alloc] init];
+    [verifiedIcon setImage:[UIImage imageNamed:@"personal_center_real_name_authentication"]];
+    [verifiedView addSubview:verifiedIcon];
+    [verifiedIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.and.bottom.equalTo(verifiedView);
+    }];
+    
+    UILabel *verifiedLabel = [[UILabel alloc] init];
+    [verifiedLabel setFont:[UIFont fontWithName:FONT_REGULAR size:9.f]];
+    [verifiedLabel setTextColor:UIColor.whiteColor];
+    [verifiedLabel setText:@"已通过实名认证"];
+    [verifiedView addSubview:verifiedLabel];
+    [verifiedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(verifiedIcon.mas_right).with.offset(3.f);
+        make.centerY.equalTo(verifiedView);
+    }];
+    
+    UIView *zhimaView = [[UIView alloc] init];
+    [zhimaView.layer setCornerRadius:9.f];
+    [zhimaView setBackgroundColor:[COLOR_BLACK_333333 colorWithAlphaComponent:0.25f]];
+    [view addSubview:zhimaView];
+    [zhimaView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.and.top.and.bottom.equalTo(view);
+        make.left.equalTo(verifiedView.mas_right).with.offset(12.f);
+        make.size.mas_equalTo(CGSizeMake(95.f, 17.f));
+    }];
+    
+    UIImageView *zhimaIcon = [[UIImageView alloc] init];
+    [zhimaIcon setImage:[UIImage imageNamed:@"personal_center_sesame_credit"]];
+    [zhimaView addSubview:zhimaIcon];
+    [zhimaIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.and.bottom.equalTo(zhimaView);
+    }];
+    
+    UILabel *zhimaLabel = [[UILabel alloc] init];
+    [zhimaLabel setFont:[UIFont fontWithName:FONT_REGULAR size:9.f]];
+    [zhimaLabel setTextColor:UIColor.whiteColor];
+    [zhimaLabel setText:@"芝麻信用已授权"];
+    [zhimaView addSubview:zhimaLabel];
+    [zhimaLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(zhimaIcon.mas_right).with.offset(3.f);
+        make.centerY.equalTo(zhimaView);
+    }];
+    
+    return view;
+}
+
+- (void)setupCollectioinPanel:(UIView *)view {
+    UIView *leftLine = [[UIView alloc] init];
+    [leftLine setBackgroundColor:COLOR_GRAY_E5E5E5];
+    [view addSubview:leftLine];
+    [leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(view).with.offset(111.f * g_rateWidth);
+        make.centerY.equalTo(view);
+        make.size.mas_equalTo(CGSizeMake(1.f, 21.f * g_rateWidth));
+    }];
+    
+    UIView *rightLine = [[UIView alloc] init];
+    [rightLine setBackgroundColor:COLOR_GRAY_E5E5E5];
+    [view addSubview:rightLine];
+    [rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(view).with.offset(-111.f * g_rateWidth);
+        make.centerY.equalTo(view);
+        make.size.mas_equalTo(CGSizeMake(1.f, 21.f * g_rateWidth));
+    }];
+    
+    UIControl *leftView = [[UIControl alloc] init];
+    [leftView addTarget:self action:@selector(onClickCollectionCtrl:) forControlEvents:UIControlEventTouchUpInside];
+    [leftView setTag:0];
+    [view addSubview:leftView];
+    [leftView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(view);
+        make.left.and.equalTo(view);
+        make.right.equalTo(leftLine.mas_left);
+    }];
+    
+    UIControl *rightView = [[UIControl alloc] init];
+    [rightView addTarget:self action:@selector(onClickCollectionCtrl:) forControlEvents:UIControlEventTouchUpInside];
+    [rightView setTag:2];
+    [view addSubview:rightView];
+    [rightView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(view);
+        make.right.and.equalTo(view);
+        make.left.equalTo(rightLine.mas_right);
+    }];
+    
+    UIControl *centerView = [[UIControl alloc] init];
+    [centerView addTarget:self action:@selector(onClickCollectionCtrl:) forControlEvents:UIControlEventTouchUpInside];
+    [centerView setTag:1];
+    [view addSubview:centerView];
+    [centerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(view);
+        make.left.equalTo(leftLine.mas_right);
+        make.right.equalTo(rightLine.mas_left);
+    }];
+    
+    UILabel *keepNumLabel = [[UILabel alloc] init];
+    [keepNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:20.f]];
+    [keepNumLabel setTextColor:COLOR_BLACK_333333];
+    [leftView addSubview:keepNumLabel];
+    _keepNumLabel = keepNumLabel;
+    [keepNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(leftView);
+        make.centerX.equalTo(leftView);
+        make.height.mas_equalTo(keepNumLabel.font.pointSize);
+    }];
+    
+    UILabel *keepLabel = [[UILabel alloc] init];
+    [keepLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:13.f]];
+    [keepLabel setTextColor:COLOR_BLACK_666666];
+    [keepLabel setText:@"收藏"];
+    [leftView addSubview:keepLabel];
+    [keepLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(keepNumLabel.mas_bottom).with.offset(8.f);
+        make.centerX.equalTo(keepNumLabel);
+        make.height.mas_equalTo(keepLabel.font.pointSize);
+        make.bottom.equalTo(leftView);
+    }];
+    
+    UILabel *followNumLabel = [[UILabel alloc] init];
+    [followNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:20.f]];
+    [followNumLabel setTextColor:COLOR_BLACK_333333];
+    [centerView addSubview:followNumLabel];
+    _followNumLabel = followNumLabel;
+    [followNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(centerView);
+        make.centerX.equalTo(centerView);
+        make.height.mas_equalTo(followNumLabel.font.pointSize);
+    }];
+
+    UILabel *followLabel = [[UILabel alloc] init];
+    [followLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:13.f]];
+    [followLabel setTextColor:COLOR_BLACK_666666];
+    [followLabel setText:@"关注"];
+    [centerView addSubview:followLabel];
+    [followLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(followNumLabel.mas_bottom).with.offset(8.f);
+        make.centerX.equalTo(followNumLabel);
+        make.height.mas_equalTo(followLabel.font.pointSize);
+        make.bottom.equalTo(centerView);
+    }];
+
+    UILabel *historyNumLabel = [[UILabel alloc] init];
+    [historyNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:20.f]];
+    [historyNumLabel setTextColor:COLOR_BLACK_333333];
+    [rightView addSubview:historyNumLabel];
+    _historyNumLabel = historyNumLabel;
+    [historyNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(rightView);
+        make.centerX.equalTo(rightView);
+        make.height.mas_equalTo(historyNumLabel.font.pointSize);
+    }];
+
+    UILabel *historyLabel = [[UILabel alloc] init];
+    [historyLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:13.f]];
+    [historyLabel setTextColor:COLOR_BLACK_666666];
+    [historyLabel setText:@"浏览历史"];
+    [rightView addSubview:historyLabel];
+    [historyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(historyNumLabel.mas_bottom).with.offset(8.f);
+        make.centerX.equalTo(rightView);
+        make.height.mas_equalTo(historyLabel.font.pointSize);
+        make.bottom.equalTo(rightView);
+    }];
+}
+
+- (void)setupFunctionPanel:(UIView *)view {
+    UIView *centerView = [[UIView alloc] init];
+    [view addSubview:centerView];
+    [centerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(view);
+        make.centerX.equalTo(view);
+    }];
+    
+    CGFloat xSpace = 61.f * g_rateWidth;
+    CGFloat ySpace = 36.f * g_rateWidth;
+    
+    UIView *shareManagementItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_sharing_management"] title:@"共享管理" desc:@"0条"];
+    [centerView addSubview:shareManagementItem];
+    [shareManagementItem mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.top.equalTo(centerView);
+    }];
+    
+    UIView *myCardItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_business_card"] title:@"我的名片" desc:@"交流更高效"];
+    [centerView addSubview:myCardItem];
+    [myCardItem mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(centerView);
+        make.left.equalTo(shareManagementItem.mas_right).with.offset(xSpace);
+    }];
+    
+    UIView *invitationPriceItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_courtesy"] title:@"邀请有礼" desc:@"限时免费"];
+    [centerView addSubview:invitationPriceItem];
+    [invitationPriceItem mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(centerView);
+        make.left.equalTo(myCardItem.mas_right).with.offset(xSpace);
+        make.right.equalTo(centerView);
+    }];
+    
+    UIView *feedbackItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_information"] title:@"意见反馈" desc:@"感谢有你"];
+    [centerView addSubview:feedbackItem];
+    [feedbackItem mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(centerView);
+        make.top.equalTo(shareManagementItem.mas_bottom).with.offset(ySpace);
+        make.bottom.equalTo(centerView);
+    }];
+    
+    UIView *customerServiceItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_customer_service"] title:@"在线客服" desc:@"24小时贴心服务"];
+    [centerView addSubview:customerServiceItem];
+    [customerServiceItem mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(myCardItem);
+        make.top.equalTo(feedbackItem);
+        make.bottom.equalTo(centerView);
+    }];
+    
+    UIView *aboutUsItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_about_us"] title:@"关于我们" desc:@"24小时服务"];
+    [centerView addSubview:aboutUsItem];
+    [aboutUsItem mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(invitationPriceItem);
+        make.top.equalTo(feedbackItem);
+        make.bottom.equalTo(centerView);
+    }];
+}
+
+- (UIView *)setupFunctionItemWithIcon:(UIImage *)icon title:(NSString *)title desc:(NSString *)desc {
+    UIView *view = [[UIView alloc] init];
+    
+    HPAlignCenterButton *btn = [[HPAlignCenterButton alloc] initWithImage:icon];
+    [btn setTextFont:[UIFont fontWithName:FONT_MEDIUM size:13.f]];
+    [btn setTextColor:COLOR_BLACK_333333];
+    [btn setText:title];
+    [btn addTarget:self action:@selector(onClickFunctionBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:btn];
+    [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.width.and.top.equalTo(view);
+        make.size.mas_equalTo(CGSizeMake(55.f, 55.f));
+    }];
+    
+    UILabel *descLabel = [[UILabel alloc] init];
+    [descLabel setFont:[UIFont fontWithName:FONT_REGULAR size:11.f]];
+    [descLabel setTextColor:COLOR_GRAY_BBBBBB];
+    [descLabel setText:desc];
+    [view addSubview:descLabel];
+    [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(view);
+        make.top.equalTo(btn.mas_bottom).with.offset(6.f * g_rateWidth);
+        make.height.mas_equalTo(descLabel.font.pointSize);
+        make.bottom.equalTo(view);
+    }];
+    
+    return view;
 }
 
 #pragma mark - OnClick
 
 - (void)onClickConfigBtn:(UIButton *)btn {
+    if (!g_isLogin) {
+        [HPProgressHUD alertMessage:@"用户未登录"];
+        return;
+    }
     
+    NSLog(@"onClickConfigBtn");
+}
+
+- (void)onClickLoginBtn:(UIButton *)btn {
+    HPLoginController *vc = [[HPLoginController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)onClickCertificateBtn:(UIButton *)btn {
+    NSLog(@"onClickCertificateBtn");
+}
+
+- (void)onClickCollectionCtrl:(UIControl *)ctrl {
+    if (!g_isLogin) {
+        [HPProgressHUD alertMessage:@"用户未登录"];
+        return;
+    }
+    
+    if (ctrl.tag == 0) {
+        NSLog(@"onClick 收藏");
+    }
+    else if (ctrl.tag == 1) {
+        NSLog(@"onClick 关注");
+    }
+    else if (ctrl.tag == 2) {
+        NSLog(@"onClick 浏览历史");
+    }
+}
+
+- (void)onClickFunctionBtn:(HPAlignCenterButton *)btn {
+    if (!g_isLogin) {
+        [HPProgressHUD alertMessage:@"用户未登录"];
+        return;
+    }
+    
+    NSLog(@"function btn: %@", btn.text);
 }
 
 @end

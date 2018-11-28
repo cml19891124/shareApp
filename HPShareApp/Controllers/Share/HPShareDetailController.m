@@ -150,7 +150,7 @@
     _pageControl = pageControl;
     [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(scrollView);
-        make.top.equalTo(scrollView).with.offset(172.f * g_rateWidth);
+        make.bottom.equalTo(banner);
     }];
     
     UIView *titleRegion = [[UIView alloc] init];

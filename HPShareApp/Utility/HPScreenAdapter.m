@@ -50,4 +50,13 @@
     }
 }
 
++ (CGFloat)bottomSafeAreaHeight {
+    if (IPHONE_HAS_NOTCH) {
+        return 34.f;
+    }
+    else {
+        return 0.f;
+    }
+}
+
 @end

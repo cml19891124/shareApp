@@ -37,6 +37,7 @@
 #define COLOR_BLUE_74A1BA [UIColor colorWithHexString:@"#74A1BA"]
 
 #define COLOR_PINK_FF1F5E [UIColor colorWithHexString:@"#ff1f5e"]
+#define COLOR_PINK_FFEFF2 [UIColor colorWithHexString:@"#FFEFF2"]
 #define COLOR_PINK_FFC5C4 [UIColor colorWithHexString:@"#FFC5C4"]
 
 #define COLOR_GREEN_EFF3F6 [UIColor colorWithHexString:@"#EFF3F6"]
@@ -56,6 +57,7 @@
 
 #define COLOR_GRAY_DBDBDB [UIColor colorWithHexString:@"#dbdbdb"]
 #define COLOR_GRAY_E6E5E5 [UIColor colorWithHexString:@"#E6E5E5"]
+#define COLOR_GRAY_E5E5E5 [UIColor colorWithHexString:@"#E5E5E5"]
 #define COLOR_GRAY_EBEBEB [UIColor colorWithHexString:@"#EBEBEB"]
 #define COLOR_GRAY_F0F0F0 [UIColor colorWithHexString:@"#F0F0F0"]
 #define COLOR_GRAY_F6F6F6 [UIColor colorWithHexString:@"#F6F6F6"]
@@ -77,6 +79,7 @@
 #define COLOR_GRAY_CDCDCD [UIColor colorWithHexString:@"#CDCDCD"]
 #define COLOR_GRAY_A5B9CE [UIColor colorWithHexString:@"#A5B9CE"]
 #define COLOR_GRAY_DAA6A6 [UIColor colorWithHexString:@"#DAA6A6"]
+#define COLOR_GRAY_BBBBBB [UIColor colorWithHexString:@"#BBBBBB"]
 
 /**
  字体宏定义

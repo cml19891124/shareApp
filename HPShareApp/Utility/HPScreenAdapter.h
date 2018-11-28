@@ -38,6 +38,13 @@ NS_ASSUME_NONNULL_BEGIN
 + (CGFloat)tabBarHeight;
 
 /**
+ 底部安全区域的高度。
+ 
+ @return 安全区域高度
+ */
++ (CGFloat)bottomSafeAreaHeight;
+
+/**
  顶部状态栏的高度。
 
  @return 状态栏高度
