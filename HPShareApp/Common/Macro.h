@@ -21,6 +21,7 @@
 #import "UIColor+Hex.h"
 #define COLOR_WHITE_F9FCFF [UIColor colorWithHexString:@"#F9FCFF"]
 #define COLOR_WHITE_FAF9FE [UIColor colorWithHexString:@"#FAF9FE"]
+#define COLOR_WHITE_FCFDFF [UIColor colorWithHexString:@"#FCFDFF"]
 
 #define COLOR_RED_FF3C5E [UIColor colorWithHexString:@"#ff3c5e"]
 #define COLOR_RED_FF3455 [UIColor colorWithHexString:@"#FF3455"]
@@ -80,6 +81,7 @@
 #define COLOR_GRAY_A5B9CE [UIColor colorWithHexString:@"#A5B9CE"]
 #define COLOR_GRAY_DAA6A6 [UIColor colorWithHexString:@"#DAA6A6"]
 #define COLOR_GRAY_BBBBBB [UIColor colorWithHexString:@"#BBBBBB"]
+#define COLOR_GRAY_BCC1CF [UIColor colorWithHexString:@"#BCC1CF"]
 
 /**
  字体宏定义

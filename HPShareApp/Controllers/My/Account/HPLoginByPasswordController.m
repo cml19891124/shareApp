@@ -8,6 +8,7 @@
 
 #import "HPLoginByPasswordController.h"
 #import "HPRegisterController.h"
+#import "HPForgetPasswordController.h"
 
 @interface HPLoginByPasswordController ()
 
@@ -96,20 +97,8 @@
         make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 1.f));
     }];
     
-    UIButton *codeBtn = [[UIButton alloc] init];
-    [codeBtn.titleLabel setFont:[UIFont fontWithName:FONT_REGULAR size:15.f]];
-    [codeBtn setTitleColor:COLOR_BLACK_666666 forState:UIControlStateNormal];
-    [codeBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
-    [codeBtn addTarget:self action:@selector(onClickCodeBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:codeBtn];
-    [codeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(phoneNumLine);
-        make.centerY.equalTo(phoneNumTextField);
-        make.width.mas_equalTo(80.f);
-    }];
-    
     [phoneNumTextField mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(codeBtn.mas_left).with.offset(-5.f);
+        make.right.equalTo(phoneNumLine);
     }];
     
     UITextField *passwordTextField = [[UITextField alloc] init];
@@ -260,16 +249,13 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)onClickCodeBtn:(UIButton *)btn {
-    NSLog(@"onClickCodeBtn");
-}
-
 - (void)onClickSwitchBtn:(UIButton *)btn {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)onClickForgetBtn:(UIButton *)btn {
-    NSLog(@"onClickForgetBtn");
+    HPForgetPasswordController *vc = [[HPForgetPasswordController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)onClickThirdPartBtn:(UIButton *)btn {

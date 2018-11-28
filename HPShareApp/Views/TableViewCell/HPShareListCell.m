@@ -7,10 +7,21 @@
 //
 
 #import "HPShareListCell.h"
+#import "HPImageUtil.h"
 
 @interface HPShareListCell ()
 
+@property (nonatomic, weak) UIView *bgView;
+
 @property (nonatomic, weak) UILabel *titleLabel;
+
+@property (nonatomic, weak) UILabel *tradeDescLabel;
+
+@property (nonatomic, weak) UILabel *rentTimeDescLabel;
+
+@property (nonatomic, weak) UILabel *areaDescLabel;
+
+@property (nonatomic, weak) UILabel *priceDescLabel;
 
 @property (nonatomic, weak) UILabel *tradeLabel;
 
@@ -20,13 +31,11 @@
 
 @property (nonatomic, weak) UILabel *priceLabel;
 
-@property (nonatomic, weak) UILabel *userNameLabel;
-
-@property (nonatomic, weak) UILabel *releaseTimeLabel;
-
-@property (nonatomic, weak) UIImageView *portrait;
-
 @property (nonatomic, weak) UIImageView *tagIcon;
+
+@property (nonatomic, weak) UIButton *checkBtn;
+
+@property (nonatomic, weak) MASConstraint *leftConstraint;
 
 @end
 
@@ -67,54 +76,58 @@
     [bgView.layer setCornerRadius:7.f];
     [bgView.layer setShadowColor:COLOR_GRAY_AAAAAA.CGColor];
     [bgView.layer setShadowOffset:CGSizeMake(0.f, 2.f)];
+    [bgView.layer setShadowRadius:8.f];
     [bgView.layer setShadowOpacity:0.4f];
     [bgView setBackgroundColor:UIColor.whiteColor];
     [self addSubview:bgView];
+    _bgView = bgView;
     [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.and.centerY.equalTo(self);
         make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 115.f * g_rateWidth));
     }];
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
+    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:14.f]];
     [titleLabel setTextColor:COLOR_BLACK_333333];
     [bgView addSubview:titleLabel];
     _titleLabel = titleLabel;
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(bgView).with.offset(23.f * g_rateWidth);
-        make.top.equalTo(bgView).with.offset(20.f * g_rateWidth);
+        self.leftConstraint = make.left.equalTo(bgView).with.offset(23.f * g_rateWidth);
+        make.top.equalTo(bgView).with.offset(22.f * g_rateWidth);
         make.height.mas_equalTo(titleLabel.font.pointSize);
     }];
     
     UILabel *tradeDescLabel = [[UILabel alloc] init];
-    [tradeDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:10.f]];
-    [tradeDescLabel setTextColor:COLOR_BLACK_6E7980];
+    [tradeDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:11.f]];
+    [tradeDescLabel setTextColor:COLOR_GRAY_999999];
     [tradeDescLabel setText:@"经营行业"];
     [bgView addSubview:tradeDescLabel];
+    _tradeDescLabel = tradeDescLabel;
     [tradeDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(bgView).with.offset(26.f);
-        make.top.equalTo(titleLabel.mas_bottom).with.offset(20.f * g_rateWidth);
+        make.left.equalTo(titleLabel);
+        make.top.equalTo(titleLabel.mas_bottom).with.offset(22.f * g_rateWidth);
         make.height.mas_equalTo(tradeDescLabel.font.pointSize);
     }];
     
     UILabel *tradeLabel = [[UILabel alloc] init];
-    [tradeLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
+    [tradeLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
     [tradeLabel setTextColor:COLOR_BLACK_333333];
     [bgView addSubview:tradeLabel];
     _tradeLabel = tradeLabel;
     [tradeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(tradeDescLabel);
-        make.top.equalTo(tradeDescLabel.mas_bottom).with.offset(16.f * g_rateWidth);
+        make.top.equalTo(tradeDescLabel.mas_bottom).with.offset(12.f * g_rateWidth);
         make.height.mas_equalTo(tradeLabel.font.pointSize);
     }];
     
-    CGFloat space = ((345.f - 26.f - 26.f) * g_rateWidth - 40.f * 4)/3;
+    CGFloat space = ((345.f - 23.f - 23.f) * g_rateWidth - 44.f * 4)/3;
     
     UILabel *rentTimeDescLabel = [[UILabel alloc] init];
-    [rentTimeDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:10.f]];
-    [rentTimeDescLabel setTextColor:COLOR_BLACK_6E7980];
+    [rentTimeDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:11.f]];
+    [rentTimeDescLabel setTextColor:COLOR_GRAY_999999];
     [rentTimeDescLabel setText:@"可租档期"];
     [bgView addSubview:rentTimeDescLabel];
+    _rentTimeDescLabel = rentTimeDescLabel;
     [rentTimeDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(tradeDescLabel.mas_right).with.offset(space);
         make.centerY.equalTo(tradeDescLabel);
@@ -122,7 +135,7 @@
     }];
     
     UILabel *rentTimeLabel = [[UILabel alloc] init];
-    [rentTimeLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
+    [rentTimeLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
     [rentTimeLabel setTextColor:COLOR_BLACK_333333];
     [rentTimeLabel setText:@"不限"];
     [bgView addSubview:rentTimeLabel];
@@ -134,10 +147,11 @@
     }];
     
     UILabel *areaDescLabel = [[UILabel alloc] init];
-    [areaDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:10.f]];
-    [areaDescLabel setTextColor:COLOR_BLACK_6E7980];
+    [areaDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:11.f]];
+    [areaDescLabel setTextColor:COLOR_GRAY_999999];
     [areaDescLabel setText:@"期望面积"];
     [bgView addSubview:areaDescLabel];
+    _areaDescLabel = areaDescLabel;
     [areaDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(rentTimeDescLabel.mas_right).with.offset(space);
         make.centerY.equalTo(tradeDescLabel);
@@ -145,7 +159,7 @@
     }];
     
     UILabel *areaLabel = [[UILabel alloc] init];
-    [areaLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
+    [areaLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
     [areaLabel setTextColor:COLOR_RED_FF3C5E];
     [bgView addSubview:areaLabel];
     _areaLabel = areaLabel;
@@ -167,10 +181,11 @@
     }];
     
     UILabel *priceDescLabel = [[UILabel alloc] init];
-    [priceDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:10.f]];
-    [priceDescLabel setTextColor:COLOR_BLACK_6E7980];
+    [priceDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:11.f]];
+    [priceDescLabel setTextColor:COLOR_GRAY_999999];
     [priceDescLabel setText:@"期望价格"];
     [bgView addSubview:priceDescLabel];
+    _priceDescLabel = priceDescLabel;
     [priceDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(areaDescLabel.mas_right).with.offset(space);
         make.centerY.equalTo(tradeDescLabel);
@@ -178,7 +193,7 @@
     }];
     
     UILabel *priceLabel = [[UILabel alloc] init];
-    [priceLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
+    [priceLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
     [priceLabel setTextColor:COLOR_RED_FF3C5E];
     [bgView addSubview:priceLabel];
     _priceLabel = priceLabel;
@@ -203,7 +218,7 @@
     [bgView addSubview:tagIcon];
     _tagIcon = tagIcon;
     [tagIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(bgView).with.offset(-6.f);
+        make.top.equalTo(bgView).with.offset(-7.f);
         make.right.equalTo(bgView).with.offset(-18.f);
         make.size.mas_equalTo(CGSizeMake(37.f, 50.f));
     }];
@@ -211,6 +226,20 @@
     [titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(tagIcon.mas_left).with.offset(-5.f * g_rateWidth);
     }];
+    
+    UIImage *normalImage = [HPImageUtil getRectangleByStrokeColor:COLOR_GRAY_BCC1CF fillColor:UIColor.whiteColor borderWidth:1.f cornerRadius:10.f inRect:CGRectMake(0.f, 0.f, 19.f, 19.f)];
+    
+    UIButton *checkBtn = [[UIButton alloc] init];
+    [checkBtn setImage:normalImage forState:UIControlStateNormal];
+    [checkBtn setImage:[UIImage imageNamed:@"collection_selection"] forState:UIControlStateSelected];
+    [bgView addSubview:checkBtn];
+    _checkBtn = checkBtn;
+    [checkBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(bgView).with.offset(15.f * g_rateWidth);
+        make.top.equalTo(bgView).with.offset(20.f * g_rateWidth);
+        make.size.mas_equalTo(CGSizeMake(19.f, 19.f));
+    }];
+    [checkBtn setHidden:YES];
 }
 
 - (void)setTitle:(NSString *)title {
@@ -240,6 +269,58 @@
     else if (type == HPShareListCellTypeOwner) {
         [_tagIcon setImage:[UIImage imageNamed:@"share_owner"]];
     }
+}
+
+- (void)setCheckEnabled:(BOOL)enabled {
+    if (enabled) {
+        [_checkBtn setHidden:NO];
+        
+        [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            [self.leftConstraint uninstall];
+            self.leftConstraint = make.left.equalTo(self.checkBtn.mas_right).with.offset(10.f * g_rateWidth);
+        }];
+        
+        CGFloat space = ((345.f - 44.f - 17.f) * g_rateWidth - 44.f * 4)/3;
+        
+        [_rentTimeDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.tradeDescLabel.mas_right).with.offset(space);
+        }];
+        
+        [_areaDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.rentTimeDescLabel.mas_right).with.offset(space);
+        }];
+        
+        [_priceDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.areaDescLabel.mas_right).with.offset(space);
+        }];
+    }
+    else {
+        [_checkBtn setHidden:YES];
+        
+        [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            [self.leftConstraint uninstall];
+            self.leftConstraint = make.left.equalTo(self.bgView).with.offset(23.f * g_rateWidth);
+        }];
+        
+        CGFloat space = ((345.f - 23.f - 23.f) * g_rateWidth - 44.f * 4)/3;
+        
+        [_rentTimeDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.tradeDescLabel.mas_right).with.offset(space);
+        }];
+        
+        [_areaDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.rentTimeDescLabel.mas_right).with.offset(space);
+        }];
+        
+        [_priceDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.areaDescLabel.mas_right).with.offset(space);
+        }];
+    }
+}
+
+- (void)setChecked:(BOOL)isChecked {
+    [_checkBtn setSelected:isChecked];
+    _isChecked = isChecked;
 }
 
 @end

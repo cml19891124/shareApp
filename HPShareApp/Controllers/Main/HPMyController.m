@@ -10,6 +10,9 @@
 #import "HPAlignCenterButton.h"
 #import "HPProgressHUD.h"
 #import "HPLoginController.h"
+#import "HPKeepController.h"
+#import "HPMyCardController.h"
+#import "HPConfigCenterController.h"
 
 @interface HPMyController ()
 
@@ -38,9 +41,10 @@
     // Do any additional setup after loading the view.
     
     [self setupUI];
-    
-//    g_isLogin = YES;
-//    g_isCertified = YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
     if (g_isLogin) {
         [_portraitBtn setImage:[UIImage imageNamed:@"personal_center_login_head"] forState:UIControlStateSelected];
@@ -414,7 +418,7 @@
         make.bottom.equalTo(centerView);
     }];
     
-    UIView *customerServiceItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_customer_service"] title:@"在线客服" desc:@"24小时贴心服务"];
+    UIView *customerServiceItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_customer_service"] title:@"在线客服" desc:@"贴心做服务"];
     [centerView addSubview:customerServiceItem];
     [customerServiceItem mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(myCardItem);
@@ -422,7 +426,7 @@
         make.bottom.equalTo(centerView);
     }];
     
-    UIView *aboutUsItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_about_us"] title:@"关于我们" desc:@"24小时服务"];
+    UIView *aboutUsItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_about_us"] title:@"关于我们" desc:@"用心做产品"];
     [centerView addSubview:aboutUsItem];
     [aboutUsItem mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(invitationPriceItem);
@@ -469,6 +473,8 @@
     }
     
     NSLog(@"onClickConfigBtn");
+    HPConfigCenterController *vc = [[HPConfigCenterController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)onClickLoginBtn:(UIButton *)btn {
@@ -486,13 +492,14 @@
         return;
     }
     
-    if (ctrl.tag == 0) {
-        NSLog(@"onClick 收藏");
+    if (ctrl.tag == 0) { //收藏
+        HPKeepController *vc = [[HPKeepController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
     }
-    else if (ctrl.tag == 1) {
+    else if (ctrl.tag == 1) { //关注
         NSLog(@"onClick 关注");
     }
-    else if (ctrl.tag == 2) {
+    else if (ctrl.tag == 2) { //浏览历史
         NSLog(@"onClick 浏览历史");
     }
 }
@@ -504,6 +511,10 @@
     }
     
     NSLog(@"function btn: %@", btn.text);
+    if ([btn.text isEqualToString:@"我的名片"]) {
+        HPMyCardController *myCardController = [[HPMyCardController alloc] init];
+        [self.navigationController pushViewController:myCardController animated:YES];
+    }
 }
 
 @end

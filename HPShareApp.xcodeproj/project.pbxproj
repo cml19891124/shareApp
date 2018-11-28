@@ -88,6 +88,9 @@
 		E6D75F2821AD463000B2067C /* HPLoginByPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F2721AD463000B2067C /* HPLoginByPasswordController.m */; };
 		E6D75F2B21AD4DD400B2067C /* HPRegisterController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F2A21AD4DD400B2067C /* HPRegisterController.m */; };
 		E6D75F2E21AD6AF800B2067C /* HPThirdPartReturnController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F2D21AD6AF800B2067C /* HPThirdPartReturnController.m */; };
+		E6D75F3121AE211C00B2067C /* HPForgetPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F3021AE211C00B2067C /* HPForgetPasswordController.m */; };
+		E6D75F3621AE250300B2067C /* HPKeepController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F3521AE250300B2067C /* HPKeepController.m */; };
+		E6D75F3B21AEA15400B2067C /* HPConfigCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F3A21AEA15400B2067C /* HPConfigCenterController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -279,6 +282,12 @@
 		E6D75F2A21AD4DD400B2067C /* HPRegisterController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRegisterController.m; sourceTree = "<group>"; };
 		E6D75F2C21AD6AF800B2067C /* HPThirdPartReturnController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPThirdPartReturnController.h; sourceTree = "<group>"; };
 		E6D75F2D21AD6AF800B2067C /* HPThirdPartReturnController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPThirdPartReturnController.m; sourceTree = "<group>"; };
+		E6D75F2F21AE211C00B2067C /* HPForgetPasswordController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPForgetPasswordController.h; sourceTree = "<group>"; };
+		E6D75F3021AE211C00B2067C /* HPForgetPasswordController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPForgetPasswordController.m; sourceTree = "<group>"; };
+		E6D75F3421AE250300B2067C /* HPKeepController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPKeepController.h; sourceTree = "<group>"; };
+		E6D75F3521AE250300B2067C /* HPKeepController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPKeepController.m; sourceTree = "<group>"; };
+		E6D75F3921AEA15400B2067C /* HPConfigCenterController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPConfigCenterController.h; sourceTree = "<group>"; };
+		E6D75F3A21AEA15400B2067C /* HPConfigCenterController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPConfigCenterController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -752,8 +761,17 @@
 		E6D75F2221AD1ACB00B2067C /* My */ = {
 			isa = PBXGroup;
 			children = (
-				E661B13E21A6355E00C86CF5 /* HPMyCardController.h */,
-				E661B13F21A6355E00C86CF5 /* HPMyCardController.m */,
+				E6D75F3221AE247200B2067C /* Account */,
+				E6D75F3321AE24C600B2067C /* Collection */,
+				E6D75F3721AEA0DB00B2067C /* Function */,
+				E6D75F3821AEA11E00B2067C /* Info */,
+			);
+			path = My;
+			sourceTree = "<group>";
+		};
+		E6D75F3221AE247200B2067C /* Account */ = {
+			isa = PBXGroup;
+			children = (
 				E6D75F2321AD1B3900B2067C /* HPLoginController.h */,
 				E6D75F2421AD1B3900B2067C /* HPLoginController.m */,
 				E6D75F2621AD463000B2067C /* HPLoginByPasswordController.h */,
@@ -762,8 +780,37 @@
 				E6D75F2A21AD4DD400B2067C /* HPRegisterController.m */,
 				E6D75F2C21AD6AF800B2067C /* HPThirdPartReturnController.h */,
 				E6D75F2D21AD6AF800B2067C /* HPThirdPartReturnController.m */,
+				E6D75F2F21AE211C00B2067C /* HPForgetPasswordController.h */,
+				E6D75F3021AE211C00B2067C /* HPForgetPasswordController.m */,
 			);
-			path = My;
+			path = Account;
+			sourceTree = "<group>";
+		};
+		E6D75F3321AE24C600B2067C /* Collection */ = {
+			isa = PBXGroup;
+			children = (
+				E6D75F3421AE250300B2067C /* HPKeepController.h */,
+				E6D75F3521AE250300B2067C /* HPKeepController.m */,
+			);
+			path = Collection;
+			sourceTree = "<group>";
+		};
+		E6D75F3721AEA0DB00B2067C /* Function */ = {
+			isa = PBXGroup;
+			children = (
+				E661B13E21A6355E00C86CF5 /* HPMyCardController.h */,
+				E661B13F21A6355E00C86CF5 /* HPMyCardController.m */,
+			);
+			path = Function;
+			sourceTree = "<group>";
+		};
+		E6D75F3821AEA11E00B2067C /* Info */ = {
+			isa = PBXGroup;
+			children = (
+				E6D75F3921AEA15400B2067C /* HPConfigCenterController.h */,
+				E6D75F3A21AEA15400B2067C /* HPConfigCenterController.m */,
+			);
+			path = Info;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -984,6 +1031,7 @@
 			files = (
 				E661B12921A28E8500C86CF5 /* JTVerticalCalendarView.m in Sources */,
 				E6292172219AB28700BEF16C /* HPGlobalVariable.m in Sources */,
+				E6D75F3121AE211C00B2067C /* HPForgetPasswordController.m in Sources */,
 				E629217F219ABD6D00BEF16C /* UIView + Tag.m in Sources */,
 				E661B0BD219C2DF700C86CF5 /* HPLinkageSheetView.m in Sources */,
 				E661B12E21A28E8500C86CF5 /* JTCalendarPageView.m in Sources */,
@@ -1003,6 +1051,7 @@
 				E661B0ED219EDCC800C86CF5 /* HPBanner.m in Sources */,
 				E661B0D0219D24A500C86CF5 /* HPSelectTable.m in Sources */,
 				E661B13321A2C4F500C86CF5 /* HPCalendarView.m in Sources */,
+				E6D75F3621AE250300B2067C /* HPKeepController.m in Sources */,
 				E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */,
 				E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */,
 				E6D75F2821AD463000B2067C /* HPLoginByPasswordController.m in Sources */,
@@ -1030,6 +1079,7 @@
 				E661B097219BAD5000C86CF5 /* HPIdeaController.m in Sources */,
 				E661B12521A28E8500C86CF5 /* JTDateHelper.m in Sources */,
 				E661B0C4219CFE6D00C86CF5 /* HPCheckTableCell.m in Sources */,
+				E6D75F3B21AEA15400B2067C /* HPConfigCenterController.m in Sources */,
 				E661B12821A28E8500C86CF5 /* JTCalendarManager.m in Sources */,
 				E661B0EA219EBF3600C86CF5 /* HPShareRecommendCard.m in Sources */,
 				E661B0DF219D4C8E00C86CF5 /* HPLinkageData.m in Sources */,

@@ -1,18 +1,18 @@
 //
-//  HPRegisterController.m
+//  HPThirdPartReturnController.m
 //  HPShareApp
 //
 //  Created by HP on 2018/11/27.
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPRegisterController.h"
+#import "HPThirdPartReturnController.h"
 
-@interface HPRegisterController ()
+@interface HPThirdPartReturnController ()
 
 @end
 
-@implementation HPRegisterController
+@implementation HPThirdPartReturnController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -33,13 +33,12 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
-    [self setupNavigationBarWithTitle:@"注册"];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"登录"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"绑定手机号"];
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:23.f]];
+    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:21.f]];
     [titleLabel setTextColor:COLOR_BLACK_444444];
-    [titleLabel setText:@"手机注册账户"];
+    [titleLabel setText:@"您的QQ账号“合派科技”已通过验证"];
     [self.view addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(navigationView.mas_bottom).with.offset(55.f * g_rateWidth);
@@ -50,7 +49,7 @@
     UILabel *descLabel = [[UILabel alloc] init];
     [descLabel setFont:[UIFont fontWithName:FONT_REGULAR size:12.f]];
     [descLabel setTextColor:COLOR_BLACK_666666];
-    [descLabel setText:@"进入设置中心可更改绑定手机号"];
+    [descLabel setText:@"绑定手机号同步账号信息，登录更方便"];
     [self.view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f * g_rateWidth);
@@ -118,7 +117,7 @@
     [self.view addSubview:codeTextField];
     [codeTextField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(phoneNumTextField);
-        make.top.equalTo(phoneNumLine.mas_bottom).with.offset(33.f * g_rateWidth);
+        make.top.equalTo(phoneNumLine.mas_bottom).with.offset(35.f * g_rateWidth);
         make.right.equalTo(phoneNumTextField);
     }];
     
@@ -131,78 +130,29 @@
         make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 1.f));
     }];
     
-    UITextField *passwordTextField = [[UITextField alloc] init];
-    [passwordTextField setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];
-    [passwordTextField setTextColor:COLOR_BLACK_333333];
-    [passwordTextField setTintColor:COLOR_RED_FF3C5E];
-    [passwordTextField setSecureTextEntry:YES];
-    [passwordTextField setKeyboardType:UIKeyboardTypeAlphabet];
-    [passwordTextField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
-    NSMutableAttributedString *passwordPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"请输入新密码（最少6位）"];
-    [passwordPlaceholder addAttribute:NSForegroundColorAttributeName
-                            value:COLOR_GRAY_CCCCCC
-                            range:NSMakeRange(0, 12)];
-    [passwordPlaceholder addAttribute:NSFontAttributeName
-                            value:[UIFont fontWithName:FONT_MEDIUM size:16.f]
-                            range:NSMakeRange(0, 6)];
-    [passwordPlaceholder addAttribute:NSFontAttributeName
-                                value:[UIFont fontWithName:FONT_MEDIUM size:13.f]
-                                range:NSMakeRange(6, 6)];
-    [passwordTextField setAttributedPlaceholder:passwordPlaceholder];
-    [self.view addSubview:passwordTextField];
-    [passwordTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(phoneNumTextField);
-        make.top.equalTo(codeLine.mas_bottom).with.offset(33.f * g_rateWidth);
-        make.right.equalTo(phoneNumTextField);
-    }];
-    
-    UIView *passwordLine = [[UIView alloc] init];
-    [passwordLine setBackgroundColor:COLOR_GRAY_EEEEEE];
-    [self.view addSubview:passwordLine];
-    [passwordLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(passwordTextField.mas_bottom).with.offset(5.f);;
-        make.centerX.equalTo(self.view);
-        make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 1.f));
-    }];
-    
-    UIButton *registerBtn = [[UIButton alloc] init];
-    [registerBtn.layer setCornerRadius:24.f * g_rateWidth];
-    [registerBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
-    [registerBtn setTitleColor:COLOR_PINK_FFEFF2 forState:UIControlStateNormal];
-    [registerBtn setTitle:@"立即注册" forState:UIControlStateNormal];
-    [registerBtn setBackgroundColor:COLOR_RED_FF3C5E];
-    [registerBtn addTarget:self action:@selector(onClickRegisterBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:registerBtn];
-    [registerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(passwordLine.mas_bottom).with.offset(25.f * g_rateWidth);
+    UIButton *confirmBtn = [[UIButton alloc] init];
+    [confirmBtn.layer setCornerRadius:24.f * g_rateWidth];
+    [confirmBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
+    [confirmBtn setTitleColor:COLOR_PINK_FFEFF2 forState:UIControlStateNormal];
+    [confirmBtn setTitle:@"确认" forState:UIControlStateNormal];
+    [confirmBtn setBackgroundColor:COLOR_RED_FF3C5E];
+    [confirmBtn addTarget:self action:@selector(onClickConfirmBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:confirmBtn];
+    [confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(codeLine.mas_bottom).with.offset(25.f * g_rateWidth);
         make.centerX.equalTo(self.view);
         make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 47.f * g_rateWidth));
-    }];
-    
-    UIButton *switchBtn = [[UIButton alloc] init];
-    [switchBtn.titleLabel setFont:[UIFont fontWithName:FONT_REGULAR size:13.f]];
-    [switchBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-    [switchBtn setTitle:@"已有账号，立即登录" forState:UIControlStateNormal];
-    [switchBtn addTarget:self action:@selector(onClickSwitchBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:switchBtn];
-    [switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(registerBtn.mas_bottom).with.offset(20.f * g_rateWidth);
-        make.centerX.equalTo(self.view);
     }];
 }
 
 #pragma mark - OnClick
 
-- (void)onClickRegisterBtn:(UIButton *)btn {
-    NSLog(@"onClickRegisterBtn");
+- (void)onClickConfirmBtn:(UIButton *)btn {
+    NSLog(@"nClickConfirmBtn");
 }
 
 - (void)onClickCodeBtn:(UIButton *)btn {
     NSLog(@"onClickCodeBtn");
-}
-
-- (void)onClickSwitchBtn:(UIButton *)btn {
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

@@ -9,6 +9,8 @@
 #import "HPLoginController.h"
 #import "HPLoginByPasswordController.h"
 #import "HPRegisterController.h"
+#import "HPThirdPartReturnController.h"
+#import "HPProgressHUD.h"
 
 @interface HPLoginController ()
 
@@ -226,7 +228,12 @@
 #pragma mark - OnClick
 
 - (void)onClickLoginBtn:(UIButton *)btn {
-    NSLog(@"nClickLoginBtn");
+    g_isLogin = YES;
+    g_isCertified = YES;
+    [HPProgressHUD alertMessage:@"登录成功"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.navigationController popViewControllerAnimated:YES];
+    });
 }
 
 - (void)onClickRegisterBtn:(UIButton *)btn {
@@ -242,6 +249,7 @@
     HPLoginByPasswordController *vc = [[HPLoginByPasswordController alloc] init];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
     [navigationController setNavigationBarHidden:YES];
+    [navigationController.interactivePopGestureRecognizer setDelegate:self.navigationController.viewControllers.firstObject];
     [self presentViewController:navigationController animated:YES completion:nil];
 }
 
@@ -255,6 +263,9 @@
     else if (btn.tag == 2) {
         NSLog(@"onClickThirdPartBtn: Sina");
     }
+    
+    HPThirdPartReturnController *vc = [[HPThirdPartReturnController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

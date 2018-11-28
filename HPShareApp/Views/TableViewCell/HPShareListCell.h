@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPShareListCell : HPBaseTableViewCell
 
+@property (nonatomic, assign) BOOL isChecked;
+
 - (void)setTitle:(NSString *)title;
 
 - (void)setTrade:(NSString *)trade;
@@ -28,6 +30,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setPrice:(NSString *)price;
 
 - (void)setTagType:(HPShareListCellType)type;
+
+- (void)setCheckEnabled:(BOOL)enabled;
+
+- (void)setChecked:(BOOL)isChecked;
 
 @end
 
