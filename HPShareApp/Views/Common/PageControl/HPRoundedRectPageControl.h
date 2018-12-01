@@ -6,15 +6,15 @@
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "HPPageControl.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPPageControl : UIPageControl
+@interface HPRoundedRectPageControl : HPPageControl
 
-@property (nonatomic, strong) UIImage *currentImage;
+- (void)setNumberOfPages:(NSInteger)numOfPages;
 
-@property (nonatomic, strong) UIImage *inactiveImage;
+- (void)setCurrentPage:(NSInteger)page;
 
 @end
 

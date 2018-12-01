@@ -8,7 +8,6 @@
 
 #import "HPHowToPlayShareSpaceController.h"
 #import "HPIdeaExampleItem.h"
-#import "HPHowToPlayDetailController.h"
 
 @interface HPHowToPlayShareSpaceController ()
 
@@ -202,8 +201,7 @@
 }
 
 - (void)onClickDetailBtn:(UIButton *)btn {
-    HPHowToPlayDetailController *vc = [[HPHowToPlayDetailController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self pushVCByClassName:@"HPHowToPlayDetailController"];
 }
 
 @end

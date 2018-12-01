@@ -7,8 +7,6 @@
 //
 
 #import "HPLoginByPasswordController.h"
-#import "HPRegisterController.h"
-#import "HPForgetPasswordController.h"
 
 @interface HPLoginByPasswordController ()
 
@@ -245,8 +243,7 @@
 }
 
 - (void)onClickRegisterBtn:(UIButton *)btn {
-    HPRegisterController *vc = [[HPRegisterController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self pushVCByClassName:@"HPRegisterController"];
 }
 
 - (void)onClickSwitchBtn:(UIButton *)btn {
@@ -254,8 +251,7 @@
 }
 
 - (void)onClickForgetBtn:(UIButton *)btn {
-    HPForgetPasswordController *vc = [[HPForgetPasswordController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self pushVCByClassName:@"HPForgetPasswordController"];
 }
 
 - (void)onClickThirdPartBtn:(UIButton *)btn {

@@ -58,8 +58,37 @@
             image = imageArray[0];
         }
         
+//        UIView *bgView = [[UIView alloc] init];
+//        [self.scrollView addSubview:bgView];
+//        [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.equalTo(self);
+//            make.size.equalTo(self);
+//
+//            if (i == 0) {
+//                make.left.equalTo(self.scrollView);
+//            }
+//            else {
+//                UIView *lastView = self.scrollView.subviews[i-1];
+//                make.left.equalTo(lastView.mas_right);
+//            }
+//
+//            if (i == imageArray.count) {
+//                make.right.equalTo(self.scrollView);
+//            }
+//        }];
+//
+//        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+//        [bgView addSubview:imageView];
+//        [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            CGAffineTransform t = CGAffineTransformMakeScale(g_rateWidth, g_rateWidth);
+//            CGSize size = CGSizeApplyAffineTransform(image.size, t);
+//            make.size.mas_equalTo(size);
+//            make.centerX.and.centerY.equalTo(bgView);
+//        }];
+        
         UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-        [self.scrollView addSubview:imageView];
+        [imageView setContentMode:UIViewContentModeCenter];
+        [_scrollView addSubview:imageView];
         [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self);
             make.size.equalTo(self);
@@ -68,8 +97,8 @@
                 make.left.equalTo(self.scrollView);
             }
             else {
-                UIImageView *lastImageView = self.scrollView.subviews[i-1];
-                make.left.equalTo(lastImageView.mas_right);
+                UIView *lastView = self.scrollView.subviews[i-1];
+                make.left.equalTo(lastView.mas_right);
             }
             
             if (i == imageArray.count) {
@@ -79,6 +108,10 @@
     }
     
     [self.pageLabel setText:[NSString stringWithFormat:@"1/%ld", imageArray.count]];
+}
+
+- (void)setContentMode:(UIViewContentMode)contentMode {
+    
 }
 
 #pragma mark - UIScrollView

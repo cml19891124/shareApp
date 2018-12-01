@@ -11,9 +11,7 @@
 #import "HPImageUtil.h"
 #import "HPTextDialogView.h"
 
-#define CELL_ID @"HPShareListCell"
-
-@interface HPKeepController () <UITableViewDelegate, UITableViewDataSource>
+@interface HPKeepController ()
 
 @property (nonatomic, weak) UITableView *tableView;
 
@@ -24,8 +22,6 @@
 @property (nonatomic, weak) UIButton *allCheckBtn;
 
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
-
-@property (nonatomic, strong) NSMutableArray *dataArray;
 
 @property (nonatomic, strong) NSMutableArray *checkArray;
 
@@ -41,19 +37,10 @@
     
     _isEdited = NO;
     
-    NSArray *dataArray = @[@{@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner"},
-                   @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"startup"},
-                   @{@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner"},
-                   @{@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner"},
-                   @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"startup"},
-                   @{@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner"},
-                   @{@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner"},
-                   @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"startup"},
-                   @{@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner"}];
-    _dataArray = [NSMutableArray arrayWithArray:dataArray];
+    self.dataArray = [NSMutableArray arrayWithArray:self.testDataArray];
     
     _checkArray = [[NSMutableArray alloc] init];
-    for (int i = 0; i < _dataArray.count; i ++) {
+    for (int i = 0; i < self.dataArray.count; i ++) {
         [_checkArray addObject:[NSNumber numberWithBool:NO]];
     }
     
@@ -132,27 +119,30 @@
     return 7.5f * g_rateWidth;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 130.f * g_rateWidth;
-}
-
 #pragma mark - UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
     
-    NSDictionary *dict = _dataArray[indexPath.row];
+    NSDictionary *dict = self.dataArray[indexPath.row];
     
-    [cell setTitle:dict[@"title"]];
-    [cell setTrade:dict[@"trade"]];
-    [cell setRentTime:dict[@"rentTime"]];
-    [cell setArea:dict[@"area"]];
-    [cell setPrice:dict[@"price"]];
+    NSString *title = dict[@"title"];
+    NSString *trade = dict[@"trade"];
+    NSString *rentTime = dict[@"rentTime"];
+    NSString *area = dict[@"area"];
+    NSString *price = dict[@"price"];
+    NSString *type = dict[@"type"];
     
-    if ([dict[@"type"] isEqualToString:@"startup"]) {
+    [cell setTitle:title];
+    [cell setTrade:trade];
+    [cell setRentTime:rentTime];
+    [cell setArea:area];
+    [cell setPrice:price];
+    
+    if ([type isEqualToString:@"startup"]) {
         [cell setTagType:HPShareListCellTypeStartup];
     }
-    else if ([dict[@"type"] isEqualToString:@"owner"]) {
+    else if ([type isEqualToString:@"owner"]) {
         [cell setTagType:HPShareListCellTypeOwner];
     }
     
@@ -162,10 +152,6 @@
     [cell setChecked:isChecked];
     
     return cell;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _dataArray.count;
 }
 
 #pragma mark - CheckCell

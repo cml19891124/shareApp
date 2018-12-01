@@ -91,4 +91,28 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)pushVCByClassName:(NSString *)name {
+    [self pushVCByClassName:name withParam:nil];
+}
+
+- (void)pushVCByClassName:(NSString *)name withParam:(NSDictionary *)param {
+    Class class = NSClassFromString(name);
+    
+    if (class) {
+        NSObject *object = [class alloc];
+        
+        if ([object isKindOfClass:HPBaseViewController.class]) {
+            HPBaseViewController *baseVC = (HPBaseViewController *)object;
+            baseVC = [baseVC init];
+            [baseVC setParam:param];
+            [self.navigationController pushViewController:baseVC animated:YES];
+        }
+        else if ([object isKindOfClass:UIViewController.class]) {
+            UIViewController *vc = (UIViewController *)object;
+            vc = [vc init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+    }
+}
+
 @end

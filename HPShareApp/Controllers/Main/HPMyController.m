@@ -9,10 +9,7 @@
 #import "HPMyController.h"
 #import "HPAlignCenterButton.h"
 #import "HPProgressHUD.h"
-#import "HPLoginController.h"
-#import "HPKeepController.h"
 #import "HPMyCardController.h"
-#import "HPConfigCenterController.h"
 
 @interface HPMyController ()
 
@@ -47,8 +44,7 @@
     [super viewWillAppear:animated];
     
     if (g_isLogin) {
-        [_portraitBtn setImage:[UIImage imageNamed:@"personal_center_login_head"] forState:UIControlStateSelected];
-        [_portraitBtn setSelected:YES];
+        [_portraitBtn setImage:[UIImage imageNamed:@"personal_center_login_head"] forState:UIControlStateNormal];
         [_loginBtn setTitle:@"早上好，董晓丽" forState:UIControlStateDisabled];
         [_loginBtn setEnabled:NO];
         [_keepNumLabel setText:@"1,390"];
@@ -68,7 +64,7 @@
         [_certificateBtn setHidden:YES];
         [_descLabel setHidden:NO];
         [_loginBtn setEnabled:YES];
-        [_portraitBtn setSelected:NO];
+        [_portraitBtn setImage:[UIImage imageNamed:@"personal_center_not_login_head"] forState:UIControlStateNormal];
         [_keepNumLabel setText:@"--"];
         [_followNumLabel setText:@"--"];
         [_historyNumLabel setText:@"--"];
@@ -472,14 +468,11 @@
         return;
     }
     
-    NSLog(@"onClickConfigBtn");
-    HPConfigCenterController *vc = [[HPConfigCenterController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self pushVCByClassName:@"HPConfigCenterController"];
 }
 
 - (void)onClickLoginBtn:(UIButton *)btn {
-    HPLoginController *vc = [[HPLoginController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self pushVCByClassName:@"HPLoginController"];
 }
 
 - (void)onClickCertificateBtn:(UIButton *)btn {
@@ -493,14 +486,13 @@
     }
     
     if (ctrl.tag == 0) { //收藏
-        HPKeepController *vc = [[HPKeepController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
+        [self pushVCByClassName:@"HPKeepController"];
     }
     else if (ctrl.tag == 1) { //关注
-        NSLog(@"onClick 关注");
+        [self pushVCByClassName:@"HPFollowController"];
     }
     else if (ctrl.tag == 2) { //浏览历史
-        NSLog(@"onClick 浏览历史");
+        [self pushVCByClassName:@"HPHistoryController"];
     }
 }
 
@@ -512,8 +504,9 @@
     
     NSLog(@"function btn: %@", btn.text);
     if ([btn.text isEqualToString:@"我的名片"]) {
-        HPMyCardController *myCardController = [[HPMyCardController alloc] init];
-        [self.navigationController pushViewController:myCardController animated:YES];
+        [self pushVCByClassName:@"HPMyCardController"];
+//        HPMyCardController *vc = [[HPMyCardController alloc] init];
+//        [self.navigationController pushViewController:vc animated:YES];
     }
 }
 

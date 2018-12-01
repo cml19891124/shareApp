@@ -7,8 +7,6 @@
 //
 
 #import "HPIdeaController.h"
-#import "HPWhatIsShareSpaceController.h"
-#import "HPHowToPlayShareSpaceController.h"
 
 @interface HPIdeaController ()
 
@@ -254,17 +252,11 @@
 #pragma mark - OnClick
 
 - (void)onClickShareSpaceCtrl:(UIControl *)ctrl {
-    UIViewController *vc;
-    
     if (ctrl.tag == 0) {
-        vc = [[HPWhatIsShareSpaceController alloc] init];
+        [self pushVCByClassName:@"HPWhatIsShareSpaceController"];
     }
     else if (ctrl.tag == 1) {
-        vc = [[HPHowToPlayShareSpaceController alloc] init];
-    }
-    
-    if (vc) {
-        [self.navigationController pushViewController:vc animated:YES];
+        [self pushVCByClassName:@"HPHowToPlayShareSpaceController"];
     }
 }
 

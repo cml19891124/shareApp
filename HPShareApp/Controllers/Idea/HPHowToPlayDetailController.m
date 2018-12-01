@@ -9,11 +9,11 @@
 #import "HPHowToPlayDetailController.h"
 #import "HPBanner.h"
 #import "HPImageUtil.h"
-#import "StyledPageControl.h"
+#import "HPPageControlFactory.h"
 
 @interface HPHowToPlayDetailController () <HPBannerDelegate>
 
-@property (nonatomic, weak) StyledPageControl *pageControl;
+@property (nonatomic, weak) HPPageControl *pageControl;
 
 @property (nonatomic, weak) UILabel *titleLabel;
 
@@ -118,23 +118,14 @@
         make.centerY.equalTo(backBtn);
     }];
     
-    UIImage *pageCurrentImage = [HPImageUtil getRectangleByStrokeColor:UIColor.whiteColor fillColor:UIColor.whiteColor borderWidth:1.f cornerRadius:2.f inRect:CGRectMake(0.f, 0.f, 9.f, 4.f)];
-    UIImage *pageImage = [HPImageUtil getRectangleByStrokeColor:UIColor.whiteColor fillColor:[UIColor.whiteColor colorWithAlphaComponent:0.5f] borderWidth:0.f cornerRadius:2.f inRect:CGRectMake(0.f, 0.f, 4.f, 4.f)];
-    
-    StyledPageControl *pageControl = [[StyledPageControl alloc] init];
+    HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleRoundedRect];
     [pageControl setNumberOfPages:3];
     [pageControl setCurrentPage:0];
-    [pageControl setCoreNormalColor:[UIColor.whiteColor colorWithAlphaComponent:0.5f]];
-    [pageControl setPageControlStyle:PageControlStyleThumb];
-    [pageControl setSelectedThumbImage:pageCurrentImage];
-    [pageControl setThumbImage:pageImage];
-    [pageControl setGapWidth:2.5f];
     [banner addSubview:pageControl];
     _pageControl = pageControl;
     [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(banner);
         make.bottom.equalTo(banner).with.offset(-22.f * g_rateWidth);
-        make.size.mas_equalTo(CGSizeMake(80.f, 5.f));
     }];
     
     UIView *topicView = [[UIView alloc] init];

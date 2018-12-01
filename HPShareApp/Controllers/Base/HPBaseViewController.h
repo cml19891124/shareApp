@@ -15,11 +15,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPBaseViewController : UIViewController
 
+@property (nonatomic, strong) NSDictionary *param;
+
 @property (nonatomic, assign) BOOL isPopGestureRecognize;
 
 - (void)setupBackBtn;
 
 - (UIView *)setupNavigationBarWithTitle:(NSString *)title;
+
+- (void)pushVCByClassName:(NSString *)name;
+
+- (void)pushVCByClassName:(NSString *)name withParam:(NSDictionary * _Nullable)param;
 
 @end
 

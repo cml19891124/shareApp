@@ -7,10 +7,8 @@
 //
 
 #import "HPLoginController.h"
-#import "HPLoginByPasswordController.h"
-#import "HPRegisterController.h"
-#import "HPThirdPartReturnController.h"
 #import "HPProgressHUD.h"
+#import "HPLoginByPasswordController.h"
 
 @interface HPLoginController ()
 
@@ -237,8 +235,7 @@
 }
 
 - (void)onClickRegisterBtn:(UIButton *)btn {
-    HPRegisterController *vc = [[HPRegisterController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self pushVCByClassName:@"HPRegisterController"];
 }
 
 - (void)onClickCodeBtn:(UIButton *)btn {
@@ -264,8 +261,7 @@
         NSLog(@"onClickThirdPartBtn: Sina");
     }
     
-    HPThirdPartReturnController *vc = [[HPThirdPartReturnController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self pushVCByClassName:@"HPLoginByPasswordController"];
 }
 
 @end

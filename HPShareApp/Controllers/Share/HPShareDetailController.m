@@ -9,10 +9,11 @@
 #import "HPShareDetailController.h"
 #import "HPBanner.h"
 #import "HPCalendarView.h"
+#import "HPPageControlFactory.h"
 
 @interface HPShareDetailController () <HPBannerDelegate>
 
-@property (nonatomic, weak) UIPageControl *pageControl;
+@property (nonatomic, weak) HPPageControl *pageControl;
 
 @property (nonatomic, weak) UILabel *titleLabel;
 
@@ -42,17 +43,10 @@
 
 @implementation HPShareDetailController
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _tagItems = [[NSMutableArray alloc] init];
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _tagItems = [[NSMutableArray alloc] init];
     
     [self setupUI];
     
@@ -141,9 +135,7 @@
         make.height.mas_equalTo(44.f);
     }];
     
-    UIPageControl *pageControl = [[UIPageControl alloc] init];
-    [pageControl setPageIndicatorTintColor:[UIColor.whiteColor colorWithAlphaComponent:0.5f]];
-    [pageControl setCurrentPageIndicatorTintColor:UIColor.whiteColor];
+    HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleCirlcle];
     [pageControl setNumberOfPages:3];
     [pageControl setCurrentPage:0];
     [scrollView addSubview:pageControl];

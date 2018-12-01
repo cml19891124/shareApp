@@ -10,16 +10,15 @@
 #import "HPShareRecommendCard.h"
 #import "HPImageUtil.h"
 #import "HPBanner.h"
-#import "HPShareListController.h"
-#import "StyledPageControl.h"
 #import "HPAlignCenterButton.h"
 #import "HPSharePersonCard.h"
+#import "HPPageControlFactory.h"
 
 @interface HPShareController () <HPBannerDelegate>
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 
-@property (nonatomic, weak) StyledPageControl *pageControl;
+@property (nonatomic, weak) HPPageControl *pageControl;
 
 @property (nonatomic, weak) HPBanner *baner;
 
@@ -101,23 +100,14 @@
         make.height.mas_equalTo(225.f * g_rateWidth);
     }];
     
-    UIImage *pageCurrentImage = [HPImageUtil getRectangleByStrokeColor:UIColor.whiteColor fillColor:UIColor.whiteColor borderWidth:1.f cornerRadius:2.f inRect:CGRectMake(0.f, 0.f, 9.f, 4.f)];
-    UIImage *pageImage = [HPImageUtil getRectangleByStrokeColor:UIColor.whiteColor fillColor:[UIColor.whiteColor colorWithAlphaComponent:0.5f] borderWidth:0.f cornerRadius:2.f inRect:CGRectMake(0.f, 0.f, 4.f, 4.f)];
-    
-    StyledPageControl *pageControl = [[StyledPageControl alloc] init];
+    HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleRoundedRect];
     [pageControl setNumberOfPages:3];
     [pageControl setCurrentPage:0];
-    [pageControl setCoreNormalColor:[UIColor.whiteColor colorWithAlphaComponent:0.5f]];
-    [pageControl setPageControlStyle:PageControlStyleThumb];
-    [pageControl setSelectedThumbImage:pageCurrentImage];
-    [pageControl setThumbImage:pageImage];
-    [pageControl setGapWidth:2.5f];
     [banner addSubview:pageControl];
     _pageControl = pageControl;
     [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(banner);
         make.bottom.equalTo(banner).with.offset(-42.f * g_rateWidth);
-        make.size.mas_equalTo(CGSizeMake(80.f, 5.f));
     }];
     
     UIView *searchView = [[UIView alloc] init];
@@ -231,6 +221,7 @@
     [shopBtn setTextFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
     [shopBtn setTextColor:COLOR_BLACK_333333];
     [shopBtn setText:@"共享店铺"];
+    [shopBtn addTarget:self action:@selector(onClickShareBtn:) forControlEvents:UIControlEventTouchUpInside];
     [centerView addSubview:shopBtn];
     [shopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(centerView);
@@ -243,6 +234,7 @@
     [spaceBtn setTextFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
     [spaceBtn setTextColor:COLOR_BLACK_333333];
     [spaceBtn setText:@"共享空间"];
+    [spaceBtn addTarget:self action:@selector(onClickShareBtn:) forControlEvents:UIControlEventTouchUpInside];
     [centerView addSubview:spaceBtn];
     [spaceBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(shopBtn.mas_right).with.offset(26.f * g_rateWidth);
@@ -255,6 +247,7 @@
     [goodBtn setTextFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
     [goodBtn setTextColor:COLOR_BLACK_333333];
     [goodBtn setText:@"共享货品"];
+    [goodBtn addTarget:self action:@selector(onClickShareBtn:) forControlEvents:UIControlEventTouchUpInside];
     [centerView addSubview:goodBtn];
     [goodBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(spaceBtn.mas_right).with.offset(26.f * g_rateWidth);
@@ -267,6 +260,7 @@
     [mapBtn setTextFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
     [mapBtn setTextColor:COLOR_BLACK_333333];
     [mapBtn setText:@"共享地图"];
+    [mapBtn addTarget:self action:@selector(onClickShareBtn:) forControlEvents:UIControlEventTouchUpInside];
     [centerView addSubview:mapBtn];
     [mapBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(goodBtn.mas_right).with.offset(26.f * g_rateWidth);
@@ -552,8 +546,13 @@
 - (void)onClickMoreView:(UIView *)view {
     [_baner stopAutoScroll];
     
-    HPShareListController *shareListController = [[HPShareListController alloc] init];
-    [self.navigationController pushViewController:shareListController animated:YES];
+    [self pushVCByClassName:@"HPShareListController"];
+}
+
+- (void)onClickShareBtn:(HPAlignCenterButton *)btn {
+    if ([btn.text isEqualToString:@"共享空间"]) {
+        [self pushVCByClassName:@"HPShareSpaceListController"];
+    }
 }
 
 @end
