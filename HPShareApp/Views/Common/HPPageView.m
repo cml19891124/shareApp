@@ -8,15 +8,15 @@
 
 #import "HPPageView.h"
 
-@interface HPPageView () <UIScrollViewDelegate>
+@interface HPPageView ()
 
-@property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, assign) NSInteger pageItemNum;
 
-@property (nonatomic, weak) UIView *leftView;
+@property (nonatomic, assign) NSInteger centerPageItemIndex;
 
-@property (nonatomic, weak) UIView *centerView;
+@property (nonatomic, assign) CGFloat centerOffsetX;
 
-@property (nonatomic, weak) UIView *rightView;
+@property (nonatomic, strong) NSMutableArray *pageItemViews;
 
 @property (nonatomic, assign) NSInteger pageNumber;
 
@@ -42,6 +42,7 @@
         _pageSpace = 0.f;
         _pageNumber = 0;
         _currentPage = 0;
+        _pageItemViews = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -61,38 +62,37 @@
         make.width.mas_equalTo(self.pageWidth + self.pageSpace);
     }];
     
-    UIView *leftView = [[UIView alloc] init];
-    [scrollView addSubview:leftView];
-    _leftView = leftView;
-    [leftView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.and.bottom.equalTo(scrollView);
-        make.left.equalTo(scrollView);
-        make.width.mas_equalTo(self.pageWidth);
-    }];
+    for (int i = 0; i < _pageItemNum; i ++) {
+        UIView *pageItemView = [[UIView alloc] init];
+        [scrollView addSubview:pageItemView];
+        [_pageItemViews addObject:pageItemView];
+        [pageItemView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.and.bottom.equalTo(scrollView);
+            make.width.mas_equalTo(self.pageWidth);
+            make.height.mas_equalTo(self.frame.size.height);
+            
+            if (i == 0) {
+                make.left.equalTo(scrollView);
+            }
+            else {
+                UIView *lastPageItemView = self.pageItemViews[i - 1];
+                make.left.equalTo(lastPageItemView.mas_right).with.offset(self.pageSpace);
+            }
+            
+            if (i == self.pageItemNum - 1) {
+                make.right.equalTo(scrollView).with.offset(-self.pageSpace);
+            }
+        }];
+    }
     
-    UIView *centerView = [[UIView alloc] init];
-    [scrollView addSubview:centerView];
-    _centerView = centerView;
-    [centerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.and.bottom.equalTo(scrollView);
-        make.left.equalTo(leftView.mas_right).with.offset(self.pageSpace);
-        make.width.mas_equalTo(self.pageWidth);
-    }];
-    
-    UIView *rightView = [[UIView alloc] init];
-    [scrollView addSubview:rightView];
-    _rightView = rightView;
-    [rightView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.and.bottom.equalTo(scrollView);
-        make.left.equalTo(centerView.mas_right).with.offset(self.pageSpace);
-        make.width.mas_equalTo(self.pageWidth);
-        make.right.equalTo(scrollView);
-    }];
-    
-    [self setupPageItem];
+    [self refreshPageItem];
 }
 
-- (void)setupPageItem {
+- (void)refreshPageItem {
+    if (_pageItemViews.count == 0) {
+        return;
+    }
+    
     if (_delegate) {
         if ([_delegate respondsToSelector:@selector(pageNumberOfPageView:)]) {
             _pageNumber = [_delegate pageNumberOfPageView:self];
@@ -101,53 +101,63 @@
         if (_pageNumber <= 0) {
             return;
         }
-        else if (_pageNumber < _currentPage + 1) {
-            _currentPage = 0;
+        else if (_currentPage > _pageNumber - 1) {
+            _currentPage = _currentPage - _pageNumber;
         }
         else if (_currentPage < 0) {
-            _currentPage = _pageNumber - 1;
+            _currentPage = _pageNumber + _currentPage;
         }
         
         if ([_delegate respondsToSelector:@selector(pageView:viewAtPageIndex:)]) {
-            if (_centerView.subviews.count > 0) {
-                [_centerView.subviews[0] removeFromSuperview];
+            UIView *centerView = _pageItemViews[_centerPageItemIndex];
+            
+            if (centerView.subviews.count > 0) {
+                [centerView.subviews[0] removeFromSuperview];
             }
             
             UIView *centerPageItem = [_delegate pageView:self viewAtPageIndex:_currentPage];
             if (centerPageItem) {
-                [self.centerView addSubview:centerPageItem];
+                [centerView addSubview:centerPageItem];
                 [centerPageItem mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.edges.equalTo(self.centerView);
+                    make.edges.equalTo(centerView);
                 }];
             }
             
-            [_scrollView setContentOffset:CGPointMake(self.pageWidth + self.pageSpace, 0.f)];
+            [_scrollView setContentOffset:CGPointMake(_centerOffsetX, 0.f)];
             
             if (_pageNumber >= 2) {
-                if (_leftView.subviews.count > 0) {
-                    [_leftView.subviews[0] removeFromSuperview];
+                for (NSInteger i = _centerPageItemIndex - 1; i >= 0; i --) {
+                    UIView *leftView = _pageItemViews[i];
+                    if (leftView.subviews.count > 0) {
+                        [leftView.subviews[0] removeFromSuperview];
+                    }
+                    
+                    NSInteger leftPageIndex = _currentPage - (_centerPageItemIndex - i) < 0 ? _pageNumber + _currentPage - (_centerPageItemIndex - i) : _currentPage - (_centerPageItemIndex - i);
+                    
+                    UIView *leftPageItem = [_delegate pageView:self viewAtPageIndex:leftPageIndex];
+                    if (leftPageItem) {
+                        [leftView addSubview:leftPageItem];
+                        [leftPageItem mas_makeConstraints:^(MASConstraintMaker *make) {
+                            make.edges.equalTo(leftView);
+                        }];
+                    }
                 }
                 
-                NSInteger leftPage = _currentPage - 1 < 0 ? _pageNumber - 1 : _currentPage - 1;
-                UIView *leftPageItem = [_delegate pageView:self viewAtPageIndex:leftPage];
-                if (leftPageItem) {
-                    [self.leftView addSubview:leftPageItem];
-                    [leftPageItem mas_makeConstraints:^(MASConstraintMaker *make) {
-                        make.edges.equalTo(self.leftView);
-                    }];
-                }
-                
-                if (_rightView.subviews.count > 0) {
-                    [_rightView.subviews[0] removeFromSuperview];
-                }
-                
-                NSInteger rightPage = _currentPage + 1 < _pageNumber ? _currentPage + 1 : 0;
-                UIView *rightPageItem = [_delegate pageView:self viewAtPageIndex:rightPage];
-                if (rightPageItem) {
-                    [self.rightView addSubview:rightPageItem];
-                    [rightPageItem mas_makeConstraints:^(MASConstraintMaker *make) {
-                        make.edges.equalTo(self.rightView);
-                    }];
+                for (NSInteger i = _centerPageItemIndex + 1; i < _pageItemNum; i ++) {
+                    UIView *rightView = _pageItemViews[i];
+                    if (rightView.subviews.count > 0) {
+                        [rightView.subviews[0] removeFromSuperview];
+                    }
+                    
+                    NSInteger rightPageIndex = _currentPage + i - _centerPageItemIndex < _pageNumber ? _currentPage + i - _centerPageItemIndex : _currentPage + i - _centerPageItemIndex - _pageNumber;
+                    
+                    UIView *rightPageItem = [_delegate pageView:self viewAtPageIndex:rightPageIndex];
+                    if (rightPageItem) {
+                        [rightView addSubview:rightPageItem];
+                        [rightPageItem mas_makeConstraints:^(MASConstraintMaker *make) {
+                            make.edges.equalTo(rightView);
+                        }];
+                    }
                 }
             }
         }
@@ -155,7 +165,6 @@
 }
 
 - (void)updateConstraints {
-    NSLog(@"+++updateConstraints: %f", _scrollView.contentOffset.x);
     
     [super updateConstraints];
 }
@@ -169,31 +178,45 @@
         _pageWidth = self.frame.size.width;
     }
     
+    if (_pageWidth == self.frame.size.width) {
+        _pageItemNum = 3;
+    }
+    else {
+        _pageItemNum = 5;
+    }
+    
+    _centerPageItemIndex = _pageItemNum/2;
+    _centerOffsetX = _centerPageItemIndex*(self.pageWidth + self.pageSpace);
+    
     if (_scrollView) {
         [_scrollView removeFromSuperview];
+        [_pageItemViews removeAllObjects];
     }
     
     [self setupUI];
 }
 
 - (void)drawRect:(CGRect)rect {
-    [_scrollView setContentOffset:CGPointMake(self.pageWidth + self.pageSpace, 0.f)];
+    [_scrollView setContentOffset:CGPointMake(_centerOffsetX, 0.f)];
 }
 
 #pragma mark UIScrollViewDelegate
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if (scrollView.contentOffset.x == self.pageWidth + self.pageSpace) {
+    if (scrollView.contentOffset.x == _centerOffsetX) {
         return;
     }
-    else if (scrollView.contentOffset.x > self.pageWidth + self.pageSpace) {
-        _currentPage += 1;
-    }
-    else {
-        _currentPage -= 1;
-    }
     
-    [self setupPageItem];
+    CGFloat deltaOffsetX = scrollView.contentOffset.x - _centerOffsetX;
+    NSInteger deltaIndex = deltaOffsetX / (_pageWidth + _pageSpace);
+    
+    _currentPage += deltaIndex;
+    
+    [self refreshPageItem];
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(pageView:didScrollAtIndex:)]) {
+        [_delegate pageView:self didScrollAtIndex:_currentPage];
+    }
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "UIScrollView+GestureConflict.h"
+#import "HPBannerView.h"
 
 @implementation UIScrollView (GestureConflict)
 
@@ -24,7 +25,7 @@
     UIView *parentView = touch.view;
     
     while (parentView != nil) {
-        if ([parentView isKindOfClass:UIScrollView.class]) {
+        if ([parentView isMemberOfClass:UIScrollView.class] || [parentView isMemberOfClass:UITableView.class]) {
             if (parentView == self) {
                 return YES;
             }
@@ -37,6 +38,20 @@
     }
     
     return YES;
+}
+
+#pragma mark - UIResponder
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if ([self.superview isMemberOfClass:HPBannerView.class]) {
+        [super touchesBegan:touches withEvent:event];
+    }
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if ([self.superview isMemberOfClass:HPBannerView.class]) {
+        [super touchesEnded:touches withEvent:event];
+    }
 }
 
 @end

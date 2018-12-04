@@ -10,7 +10,7 @@
 #import "HPPageControl.h"
 
 typedef NS_ENUM(NSInteger, HPPageControlStyle) {
-    HPPageControlStyleCirlcle = 0,
+    HPPageControlStyleCircle = 0,
     HPPageControlStyleRoundedRect
 };
 

@@ -21,14 +21,16 @@
 + (void)alertMessage:(NSString *)msg hideAfterDelay:(NSTimeInterval)delay AtBottom:(BOOL)isBottom {
     UIView *currentView = [UIViewController getCurrentVC].view;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:currentView animated:YES];
+    [hud setRemoveFromSuperViewOnHide:YES];
     hud.mode = MBProgressHUDModeText;
     if (isBottom) {
         hud.offset = CGPointMake(0.f, MBProgressMaxOffset);
     }
     hud.label.text = msg;
-    [hud.label setFont:[UIFont fontWithName:FONT_MEDIUM size:13.f]];
+    [hud.label setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
     [hud.label setTextColor:UIColor.whiteColor];
-    hud.bezelView.backgroundColor = COLOR_BLACK_TRANS_1111119b;
+    hud.bezelView.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.5f];
+    [hud.bezelView.layer setCornerRadius:10.f];
     [hud hideAnimated:YES afterDelay:delay];
 }
 

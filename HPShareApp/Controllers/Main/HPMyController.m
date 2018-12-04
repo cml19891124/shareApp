@@ -10,6 +10,7 @@
 #import "HPAlignCenterButton.h"
 #import "HPProgressHUD.h"
 #import "HPMyCardController.h"
+#import "HPCustomerServiceModalView.h"
 
 @interface HPMyController ()
 
@@ -28,6 +29,8 @@
 @property (nonatomic, weak) UILabel *followNumLabel;
 
 @property (nonatomic, weak) UILabel *historyNumLabel;
+
+@property (nonatomic, weak) HPCustomerServiceModalView *customerServiceModalView;
 
 @end
 
@@ -505,8 +508,21 @@
     NSLog(@"function btn: %@", btn.text);
     if ([btn.text isEqualToString:@"我的名片"]) {
         [self pushVCByClassName:@"HPMyCardController"];
-//        HPMyCardController *vc = [[HPMyCardController alloc] init];
-//        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if ([btn.text isEqualToString:@"共享管理"]) {
+        [self pushVCByClassName:@"HPShareManageController"];
+    }
+    else if ([btn.text isEqualToString:@"意见反馈"]) {
+        [self pushVCByClassName:@"HPFeedbackController"];
+    }
+    else if ([btn.text isEqualToString:@"在线客服"]) {
+        if (_customerServiceModalView == nil) {
+            HPCustomerServiceModalView *customerServiceModalView = [[HPCustomerServiceModalView alloc] initWithParent:self.parentViewController.view];
+            _customerServiceModalView = customerServiceModalView;
+        }
+        
+        [_customerServiceModalView show:YES];
+        [self.parentViewController.view bringSubviewToFront:_customerServiceModalView]; 
     }
 }
 

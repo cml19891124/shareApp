@@ -45,5 +45,9 @@
 	<string>UIStatusBarStyleLightContent</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>高德地图定位</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>高德地图定位</string>
 </dict>
 </plist>

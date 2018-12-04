@@ -8,10 +8,13 @@
 
 #import "HPHowToPlayShareSpaceController.h"
 #import "HPIdeaExampleItem.h"
+#import "HPPageView.h"
 
-@interface HPHowToPlayShareSpaceController ()
+@interface HPHowToPlayShareSpaceController () <HPPageViewDelegate>
 
-@property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, strong) NSMutableArray *exampleData;
+
+@property (nonatomic, weak) HPPageView *pageView;
 
 @end
 
@@ -103,12 +106,14 @@
         make.height.mas_equalTo(exampleTitleLabel.font.pointSize);
     }];
     
-    UIScrollView *scrollView = [[UIScrollView alloc] init];
-    [scrollView setClipsToBounds:NO];
-    [scrollView setShowsHorizontalScrollIndicator:NO];
-    [self.view addSubview:scrollView];
-    _scrollView = scrollView;
-    [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+    HPPageView *pageView = [[HPPageView alloc] init];
+    [pageView setPageMarginLeft:20.f * g_rateWidth];
+    [pageView setPageWidth:297.f * g_rateWidth];
+    [pageView setPageSpace:20.f * g_rateWidth];
+    [pageView setDelegate:self];
+    [self.view addSubview:pageView];
+    _pageView = pageView;
+    [pageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(exampleTitleLabel.mas_bottom).with.offset(20.f * g_rateWidth);
         make.left.equalTo(self.view);
         make.height.mas_equalTo(296.f * g_rateWidth);
@@ -119,8 +124,8 @@
     [footerView setImage:[UIImage imageNamed:@"shenmeshi_hepai"]];
     [self.view addSubview:footerView];
     [footerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(scrollView.mas_bottom).with.offset(25.f * g_rateWidth);
-        make.centerX.equalTo(scrollView);
+        make.top.equalTo(pageView.mas_bottom).with.offset(25.f * g_rateWidth);
+        make.centerX.equalTo(pageView);
     }];
 }
 
@@ -161,37 +166,30 @@
 }
 
 - (void)loadExampleItemWithData:(NSArray *)data {
-    for (int i = 0; i < data.count; i ++) {
-        NSDictionary *dict = data[i];
-        NSString *title = dict[@"title"];
-        NSString *type = dict[@"type"];
-        NSString *desc = dict[@"desc"];
-        NSArray *photos = dict[@"photos"];
-        
-        HPIdeaExampleItem *item = [[HPIdeaExampleItem alloc] init];
-        [item setTitle:title];
-        [item setType:type];
-        [item setDesc:desc];
-        [item loadPhotoWithImages:photos];
-        [item.detailBtn addTarget:self action:@selector(onClickDetailBtn:) forControlEvents:UIControlEventTouchUpInside];
-        [_scrollView addSubview:item];
-        [item mas_makeConstraints:^(MASConstraintMaker *make) {
-            if (i == 0) {
-                make.left.equalTo(self.scrollView).with.offset(20.f * g_rateWidth);
-            }
-            else {
-                UIView *lastItem = self.scrollView.subviews[i - 1];
-                make.left.equalTo(lastItem.mas_right).with.offset(15.f * g_rateWidth);
-            }
-            
-            make.top.equalTo(self.scrollView);
-            make.size.mas_equalTo(CGSizeMake(297.f * g_rateWidth, 296.f * g_rateWidth));
-            
-            if (i == data.count - 1) {
-                make.right.equalTo(self.scrollView).with.offset(-20.f * g_rateWidth);
-            }
-        }];
-    }
+    _exampleData = [[NSMutableArray alloc] initWithArray:data];
+    [_pageView refreshPageItem];
+}
+
+#pragma mark - HPPageViewDelegate
+
+- (UIView *)pageView:(HPPageView *)pageView viewAtPageIndex:(NSInteger)index {
+    NSDictionary *dict = _exampleData[index];
+    NSString *title = dict[@"title"];
+    NSString *type = dict[@"type"];
+    NSString *desc = dict[@"desc"];
+    NSArray *photos = dict[@"photos"];
+    
+    HPIdeaExampleItem *item = [[HPIdeaExampleItem alloc] init];
+    [item setTitle:title];
+    [item setType:type];
+    [item setDesc:desc];
+    [item loadPhotoWithImages:photos];
+    [item.detailBtn addTarget:self action:@selector(onClickDetailBtn:) forControlEvents:UIControlEventTouchUpInside];
+    return item;
+}
+
+- (NSInteger)pageNumberOfPageView:(HPPageView *)pageView {
+    return _exampleData.count;
 }
 
 #pragma mark - onClick

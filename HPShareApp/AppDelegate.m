@@ -8,7 +8,9 @@
 
 #import "AppDelegate.h"
 #import "HPGlobalVariable.h"
+#import "Macro.h"
 #import "HPMainTabBarController.h"
+#import <AMapFoundationKit/AMapFoundationKit.h>
 
 @interface AppDelegate ()
 
@@ -21,6 +23,8 @@
     // Override point for customization after application launch.
     [HPGlobalVariable initVariable];
     
+    [self configureAMapKey];
+    
     HPMainTabBarController *mainTabBarController = [[HPMainTabBarController alloc] init];
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainTabBarController];
@@ -30,6 +34,19 @@
      self.window.rootViewController = navigationController;
     
     return YES;
+}
+
+- (void)configureAMapKey {
+    if ([AMAP_KEY length] == 0)
+    {
+        NSString *reason = [NSString stringWithFormat:@"apiKey为空，请检查key是否正确设置。"];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:reason delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        
+        [alert show];
+    }
+    
+    [AMapServices sharedServices].apiKey = (NSString *)AMAP_KEY;
 }
 
 

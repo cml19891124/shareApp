@@ -7,11 +7,13 @@
 //
 
 #import "HPShareDetailController.h"
-#import "HPBanner.h"
+#import "HPBannerView.h"
 #import "HPCalendarView.h"
 #import "HPPageControlFactory.h"
 
-@interface HPShareDetailController () <HPBannerDelegate>
+@interface HPShareDetailController () <HPBannerViewDelegate>
+
+@property (nonatomic, weak) HPBannerView *bannerView;
 
 @property (nonatomic, weak) HPPageControl *pageControl;
 
@@ -88,6 +90,18 @@
     [_calendarView setSelectedDates:selectedDates];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [_bannerView startAutoScrollWithInterval:2.0];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [_bannerView stopAutoScroll];
+}
+
 /*
 #pragma mark - Navigation
 
@@ -107,11 +121,12 @@
         make.edges.equalTo(self.view);
     }];
     
-    HPBanner *banner = [[HPBanner alloc] init];
-    [banner setDelegate:self];
-    [banner setImageArray:@[[UIImage imageNamed:@"shared_shop_details_background"], [UIImage imageNamed:@"shared_shop_details_background"], [UIImage imageNamed:@"shared_shop_details_background"]]];
-    [scrollView addSubview:banner];
-    [banner mas_makeConstraints:^(MASConstraintMaker *make) {
+    HPBannerView *bannerView = [[HPBannerView alloc] init];
+    [bannerView setBannerViewDelegate:self];
+    [bannerView setImages:@[[UIImage imageNamed:@"shared_shop_details_background"], [UIImage imageNamed:@"shared_shop_details_background"], [UIImage imageNamed:@"shared_shop_details_background"]]];
+    [scrollView addSubview:bannerView];
+    _bannerView = bannerView;
+    [bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(scrollView).with.offset(-g_statusBarHeight);
         make.left.and.width.equalTo(scrollView);
         make.height.mas_equalTo(230.f * g_rateWidth);
@@ -135,14 +150,14 @@
         make.height.mas_equalTo(44.f);
     }];
     
-    HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleCirlcle];
+    HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleCircle];
     [pageControl setNumberOfPages:3];
     [pageControl setCurrentPage:0];
     [scrollView addSubview:pageControl];
     _pageControl = pageControl;
     [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(scrollView);
-        make.bottom.equalTo(banner);
+        make.bottom.equalTo(bannerView);
     }];
     
     UIView *titleRegion = [[UIView alloc] init];
@@ -150,7 +165,7 @@
     [scrollView addSubview:titleRegion];
     [titleRegion mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(scrollView);
-        make.top.equalTo(banner.mas_bottom);
+        make.top.equalTo(bannerView.mas_bottom);
         make.height.mas_equalTo(127.f * g_rateWidth);
     }];
     [self setupTitleRegion:titleRegion];
@@ -542,9 +557,9 @@
     }];
 }
 
-#pragma mark - HPBannerDelegate
+#pragma mark - HPbannerViewDelegate
 
-- (void)banner:(HPBanner *)banner didScrollAtIndex:(NSInteger)index {
+- (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
     [_pageControl setCurrentPage:index];
 }
 

@@ -1,18 +1,18 @@
 //
-//  HPShareSpaceListController.m
+//  HPShareShopListController.m
 //  HPShareApp
 //
-//  Created by HP on 2018/11/30.
+//  Created by HP on 2018/12/3.
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPShareSpaceListController.h"
+#import "HPShareShopListController.h"
 #import "HPBannerView.h"
 #import "HPPageControlFactory.h"
 
 #define BANNER_SEPARATOR_HEIGHT 150.f * g_rateWidth + 10.f
 
-@interface HPShareSpaceListController () <HPBannerViewDelegate>
+@interface HPShareShopListController () <HPBannerViewDelegate>
 
 @property (nonatomic, weak) UITableView *tableView;
 
@@ -22,7 +22,7 @@
 
 @end
 
-@implementation HPShareSpaceListController
+@implementation HPShareShopListController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -45,18 +45,18 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"共享空间"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"共享店铺"];
     
     UITableView *tableView = [[UITableView alloc] init];
     [tableView setBackgroundColor:UIColor.clearColor];
@@ -97,8 +97,8 @@
     UIView *view = [[UIView alloc] init];
     
     HPBannerView *bannerView = [[HPBannerView alloc] init];
-    [bannerView setImages:@[[UIImage imageNamed:@"banner_share_space_red"],
-                            [UIImage imageNamed:@"banner_share_space_purple"]]];
+    [bannerView setImages:@[[UIImage imageNamed:@"banner_share_shop_red"],
+                            [UIImage imageNamed:@"banner_share_shop_purple"]]];
     [bannerView setBannerViewDelegate:self];
     [bannerView setImageContentMode:UIViewContentModeCenter];
     [view addSubview:bannerView];

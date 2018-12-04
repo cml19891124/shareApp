@@ -8,7 +8,6 @@
 
 #import "HPMyCardController.h"
 #import "HPShareListCell.h"
-#import "UIScrollView+GestureConflict.h"
 
 @interface HPMyCardController () <UITableViewDelegate, UITableViewDataSource>
 

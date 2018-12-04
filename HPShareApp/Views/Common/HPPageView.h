@@ -16,11 +16,14 @@
 
 - (UIView *)pageView:(HPPageView *)pageView viewAtPageIndex:(NSInteger)index;
 
+@optional
+- (void)pageView:(HPPageView *)pageView didScrollAtIndex:(NSInteger)index;
+
 @end
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPPageView : HPBaseView
+@interface HPPageView : HPBaseView <UIScrollViewDelegate>
 
 @property (nonatomic, assign) CGFloat pageMarginLeft;
 
@@ -29,6 +32,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat pageSpace;
 
 @property (nonatomic, weak) id <HPPageViewDelegate> delegate;
+
+@property (nonatomic, weak, readonly) UIScrollView *scrollView;
+
+- (void)refreshPageItem;
 
 @end
 

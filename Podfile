@@ -4,6 +4,9 @@
 target 'HPShareApp' do
   pod 'MBProgressHUD', '~> 1.1.0'
   pod 'Masonry'
+  pod 'AMap3DMap'
+  pod 'AMapSearch'
+  pod 'AMapLocation'
   use_frameworks!
   pod 'Charts'
 

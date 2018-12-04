@@ -123,7 +123,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
-    
     NSDictionary *dict = self.dataArray[indexPath.row];
     
     NSString *title = dict[@"title"];

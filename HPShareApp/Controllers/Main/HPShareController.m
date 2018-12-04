@@ -9,24 +9,26 @@
 #import "HPShareController.h"
 #import "HPShareRecommendCard.h"
 #import "HPImageUtil.h"
-#import "HPBanner.h"
+#import "HPBannerView.h"
 #import "HPAlignCenterButton.h"
 #import "HPSharePersonCard.h"
 #import "HPPageControlFactory.h"
 
-@interface HPShareController () <HPBannerDelegate>
+@interface HPShareController () <HPBannerViewDelegate, HPPageViewDelegate>
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 
 @property (nonatomic, weak) HPPageControl *pageControl;
 
-@property (nonatomic, weak) HPBanner *baner;
+@property (nonatomic, weak) HPBannerView *bannerView;
 
 @property (nonatomic, weak) HPShareRecommendCard *shareCard_1;
 
 @property (nonatomic, weak) HPShareRecommendCard *shareCard_2;
 
-@property (nonatomic, weak) UIScrollView *shareRecommendScrollView;
+@property (nonatomic, weak) HPPageView *sharePersonPageView;
+
+@property (nonatomic, strong) NSArray *sharePersonData;
 
 @end
 
@@ -62,12 +64,13 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    [_bannerView startAutoScrollWithInterval:2.0];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    [_baner stopAutoScroll];
+    [_bannerView stopAutoScroll];
 }
 
 /*
@@ -87,14 +90,16 @@
     [self.view addSubview:scrollView];
     [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
+        make.top.and.left.and.width.equalTo(self.view);
+        make.bottom.equalTo(self.view).with.offset(-g_tabBarHeight);
     }];
     
-    HPBanner *banner = [[HPBanner alloc] init];
-    [banner setImageArray:@[[UIImage imageNamed:@"shouye_banner"], [UIImage imageNamed:@"shouye_banner"], [UIImage imageNamed:@"shouye_banner"]]];
-    [banner setDelegate:self];
-    [scrollView addSubview:banner];
-    _baner = banner;
-    [banner mas_makeConstraints:^(MASConstraintMaker *make) {
+    HPBannerView *bannerView = [[HPBannerView alloc] init];
+    [bannerView setImages:@[[UIImage imageNamed:@"shouye_banner"], [UIImage imageNamed:@"shouye_banner"], [UIImage imageNamed:@"shouye_banner"]]];
+    [bannerView setBannerViewDelegate:self];
+    [scrollView addSubview:bannerView];
+    _bannerView = bannerView;
+    [bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(scrollView).with.offset(-g_statusBarHeight);
         make.left.and.width.equalTo(scrollView);
         make.height.mas_equalTo(225.f * g_rateWidth);
@@ -103,11 +108,11 @@
     HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleRoundedRect];
     [pageControl setNumberOfPages:3];
     [pageControl setCurrentPage:0];
-    [banner addSubview:pageControl];
+    [scrollView addSubview:pageControl];
     _pageControl = pageControl;
     [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(banner);
-        make.bottom.equalTo(banner).with.offset(-42.f * g_rateWidth);
+        make.centerX.equalTo(scrollView);
+        make.bottom.equalTo(bannerView).with.offset(-42.f * g_rateWidth);
     }];
     
     UIView *searchView = [[UIView alloc] init];
@@ -131,7 +136,7 @@
     [menuPanel setBackgroundColor:UIColor.whiteColor];
     [scrollView addSubview:menuPanel];
     [menuPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(banner).with.offset(67.f * g_rateWidth);
+        make.bottom.equalTo(bannerView).with.offset(67.f * g_rateWidth);
         make.centerX.equalTo(scrollView);
         make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 105.f * g_rateWidth));
     }];
@@ -336,12 +341,14 @@
 - (void)setupShareRecommendRegion:(UIView *)view {
     UILabel *titleLabel = [self setupTitle:@"共享人推荐" ofRegion:view];
     
-    UIScrollView *scrollView = [[UIScrollView alloc] init];
-    [scrollView setClipsToBounds:NO];
-    [scrollView setShowsHorizontalScrollIndicator:NO];
-    [view addSubview:scrollView];
-    _shareRecommendScrollView = scrollView;
-    [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+    HPPageView *pageView = [[HPPageView alloc] init];
+    [pageView setPageMarginLeft:15.f * g_rateWidth];
+    [pageView setPageSpace:15.f * g_rateWidth];
+    [pageView setPageWidth:291.f * g_rateWidth];
+    [pageView setDelegate:self];
+    [view addSubview:pageView];
+    _sharePersonPageView = pageView;
+    [pageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.right.equalTo(view);
         make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f);
         make.height.mas_equalTo(187.f * g_rateWidth);
@@ -350,42 +357,9 @@
 }
 
 - (void)reloadShareRecommendRegionWithDate:(NSArray *)data {
-    for (int i = 0; i < data.count; i ++) {
-        NSDictionary *dict = data[i];
-        
-        HPSharePersonCard *sharePersonCard;
-        
-        if (_shareRecommendScrollView.subviews.count > i) {
-            sharePersonCard = _shareRecommendScrollView.subviews[i];
-        }
-        else {
-            sharePersonCard = [[HPSharePersonCard alloc] init];
-            [_shareRecommendScrollView addSubview:sharePersonCard];
-            [sharePersonCard mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(self.shareRecommendScrollView);
-                make.width.mas_equalTo(291.f * g_rateWidth);
-                make.height.mas_equalTo(187.f * g_rateWidth);
-                
-                if (i == 0) {
-                    make.left.equalTo(self.shareRecommendScrollView).with.offset(15.f * g_rateWidth);
-                }
-                else {
-                    UIView *lastShareCard = self.shareRecommendScrollView.subviews[i - 1];
-                    make.left.equalTo(lastShareCard.mas_right).with.offset(15.f * g_rateWidth);
-                }
-                
-                if (i == data.count - 1) {
-                    make.right.equalTo(self.shareRecommendScrollView).with.offset(-15.f * g_rateWidth);
-                }
-            }];
-        }
-        
-        [sharePersonCard setPortrait:dict[@"portrait"]];
-        [sharePersonCard setUserName:dict[@"userName"]];
-        [sharePersonCard setCompany:dict[@"company"]];
-        [sharePersonCard setSignature:dict[@"signature"]];
-        [sharePersonCard setDescription:dict[@"desc"]];
-    }
+    _sharePersonData = data;
+    
+    [_sharePersonPageView refreshPageItem];
 }
 
 - (void)setupShareProcessRegion:(UIView *)view {
@@ -509,7 +483,7 @@
         make.centerX.equalTo(view);
     }];
     
-    UILabel *indexLabel = [[UILabel alloc] init];\
+    UILabel *indexLabel = [[UILabel alloc] init];
     [indexLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
     [indexLabel setTextColor:COLOR_BLACK_666666];
     [indexLabel setText:index];
@@ -534,17 +508,35 @@
     return view;
 }
 
+#pragma mark - HPageViewDelegate
+
+- (UIView *)pageView:(HPPageView *)pageView viewAtPageIndex:(NSInteger)index {
+    NSDictionary *dict = _sharePersonData[index];
+    
+    HPSharePersonCard *sharePersonCard = [[HPSharePersonCard alloc] init];
+    [sharePersonCard setPortrait:dict[@"portrait"]];
+    [sharePersonCard setUserName:dict[@"userName"]];
+    [sharePersonCard setCompany:dict[@"company"]];
+    [sharePersonCard setSignature:dict[@"signature"]];
+    [sharePersonCard setDescription:dict[@"desc"]];
+    
+    return sharePersonCard;
+}
+
+- (NSInteger)pageNumberOfPageView:(HPPageView *)pageView {
+    return _sharePersonData.count;
+}
+
 
 #pragma mark - HPBannerDelegate
 
-- (void)banner:(HPBanner *)banner didScrollAtIndex:(NSInteger)index {
+- (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
     [_pageControl setCurrentPage:index];
 }
 
 #pragma mark - onClick
 
 - (void)onClickMoreView:(UIView *)view {
-    [_baner stopAutoScroll];
     
     [self pushVCByClassName:@"HPShareListController"];
 }
@@ -552,6 +544,15 @@
 - (void)onClickShareBtn:(HPAlignCenterButton *)btn {
     if ([btn.text isEqualToString:@"共享空间"]) {
         [self pushVCByClassName:@"HPShareSpaceListController"];
+    }
+    else if ([btn.text isEqualToString:@"共享店铺"]) {
+        [self pushVCByClassName:@"HPShareShopListController"];
+    }
+    else if ([btn.text isEqualToString:@"共享货品"]) {
+        [self pushVCByClassName:@"HPShareGoodViewController"];
+    }
+    else if ([btn.text isEqualToString:@"共享地图"]) {
+        [self pushVCByClassName:@"HPShareMapController"];
     }
 }
 

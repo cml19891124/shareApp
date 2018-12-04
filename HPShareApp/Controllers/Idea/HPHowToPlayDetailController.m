@@ -7,11 +7,13 @@
 //
 
 #import "HPHowToPlayDetailController.h"
-#import "HPBanner.h"
+#import "HPBannerView.h"
 #import "HPImageUtil.h"
 #import "HPPageControlFactory.h"
 
-@interface HPHowToPlayDetailController () <HPBannerDelegate>
+@interface HPHowToPlayDetailController () <HPBannerViewDelegate>
+
+@property (nonatomic, weak) HPBannerView *bannerView;
 
 @property (nonatomic, weak) HPPageControl *pageControl;
 
@@ -60,6 +62,18 @@
     [_afterSecondDescLabel setText:@"轻食店入驻健身房后，减少了店铺租金的压力。健身房给轻食店带来了大量稳定的客流，客户匹配程度非常高，增加了销售，带来收益。"];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [_bannerView startAutoScrollWithInterval:2.0];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [_bannerView stopAutoScroll];
+}
+
 /*
 #pragma mark - Navigation
 
@@ -81,11 +95,12 @@
     
     NSArray *images = @[[UIImage imageNamed:@"jingxuanwanfa_banner"], [UIImage imageNamed:@"jingxuanwanfa_banner"], [UIImage imageNamed:@"jingxuanwanfa_banner"]];
     
-    HPBanner *banner = [[HPBanner alloc] init];
-    [banner setImageArray:images];
-    [banner setDelegate:self];
-    [scrollView addSubview:banner];
-    [banner mas_makeConstraints:^(MASConstraintMaker *make) {
+    HPBannerView *bannerView = [[HPBannerView alloc] init];
+    [bannerView setImages:images];
+    [bannerView setBannerViewDelegate:self];
+    [scrollView addSubview:bannerView];
+    _bannerView = bannerView;
+    [bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(scrollView).with.offset(- g_statusBarHeight);
         make.left.and.width.equalTo(scrollView);
         make.height.mas_equalTo(225.f * g_rateWidth);
@@ -121,18 +136,18 @@
     HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleRoundedRect];
     [pageControl setNumberOfPages:3];
     [pageControl setCurrentPage:0];
-    [banner addSubview:pageControl];
+    [scrollView addSubview:pageControl];
     _pageControl = pageControl;
     [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(banner);
-        make.bottom.equalTo(banner).with.offset(-22.f * g_rateWidth);
+        make.centerX.equalTo(scrollView);
+        make.bottom.equalTo(bannerView).with.offset(-22.f * g_rateWidth);
     }];
     
     UIView *topicView = [[UIView alloc] init];
     [topicView setBackgroundColor:UIColor.whiteColor];
     [scrollView addSubview:topicView];
     [topicView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(banner.mas_bottom);
+        make.top.equalTo(bannerView.mas_bottom);
         make.left.and.width.equalTo(scrollView);
     }];
     [self setupTopicView:topicView];
@@ -364,7 +379,7 @@
 
 #pragma mark - HPBannerDelegate
 
-- (void)banner:(HPBanner *)banner didScrollAtIndex:(NSInteger)index {
+- (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
     [_pageControl setCurrentPage:index];
 }
 

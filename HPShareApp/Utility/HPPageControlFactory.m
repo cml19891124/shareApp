@@ -16,7 +16,7 @@
     HPPageControl *pageControl = nil;
     
     switch (style) {
-        case HPPageControlStyleCirlcle:
+        case HPPageControlStyleCircle:
             pageControl = [[HPCirclePageControl alloc] init];
             break;
         case HPPageControlStyleRoundedRect:

@@ -64,10 +64,12 @@
 #define COLOR_GRAY_F0F0F0 [UIColor colorWithHexString:@"#F0F0F0"]
 #define COLOR_GRAY_F1F1F1 [UIColor colorWithHexString:@"#F1F1F1"]
 #define COLOR_GRAY_F2F2F2 [UIColor colorWithHexString:@"#F2F2F2"]
+#define COLOR_GRAY_F4F4F4 [UIColor colorWithHexString:@"#F4F4F4"]
 #define COLOR_GRAY_F6F6F6 [UIColor colorWithHexString:@"#F6F6F6"]
 #define COLOR_GRAY_F7F7F7 [UIColor colorWithHexString:@"#F7F7F7"]
 #define COLOR_GRAY_F8F8F8 [UIColor colorWithHexString:@"#F8F8F8"]
 #define COLOR_GRAY_F8FAFC [UIColor colorWithHexString:@"#F8FAFC"]
+#define COLOR_GRAY_FAF9FE [UIColor colorWithHexString:@"#FAF9FE"]
 #define COLOR_GRAY_FBFBFB [UIColor colorWithHexString:@"#FBFBFB"]
 #define COLOR_GRAY_EEEEEE [UIColor colorWithHexString:@"#eeeeee"]
 #define COLOR_GRAY_CCCCCC [UIColor colorWithHexString:@"#CCCCCC"]
@@ -94,5 +96,10 @@
 #define FONT_MEDIUM @"PingFangSC-Medium"
 #define FONT_REGULAR @"PingFangSC-Regular"
 #define FONT_LIGHT @"PingFangSC-Light"
+
+/**
+ 高德地图API key
+ */
+#define AMAP_KEY @"bdd5ea7841253bf7196e963c2e5a830a"
 
 #endif /* Macro_h */

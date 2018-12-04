@@ -54,7 +54,6 @@
 		E661B0E2219D7BA100C86CF5 /* HPOwnerCardDefineController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0E1219D7BA100C86CF5 /* HPOwnerCardDefineController.m */; };
 		E661B0E6219E53A500C86CF5 /* HPTagDialogView.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0E5219E53A500C86CF5 /* HPTagDialogView.m */; };
 		E661B0EA219EBF3600C86CF5 /* HPShareRecommendCard.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0E9219EBF3600C86CF5 /* HPShareRecommendCard.m */; };
-		E661B0ED219EDCC800C86CF5 /* HPBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0EC219EDCC800C86CF5 /* HPBanner.m */; };
 		E661B0F1219EE85000C86CF5 /* HPShareListController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0F0219EE85000C86CF5 /* HPShareListController.m */; };
 		E661B0F4219FC13E00C86CF5 /* HPShareListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0F3219FC13E00C86CF5 /* HPShareListCell.m */; };
 		E661B0F7219FEBDC00C86CF5 /* HPShareDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B0F6219FEBDC00C86CF5 /* HPShareDetailController.m */; };
@@ -104,6 +103,14 @@
 		E6D75F6421B2301600B2067C /* HPCirclePageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F6321B2301600B2067C /* HPCirclePageControl.m */; };
 		E6D75F6721B230FC00B2067C /* HPPageControlFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F6621B230FC00B2067C /* HPPageControlFactory.m */; };
 		E6D75F6A21B253D000B2067C /* HPPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F6921B253D000B2067C /* HPPageView.m */; };
+		E6D75F7621B4B6EE00B2067C /* HPBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F7521B4B6EE00B2067C /* HPBannerView.m */; };
+		E6D75F7921B54E7900B2067C /* HPShareShopListController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F7821B54E7900B2067C /* HPShareShopListController.m */; };
+		E6D75F7C21B54FDD00B2067C /* HPShareGoodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F7B21B54FDD00B2067C /* HPShareGoodViewController.m */; };
+		E6D75F7F21B6463400B2067C /* HPShareManageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F7E21B6463400B2067C /* HPShareManageCell.m */; };
+		E6D75F8221B646B000B2067C /* HPShareManageController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F8121B646B000B2067C /* HPShareManageController.m */; };
+		E6D75F8521B65AAD00B2067C /* HPFeedbackController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F8421B65AAD00B2067C /* HPFeedbackController.m */; };
+		E6D75F8821B68A4D00B2067C /* HPCustomerServiceModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F8721B68A4D00B2067C /* HPCustomerServiceModalView.m */; };
+		E6D75F8B21B69D0D00B2067C /* HPShareMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F8A21B69D0D00B2067C /* HPShareMapController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -221,8 +228,6 @@
 		E661B0E5219E53A500C86CF5 /* HPTagDialogView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPTagDialogView.m; sourceTree = "<group>"; };
 		E661B0E8219EBF3600C86CF5 /* HPShareRecommendCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareRecommendCard.h; sourceTree = "<group>"; };
 		E661B0E9219EBF3600C86CF5 /* HPShareRecommendCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareRecommendCard.m; sourceTree = "<group>"; };
-		E661B0EB219EDCC800C86CF5 /* HPBanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBanner.h; sourceTree = "<group>"; };
-		E661B0EC219EDCC800C86CF5 /* HPBanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBanner.m; sourceTree = "<group>"; };
 		E661B0EF219EE85000C86CF5 /* HPShareListController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareListController.h; sourceTree = "<group>"; };
 		E661B0F0219EE85000C86CF5 /* HPShareListController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareListController.m; sourceTree = "<group>"; };
 		E661B0F2219FC13E00C86CF5 /* HPShareListCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareListCell.h; sourceTree = "<group>"; };
@@ -327,6 +332,22 @@
 		E6D75F6621B230FC00B2067C /* HPPageControlFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPPageControlFactory.m; sourceTree = "<group>"; };
 		E6D75F6821B253D000B2067C /* HPPageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPageView.h; sourceTree = "<group>"; };
 		E6D75F6921B253D000B2067C /* HPPageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPPageView.m; sourceTree = "<group>"; };
+		E6D75F7421B4B6EE00B2067C /* HPBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBannerView.h; sourceTree = "<group>"; };
+		E6D75F7521B4B6EE00B2067C /* HPBannerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBannerView.m; sourceTree = "<group>"; };
+		E6D75F7721B54E7900B2067C /* HPShareShopListController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareShopListController.h; sourceTree = "<group>"; };
+		E6D75F7821B54E7900B2067C /* HPShareShopListController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareShopListController.m; sourceTree = "<group>"; };
+		E6D75F7A21B54FDD00B2067C /* HPShareGoodViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareGoodViewController.h; sourceTree = "<group>"; };
+		E6D75F7B21B54FDD00B2067C /* HPShareGoodViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareGoodViewController.m; sourceTree = "<group>"; };
+		E6D75F7D21B6463400B2067C /* HPShareManageCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareManageCell.h; sourceTree = "<group>"; };
+		E6D75F7E21B6463400B2067C /* HPShareManageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareManageCell.m; sourceTree = "<group>"; };
+		E6D75F8021B646B000B2067C /* HPShareManageController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareManageController.h; sourceTree = "<group>"; };
+		E6D75F8121B646B000B2067C /* HPShareManageController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareManageController.m; sourceTree = "<group>"; };
+		E6D75F8321B65AAD00B2067C /* HPFeedbackController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPFeedbackController.h; sourceTree = "<group>"; };
+		E6D75F8421B65AAD00B2067C /* HPFeedbackController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPFeedbackController.m; sourceTree = "<group>"; };
+		E6D75F8621B68A4D00B2067C /* HPCustomerServiceModalView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCustomerServiceModalView.h; sourceTree = "<group>"; };
+		E6D75F8721B68A4D00B2067C /* HPCustomerServiceModalView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCustomerServiceModalView.m; sourceTree = "<group>"; };
+		E6D75F8921B69D0D00B2067C /* HPShareMapController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareMapController.h; sourceTree = "<group>"; };
+		E6D75F8A21B69D0D00B2067C /* HPShareMapController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareMapController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -609,12 +630,12 @@
 				E661B0CC219D1B9200C86CF5 /* HPRowPanel.m */,
 				E661B0CE219D24A500C86CF5 /* HPSelectTable.h */,
 				E661B0CF219D24A500C86CF5 /* HPSelectTable.m */,
-				E661B0EB219EDCC800C86CF5 /* HPBanner.h */,
-				E661B0EC219EDCC800C86CF5 /* HPBanner.m */,
 				E661B13121A2C4F500C86CF5 /* HPCalendarView.h */,
 				E661B13221A2C4F500C86CF5 /* HPCalendarView.m */,
 				E6D75F6821B253D000B2067C /* HPPageView.h */,
 				E6D75F6921B253D000B2067C /* HPPageView.m */,
+				E6D75F7421B4B6EE00B2067C /* HPBannerView.h */,
+				E6D75F7521B4B6EE00B2067C /* HPBannerView.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -656,6 +677,8 @@
 				E661B0F3219FC13E00C86CF5 /* HPShareListCell.m */,
 				E6D75F5121B0076F00B2067C /* HPFollowListCell.h */,
 				E6D75F5221B0076F00B2067C /* HPFollowListCell.m */,
+				E6D75F7D21B6463400B2067C /* HPShareManageCell.h */,
+				E6D75F7E21B6463400B2067C /* HPShareManageCell.m */,
 			);
 			path = TableViewCell;
 			sourceTree = "<group>";
@@ -667,6 +690,8 @@
 				E661B0E5219E53A500C86CF5 /* HPTagDialogView.m */,
 				E661B13B21A3DFD600C86CF5 /* HPReleaseModalView.h */,
 				E661B13C21A3DFD600C86CF5 /* HPReleaseModalView.m */,
+				E6D75F8621B68A4D00B2067C /* HPCustomerServiceModalView.h */,
+				E6D75F8721B68A4D00B2067C /* HPCustomerServiceModalView.m */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -691,6 +716,12 @@
 				E661B0F6219FEBDC00C86CF5 /* HPShareDetailController.m */,
 				E6D75F5721B1117500B2067C /* HPShareSpaceListController.h */,
 				E6D75F5821B1117500B2067C /* HPShareSpaceListController.m */,
+				E6D75F7721B54E7900B2067C /* HPShareShopListController.h */,
+				E6D75F7821B54E7900B2067C /* HPShareShopListController.m */,
+				E6D75F7A21B54FDD00B2067C /* HPShareGoodViewController.h */,
+				E6D75F7B21B54FDD00B2067C /* HPShareGoodViewController.m */,
+				E6D75F8921B69D0D00B2067C /* HPShareMapController.h */,
+				E6D75F8A21B69D0D00B2067C /* HPShareMapController.m */,
 			);
 			path = Share;
 			sourceTree = "<group>";
@@ -854,6 +885,10 @@
 			children = (
 				E661B13E21A6355E00C86CF5 /* HPMyCardController.h */,
 				E661B13F21A6355E00C86CF5 /* HPMyCardController.m */,
+				E6D75F8021B646B000B2067C /* HPShareManageController.h */,
+				E6D75F8121B646B000B2067C /* HPShareManageController.m */,
+				E6D75F8321B65AAD00B2067C /* HPFeedbackController.h */,
+				E6D75F8421B65AAD00B2067C /* HPFeedbackController.m */,
 			);
 			path = Function;
 			sourceTree = "<group>";
@@ -906,6 +941,7 @@
 				E629212E219AA83000BEF16C /* Frameworks */,
 				E629212F219AA83000BEF16C /* Resources */,
 				70D9735B568E410427B2682C /* [CP] Embed Pods Frameworks */,
+				57714F74091F5362A671B1F2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1045,6 +1081,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		57714F74091F5362A671B1F2 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-resources.sh",
+				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		70D9735B568E410427B2682C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1119,9 +1173,11 @@
 				E661B12E21A28E8500C86CF5 /* JTCalendarPageView.m in Sources */,
 				E6292179219AB7B800BEF16C /* UIColor+Hex.m in Sources */,
 				E6D75F2521AD1B3900B2067C /* HPLoginController.m in Sources */,
+				E6D75F7C21B54FDD00B2067C /* HPShareGoodViewController.m in Sources */,
 				E6D75F3E21AFDEB700B2067C /* HPRightImageButton.m in Sources */,
 				E661B0C7219CFF1800C86CF5 /* HPProgressHUD.m in Sources */,
 				E661B0CD219D1B9200C86CF5 /* HPRowPanel.m in Sources */,
+				E6D75F7F21B6463400B2067C /* HPShareManageCell.m in Sources */,
 				E661B14621A68BE300C86CF5 /* HPRoundedRectPageControl.m in Sources */,
 				E661B12721A28E8500C86CF5 /* JTCalendarDelegateManager.m in Sources */,
 				E661B0AA219C1AE800C86CF5 /* HPBaseModalView.m in Sources */,
@@ -1133,11 +1189,12 @@
 				E661B14A21A6986B00C86CF5 /* StyledPageControl.m in Sources */,
 				E661B12F21A28E8500C86CF5 /* JTCalendarMenuView.m in Sources */,
 				E6D75F5321B0076F00B2067C /* HPFollowListCell.m in Sources */,
-				E661B0ED219EDCC800C86CF5 /* HPBanner.m in Sources */,
 				E661B0D0219D24A500C86CF5 /* HPSelectTable.m in Sources */,
 				E661B13321A2C4F500C86CF5 /* HPCalendarView.m in Sources */,
+				E6D75F8B21B69D0D00B2067C /* HPShareMapController.m in Sources */,
 				E6D75F5C21B119BC00B2067C /* HPBaseShareListController.m in Sources */,
 				E6D75F3621AE250300B2067C /* HPKeepController.m in Sources */,
+				E6D75F7921B54E7900B2067C /* HPShareShopListController.m in Sources */,
 				E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */,
 				E6D75F4A21AFF37B00B2067C /* HPUnbindPhoneController.m in Sources */,
 				E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */,
@@ -1170,6 +1227,7 @@
 				E661B0C4219CFE6D00C86CF5 /* HPCheckTableCell.m in Sources */,
 				E6D75F3B21AEA15400B2067C /* HPConfigCenterController.m in Sources */,
 				E661B12821A28E8500C86CF5 /* JTCalendarManager.m in Sources */,
+				E6D75F8221B646B000B2067C /* HPShareManageController.m in Sources */,
 				E661B0EA219EBF3600C86CF5 /* HPShareRecommendCard.m in Sources */,
 				E661B0DF219D4C8E00C86CF5 /* HPLinkageData.m in Sources */,
 				E6292185219ABF4400BEF16C /* HPGradientUtil.m in Sources */,
@@ -1180,12 +1238,15 @@
 				E661B0F4219FC13E00C86CF5 /* HPShareListCell.m in Sources */,
 				E6D75F2B21AD4DD400B2067C /* HPRegisterController.m in Sources */,
 				E661B0F7219FEBDC00C86CF5 /* HPShareDetailController.m in Sources */,
+				E6D75F8821B68A4D00B2067C /* HPCustomerServiceModalView.m in Sources */,
 				E661B0C0219CFDEA00C86CF5 /* HPBaseTableViewCell.m in Sources */,
 				E661B0AD219C1CE100C86CF5 /* HPBaseDialogView.m in Sources */,
 				E661B0A7219C0B9800C86CF5 /* HPBaseControl.m in Sources */,
 				E661B0B6219C2C0400C86CF5 /* HPCheckDialogView.m in Sources */,
 				E661B0A4219C0B5600C86CF5 /* HPBaseView.m in Sources */,
+				E6D75F8521B65AAD00B2067C /* HPFeedbackController.m in Sources */,
 				E6D75F6721B230FC00B2067C /* HPPageControlFactory.m in Sources */,
+				E6D75F7621B4B6EE00B2067C /* HPBannerView.m in Sources */,
 				E661B0A0219BC59E00C86CF5 /* HPAlignCenterButton.m in Sources */,
 				E661B0BA219C2C6300C86CF5 /* HPCheckDialogLayout.m in Sources */,
 				E6D75F6121B22EC700B2067C /* HPPageControl.m in Sources */,
