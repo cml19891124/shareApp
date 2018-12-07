@@ -109,7 +109,7 @@
 #define ImageNamed(_pointer) ([UIImage imageNamed:_pointer])
 /* 平方-中号 */
 #define kFont_Medium(font)  [UIFont fontWithName:@"PingFangSC-Medium"size:font]
-#define kBaseUrl  @"https://app.hepaicn.com/v2/api-docs"
+#define kBaseUrl  @"https://app.hepaicn.com"
 #define BoundWithSize(str,width,font)   ([str boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:font]} context:nil])
 //APP版本号
 #define kAppVersion [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
@@ -118,7 +118,20 @@
 #define kUserDefaults       [NSUserDefaults standardUserDefaults]
 #define kNotificationCenter [NSNotificationCenter defaultCenter]
 #define iPhone5 ([[UIScreen mainScreen] bounds].size.height == 568)
+#define CODE                 [[responseObject objectForKey:@"code"] integerValue]
+#define MSG                 [responseObject objectForKey:@"msg"]
+#define ErrorNet                 [HPProgressHUD alertMessage:@"网络错误"];
+//弱引用/强引用
+#define kWeakSelf(weakSelf)  __weak __typeof(&*self)weakSelf = self;
+#define kStrongSelf(weakSelf) __strong typeof(&*weakSelf) strongSelf = weakSelf;
+
 #import "MJExtension.h"
+#import "AFNetworking.h"
+#import "HPHTTPSever.h"
+#import "HPProgressHUD.h"
+#import "HPLoginModel.h"
+#import "HPUserTool.h"
+
 //自定义打印语句
 #ifdef DEBUG
 # define HPLog(fmt, ...) NSLog((@"[文件名:%s]\n" "[函数名:%s]\n" "[行号:%d] \n" fmt), __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);

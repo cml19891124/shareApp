@@ -10,12 +10,17 @@
 #import "HPProgressHUD.h"
 #import "HPLoginByPasswordController.h"
 #import "HPValidatePhone.h"
+#import "HPLoginModel.h"
 
 @interface HPLoginController ()<UITextFieldDelegate>
 @property (nonatomic, strong) UIButton *probtn;
 @property (nonatomic, strong) UITextField *phoneNumTextField;
 @property (nonatomic, strong) UITextField *codeTextField;
 
+/**
+ 状态：1：账号密码登录；0：验证码登录
+ */
+@property (nonatomic, copy) NSString *state;
 /**
  手机号是否有效
  */
@@ -27,7 +32,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    _state = @"-1";
     [self setupUI];
 }
 
@@ -131,7 +136,6 @@
     [codeTextField setTintColor:COLOR_RED_FF3C5E];
     [codeTextField setKeyboardType:UIKeyboardTypeNumberPad];
     codeTextField.delegate = self;
-    codeTextField.text = @"545454";
 
     self.codeTextField = codeTextField;
     NSMutableAttributedString *codePlaceholder = [[NSMutableAttributedString alloc] initWithString:@"请输入验证码"];
@@ -301,12 +305,31 @@
 
 - (void)isCanLogin
 {
-    g_isLogin = YES;
-    g_isCertified = YES;
-    [HPProgressHUD alertMessage:@"登录成功"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.navigationController popViewControllerAnimated:YES];
-    });
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"code"] = _codeTextField.text;
+    dic[@"mobile"] = _phoneNumTextField.text;
+    dic[@"state"] = @"0";
+
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/login" paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            HPLoginModel *model = [HPLoginModel AccountStatusWithDict:responseObject[@"data"]];
+            [HPUserTool saveAccount:model];
+            [HPProgressHUD alertMessage:@"登录成功"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController popViewControllerAnimated:YES];
+            });
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+//    g_isLogin = YES;
+//    g_isCertified = YES;
+//    [HPProgressHUD alertMessage:@"登录成功"];
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [self.navigationController popViewControllerAnimated:YES];
+//    });
 }
 
 - (void)onClickRegisterBtn:(UIButton *)btn {
@@ -315,7 +338,33 @@
 
 - (void)onClickCodeBtn:(UIButton *)btn {
     NSLog(@"onClickCodeBtn");
+    if (_phoneNumTextField.text.length != 11) {
+        [HPProgressHUD alertMessage:@"请输入正确的手机号"];
+    }else{
+        [self getCodeNumber];
+    }
+    
 }
+
+#pragma mark - 获取验证码
+- (void)getCodeNumber
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"mobile"] = self.phoneNumTextField.text;
+    dic[@"state"] = _state;
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:@"发送成功"];
+            weakSelf.codeTextField.text = responseObject[@"data"];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        [HPProgressHUD alertMessage:@"网络错误"];
+    }];
+}
+
 
 - (void)onClickSwitchBtn:(UIButton *)btn {
     HPLoginByPasswordController *vc = [[HPLoginByPasswordController alloc] init];

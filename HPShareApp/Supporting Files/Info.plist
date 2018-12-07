@@ -57,5 +57,7 @@
 	<string>合店站需要您的同意,才能始终访问位置</string>
 	<key>NSCalendarsUsageDescriptionApp</key>
 	<string>合店站需要您的同意,才能访问日历</string>
+	<key>NSAllowsArbitraryLoads</key>
+	<true/>
 </dict>
 </plist>

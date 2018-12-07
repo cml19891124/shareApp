@@ -45,8 +45,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    if (g_isLogin) {
+    HPLoginModel *model = [HPUserTool account];
+    if (model.token) {
         [_portraitBtn setImage:[UIImage imageNamed:@"personal_center_login_head"] forState:UIControlStateNormal];
         [_loginBtn setTitle:@"早上好，董晓丽" forState:UIControlStateDisabled];
         [_loginBtn setEnabled:NO];
@@ -474,7 +474,8 @@
 #pragma mark - OnClick
 
 - (void)onClickConfigBtn:(UIButton *)btn {
-    if (!g_isLogin) {
+    HPLoginModel *model = [HPUserTool account];
+    if (!model.token) {
 //        [HPProgressHUD alertMessage:@"用户未登录"];
         [self pushVCByClassName:@"HPLoginController"];
 
@@ -493,7 +494,8 @@
 }
 
 - (void)onClickCollectionCtrl:(UIControl *)ctrl {
-    if (!g_isLogin) {
+    HPLoginModel *model = [HPUserTool account];
+    if (!model.token) {
         [HPProgressHUD alertMessage:@"用户未登录"];
         return;
     }
@@ -510,7 +512,8 @@
 }
 
 - (void)onClickFunctionBtn:(HPAlignCenterButton *)btn {
-    if (!g_isLogin) {
+    HPLoginModel *model = [HPUserTool account];
+    if (!model.token) {
         [HPProgressHUD alertMessage:@"用户未登录"];
         return;
     }

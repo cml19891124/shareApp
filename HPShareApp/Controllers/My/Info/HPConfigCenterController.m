@@ -52,14 +52,15 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self setupUI];
-    
+    HPLoginModel *model = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)model.userInfo;
     [self setPortrait:[UIImage imageNamed:@"my_business_card_default_head_image"]];
     [self setText:@"徐泽锋" ofBtnWithType:HPConfigGotoFullName];
     [self setText:@"深圳市前海合派科技有限公司" ofBtnWithType:HPConfigGotoCompany];
-    [self setText:@"15914040963" ofBtnWithType:HPConfigGotoContact];
+    [self setText:dic[@"mobile"] ofBtnWithType:HPConfigGotoContact];
     [self setText:@"Jay Gatsby" ofBtnWithType:HPConfigGotoUserName];
     [self setText:@"xzf@hepaicn.com" ofBtnWithType:HPConfigGotoMail];
-    [self setText:@"15914040963" ofBtnWithType:HPConfigGotoPhoneNum];
+    [self setText:dic[@"mobile"] ofBtnWithType:HPConfigGotoPhoneNum];
     [self setText:@"修改" ofBtnWithType:HPConfigGotoPassword];
     [self setText:@"V1.1.0" ofBtnWithType:HPConfigGotoVersion];
     [self setText:@"16.8MB" ofBtnWithType:HPConfigGotoCache];
@@ -155,6 +156,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [switchBtn setTitleColor:COLOR_PINK_FFEFF2 forState:UIControlStateNormal];
     [switchBtn setTitle:@"切换账号" forState:UIControlStateNormal];
     [switchBtn setBackgroundColor:COLOR_RED_FF3C5E];
+    [switchBtn addTarget:self action:@selector(swithAccountOfOthers:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:switchBtn];
     [switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(versionPanel.mas_bottom).with.offset(25.f * g_rateWidth);
@@ -163,7 +165,16 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.bottom.equalTo(scrollView).with.offset(-26.f * g_rateWidth);
     }];
 }
+#pragma mark - 切换账号
+- (void)swithAccountOfOthers:(UIButton *)button
+{
+    HPLoginModel *model = [HPUserTool account];
+    if (model.token) {
+        [HPUserTool deleteAccount];
+    }
+    [self.navigationController popViewControllerAnimated:YES];
 
+}
 - (void)setupPersonInfoPanel:(UIView *)view {
     UIView *portraitRow = [self addRowOfParentView:view withHeight:63.f * g_rateWidth margin:0.f isEnd:NO];
     
