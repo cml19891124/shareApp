@@ -13,6 +13,10 @@
 
 @interface HPShareDetailController () <HPBannerViewDelegate>
 
+/**
+ 联系人view
+ */
+@property (nonatomic, strong) UIView *contactRegion;
 @property (nonatomic, weak) HPBannerView *bannerView;
 
 @property (nonatomic, weak) HPPageControl *pageControl;
@@ -100,6 +104,7 @@
     [super viewWillDisappear:animated];
     
     [_bannerView stopAutoScroll];
+    [_contactRegion removeFromSuperview];
 }
 
 /*
@@ -116,9 +121,10 @@
     [self.view setBackgroundColor:COLOR_WHITE_FAF9FE];
     
     UIScrollView *scrollView = [[UIScrollView alloc] init];
+    [scrollView setBackgroundColor:COLOR_WHITE_FAF9FE];
     [self.view addSubview:scrollView];
     [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 60.f * g_rateWidth, 0));
     }];
     
     HPBannerView *bannerView = [[HPBannerView alloc] init];
@@ -197,6 +203,7 @@
         make.left.and.width.equalTo(scrollView);
         make.top.equalTo(shareDateRegion.mas_bottom).with.offset(15.f * g_rateWidth);
         make.height.mas_equalTo(180.f * g_rateWidth);
+        make.bottom.equalTo(scrollView);
     }];
     [self setupRemarkRegion:remarkRegion];
     
@@ -205,12 +212,22 @@
     [contactRegion.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
     [contactRegion.layer setShadowOffset:CGSizeMake(0.f, -2.f)];
     [contactRegion.layer setShadowOpacity:0.19f];
-    [scrollView addSubview:contactRegion];
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    [window addSubview:contactRegion];
+    self.contactRegion = contactRegion;
     [contactRegion mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(remarkRegion.mas_bottom).with.offset(60.f * g_rateWidth);
-        make.left.and.width.equalTo(scrollView);
+        make.top.equalTo(window.mas_bottom).with.offset(-60.f * g_rateWidth);
+        make.left.and.width.equalTo(window);
+        if (IPHONE_HAS_NOTCH) {
+            //改变tabbar背景颜色
+            
+            [[UITabBar appearance] setTintColor:UIColor.whiteColor];
+            
+        }else{
+        }
         make.height.mas_equalTo(60.f * g_rateWidth);
-        make.bottom.equalTo(scrollView);
+
+        make.bottom.equalTo(window);
     }];
     [self setupContactRegion:contactRegion];
 }
@@ -506,11 +523,15 @@
         make.bottom.equalTo(view).with.offset(-20.f * g_rateWidth);
     }];
 }
-
+- (void)MyCardVC:(UITapGestureRecognizer *)tap
+{
+ [self pushVCByClassName:@"HPMyCardController"];
+}
 - (void)setupContactRegion:(UIView *)view {
     UIImageView *portrait = [[UIImageView alloc] init];
     [portrait.layer setMasksToBounds:YES];
     [portrait.layer setCornerRadius:20.f * g_rateWidth];
+    portrait.userInteractionEnabled = YES;
     [view addSubview:portrait];
     _portrait = portrait;
     [portrait mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -518,6 +539,8 @@
         make.centerY.equalTo(view);
         make.size.mas_equalTo(CGSizeMake(40.f * g_rateWidth, 40.f * g_rateWidth));
     }];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(MyCardVC:)];
+    [portrait addGestureRecognizer:tap];
     
     UILabel *userNameLabel = [[UILabel alloc] init];
     [userNameLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];

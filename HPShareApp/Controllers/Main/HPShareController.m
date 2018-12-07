@@ -13,9 +13,17 @@
 #import "HPAlignCenterButton.h"
 #import "HPSharePersonCard.h"
 #import "HPPageControlFactory.h"
+#import "iCarousel.h"
+#import "HPMyCardController.h"
+#import "HPShareDetailController.h"
 
-@interface HPShareController () <HPBannerViewDelegate, HPPageViewDelegate>
-
+#import <AMapFoundationKit/AMapFoundationKit.h>
+#import <AMapSearchKit/AMapSearchKit.h>
+#import <MAMapKit/MAMapKit.h>
+#import <AMapLocationKit/AMapLocationKit.h>
+#import "HPNearbyShareView.h"
+@interface HPShareController () <HPBannerViewDelegate,iCarouselDelegate,iCarouselDataSource,HPSharePersonCardDelegate,MAMapViewDelegate,AMapLocationManagerDelegate,CLLocationManagerDelegate,AMapSearchDelegate>
+@property (nonatomic, strong) UIView *localMapView;
 @property (nonatomic, weak) UIScrollView *scrollView;
 
 @property (nonatomic, weak) HPPageControl *pageControl;
@@ -29,11 +37,76 @@
 @property (nonatomic, weak) HPPageView *sharePersonPageView;
 
 @property (nonatomic, strong) NSArray *sharePersonData;
+@property(nonatomic,strong) iCarousel *carousel;
+
+@property (nonatomic, strong) MAMapView *mapView;
+@property (strong, nonatomic) AMapLocationManager * locationManager;//定位用
 
 @end
 
 @implementation HPShareController
-
+#pragma mark - 初始化地图
+- (void)initMapView{
+    
+    //初始化地图
+    self.mapView = [[MAMapView alloc] initWithFrame:self.localMapView.bounds];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"style.data" ofType:nil];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    [self.mapView setCustomMapStyleWithWebData:data];
+    [self.mapView setCustomMapStyleEnabled:YES];
+    [self.mapView setZoomLevel:17 animated:YES];
+//    [self.view addSubview:self.mapView];
+    self.mapView.layer.cornerRadius = 5 * g_rateWidth;
+    self.mapView.layer.masksToBounds = YES;
+    self.mapView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [AMapServices sharedServices].enableHTTPS = YES;
+    self.mapView.delegate = self;
+    MAUserLocationRepresentation *UserLocationRep = [[MAUserLocationRepresentation alloc] init];
+    
+    UserLocationRep.showsAccuracyRing = NO;///精度圈是否显示，默认YES
+    [self.mapView updateUserLocationRepresentation:UserLocationRep];
+    
+    
+    // 开启定位
+    self.mapView.showsUserLocation = YES;
+    self.mapView.userTrackingMode = MAUserTrackingModeFollow;
+    self.mapView.headingFilter = 10;
+    self.mapView.distanceFilter = 5;
+    self.mapView.zoomEnabled = YES;
+    self.mapView.scrollEnabled = YES;
+    
+    //路径规划
+//    self.mapSearch = [[AMapSearchAPI alloc] init];
+//    self.mapSearch.delegate = self;
+    
+    //    iOS 去除高德地图下方的 logo 图标
+    [self.mapView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if ([obj isKindOfClass:[UIImageView class]]) {
+            
+            UIImageView * logoM = obj;
+            
+            logoM.layer.contents = (__bridge id)[UIImage imageNamed:@""].CGImage;
+            
+        }
+        
+    }];
+    //iOS 去除高德地图下方的 地图比例尺
+    self.mapView.showsScale = NO;
+    //导航
+    //初始化AMapNaviDriveManager
+//    if (self.driveManager == nil)
+//    {
+//        self.driveManager = [[AMapNaviDriveManager alloc] init];
+//        [self.driveManager setDelegate:self];
+//    }
+    
+    //添加屏幕中心点
+    //[self.mapView addAnnotation:self.centerPoint];
+//    [self.view bringSubviewToFront:self.rentNotiView];
+    
+    
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -222,10 +295,10 @@
         make.top.equalTo(view).with.offset(17.f * g_rateWidth);
     }];
     
-    HPAlignCenterButton *shopBtn = [[HPAlignCenterButton alloc] initWithImage:[UIImage imageNamed:@"share_shop"]];
+    HPAlignCenterButton *shopBtn = [[HPAlignCenterButton alloc] initWithImage:[UIImage imageNamed:@"icon_renli"]];
     [shopBtn setTextFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
     [shopBtn setTextColor:COLOR_BLACK_333333];
-    [shopBtn setText:@"共享店铺"];
+    [shopBtn setText:@"人力共享"];
     [shopBtn addTarget:self action:@selector(onClickShareBtn:) forControlEvents:UIControlEventTouchUpInside];
     [centerView addSubview:shopBtn];
     [shopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -235,10 +308,10 @@
         make.bottom.equalTo(centerView);
     }];
     
-    HPAlignCenterButton *spaceBtn = [[HPAlignCenterButton alloc] initWithImage:[UIImage imageNamed:@"share_space"]];
+    HPAlignCenterButton *spaceBtn = [[HPAlignCenterButton alloc] initWithImage:[UIImage imageNamed:@"icon_goods"]];
     [spaceBtn setTextFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
     [spaceBtn setTextColor:COLOR_BLACK_333333];
-    [spaceBtn setText:@"共享空间"];
+    [spaceBtn setText:@"货品共享"];
     [spaceBtn addTarget:self action:@selector(onClickShareBtn:) forControlEvents:UIControlEventTouchUpInside];
     [centerView addSubview:spaceBtn];
     [spaceBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -248,10 +321,10 @@
         make.bottom.equalTo(centerView);
     }];
     
-    HPAlignCenterButton *goodBtn = [[HPAlignCenterButton alloc] initWithImage:[UIImage imageNamed:@"share_good"]];
+    HPAlignCenterButton *goodBtn = [[HPAlignCenterButton alloc] initWithImage:[UIImage imageNamed:@"icon_stores"]];
     [goodBtn setTextFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
     [goodBtn setTextColor:COLOR_BLACK_333333];
-    [goodBtn setText:@"共享货品"];
+    [goodBtn setText:@"店铺共享"];
     [goodBtn addTarget:self action:@selector(onClickShareBtn:) forControlEvents:UIControlEventTouchUpInside];
     [centerView addSubview:goodBtn];
     [goodBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -261,7 +334,7 @@
         make.bottom.equalTo(centerView);
     }];
     
-    HPAlignCenterButton *mapBtn = [[HPAlignCenterButton alloc] initWithImage:[UIImage imageNamed:@"share_map"]];
+    HPAlignCenterButton *mapBtn = [[HPAlignCenterButton alloc] initWithImage:[UIImage imageNamed:@"icon_map"]];
     [mapBtn setTextFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
     [mapBtn setTextColor:COLOR_BLACK_333333];
     [mapBtn setText:@"共享地图"];
@@ -324,23 +397,54 @@
 }
 
 - (void)setupNearbyShareRegion:(UIView *)view {
+    //初始化地图
+    [self initMapView];
     UILabel *titleLabel = [self setupTitle:@"附近共享" ofRegion:view];
     
     UIView *mapView = [[UIView alloc] init];
     [mapView.layer setCornerRadius:5.f];
     [mapView setBackgroundColor:COLOR_GRAY_999999];
     [view addSubview:mapView];
+    self.localMapView = mapView;
     [mapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f);
         make.centerX.equalTo(view);
         make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 121.f * g_rateWidth));
         make.bottom.equalTo(view).with.offset(-5.f * g_rateWidth);
     }];
+    [mapView addSubview:self.mapView];
+    
+    UIView *coverView = [UIView new];
+    coverView.backgroundColor = UIColor.blackColor;
+    coverView.alpha = 0.4;
+    [coverView.layer setCornerRadius:5.f];
+    coverView.layer.masksToBounds = YES;
+    [mapView insertSubview:coverView aboveSubview:self.mapView];
+    [coverView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
+    
+    HPNearbyShareView *nearbyView = [HPNearbyShareView new];
+    nearbyView.layer.cornerRadius = 4;
+    nearbyView.layer.masksToBounds = YES;
+    [mapView addSubview:nearbyView];
+    [mapView bringSubviewToFront:nearbyView];
+    [nearbyView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(315.f * g_rateWidth);
+        make.height.mas_equalTo(91.f * g_rateWidth);
+        make.center.mas_equalTo(mapView);
+    }];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareDetailVC:)];
+    [nearbyView addGestureRecognizer:tap];
 }
-
+#pragma mark - 共享详情
+- (void)shareDetailVC:(UITapGestureRecognizer *)tap
+{
+    [self pushVCByClassName:@"HPShareDetailController"];
+}
 - (void)setupShareRecommendRegion:(UIView *)view {
     UILabel *titleLabel = [self setupTitle:@"共享人推荐" ofRegion:view];
-    
+    /*
     HPPageView *pageView = [[HPPageView alloc] init];
     [pageView setPageMarginLeft:15.f * g_rateWidth];
     [pageView setPageSpace:15.f * g_rateWidth];
@@ -353,13 +457,30 @@
         make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f);
         make.height.mas_equalTo(187.f * g_rateWidth);
         make.bottom.equalTo(view).with.offset(-5.f * g_rateWidth);
+    }];*/
+    iCarousel * carousel = [[iCarousel alloc] init];
+    carousel.dataSource = self;
+    carousel.bounces = NO;
+    carousel.pagingEnabled = YES;
+    carousel.delegate = self;
+    carousel.type  = iCarouselTypeLinear;
+    [view addSubview:carousel];
+    self.carousel = carousel;
+    
+    [carousel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(view.mas_left).offset(15);
+        make.width.mas_equalTo(g_rateWidth * 291.f);
+        make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f);
+        make.height.mas_equalTo(187.f * g_rateWidth);
+        make.bottom.equalTo(view).with.offset(-5.f * g_rateWidth);
     }];
 }
 
 - (void)reloadShareRecommendRegionWithDate:(NSArray *)data {
     _sharePersonData = data;
-    
-    [_sharePersonPageView refreshPageItem];
+//    [_sharePersonPageView refreshPageItem];
+    [_carousel reloadData];
+
 }
 
 - (void)setupShareProcessRegion:(UIView *)view {
@@ -507,7 +628,7 @@
     
     return view;
 }
-
+/*
 #pragma mark - HPageViewDelegate
 
 - (UIView *)pageView:(HPPageView *)pageView viewAtPageIndex:(NSInteger)index {
@@ -526,7 +647,7 @@
 - (NSInteger)pageNumberOfPageView:(HPPageView *)pageView {
     return _sharePersonData.count;
 }
-
+*/
 
 #pragma mark - HPBannerDelegate
 
@@ -555,5 +676,53 @@
         [self pushVCByClassName:@"HPShareMapController"];
     }
 }
+#pragma mark - iCarouselDataSource
+- (NSInteger)numberOfItemsInCarousel:(iCarousel *)carousel
+{
+    return _sharePersonData.count;
+}
 
+- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
+{
+    if (view == nil)
+    {
+        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0,291.f * g_rateWidth, 187.f * g_rateWidth)];
+        NSDictionary *dict = _sharePersonData[index];
+        HPSharePersonCard *sharePersonCard = [[HPSharePersonCard alloc] init];
+        [sharePersonCard setPortrait:dict[@"portrait"]];
+        [sharePersonCard setUserName:dict[@"userName"]];
+        [sharePersonCard setCompany:dict[@"company"]];
+        [sharePersonCard setSignature:dict[@"signature"]];
+        [sharePersonCard setDescription:dict[@"desc"]];
+        sharePersonCard.delegate = self;
+        [view addSubview:sharePersonCard];
+        [sharePersonCard mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.top.mas_equalTo(view);
+            make.width.mas_equalTo(291.f * g_rateWidth);
+            make.height.mas_equalTo(187.f * g_rateWidth);
+        }];
+    }
+    return view;
+    
+}
+
+- (CGFloat)carousel:(iCarousel *)carousel valueForOption:(iCarouselOption)option withDefault:(CGFloat)value
+{
+    if (option == iCarouselOptionSpacing)
+    {
+        return value * 1.03;
+    }
+    return value;
+}
+
+- (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
+{
+    [self pushVCByClassName:@"HPMyCardController"];
+}
+
+#pragma mark - HPSharePersonCardDelegate
+- (void)clickFollowBtnToFocusSB
+{
+    HPLog(@"focusSB");
+}
 @end

@@ -9,9 +9,17 @@
 #import "HPLoginController.h"
 #import "HPProgressHUD.h"
 #import "HPLoginByPasswordController.h"
+#import "HPValidatePhone.h"
 
-@interface HPLoginController ()
+@interface HPLoginController ()<UITextFieldDelegate>
+@property (nonatomic, strong) UIButton *probtn;
+@property (nonatomic, strong) UITextField *phoneNumTextField;
+@property (nonatomic, strong) UITextField *codeTextField;
 
+/**
+ 手机号是否有效
+ */
+@property (nonatomic, assign) BOOL isValidate;
 @end
 
 @implementation HPLoginController
@@ -75,6 +83,9 @@
     [phoneNumTextField setTextColor:COLOR_BLACK_333333];
     [phoneNumTextField setTintColor:COLOR_RED_FF3C5E];
     [phoneNumTextField setKeyboardType:UIKeyboardTypeNumberPad];
+    phoneNumTextField.delegate = self;
+    phoneNumTextField.text = @"15817479363";
+    self.phoneNumTextField = phoneNumTextField;
     NSMutableAttributedString *phoneNumPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"请输入手机号"];
     [phoneNumPlaceholder addAttribute:NSForegroundColorAttributeName
                         value:COLOR_GRAY_CCCCCC
@@ -119,6 +130,10 @@
     [codeTextField setTextColor:COLOR_BLACK_333333];
     [codeTextField setTintColor:COLOR_RED_FF3C5E];
     [codeTextField setKeyboardType:UIKeyboardTypeNumberPad];
+    codeTextField.delegate = self;
+    codeTextField.text = @"545454";
+
+    self.codeTextField = codeTextField;
     NSMutableAttributedString *codePlaceholder = [[NSMutableAttributedString alloc] initWithString:@"请输入验证码"];
     [codePlaceholder addAttribute:NSForegroundColorAttributeName
                                 value:COLOR_GRAY_CCCCCC
@@ -138,9 +153,49 @@
     [codeLine setBackgroundColor:COLOR_GRAY_EEEEEE];
     [self.view addSubview:codeLine];
     [codeLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(codeTextField.mas_bottom).with.offset(5.f);;
+        make.top.equalTo(codeTextField.mas_bottom).with.offset(6.f);;
         make.centerX.equalTo(self.view);
         make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 1.f));
+    }];
+    
+    UIView *protocalView = [[UIView alloc] init];
+    [protocalView setBackgroundColor:UIColor.whiteColor];
+    [self.view addSubview:protocalView];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(checkProtocalContent:)];
+    [protocalView addGestureRecognizer:tap];
+    [protocalView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(codeLine.mas_bottom).with.offset(20.f);;
+        make.centerX.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 25.f * g_rateWidth));
+    }];
+    
+    UIButton *probtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [probtn setBackgroundImage:ImageNamed(@"unselected button") forState:UIControlStateNormal];
+    [probtn setBackgroundImage:ImageNamed(@"check button") forState:UIControlStateSelected];
+    [protocalView addSubview:probtn];
+    probtn.userInteractionEnabled = NO;
+    probtn.selected = YES;
+    self.probtn= probtn;
+    [probtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(protocalView);
+        make.centerY.equalTo(protocalView);
+        make.height.width.mas_equalTo(14.f * g_rateWidth);
+    }];
+    
+    NSString *prostr = @"注册/登录即代表同意《合店站用户服务及隐私保护协议》";
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:prostr];
+    NSRange proRange = [prostr rangeOfString:@"《合店站用户服务及隐私保护协议》"];
+    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:proRange];
+    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_666666 range:NSMakeRange(0, proRange.location)];
+
+    UILabel *proLabel = [[UILabel alloc] init];
+    proLabel.font = kFont_Medium(12);
+    proLabel.attributedText = attr;
+    [protocalView addSubview:proLabel];
+    [proLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(probtn.mas_right).offset(5);
+        make.top.bottom.right.mas_equalTo(protocalView);
     }];
     
     UIButton *loginBtn = [[UIButton alloc] init];
@@ -152,7 +207,7 @@
     [loginBtn addTarget:self action:@selector(onClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:loginBtn];
     [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(codeLine.mas_bottom).with.offset(25.f * g_rateWidth);
+        make.top.equalTo(protocalView.mas_bottom).with.offset(25.f * g_rateWidth);
         make.centerX.equalTo(self.view);
         make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 47.f * g_rateWidth));
     }];
@@ -187,7 +242,12 @@
     }];
     [self setupThirdPartView:thirdPartView];
 }
-
+#pragma mark - 是否同意协议
+- (void)checkProtocalContent:(UITapGestureRecognizer *)tap
+{
+    HPLog(@"protocal");
+    self.probtn.selected = !self.probtn.selected;
+}
 - (void)setupThirdPartView:(UIView *)view {
     UIButton *qqBtn = [[UIButton alloc] init];
     [qqBtn setTag:0];
@@ -226,6 +286,21 @@
 #pragma mark - OnClick
 
 - (void)onClickLoginBtn:(UIButton *)btn {
+    if (self.phoneNumTextField.text.length < 11) {
+        [HPProgressHUD alertMessage:@"请输入11位手机号"];
+    }else if (self.codeTextField.text.length < 6){
+        [HPProgressHUD alertMessage:@"请输入6位验证码"];
+    }else
+    if (!self.probtn.selected) {
+        [HPProgressHUD alertMessage:@"请选择同意协议"];
+    }
+    if (self.phoneNumTextField.text.length == 11&&self.codeTextField.text.length == 6&&self.probtn.selected) {
+        [self isCanLogin];
+    }
+}
+
+- (void)isCanLogin
+{
     g_isLogin = YES;
     g_isCertified = YES;
     [HPProgressHUD alertMessage:@"登录成功"];
@@ -264,4 +339,51 @@
     [self pushVCByClassName:@"HPLoginByPasswordController"];
 }
 
+
+#pragma mark - UITextFieldDelegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField == self.phoneNumTextField) {
+        if (textField.text.length < 11) {
+            [HPProgressHUD alertMessage:@"请输入11位手机号"];
+        }else{
+            self.phoneNumTextField.text = [textField.text substringToIndex:11];
+        }
+    }else if (textField == self.codeTextField){
+        if (textField.text.length < 6) {
+            [HPProgressHUD alertMessage:@"请输入6位验证码"];
+        }else{
+            self.codeTextField.text = [textField.text substringToIndex:6];
+        }
+    }
+
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (textField == self.phoneNumTextField) {
+        if (textField.text.length >= 11) {
+//            [HPProgressHUD alertMessage:@"请输入11位手机号"];
+            self.phoneNumTextField.text = [textField.text substringToIndex:11];
+            //[textField resignFirstResponder];
+//            [self.codeTextField becomeFirstResponder];
+            _isValidate = [HPValidatePhone validateContactNumber:textField.text];
+
+            return YES;
+        }
+    }else if (textField == self.codeTextField){
+        if (textField.text.length >= 6) {
+//            [HPProgressHUD alertMessage:@"请输入6位验证码"];
+            self.codeTextField.text = [textField.text substringToIndex:6];
+//            [textField resignFirstResponder];
+            return YES;
+        }
+    }
+    return YES;
+}
 @end

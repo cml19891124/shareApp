@@ -18,7 +18,7 @@
 
 @property (nonatomic, weak) UIButton *loginBtn;
 
-@property (nonatomic, weak) UILabel *descLabel;
+@property (nonatomic, weak) UIButton *descLabel;
 
 @property (nonatomic, weak) UIButton *certificateBtn;
 
@@ -89,14 +89,21 @@
     [bgView setImage:[UIImage imageNamed:@"my_bg"]];
     [self.view addSubview:bgView];
     [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.top.and.width.equalTo(self.view);
+        make.left.equalTo(self.view).offset(-1);
+        make.top.mas_equalTo(-1);
+        make.right.equalTo(self.view).offset(1);
+        if (iPhone5) {
+            make.height.mas_equalTo(getHeight(300.f));
+        }else{
+            make.height.mas_equalTo(getHeight(250.f));
+        }
     }];
     
     UIImageView *configIcon = [[UIImageView alloc] init];
     [configIcon setImage:[UIImage imageNamed:@"personal_center_set_up"]];
     [self.view addSubview:configIcon];
     [configIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(g_statusBarHeight + 15.f * g_rateWidth);
+        make.top.equalTo(self.view).with.offset(g_statusBarHeight + 15.f * g_rateHeight);
         make.right.equalTo(self.view).with.offset(-20.f * g_rateWidth);
     }];
     
@@ -116,7 +123,7 @@
     [self.view addSubview:portraitBtn];
     _portraitBtn = portraitBtn;
     [portraitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(g_statusBarHeight + 48.f * g_rateWidth);
+        make.top.equalTo(self.view).with.offset(g_statusBarHeight + 45.f * g_rateWidth);
         make.centerX.equalTo(self.view);
         make.size.mas_equalTo(CGSizeMake(72.f * g_rateWidth, 72.f * g_rateWidth));
     }];
@@ -133,16 +140,17 @@
         make.centerX.equalTo(portraitBtn);
     }];
     
-    UILabel *descLabel = [[UILabel alloc] init];
-    [descLabel setFont:[UIFont fontWithName:FONT_REGULAR size:12.f]];
-    [descLabel setTextColor:COLOR_PINK_FFC5C4];
-    [descLabel setText:@"登录即可免费发布共享信息"];
+    UIButton *descLabel = [[UIButton alloc] init];
+    [descLabel.titleLabel setFont:[UIFont fontWithName:FONT_REGULAR size:12.f]];
+    [descLabel.titleLabel setTextColor:COLOR_PINK_FFC5C4];
+    [descLabel setTitle:@"登录即可免费发布共享信息" forState:UIControlStateNormal];
+    [descLabel addTarget:self action:@selector(onClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:descLabel];
     _descLabel = descLabel;
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(loginBtn.mas_bottom).with.offset(5.f);
         make.centerX.equalTo(loginBtn);
-        make.height.mas_equalTo(descLabel.font.pointSize);
+        make.height.mas_equalTo(descLabel.titleLabel.font.pointSize);
     }];
     
     UIButton *certificateBtn = [[UIButton alloc] init];
@@ -467,7 +475,9 @@
 
 - (void)onClickConfigBtn:(UIButton *)btn {
     if (!g_isLogin) {
-        [HPProgressHUD alertMessage:@"用户未登录"];
+//        [HPProgressHUD alertMessage:@"用户未登录"];
+        [self pushVCByClassName:@"HPLoginController"];
+
         return;
     }
     

@@ -8,6 +8,7 @@
 
 #import "HPMyCardController.h"
 #import "HPShareListCell.h"
+#import "HPGradientColor.h"
 
 @interface HPMyCardController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -187,13 +188,19 @@
     [editBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
     [editBtn setBackgroundColor:COLOR_RED_FF3455];
+    
     [view addSubview:editBtn];
     [editBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(view).with.offset(8.f);
         make.centerY.equalTo(phoneNumLabel);
         make.size.mas_equalTo(CGSizeMake(55.f, 19.f));
     }];
-    
+//    [editBtn setNeedsLayout];
+//    [editBtn layoutIfNeeded];
+//    HPGradientColor * gradientColor = (HPGradientColor *_Nonnull)[HPGradientColor getGradientColorFromStartPoint:CGPointMake(0, 0) toEndColor:CGPointMake(1, 0) inRect:editBtn.frame withColors:@[COLOR_RED_FF3455,COLOR_RED_FF9B5E] atCornerRadius:9.f];
+//    HPLog(@"gradientColor:%@  editbtn:%@",gradientColor,editBtn);
+//    [editBtn.layer insertSublayer:(CALayer *)gradientColor atIndex:0];
+        
     UIView *line = [[UIView alloc] init];
     [line setBackgroundColor:COLOR_GRAY_EEEEEE];
     [view addSubview:line];

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>新合址</string>
+	<string>合店站</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -45,9 +45,17 @@
 	<string>UIStatusBarStyleLightContent</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>高德地图定位</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>高德地图定位</string>
+	<key>NSPhotoLibraryUsageDescriptionApp</key>
+	<string>合店站需要您的同意，才能访问相册</string>
+	<key>NSCameraUsageDescriptionApp</key>
+	<string>合店站需要您的同意,才能访问相机</string>
+	<key>NSLocationUsageDescriptionApp</key>
+	<string>合店站需要您的同意,才能访问位置</string>
+	<key>NSLocationWhenInUseUsageDescriptionApp</key>
+	<string>合店站需要您的同意,才能在使用期间访问位置</string>
+	<key>NSLocationAlwaysUsageDescriptionApp</key>
+	<string>合店站需要您的同意,才能始终访问位置</string>
+	<key>NSCalendarsUsageDescriptionApp</key>
+	<string>合店站需要您的同意,才能访问日历</string>
 </dict>
 </plist>

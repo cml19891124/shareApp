@@ -9,11 +9,18 @@
 #import "HPBaseView.h"
 
 NS_ASSUME_NONNULL_BEGIN
+@protocol HPSharePersonCardDelegate <NSObject>
 
+/**
+ 点击关注某人
+ */
+- (void)clickFollowBtnToFocusSB;
+
+@end
 @interface HPSharePersonCard : HPBaseView
 
-@property (nonatomic, weak, readonly) UIButton *followBtn;
-
+@property (nonatomic, strong) UIButton *followBtn;
+@property (nonatomic, weak) id<HPSharePersonCardDelegate> delegate;
 - (void)setPortrait:(UIImage *)image;
 
 - (void)setUserName:(NSString *)userName;

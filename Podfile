@@ -7,6 +7,7 @@ target 'HPShareApp' do
   pod 'AMap3DMap'
   pod 'AMapSearch'
   pod 'AMapLocation'
+  pod 'MJExtension', '~> 3.0.15.1'
   use_frameworks!
   pod 'Charts'
 

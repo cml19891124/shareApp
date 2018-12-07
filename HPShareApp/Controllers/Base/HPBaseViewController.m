@@ -8,6 +8,7 @@
 
 #import "HPBaseViewController.h"
 
+
 @interface HPBaseViewController ()
 
 @end
@@ -55,6 +56,11 @@
     }];
     
     UIImageView *backIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_back"]];
+    if (self.navigationController.childViewControllers.count) {
+        backIcon.hidden = NO;
+    }else{
+        backIcon.hidden = YES;
+    }
     [navigationBar addSubview:backIcon];
     [backIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(navigationBar).with.offset(25.f * g_rateWidth);

@@ -38,6 +38,23 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (CGGradientRef) getGradientRefByStartColor:(UIColor *)startColor endColor:(UIColor *)endColor startLoc:(CGFloat)startLoc endLoc:(CGFloat)endLoc;
 
+/*
+ 
+ 画图形渐进色方法，此方法只支持双色值渐变
+ @param context     图形上下文的CGContextRef
+ @param clipRect    需要画颜色的rect
+ @param startPoint  画颜色的起始点坐标
+ @param endPoint    画颜色的结束点坐标
+ @param options     CGGradientDrawingOptions
+ @param startColor  开始的颜色值
+ @param endColor    结束的颜色值
+ */
+- (void)DrawGradientColor:(CGContextRef)context rect:(CGRect)clipRect
+                    point:(CGPoint) startPoint
+                    point:(CGPoint) endPoint
+                  options:(CGGradientDrawingOptions) options
+               startColor:(UIColor*)startColor
+                 endColor:(UIColor*)endColor;
 @end
 
 NS_ASSUME_NONNULL_END

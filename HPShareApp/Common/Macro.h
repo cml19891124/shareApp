@@ -14,7 +14,13 @@
  */
 
 #define IPHONE_HAS_NOTCH [[UIScreen mainScreen] bounds].size.height >= 812
-
+//获取屏幕宽度与高度
+#define kScreenWidth \
+([[UIScreen mainScreen] respondsToSelector:@selector(nativeBounds)] ? [UIScreen mainScreen].nativeBounds.size.width/[UIScreen mainScreen].nativeScale : [UIScreen mainScreen].bounds.size.width)
+#define kScreenHeight \
+([[UIScreen mainScreen] respondsToSelector:@selector(nativeBounds)] ? [UIScreen mainScreen].nativeBounds.size.height/[UIScreen mainScreen].nativeScale : [UIScreen mainScreen].bounds.size.height)
+#define getWidth(x)       x*g_rateWidth
+#define getHeight(y)     y*g_rateHeight
 /**
  颜色宏定义
  */
@@ -25,6 +31,8 @@
 
 #define COLOR_RED_FF3C5E [UIColor colorWithHexString:@"#ff3c5e"]
 #define COLOR_RED_FF3455 [UIColor colorWithHexString:@"#FF3455"]
+#define COLOR_RED_FF9B5E [UIColor colorWithHexString:@"#FF9B5E"]
+
 #define COLOR_RED_FC4865 [UIColor colorWithHexString:@"#fc4865"]
 #define COLOR_RED_F93362 [UIColor colorWithHexString:@"#F93362"]
 #define COLOR_RED_FC4865 [UIColor colorWithHexString:@"#fc4865"]
@@ -43,6 +51,7 @@
 
 #define COLOR_GREEN_EFF3F6 [UIColor colorWithHexString:@"#EFF3F6"]
 #define COLOR_GREEN_7B929F [UIColor colorWithHexString:@"#7B929F"]
+#define COLOR_BLUE_259BFF [UIColor colorWithHexString:@"#259BFF"]
 
 #define COLOR_YELLOW_FFAF47 [UIColor colorWithHexString:@"#FFAF47"]
 
@@ -72,6 +81,7 @@
 #define COLOR_GRAY_FAF9FE [UIColor colorWithHexString:@"#FAF9FE"]
 #define COLOR_GRAY_FBFBFB [UIColor colorWithHexString:@"#FBFBFB"]
 #define COLOR_GRAY_EEEEEE [UIColor colorWithHexString:@"#eeeeee"]
+#define COLOR_GRAY_FFFFFF [UIColor colorWithHexString:@"#ffffff"]
 #define COLOR_GRAY_CCCCCC [UIColor colorWithHexString:@"#CCCCCC"]
 #define COLOR_GRAY_C4C4C4 [UIColor colorWithHexString:@"#C4C4C4"]
 #define COLOR_GRAY_999999 [UIColor colorWithHexString:@"#999999"]
@@ -96,6 +106,25 @@
 #define FONT_MEDIUM @"PingFangSC-Medium"
 #define FONT_REGULAR @"PingFangSC-Regular"
 #define FONT_LIGHT @"PingFangSC-Light"
+#define ImageNamed(_pointer) ([UIImage imageNamed:_pointer])
+/* 平方-中号 */
+#define kFont_Medium(font)  [UIFont fontWithName:@"PingFangSC-Medium"size:font]
+#define kBaseUrl  @"https://app.hepaicn.com/v2/api-docs"
+#define BoundWithSize(str,width,font)   ([str boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:font]} context:nil])
+//APP版本号
+#define kAppVersion [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
+//系统版本号
+#define kSystemVersion [[UIDevice currentDevice] systemVersion]
+#define kUserDefaults       [NSUserDefaults standardUserDefaults]
+#define kNotificationCenter [NSNotificationCenter defaultCenter]
+#define iPhone5 ([[UIScreen mainScreen] bounds].size.height == 568)
+#import "MJExtension.h"
+//自定义打印语句
+#ifdef DEBUG
+# define HPLog(fmt, ...) NSLog((@"[文件名:%s]\n" "[函数名:%s]\n" "[行号:%d] \n" fmt), __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+# define HPLog(...);
+#endif
 
 /**
  高德地图API key

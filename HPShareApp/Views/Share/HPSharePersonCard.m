@@ -20,6 +20,7 @@
 
 @property (nonatomic, weak) UILabel *descLabel;
 
+@property (nonatomic, strong) UIImageView *signatureIcon;
 @end
 
 @implementation HPSharePersonCard
@@ -86,6 +87,7 @@
     [followBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:9.f]];
     [followBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [followBtn setTitle:@"关注" forState:UIControlStateNormal];
+    [followBtn addTarget:self action:@selector(clickedFocusSB:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:followBtn];
     _followBtn = followBtn;
     [followBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -106,6 +108,7 @@
     UIImageView *signatureIcon = [[UIImageView alloc] init];
     [signatureIcon setImage:[UIImage imageNamed:@"my_business_card_leaf"]];
     [self addSubview:signatureIcon];
+    self.signatureIcon = signatureIcon;
     [signatureIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(portraitView);
         make.top.equalTo(line.mas_bottom).with.offset(18.f * g_rateWidth);
@@ -155,4 +158,11 @@
     [_descLabel setText:desc];
 }
 
+- (void)clickedFocusSB:(UIButton *)button
+{
+    if ([self.delegate respondsToSelector:@selector(clickFollowBtnToFocusSB)]) {
+        [self.delegate clickFollowBtnToFocusSB];
+    }
+}
+    
 @end
