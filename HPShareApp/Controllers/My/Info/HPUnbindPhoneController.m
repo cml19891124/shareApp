@@ -8,8 +8,8 @@
 
 #import "HPUnbindPhoneController.h"
 
-@interface HPUnbindPhoneController ()
-
+@interface HPUnbindPhoneController ()<UITextFieldDelegate>
+@property (strong, nonatomic) UITextField *codeTextField;
 @end
 
 @implementation HPUnbindPhoneController
@@ -45,10 +45,14 @@
         make.height.mas_equalTo(titleLabel.font.pointSize);
     }];
     
+    HPLoginModel *model = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)model.userInfo;
+    NSString *mobile = dic[@"mobile"];
+    NSString *rangeStr = [mobile stringByReplacingCharactersInRange:NSMakeRange(3, 4) withString:@"****"];
     UILabel *descLabel = [[UILabel alloc] init];
     [descLabel setFont:[UIFont fontWithName:FONT_REGULAR size:12.f]];
     [descLabel setTextColor:COLOR_BLACK_666666];
-    [descLabel setText:@"请使用当前绑定手机号+86 186****2947接收验证码"];
+    [descLabel setText:[NSString stringWithFormat:@"请使用当前绑定手机号+86 %@接收验证码",rangeStr]];
     [self.view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f * g_rateWidth);
@@ -61,6 +65,8 @@
     [textField setTextColor:COLOR_BLACK_333333];
     [textField setTintColor:COLOR_RED_FF3C5E];
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
+    textField.delegate = self;
+    self.codeTextField = textField;
     NSMutableAttributedString *placeholder = [[NSMutableAttributedString alloc] initWithString:@"请输入验证码"];
     [placeholder addAttribute:NSForegroundColorAttributeName
                         value:COLOR_GRAY_CCCCCC
@@ -116,11 +122,68 @@
 }
 
 - (void)onClickCodeBtn:(UIButton *)btn {
+    [self getCodeNumberInBindPhone];
+}
+#pragma mark - 获取验证码--
+/**
+ 状态：1：获取验证码的时候
+ */
+- (void)getCodeNumberInBindPhone
+{
+    HPLoginModel *model = [HPUserTool account];
+    NSDictionary *dict = (NSDictionary *)model.userInfo;
+    NSString *mobile = dict[@"mobile"];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"mobile"] = mobile;
+    dic[@"state"] = @"1";
+    dic[@"code"] = _codeTextField.text;
+
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:@"发送成功"];
+            weakSelf.codeTextField.text = responseObject[@"data"];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        [HPProgressHUD alertMessage:@"网络错误"];
+    }];
+}
+- (void)onClickConfirmBtn:(UIButton *)btn {
+    if (_codeTextField.text.length == 6) {
+        [self pushVCByClassName:@"HPBindPhoneController"];
+    }
+}
+
+#pragma mark - UITextFieldDelegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField == self.codeTextField){
+        if (textField.text.length < 6) {
+            [HPProgressHUD alertMessage:@"请输入6位验证码"];
+        }else{
+            self.codeTextField.text = [textField.text substringToIndex:6];
+        }
+    }
     
 }
 
-- (void)onClickConfirmBtn:(UIButton *)btn {
-    [self pushVCByClassName:@"HPBindPhoneController"];
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (textField == self.codeTextField){
+        if (textField.text.length >= 6) {
+            //            [HPProgressHUD alertMessage:@"请输入6位验证码"];
+            self.codeTextField.text = [textField.text substringToIndex:6];
+            //            [textField resignFirstResponder];
+            return YES;
+        }
+    }
+    return YES;
 }
-
 @end

@@ -17,10 +17,8 @@
 @property (nonatomic, strong) UITextField *phoneNumTextField;
 @property (nonatomic, strong) UITextField *codeTextField;
 
-/**
- 状态：1：账号密码登录；0：验证码登录
- */
-@property (nonatomic, copy) NSString *state;
+
+
 /**
  手机号是否有效
  */
@@ -32,19 +30,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    _state = @"-1";
     [self setupUI];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+//    HPLog(@"self.navigationController.childViewControllers:%@",self.navigationController.childViewControllers);
+    HPLoginModel *model = [HPUserTool account];
+    if (model.token && self.navigationController.childViewControllers.count >= 2) {
+        [self.navigationController popViewControllerAnimated:NO];
+    }
 }
-*/
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
@@ -324,12 +321,6 @@
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
     }];
-//    g_isLogin = YES;
-//    g_isCertified = YES;
-//    [HPProgressHUD alertMessage:@"登录成功"];
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self.navigationController popViewControllerAnimated:YES];
-//    });
 }
 
 - (void)onClickRegisterBtn:(UIButton *)btn {
@@ -346,12 +337,15 @@
     
 }
 
-#pragma mark - 获取验证码
+#pragma mark - 获取验证码--
+/**
+状态：1：账号密码登录；0：验证码登录
+*/
 - (void)getCodeNumber
 {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"mobile"] = self.phoneNumTextField.text;
-    dic[@"state"] = _state;
+    dic[@"state"] = @"-1";
     kWeakSelf(weakSelf);
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {

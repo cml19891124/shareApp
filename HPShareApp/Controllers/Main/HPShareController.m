@@ -22,9 +22,12 @@
 #import <MAMapKit/MAMapKit.h>
 #import <AMapLocationKit/AMapLocationKit.h>
 #import "HPNearbyShareView.h"
+#import "HPCityModel.h"
+#import "HPLinkageSheetView.h"
 @interface HPShareController () <HPBannerViewDelegate,iCarouselDelegate,iCarouselDataSource,HPSharePersonCardDelegate,MAMapViewDelegate,AMapLocationManagerDelegate,CLLocationManagerDelegate,AMapSearchDelegate>
 @property (nonatomic, strong) UIView *localMapView;
 @property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, weak) HPLinkageSheetView *districtSheetView;
 
 @property (nonatomic, weak) HPPageControl *pageControl;
 
@@ -42,9 +45,12 @@
 @property (nonatomic, strong) MAMapView *mapView;
 @property (strong, nonatomic) AMapLocationManager * locationManager;//定位用
 
+@property (strong, nonatomic) NSMutableArray *cityArray,*disArray,*streetArray;
+@property (strong, nonatomic) NSMutableDictionary *streetDic;
 @end
 
 @implementation HPShareController
+
 #pragma mark - 初始化地图
 - (void)initMapView{
     
@@ -107,6 +113,85 @@
     
     
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    _cityArray = [NSMutableArray array];
+    _disArray = [NSMutableArray array];
+    _streetArray = [NSMutableArray array];
+    _streetDic = [NSMutableDictionary dictionary];
+    [self getAreaListInShenzhen];
+}
+#pragma mark - 获取深圳区域列表
+- (void)getAreaListInShenzhen
+{
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/area/list" paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            weakSelf.cityArray = [HPCityModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        
+    }];
+}
+
+- (void)onClickCityBtn:(UIButton *)btn {
+    if (self.districtSheetView == nil) {
+
+        for (int i = 0; i < _cityArray.count; i ++) {
+            HPCityModel *model = _cityArray[i];
+            [_disArray addObject:model.name];
+            NSMutableArray *streetArray = [NSMutableArray array];
+
+            for (int j = 0; j < model.children.count; j++) {
+                HPDistrictModel *disModel = model.children[j];
+                if ([disModel.areaId intValue] == [model.areaId intValue]) {
+                    if (j <= model.children.count - 1) {
+                        [streetArray addObject:disModel.name];
+                    }
+                }
+            }
+            NSMutableArray *perArray = [streetArray copy];
+            _streetDic[model.name] = perArray;
+        }
+
+                HPLinkageData *linkageData = [[HPLinkageData alloc] initWithParents:_disArray Children:_streetDic];
+                HPLinkageSheetView *tradeSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[@"不限"] allSingleCheck:NO];
+                [tradeSheetView setSelectDescription:@"选择城市"];
+                [tradeSheetView setMaxCheckNum:3];
+                [tradeSheetView selectCellAtParentIndex:0 childIndex:0];
+                
+                [tradeSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems) {
+                    NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];;
+                    for (NSString *checkItem in checkItems) {
+                        checkItemStr = [checkItemStr stringByAppendingString:checkItem];
+                        
+                        if (checkItem != checkItems.lastObject) {
+                            checkItemStr = [checkItemStr stringByAppendingString:@", "];
+                        }
+                    }
+                    
+                    [btn setTitle:checkItemStr forState:UIControlStateSelected];
+                    [btn setSelected:YES];
+                    CGFloat checkItemW = BoundWithSize(checkItemStr, kScreenWidth, 13).size.width + 30;
+
+                    [btn mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.width.mas_equalTo(checkItemW);
+                    }];
+                    [btn setImageEdgeInsets:UIEdgeInsetsMake(0.f, -20.f + checkItemW, 0.f, -30.f)];
+
+                }];
+                
+                self.districtSheetView = tradeSheetView;
+
+    }
+    
+    [self.districtSheetView show:YES];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -257,6 +342,7 @@
     [locationBtn setImage:[UIImage imageNamed:@"shouye_xiala"] forState:UIControlStateNormal];
     [locationBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -12.f, 0.f, 12.f)];
     [locationBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, 30.f, 0.f, -30.f)];
+    [locationBtn addTarget:self action:@selector(onClickCityBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:locationBtn];
     [locationBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.top.and.bottom.equalTo(view);
