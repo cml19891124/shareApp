@@ -16,6 +16,7 @@
 #import "HPSelectTable.h"
 #import "HPTagDialogView.h"
 #import "HPCalendarModalView.h"
+#import "TZPhotoPickerController.h"
 
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：入驻本店需事先准备相关产品质检材料，入店时需确认，三无产品请绕道..."
@@ -40,6 +41,8 @@
 
 @property (nonatomic, weak) HPCalendarModalView *calendarModalView;
 
+@property (nonatomic, weak) TZPhotoPickerController *photoPicker;
+
 @end
 
 @implementation HPOwnerCardDefineController
@@ -47,7 +50,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setupNavigationBarWithTitle:@"定制名片"];
+    [self setupNavigationBarWithTitle:@"空间发布"];
     self.isPopGestureRecognize = NO;
     [self setupUI];
     
@@ -94,32 +97,18 @@
         [self setupPanelAtIndex:i ofView:scrollView];
     }
     
-    UIButton *previewBtn = [[UIButton alloc] init];
-    [previewBtn.layer setCornerRadius:7.f];
-    [previewBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-    [previewBtn setBackgroundColor:UIColor.whiteColor];
-    [previewBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [previewBtn setTitle:@"预览名片" forState:UIControlStateNormal];
-    [previewBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:previewBtn];
-    [previewBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    UIButton *releaseBtn = [[UIButton alloc] init];
+    [releaseBtn.layer setCornerRadius:7.f];
+    [releaseBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [releaseBtn setBackgroundColor:COLOR_RED_FC4865];
+    [releaseBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
+    [releaseBtn setTitle:@"确认发布" forState:UIControlStateNormal];
+    [releaseBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:releaseBtn];
+    [releaseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(scrollView).with.offset(-20.f * g_rateWidth);
         make.centerX.equalTo(scrollView);
         make.top.equalTo(scrollView.subviews[4].mas_bottom).with.offset(40.f * g_rateWidth);
-        make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 45.f * g_rateWidth));
-    }];
-    
-    UIButton *createBtn = [[UIButton alloc] init];
-    [createBtn.layer setCornerRadius:7.f];
-    [createBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [createBtn setBackgroundColor:COLOR_RED_FC4865];
-    [createBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [createBtn setTitle:@"生成名片" forState:UIControlStateNormal];
-    [createBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:createBtn];
-    [createBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(scrollView);
-        make.bottom.equalTo(scrollView).with.offset(-20.f * g_rateWidth);
-        make.top.equalTo(previewBtn.mas_bottom).with.offset(10.f * g_rateWidth);
         make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 45.f * g_rateWidth));
     }];
     
@@ -145,14 +134,13 @@
     }
     else if (index == 1) {
         [panel addRowView:[self setupSpaceTitleRowView]];
-        [panel addRowView:[self setupSpaceAddressRowView] withHeight:78.f * g_rateWidth];
+        [panel addRowView:[self setupSpaceAddressRowView]];
         [panel addRowView:[self setupTradeRowView]];
-        [panel addRowView:[self setupcCertificationRowView]];
         [panel addRowView:[self setupSpaceTagRowView] withHeight:93.f * g_rateWidth];
         UIView *lastPanel = view.subviews[index - 1];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.width.equalTo(view);
-            make.height.mas_equalTo(310.f * g_rateWidth);
+            make.height.mas_equalTo(232.f * g_rateWidth);
             make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
         }];
     }
@@ -208,7 +196,7 @@
     UILabel *descLabel = [[UILabel alloc] init];
     [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
     [descLabel setTextColor:COLOR_GRAY_CCCCCC];
-    [descLabel setText:@"上传品牌或产品图，提高合作机会。"];
+    [descLabel setText:@"上传共享空间照片，让匹配更高效。"];
     [view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(view);
@@ -222,7 +210,7 @@
 - (UIView *)setupSpaceTitleRowView {
     UIView *view = [[UIView alloc] init];
     
-    [self setupTitleLabelWithText:@"空间标题" ofView:view];
+    [self setupTitleLabelWithText:@"发布标题" ofView:view];
     [self setupTextFieldWithPlaceholder:@"例：优品小店黄金铺位共享" ofView:view rightTo:view];
     
     return view;
@@ -231,79 +219,24 @@
 - (UIView *)setupSpaceAddressRowView {
     UIView *view = [[UIView alloc] init];
     
-    UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:@"PingFangSC-Semibold" size:15.f]];
-    [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:@"详细地址"];
-    [view addSubview:titleLabel];
-    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(21.f * g_rateWidth);
-        make.top.equalTo(view).with.offset(16.f * g_rateWidth);
-        make.height.mas_equalTo(15.f);
-    }];
+    [self setupTitleLabelWithText:@"空间地址" ofView:view];
+    UIImageView *downIcon = [self setupDownIconOfView:view];
     
-    UILabel *cityLabel = [[UILabel alloc] init];
-    [cityLabel setFont:[UIFont fontWithName:@"PingFangSC-Medium" size:15.f]];
-    [cityLabel setTextColor:COLOR_BLACK_444444];
-    [cityLabel setText:@"深圳市"];
-    [view addSubview:cityLabel];
-    [cityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    UIButton *valueBtn = [[UIButton alloc] init];
+    [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+    [valueBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
+    [valueBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
+    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
+    [valueBtn setTitle:@"请输入店铺或空间地址" forState:UIControlStateNormal];
+    [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    [valueBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:valueBtn];
+    [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(122.f * g_rateWidth);
-        make.centerY.equalTo(titleLabel);
-        make.width.mas_equalTo(50.f * g_rateWidth);
+        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
+        make.centerY.equalTo(view);
     }];
     
-    UIView *separator = [[UIView alloc] init];
-    [separator setBackgroundColor:COLOR_GRAY_D2D3D4];
-    [view addSubview:separator];
-    [separator mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(cityLabel.mas_right).with.offset(25.f * g_rateWidth);
-        make.centerY.equalTo(cityLabel);
-        make.size.mas_equalTo(CGSizeMake(12.f, 1.f));
-    }];
-    
-    UIImageView *downIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"transfer_down"]];
-    [view addSubview:downIcon];
-    [downIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(view).with.offset(-20.f * g_rateWidth);
-        make.centerY.equalTo(cityLabel);
-        make.size.mas_equalTo(CGSizeMake(13.f, 8.f));
-    }];
-    
-    UIButton *regionBtn = [[UIButton alloc] init];
-    [regionBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-    [regionBtn.titleLabel setFont:[UIFont fontWithName:@"PingFangSC-Medium" size:15.f]];
-    [regionBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [regionBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-    [regionBtn setTitle:@"请选择区域" forState:UIControlStateNormal];
-    [regionBtn addTarget:self action:@selector(onClickDistrictBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [regionBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [view addSubview:regionBtn];
-    [regionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(separator.mas_right).with.offset(26.f * g_rateWidth);
-        make.centerY.equalTo(cityLabel);
-        make.right.equalTo(downIcon.mas_left).with.offset(-10.f * g_rateWidth);
-    }];
-    
-    UITextField *detailTextField = [[UITextField alloc] init];
-    [detailTextField setFont:[UIFont fontWithName:@"PingFang-SC-Medium" size:15.f]];
-    [detailTextField setTextColor:COLOR_BLACK_333333];
-    
-    NSMutableAttributedString *placeholder = [[NSMutableAttributedString alloc] initWithString:@"请填写详细地址"];
-    [placeholder addAttribute:NSForegroundColorAttributeName
-                        value:COLOR_GRAY_CCCCCC
-                        range:NSMakeRange(0, 7)];
-    [placeholder addAttribute:NSFontAttributeName
-                        value:[UIFont fontWithName:@"PingFangSC-Medium" size:15.f]
-                        range:NSMakeRange(0, 7)];
-    [detailTextField setAttributedPlaceholder:placeholder];
-    
-    [view addSubview:detailTextField];
-    [detailTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(cityLabel);
-        make.bottom.equalTo(view).with.offset(-8.f * g_rateWidth);
-        make.right.equalTo(downIcon);
-    }];
     
     return view;
 }

@@ -16,11 +16,13 @@
 #import "HPSelectTable.h"
 #import "HPTagDialogView.h"
 #import "HPCalendarModalView.h"
+#import "TZPhotoPickerController.h"
+#import "TZImagePickerController.h"
 
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：无需寄存货物，随到随卖，只需提供座椅，诚信经营，求长期合作。"
 
-@interface HPStartUpCardDefineController () <UIGestureRecognizerDelegate>
+@interface HPStartUpCardDefineController () <TZImagePickerControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 
@@ -42,6 +44,12 @@
 
 @property (nonatomic, weak) HPCalendarModalView *calendarModalView;
 
+@property (nonatomic, weak) TZImagePickerController *imagePicker;//相册
+
+@property (nonatomic, strong) UIImagePickerController *photoPicker;//相机
+
+@property (nonatomic, weak) UIView *addPhotoView;//添加照片界面，初始隐藏
+
 @end
 
 @implementation HPStartUpCardDefineController
@@ -49,7 +57,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setupNavigationBarWithTitle:@"定制名片"];
+    [self setupNavigationBarWithTitle:@"需求发布"];
     self.isPopGestureRecognize = NO;
     [self setupUI];
     
@@ -84,47 +92,35 @@
         make.left.and.width.and.bottom.equalTo(self.view);
     }];
     
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onScrollViewTap)];
-    [tapGesture setDelegate:self];
-    [scrollView addGestureRecognizer:tapGesture];
-    
     for (int i = 0; i < 5; i++) {
         [self setupPanelAtIndex:i ofView:scrollView];
     }
     
-    UIButton *previewBtn = [[UIButton alloc] init];
-    [previewBtn.layer setCornerRadius:7.f];
-    [previewBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-    [previewBtn setBackgroundColor:UIColor.whiteColor];
-    [previewBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [previewBtn setTitle:@"预览名片" forState:UIControlStateNormal];
-    [previewBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:previewBtn];
-    [previewBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    UIButton *releaseBtn = [[UIButton alloc] init];
+    [releaseBtn.layer setCornerRadius:7.f];
+    [releaseBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [releaseBtn setBackgroundColor:COLOR_RED_FC4865];
+    [releaseBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
+    [releaseBtn setTitle:@"确认发布" forState:UIControlStateNormal];
+    [releaseBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:releaseBtn];
+    [releaseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(scrollView).with.offset(-20.f * g_rateWidth);
         make.centerX.equalTo(scrollView);
         make.top.equalTo(scrollView.subviews[4].mas_bottom).with.offset(40.f * g_rateWidth);
         make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 45.f * g_rateWidth));
     }];
     
-    UIButton *createBtn = [[UIButton alloc] init];
-    [createBtn.layer setCornerRadius:7.f];
-    [createBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [createBtn setBackgroundColor:COLOR_RED_FC4865];
-    [createBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [createBtn setTitle:@"生成名片" forState:UIControlStateNormal];
-    [createBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:createBtn];
-    [createBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(scrollView);
-        make.bottom.equalTo(scrollView).with.offset(-20.f * g_rateWidth);
-        make.top.equalTo(previewBtn.mas_bottom).with.offset(10.f * g_rateWidth);
-        make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 45.f * g_rateWidth));
-    }];
     
+    __weak typeof(self) weakSelf = self;
     HPAlertSheet *alertSheet = [[HPAlertSheet alloc] init];
-    HPAlertAction *photoAction = [[HPAlertAction alloc] initWithTitle:@"拍照" completion:nil];
+    HPAlertAction *photoAction = [[HPAlertAction alloc] initWithTitle:@"拍照" completion:^{
+        [weakSelf onClickAlbumOrPhotoSheetWithTag:0];
+    }];
     [alertSheet addAction:photoAction];
-    HPAlertAction *albumAction = [[HPAlertAction alloc] initWithTitle:@"从手机相册选择" completion:nil];
+    HPAlertAction *albumAction = [[HPAlertAction alloc] initWithTitle:@"从手机相册选择" completion:^{
+        [weakSelf onClickAlbumOrPhotoSheetWithTag:1];
+    }];
     [alertSheet addAction:albumAction];
     self.alertSheet = alertSheet;
 }
@@ -213,13 +209,25 @@
         make.height.mas_equalTo(12.f);
     }];
     
+    UIView *addPhotoView = [[UIView alloc] init];
+    [view addSubview:addPhotoView];
+    _addPhotoView = addPhotoView;
+    [addPhotoView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(view);
+    }];
+    [addPhotoView setHidden:YES];
+    
     return view;
+}
+
+- (void)setupAddPhotoView:(UIView *)view {
+    
 }
 
 - (UIView *)setupStartupTitleRowView {
     UIView *view = [[UIView alloc] init];
     
-    [self setupTitleLabelWithText:@"创业标题" ofView:view];
+    [self setupTitleLabelWithText:@"发布标题" ofView:view];
     [self setupTextFieldWithPlaceholder:@"例：优品小店深圳急求共享铺位" ofView:view rightTo:view];
     
     return view;
@@ -421,22 +429,7 @@
     UIView *view = [[UIView alloc] init];
     
     [self setupTitleLabelWithText:@"意向空间" ofView:view];
-    UIImageView *downIcon = [self setupDownIconOfView:view];
-    
-    UIButton *valueBtn = [[UIButton alloc] init];
-    [valueBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
-    [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-    [valueBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-    [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
-    [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:valueBtn];
-    [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
-        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
+    [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
     
     return view;
 }
@@ -731,7 +724,7 @@
                 [btn setSelected:NO];
             }
             else {
-                [btn setTitle:[NSString stringWithFormat:@"%ld天", selectDates.count] forState:UIControlStateSelected];
+                [btn setTitle:[NSString stringWithFormat:@"%lu天", (unsigned long)selectDates.count] forState:UIControlStateSelected];
                 [btn setSelected:YES];
             }
         }];
@@ -739,6 +732,29 @@
     }
     
     [_calendarModalView show:YES];
+}
+
+- (void)onClickAlbumOrPhotoSheetWithTag:(NSInteger)tag {
+    if (tag == 0) {
+        if (_photoPicker == nil) {
+            UIImagePickerController *photoPicker = [[UIImagePickerController alloc] init];
+            [photoPicker setSourceType:UIImagePickerControllerSourceTypeCamera];
+            [photoPicker setDelegate:self];
+            _photoPicker = photoPicker;
+        }
+        
+        [self presentViewController:_photoPicker animated:YES completion:nil];
+    }
+    else if (tag == 1) {
+        if (_imagePicker == nil) {
+            TZImagePickerController *imagePicker = [[TZImagePickerController alloc] initWithMaxImagesCount:4 delegate:self];
+            [imagePicker setNaviBgColor:COLOR_RED_FF3C5E];
+            [imagePicker setNaviTitleColor:UIColor.whiteColor];
+            _imagePicker = imagePicker;
+        }
+        
+        [self presentViewController:_imagePicker animated:YES completion:nil];
+    }
 }
 
 # pragma mark - UIGestureRecognizerDelegate
@@ -771,5 +787,17 @@
     }
 }
 
+#pragma mark - UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
+    NSLog(@"UIImagePickerController");
+    [self dismissViewControllerAnimated:_photoPicker completion:nil];
+}
+
+#pragma mark - TZImagePickerControllerDelegate
+
+- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
+    NSLog(@"didFinishPickingPhotos: %ld", photos.count);
+}
 
 @end
