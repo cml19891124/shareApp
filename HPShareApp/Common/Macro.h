@@ -112,7 +112,11 @@
 #define ImageNamed(_pointer) ([UIImage imageNamed:_pointer])
 /* 平方-中号 */
 #define kFont_Medium(font)  [UIFont fontWithName:@"PingFangSC-Medium"size:font]
-#define kBaseUrl  @"https://app.hepaicn.com"
+/* 平方-粗体 */
+#define kFont_Bold(font)  [UIFont fontWithName:@"PingFangSC-Bold"size:font]
+//#define kBaseUrl  @"https://app.hepaicn.com"
+#define kBaseUrl  @"http://192.106.0.147:8083"
+
 #define BoundWithSize(str,width,font)   ([str boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:font]} context:nil])
 //APP版本号
 #define kAppVersion [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]

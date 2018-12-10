@@ -15,6 +15,8 @@
 		CAA2DAE424EC650C0D26D3DA /* Pods_HPShareApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */; };
 		DB490D1FA8BCD64C224C403A /* Pods_HPShareAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */; };
 		E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E611563B219AC8D7003A29C5 /* HPBaseViewController.m */; };
+		E617887921BE5BC70092BFA3 /* HPChangePasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = E617887821BE5BC60092BFA3 /* HPChangePasswordController.m */; };
+		E617887C21BE6E4F0092BFA3 /* HPUploadImageHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = E617887B21BE6E4F0092BFA3 /* HPUploadImageHandle.m */; };
 		E61FE09D21B9F94500555F3F /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE09B21B9F94500555F3F /* iCarousel.m */; };
 		E61FE0A021BA0F4A00555F3F /* HPNearbyShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE09F21BA0F4A00555F3F /* HPNearbyShareView.m */; };
 		E61FE0A321BA4EEC00555F3F /* HPGradientColor.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0A221BA4EEC00555F3F /* HPGradientColor.m */; };
@@ -165,6 +167,10 @@
 		C508ECCC8CC2C9D9701839BE /* Pods_HPShareAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E611563A219AC8D7003A29C5 /* HPBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBaseViewController.h; sourceTree = "<group>"; };
 		E611563B219AC8D7003A29C5 /* HPBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBaseViewController.m; sourceTree = "<group>"; };
+		E617887721BE5BC60092BFA3 /* HPChangePasswordController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPChangePasswordController.h; sourceTree = "<group>"; };
+		E617887821BE5BC60092BFA3 /* HPChangePasswordController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPChangePasswordController.m; sourceTree = "<group>"; };
+		E617887A21BE6E4F0092BFA3 /* HPUploadImageHandle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPUploadImageHandle.h; sourceTree = "<group>"; };
+		E617887B21BE6E4F0092BFA3 /* HPUploadImageHandle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUploadImageHandle.m; sourceTree = "<group>"; };
 		E61FE09B21B9F94500555F3F /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
 		E61FE09C21B9F94500555F3F /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		E61FE09E21BA0F4A00555F3F /* HPNearbyShareView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPNearbyShareView.h; sourceTree = "<group>"; };
@@ -514,6 +520,8 @@
 				E61FE0A821BA6F5C00555F3F /* HPHTTPManager.m */,
 				E61FE0A621BA6F5C00555F3F /* HPHTTPSever.h */,
 				E61FE0A721BA6F5C00555F3F /* HPHTTPSever.m */,
+				E617887A21BE6E4F0092BFA3 /* HPUploadImageHandle.h */,
+				E617887B21BE6E4F0092BFA3 /* HPUploadImageHandle.m */,
 			);
 			path = NetworkRequest;
 			sourceTree = "<group>";
@@ -1035,6 +1043,8 @@
 				E6D75F4921AFF37B00B2067C /* HPUnbindPhoneController.m */,
 				E6D75F4B21AFF48200B2067C /* HPBindPhoneController.h */,
 				E6D75F4C21AFF48200B2067C /* HPBindPhoneController.m */,
+				E617887721BE5BC60092BFA3 /* HPChangePasswordController.h */,
+				E617887821BE5BC60092BFA3 /* HPChangePasswordController.m */,
 			);
 			path = Info;
 			sourceTree = "<group>";
@@ -1328,6 +1338,7 @@
 				E661B0E2219D7BA100C86CF5 /* HPOwnerCardDefineController.m in Sources */,
 				E6D75F2121ABF96600B2067C /* HPHowToPlayDetailController.m in Sources */,
 				E6D75F4121AFEAD600B2067C /* HPConfigUserNameController.m in Sources */,
+				E617887921BE5BC70092BFA3 /* HPChangePasswordController.m in Sources */,
 				E661B14A21A6986B00C86CF5 /* StyledPageControl.m in Sources */,
 				E661B12F21A28E8500C86CF5 /* JTCalendarMenuView.m in Sources */,
 				E6D75F5321B0076F00B2067C /* HPFollowListCell.m in Sources */,
@@ -1351,6 +1362,7 @@
 				E6D75F1A21ABCA7B00B2067C /* HPHowToPlayShareSpaceController.m in Sources */,
 				E6D75F2E21AD6AF800B2067C /* HPThirdPartReturnController.m in Sources */,
 				E6292182219ABE6500BEF16C /* HPImageUtil.m in Sources */,
+				E617887C21BE6E4F0092BFA3 /* HPUploadImageHandle.m in Sources */,
 				E661B0CA219D114300C86CF5 /* HPBaseTextInputController.m in Sources */,
 				E61FE09D21B9F94500555F3F /* iCarousel.m in Sources */,
 				E661B0D3219D3BF500C86CF5 /* HPSelectTableLayout.m in Sources */,

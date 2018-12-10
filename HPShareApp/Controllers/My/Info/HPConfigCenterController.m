@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 };
 
 @interface HPConfigCenterController ()
-
+@property (nonatomic, strong) UIView *accountInfoPanel;
 @property (nonatomic, weak) UIImageView *portraitView;
 
 @property (nonatomic, weak) HPRightImageButton *fullNameGotoBtn;
@@ -47,23 +47,37 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 @end
 
 @implementation HPConfigCenterController
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    HPLoginModel *model = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)model.userInfo;
+    NSString *realName = dic[@"realName"];
+    NSString *company = dic[@"company"];
+    NSString *username = dic[@"username"];
+    NSString *signatureContext = dic[@"signatureContext"];
+    NSString *mobile = dic[@"mobile"];
+    NSString *fianlMobile = mobile.length > 0?[mobile stringByReplacingCharactersInRange:NSMakeRange(3,4) withString:@"****"]:@"未填写";
+    NSString *telephone = dic[@"telephone"];
+    NSString *password = dic[@"password"];
+
+    [self setPortrait:[UIImage imageNamed:@"my_business_card_default_head_image"]];
+//    [self setText:realName.length > 0?realName:@"未填写" ofBtnWithType:HPConfigGotoFullName];
+//    [self setText:company.length > 0?company:@"未填写" ofBtnWithType:HPConfigGotoCompany];
+//    [self setText:telephone.length > 0?telephone:@"未填写" ofBtnWithType:HPConfigGotoContact];
+    [self setText:username.length > 0?username:@"未填写" ofBtnWithType:HPConfigGotoUserName];
+//    [self setText:signatureContext.length > 0?signatureContext:@"未填写" ofBtnWithType:HPConfigGotoMail];
+    [self setText:fianlMobile > 0?fianlMobile:@"未填写" ofBtnWithType:HPConfigGotoPhoneNum];
+    [self setText:password.length > 0?@"修改":@"未设置" ofBtnWithType:HPConfigGotoPassword];
+    [self setText:@"V1.1.0" ofBtnWithType:HPConfigGotoVersion];
+    [self setText:@"16.8MB" ofBtnWithType:HPConfigGotoCache];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self setupUI];
-    HPLoginModel *model = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)model.userInfo;
-    [self setPortrait:[UIImage imageNamed:@"my_business_card_default_head_image"]];
-    [self setText:@"徐泽锋" ofBtnWithType:HPConfigGotoFullName];
-    [self setText:@"深圳市前海合派科技有限公司" ofBtnWithType:HPConfigGotoCompany];
-    [self setText:dic[@"mobile"] ofBtnWithType:HPConfigGotoContact];
-    [self setText:@"Jay Gatsby" ofBtnWithType:HPConfigGotoUserName];
-    [self setText:@"xzf@hepaicn.com" ofBtnWithType:HPConfigGotoMail];
-    [self setText:dic[@"mobile"] ofBtnWithType:HPConfigGotoPhoneNum];
-    [self setText:@"修改" ofBtnWithType:HPConfigGotoPassword];
-    [self setText:@"V1.1.0" ofBtnWithType:HPConfigGotoVersion];
-    [self setText:@"16.8MB" ofBtnWithType:HPConfigGotoCache];
+    
 }
 
 /*
@@ -87,7 +101,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.left.and.width.and.bottom.equalTo(self.view);
         make.top.equalTo(navigationView.mas_bottom);
     }];
-    
+    /*
     UILabel *personInfoLabel = [[UILabel alloc] init];
     [personInfoLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
     [personInfoLabel setTextColor:COLOR_BLACK_333333];
@@ -107,7 +121,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.top.equalTo(personInfoLabel.mas_bottom).with.offset(15.f * g_rateWidth);
         make.width.mas_equalTo(345.f * g_rateWidth);
     }];
-    [self setupPersonInfoPanel:personInfoPanel];
+    [self setupPersonInfoPanel:personInfoPanel];*/
     
     UILabel *accountInfoLabel = [[UILabel alloc] init];
     [accountInfoLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
@@ -115,24 +129,29 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [accountInfoLabel setText:@"账户信息"];
     [scrollView addSubview:accountInfoLabel];
     [accountInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(personInfoPanel.mas_bottom ).with.offset(19.f * g_rateWidth);
-        make.left.equalTo(personInfoLabel);
-        make.height.mas_equalTo(personInfoLabel.font.pointSize);
+//        make.top.equalTo(scrollView.mas_bottom ).with.offset(19.f * g_rateWidth);
+//        make.left.equalTo(personInfoLabel);
+//        make.height.mas_equalTo(personInfoLabel.font.pointSize);
+        
+        make.top.equalTo(scrollView).with.offset(19.f * g_rateWidth);
+        make.left.equalTo(scrollView).with.offset(15.f * g_rateWidth);
+        make.height.mas_equalTo(accountInfoLabel.font.pointSize);
     }];
     
-    UILabel *descLabel = [[UILabel alloc] init];
-    [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
-    [descLabel setTextColor:COLOR_GRAY_999999];
-    [descLabel setText:@"（支持用户名/邮箱/手机多种登录方式）"];
-    [scrollView addSubview:descLabel];
-    [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(accountInfoLabel.mas_right).with.offset(11.f);
-        make.centerY.equalTo(accountInfoLabel);
-    }];
+//    UILabel *descLabel = [[UILabel alloc] init];
+//    [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
+//    [descLabel setTextColor:COLOR_GRAY_999999];
+//    [descLabel setText:@"（支持用户名/邮箱/手机多种登录方式）"];
+//    [scrollView addSubview:descLabel];
+//    [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(accountInfoLabel.mas_right).with.offset(11.f);
+//        make.centerY.equalTo(accountInfoLabel);
+//    }];
     
     UIView *accountInfoPanel = [[UIView alloc] init];
     [self setupShadowOfPanel:accountInfoPanel];
     [scrollView addSubview:accountInfoPanel];
+    self.accountInfoPanel = accountInfoPanel;
     [accountInfoPanel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(accountInfoLabel.mas_bottom ).with.offset(14.f * g_rateWidth);
         make.centerX.equalTo(scrollView);
@@ -144,7 +163,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [self setupShadowOfPanel:versionPanel];
     [scrollView addSubview:versionPanel];
     [versionPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(accountInfoPanel.mas_bottom).with.offset(15.f * g_rateWidth);
+        make.top.equalTo(_accountInfoPanel.mas_bottom).with.offset(15.f * g_rateWidth);
         make.centerX.equalTo(scrollView);
         make.width.mas_equalTo(345.f * g_rateWidth);
     }];
@@ -274,39 +293,70 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 }
 
 - (void)setupAccountInfoPanel:(UIView *)view {
-    UIView *userNameRow = [self addRowOfParentView:view withHeight:45.f * g_rateWidth margin:10.f * g_rateWidth isEnd:NO];
+//    UIView *userNameRow = [self addRowOfParentView:view withHeight:45.f * g_rateWidth margin:10.f * g_rateWidth isEnd:NO];
     
-    UILabel *userNameLabel = [self setupTitleLabelWithTitle:@"用户名"];
-    [userNameRow addSubview:userNameLabel];
-    [userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(userNameRow).with.offset(17.f * g_rateWidth);
-        make.centerY.equalTo(userNameRow);
+//    UILabel *userNameLabel = [self setupTitleLabelWithTitle:@"用户名"];
+//    [userNameRow addSubview:userNameLabel];
+//    [userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(userNameRow).with.offset(17.f * g_rateWidth);
+//        make.centerY.equalTo(userNameRow);
+//    }];
+//
+//    HPRightImageButton *userNameGotoBtn = [self setupGotoBtnWithTitle:@"未设置"];
+//    [userNameGotoBtn setTag:HPConfigGotoUserName];
+//    [userNameRow addSubview:userNameGotoBtn];
+//    _userNameGotoBtn = userNameGotoBtn;
+//    [userNameGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.right.equalTo(userNameRow).with.offset(- 17.f * g_rateWidth);
+//        make.centerY.equalTo(userNameLabel);
+//    }];
+    UIView *portraitRow = [self addRowOfParentView:view withHeight:63.f * g_rateWidth margin:0.f isEnd:NO];
+    
+    UILabel *portraitLabel = [self setupTitleLabelWithTitle:@"头像"];
+    [portraitRow addSubview:portraitLabel];
+    [portraitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(portraitRow).with.offset(17.f * g_rateWidth);
+        make.centerY.equalTo(portraitRow);
+        make.height.mas_equalTo(portraitLabel.font.pointSize);
     }];
     
-    HPRightImageButton *userNameGotoBtn = [self setupGotoBtnWithTitle:@"未设置"];
-    [userNameGotoBtn setTag:HPConfigGotoUserName];
-    [userNameRow addSubview:userNameGotoBtn];
-    _userNameGotoBtn = userNameGotoBtn;
-    [userNameGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(userNameRow).with.offset(- 17.f * g_rateWidth);
-        make.centerY.equalTo(userNameLabel);
+//    UIControl *portraitCtrl = [[UIControl alloc] init];
+//    [portraitCtrl setTag:HPConfigGotoPortrait];
+//    [portraitCtrl addTarget:self action:@selector(onClickGotoCtrl:) forControlEvents:UIControlEventTouchUpInside];
+//    [portraitRow addSubview:portraitCtrl];
+//    [portraitCtrl mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.right.equalTo(portraitRow).with.offset(-17.f * g_rateWidth);
+//        make.centerY.equalTo(portraitLabel);
+//    }];
+    
+    UIButton *portraitView = [[UIButton alloc] init];
+    [portraitView.layer setCornerRadius:23.f];
+    [portraitView.layer setMasksToBounds:YES];
+    [portraitView setBackgroundImage:ImageNamed(@"my_business_card_default_head_image") forState:UIControlStateNormal];
+//     Image:[UIImage imageNamed:@"my_business_card_default_head_image"]];
+    [portraitView addTarget:self action:@selector(onClickGotoCtrl:) forControlEvents:UIControlEventTouchUpInside];
+    [portraitRow addSubview:portraitView];
+    [portraitView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(portraitRow).with.offset(-17.f * g_rateWidth);
+        make.size.mas_equalTo(CGSizeMake(46.f, 46.f));
+        make.centerY.mas_equalTo(portraitRow);
     }];
     
     UIView *mailRow = [self addRowOfParentView:view withHeight:45.f * g_rateWidth margin:0.f isEnd:NO];
     
-    UILabel *mailLabel = [self setupTitleLabelWithTitle:@"绑定邮箱"];
+    UILabel *mailLabel = [self setupTitleLabelWithTitle:@"用户名(昵称)"];
     [mailRow addSubview:mailLabel];
     [mailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(userNameLabel);
+        make.left.equalTo(portraitLabel);
         make.centerY.equalTo(mailRow);
     }];
     
-    HPRightImageButton *mailGotoBtn = [self setupGotoBtnWithTitle:@"未绑定"];
+    HPRightImageButton *mailGotoBtn = [self setupGotoBtnWithTitle:@"未填写"];
     [mailGotoBtn setTag:HPConfigGotoMail];
     [mailRow addSubview:mailGotoBtn];
     _mailGotoBtn = mailGotoBtn;
     [mailGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(userNameGotoBtn);
+        make.right.equalTo(mailRow).with.offset(-17.f * g_rateWidth);
         make.centerY.equalTo(mailRow);
     }];
     
@@ -315,7 +365,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     UILabel *phoneNumLabel = [self setupTitleLabelWithTitle:@"绑定手机"];
     [phoneNumRow addSubview:phoneNumLabel];
     [phoneNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(userNameLabel);
+        make.left.equalTo(portraitRow).with.offset(17.f * g_rateWidth);
         make.centerY.equalTo(phoneNumRow);
     }];
     
@@ -324,7 +374,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [phoneNumRow addSubview:phoneNumGotoBtn];
     _phoneNumGotoBtn = phoneNumGotoBtn;
     [phoneNumGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(userNameGotoBtn);
+        make.right.equalTo(phoneNumRow).with.offset(-17.f * g_rateWidth);
         make.centerY.equalTo(phoneNumRow);
     }];
     
@@ -333,7 +383,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     UILabel *passwordLabel = [self setupTitleLabelWithTitle:@"登录密码"];
     [passwordRow addSubview:passwordLabel];
     [passwordLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(userNameLabel);
+        make.left.equalTo(passwordRow).with.offset(17.f * g_rateWidth);
         make.centerY.equalTo(passwordRow);
     }];
     
@@ -342,7 +392,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [passwordRow addSubview:passwordGotoBtn];
     _passwordGotoBtn = passwordGotoBtn;
     [passwordGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(userNameGotoBtn);
+        make.right.equalTo(passwordRow).with.offset(-17.f * g_rateWidth);
         make.centerY.equalTo(passwordRow);
     }];
 }
@@ -357,7 +407,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.centerY.equalTo(versionRow);
     }];
     
-    HPRightImageButton *versionGotoBtn = [self setupGotoBtnWithTitle:@"V1.0.0"];
+    
+    HPRightImageButton *versionGotoBtn = [self setupGotoBtnWithTitle:kAppVersion?:@"V1.0.0"];
     [versionGotoBtn setTag:HPConfigGotoVersion];
     [versionRow addSubview:versionGotoBtn];
     _versionGotoBtn = versionGotoBtn;
@@ -474,6 +525,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         
         case HPConfigGotoPassword:
             NSLog(@"HPConfigGotoPassword");
+            [self pushVCByClassName:@"HPChangePasswordController"];
             break;
             
         case HPConfigGotoVersion:

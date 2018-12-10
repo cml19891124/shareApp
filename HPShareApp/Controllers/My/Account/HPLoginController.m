@@ -309,7 +309,11 @@
 
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/login" paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
-            HPLoginModel *model = [HPLoginModel AccountStatusWithDict:responseObject[@"data"]];
+            HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
+            HPUserInfo *userInfo = [HPUserInfo mj_objectWithKeyValues:responseObject[@"data"][@"userInfo"]];
+            HPCardInfo *cardInfo = [HPCardInfo mj_objectWithKeyValues:responseObject[@"data"][@"cardInfo"]];
+            model.userInfo = userInfo;
+            model.cardInfo = cardInfo;
             [HPUserTool saveAccount:model];
             [HPProgressHUD alertMessage:@"登录成功"];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

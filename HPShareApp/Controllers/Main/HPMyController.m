@@ -11,6 +11,8 @@
 #import "HPProgressHUD.h"
 #import "HPMyCardController.h"
 #import "HPCustomerServiceModalView.h"
+#import "HPUploadImageHandle.h"
+#import "HPTimeString.h"
 
 @interface HPMyController ()
 
@@ -72,8 +74,54 @@
         [_followNumLabel setText:@"--"];
         [_historyNumLabel setText:@"--"];
     }
+    
+    [self uploadLocalImageGetAvatarUrl];
 }
 
+- (void)uploadLocalImageGetAvatarUrl
+{
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)account.userInfo;
+    NSString *url = [NSString stringWithFormat:@"%@/v1/file/uploadPicture",kBaseUrl];//放上传图片的网址
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];//初始化请求对象
+//    [manager setValue:account.token forKey:@"token"];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];//设置服务器允许的请求格式内容
+    NSString *historyTime = [HPTimeString getNowTimeTimestamp];
+
+    //上传图片/文字，只能POST
+    [manager POST:url parameters:@{@"file":historyTime} constructingBodyWithBlock:^(id  _Nonnull formData) {
+        //对于图片进行压缩
+        UIImage *image = [UIImage imageNamed:@"personal_center_not_login_head"];
+        NSData *data = UIImageJPEGRepresentation(image, 0.1);
+        //第一个代表文件转换后data数据，第二个代表图片的名字，第三个代表图片放入文件夹的名字，第四个代表文件的类型
+        [formData appendPartWithFileData:data name:@"file" fileName:@"image.jpg" mimeType:@"image/jpg"];
+    } progress:^(NSProgress * _Nonnull uploadProgress) {
+//        NSLog(@"uploadProgress = %@",uploadProgress);
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+//        NSLog(@"responseObject = %@, task = %@",responseObject,task);
+        id obj = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSLog(@"obj = %@",obj);
+        
+        HPUserInfo *userInfo = [[HPUserInfo alloc] init];
+        userInfo.avatarUrl = [obj[@"data"]firstObject][@"url"]?:@"";
+        userInfo.company = dic[@"company"]?:@"";
+        userInfo.password = dic[@"password"]?:@"";
+        userInfo.realName = dic[@"realName"]?:@"";
+        userInfo.signatureContext = dic[@"signatureContext"]?:@"";
+        userInfo.telephone = dic[@"telephone"]?:@"";
+        userInfo.title = dic[@"title"]?:@"";
+        userInfo.username = dic[@"username"]?:@"";
+        userInfo.userId = dic[@"userId"]?:@"";
+        userInfo.mobile = dic[@"mobile"]?:@"";
+        account.userInfo = userInfo;
+        [HPUserTool saveAccount:account];
+                
+
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+//        NSLog(@"error = %@",error);
+    }];
+    
+}
 /*
 #pragma mark - Navigation
 
