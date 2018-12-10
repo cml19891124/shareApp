@@ -1,6 +1,0 @@
-framework module Pods_HPShareApp {
-  umbrella header "Pods-HPShareApp-umbrella.h"
-
-  export *
-  module * { export * }
-}
