@@ -15,7 +15,7 @@
  @param selectedParent 选中的父类选项
  @param checkItems 选中的子类选项
  */
-typedef void(^BtnConfirmCallback)(NSString *selectedParent, NSArray *checkItems);
+typedef void(^BtnConfirmCallback)(NSString * _Nullable selectedParent, NSArray * _Nullable checkItems);
 
 NS_ASSUME_NONNULL_BEGIN
 

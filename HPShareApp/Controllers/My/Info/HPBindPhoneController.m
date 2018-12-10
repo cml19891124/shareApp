@@ -9,7 +9,8 @@
 #import "HPBindPhoneController.h"
 
 @interface HPBindPhoneController ()
-
+@property (strong, nonatomic) UITextField *phoneNumTextField;
+@property (strong, nonatomic) UITextField *codeTextField;
 @end
 
 @implementation HPBindPhoneController
@@ -60,6 +61,7 @@
                                 range:NSMakeRange(0, 5)];
     [phoneNumTextField setAttributedPlaceholder:phoneNumPlaceholder];
     [self.view addSubview:phoneNumTextField];
+    self.phoneNumTextField = phoneNumTextField;
     [phoneNumTextField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(titleLabel);
         make.top.equalTo(titleLabel.mas_bottom).with.offset(75.f * g_rateWidth);
@@ -104,6 +106,7 @@
                             range:NSMakeRange(0, 5)];
     [codeTextField setAttributedPlaceholder:codePlaceholder];
     [self.view addSubview:codeTextField];
+    self.codeTextField = codeTextField;
     [codeTextField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(phoneNumTextField);
         make.top.equalTo(phoneNumLine.mas_bottom).with.offset(30.f * g_rateWidth);
@@ -144,4 +147,30 @@
     NSLog(@"onClickCodeBtn");
 }
 
+#pragma mark - 获取验证码--
+/**
+ 状态：1：获取验证码的时候
+ */
+- (void)getCodeNumberInBindPhone
+{
+    HPLoginModel *model = [HPUserTool account];
+    NSDictionary *dict = (NSDictionary *)model.userInfo;
+    NSString *mobile = dict[@"mobile"];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"mobile"] = mobile;
+    dic[@"state"] = @"1";
+    dic[@"code"] = _codeTextField.text;
+    
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:@"发送成功"];
+            weakSelf.codeTextField.text = responseObject[@"data"];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        [HPProgressHUD alertMessage:@"网络错误"];
+    }];
+}
 @end
