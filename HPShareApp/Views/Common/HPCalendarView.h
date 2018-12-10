@@ -20,6 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSDate *endMonthOfDate;
 
+/**
+ 内部图层嵌套涂层圆角（嵌套图层是为了外部显示阴影效果，内部限制子视图在圆角范围内）
+ */
+@property (nonatomic, assign) CGFloat contentCornerRadius;
+
 @end
 
 NS_ASSUME_NONNULL_END

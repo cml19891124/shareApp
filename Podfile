@@ -8,6 +8,7 @@ target 'HPShareApp' do
   pod 'AMapSearch'
   pod 'AMapLocation'
   pod 'MJExtension', '~> 3.0.15.1'
+  pod 'TZImagePickerController'
   pod 'AFNetworking', '~> 3.2.1'
   use_frameworks!
   pod 'Charts'

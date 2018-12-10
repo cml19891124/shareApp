@@ -1,12 +1,12 @@
 //
-//  HPStartUpCardDefineController.m
+//  HPOwnerCardDefineController.m
 //  HPShareApp
 //
 //  Created by HP on 2018/11/15.
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPStartUpCardDefineController.h"
+#import "HPOwnerCardDefineController.h"
 #import "HPAlertSheet.h"
 #import "HPTextDialogView.h"
 #import "HPLinkageSheetView.h"
@@ -15,12 +15,12 @@
 #import "HPImageUtil.h"
 #import "HPSelectTable.h"
 #import "HPTagDialogView.h"
-#import "HPCalendarModalView.h"
+#import "TZPhotoPickerController.h"
 
 #define PANEL_SPACE 10.f
-#define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：无需寄存货物，随到随卖，只需提供座椅，诚信经营，求长期合作。"
+#define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：入驻本店需事先准备相关产品质检材料，入店时需确认，三无产品请绕道..."
 
-@interface HPStartUpCardDefineController () <UIGestureRecognizerDelegate>
+@interface HPOwnerCardDefineController () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 
@@ -28,28 +28,24 @@
 
 @property (nonatomic, weak) HPTextDialogView *dialogView;
 
-@property (nonatomic, weak) HPLinkageSheetView *districtSheetView;
-
 @property (nonatomic, weak) HPLinkageSheetView *tradeSheetView;
 
 @property (nonatomic, weak) UIButton *isLongTermBtn;
-
-@property (nonatomic, weak) UITextField *shareDateTextField;
 
 @property (nonatomic, weak) UITextView *remarkTextView;
 
 @property (nonatomic, weak) HPTagDialogView *tagDialogView;
 
-@property (nonatomic, weak) HPCalendarModalView *calendarModalView;
+@property (nonatomic, weak) TZPhotoPickerController *photoPicker;
 
 @end
 
-@implementation HPStartUpCardDefineController
+@implementation HPOwnerCardDefineController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setupNavigationBarWithTitle:@"定制名片"];
+    [self setupNavigationBarWithTitle:@"空间发布"];
     self.isPopGestureRecognize = NO;
     [self setupUI];
     
@@ -61,6 +57,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 /*
  #pragma mark - Navigation
  
@@ -92,32 +92,18 @@
         [self setupPanelAtIndex:i ofView:scrollView];
     }
     
-    UIButton *previewBtn = [[UIButton alloc] init];
-    [previewBtn.layer setCornerRadius:7.f];
-    [previewBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-    [previewBtn setBackgroundColor:UIColor.whiteColor];
-    [previewBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [previewBtn setTitle:@"预览名片" forState:UIControlStateNormal];
-    [previewBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:previewBtn];
-    [previewBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    UIButton *releaseBtn = [[UIButton alloc] init];
+    [releaseBtn.layer setCornerRadius:7.f];
+    [releaseBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [releaseBtn setBackgroundColor:COLOR_RED_FC4865];
+    [releaseBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
+    [releaseBtn setTitle:@"确认发布" forState:UIControlStateNormal];
+    [releaseBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:releaseBtn];
+    [releaseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(scrollView).with.offset(-20.f * g_rateWidth);
         make.centerX.equalTo(scrollView);
         make.top.equalTo(scrollView.subviews[4].mas_bottom).with.offset(40.f * g_rateWidth);
-        make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 45.f * g_rateWidth));
-    }];
-    
-    UIButton *createBtn = [[UIButton alloc] init];
-    [createBtn.layer setCornerRadius:7.f];
-    [createBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [createBtn setBackgroundColor:COLOR_RED_FC4865];
-    [createBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [createBtn setTitle:@"生成名片" forState:UIControlStateNormal];
-    [createBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:createBtn];
-    [createBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(scrollView);
-        make.bottom.equalTo(scrollView).with.offset(-20.f * g_rateWidth);
-        make.top.equalTo(previewBtn.mas_bottom).with.offset(10.f * g_rateWidth);
         make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 45.f * g_rateWidth));
     }];
     
@@ -142,27 +128,27 @@
         }];
     }
     else if (index == 1) {
-        [panel addRowView:[self setupStartupTitleRowView]];
+        [panel addRowView:[self setupSpaceTitleRowView]];
+        [panel addRowView:[self setupSpaceAddressRowView]];
         [panel addRowView:[self setupTradeRowView]];
-        [panel addRowView:[self setupProductTagRowView] withHeight:93.f * g_rateWidth];
+        [panel addRowView:[self setupSpaceTagRowView] withHeight:93.f * g_rateWidth];
         UIView *lastPanel = view.subviews[index - 1];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.width.equalTo(view);
-            make.height.mas_equalTo(184.f * g_rateWidth);
+            make.height.mas_equalTo(232.f * g_rateWidth);
             make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
         }];
     }
     else if (index == 2) {
         [panel addRowView:[self setupAreaRowView]];
         [panel addRowView:[self setupPriceRowView]];
-        [panel addRowView:[self setupDistrictRowView]];
         [panel addRowView:[self setupShareTimeRowView]];
         [panel addRowView:[self setupShareDateRowView]];
-        [panel addRowView:[self setupIntentSpaceRowView]];
+        [panel addRowView:[self setupIntentTradeRowView]];
         UIView *lastPanel = view.subviews[index - 1];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.width.equalTo(view);
-            make.height.mas_equalTo(275.f * g_rateWidth);
+            make.height.mas_equalTo(230.f * g_rateWidth);
             make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
         }];
     }
@@ -205,7 +191,7 @@
     UILabel *descLabel = [[UILabel alloc] init];
     [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
     [descLabel setTextColor:COLOR_GRAY_CCCCCC];
-    [descLabel setText:@"上传品牌或产品图，提高合作机会。"];
+    [descLabel setText:@"上传共享空间照片，让匹配更高效。"];
     [view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(view);
@@ -216,11 +202,36 @@
     return view;
 }
 
-- (UIView *)setupStartupTitleRowView {
+- (UIView *)setupSpaceTitleRowView {
     UIView *view = [[UIView alloc] init];
     
-    [self setupTitleLabelWithText:@"创业标题" ofView:view];
-    [self setupTextFieldWithPlaceholder:@"例：优品小店深圳急求共享铺位" ofView:view rightTo:view];
+    [self setupTitleLabelWithText:@"发布标题" ofView:view];
+    [self setupTextFieldWithPlaceholder:@"例：优品小店黄金铺位共享" ofView:view rightTo:view];
+    
+    return view;
+}
+
+- (UIView *)setupSpaceAddressRowView {
+    UIView *view = [[UIView alloc] init];
+    
+    [self setupTitleLabelWithText:@"空间地址" ofView:view];
+    UIImageView *downIcon = [self setupDownIconOfView:view];
+    
+    UIButton *valueBtn = [[UIButton alloc] init];
+    [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+    [valueBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
+    [valueBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
+    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
+    [valueBtn setTitle:@"请输入店铺或空间地址" forState:UIControlStateNormal];
+    [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    [valueBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:valueBtn];
+    [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
+        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
+        make.centerY.equalTo(view);
+    }];
+    
     
     return view;
 }
@@ -249,13 +260,35 @@
     return view;
 }
 
-- (UIView *)setupProductTagRowView {
+- (UIView *)setupcCertificationRowView {
+    UIView *view = [[UIView alloc] init];
+    
+    [self setupTitleLabelWithText:@"资格认证" ofView:view];
+    
+    UIButton *certificationBtn = [[UIButton alloc] init];
+    [certificationBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:14.f]];
+    [certificationBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [certificationBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+    [certificationBtn setTitle:@"认证" forState:UIControlStateNormal];
+    [certificationBtn setImage:[UIImage imageNamed:@"select_the_arrow"] forState:UIControlStateNormal];
+    [certificationBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, 27.f, 0.f, -27.f)];
+    [certificationBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -30.f, 0.f, 30.f)];
+    [view addSubview:certificationBtn];
+    [certificationBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(view).with.offset(-20.f * g_rateWidth);
+        make.centerY.equalTo(view);
+    }];
+    
+    return view;
+}
+
+- (UIView *)setupSpaceTagRowView {
     UIView *view = [[UIView alloc] init];
     
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
     [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:@"产品/品牌标签"];
+    [titleLabel setText:@"空间标签"];
     [view addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(21.f * g_rateWidth);
@@ -283,7 +316,7 @@
 - (UIView *)setupAreaRowView {
     UIView *view = [[UIView alloc] init];
     
-    [self setupTitleLabelWithText:@"期望面积" ofView:view];
+    [self setupTitleLabelWithText:@"共享面积" ofView:view];
     
     UILabel *unitLabel = [self setupUnitLabelWithText:@"（㎡）" ofView:view];
     
@@ -296,7 +329,7 @@
 - (UIView *)setupPriceRowView {
     UIView *view = [[UIView alloc] init];
     
-    [self setupTitleLabelWithText:@"期望价格" ofView:view];
+    [self setupTitleLabelWithText:@"共享租金" ofView:view];
     
     NSArray *options = @[@"（元/小时）", @"（元/天）"];
     HPSelectTableLayout *layout = [[HPSelectTableLayout alloc] init];
@@ -318,31 +351,6 @@
     
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"不填默认面议" ofView:view rightTo:unitSelectTable];
     [textField setKeyboardType:UIKeyboardTypeDecimalPad];
-    
-    return view;
-}
-
-- (UIView *)setupDistrictRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    [self setupTitleLabelWithText:@"期望区域" ofView:view];
-    
-    UIImageView *downIcon = [self setupDownIconOfView:view];
-    
-    UIButton *valueBtn = [[UIButton alloc] init];
-    [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-    [valueBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
-    [valueBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-    [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
-    [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(onClickDistrictBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:valueBtn];
-    [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
-        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
     
     return view;
 }
@@ -374,7 +382,7 @@
 - (UIView *)setupShareDateRowView {
     UIView *view = [[UIView alloc] init];
     
-    [self setupTitleLabelWithText:@"共享日期" ofView:view];
+    [self setupTitleLabelWithText:@"共享排期" ofView:view];
     
     CGRect rect = CGRectMake(0.f, 0.f, 55.f, 20.f);
     UIImage *normalImage = [HPImageUtil getImageByColor:COLOR_GRAY_CCCCCC inRect:rect];
@@ -406,7 +414,6 @@
     [calendarBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [calendarBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -15.f, 0.f, 15.f)];
     [calendarBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, 152.f, 0.f, -152.f)];
-    [calendarBtn addTarget:self action:@selector(onClickCalendarBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:calendarBtn];
     [calendarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(122.f * g_rateWidth);
@@ -417,26 +424,20 @@
     return view;
 }
 
-- (UIView *)setupIntentSpaceRowView {
+- (UIView *)setupIntentTradeRowView {
     UIView *view = [[UIView alloc] init];
     
-    [self setupTitleLabelWithText:@"意向空间" ofView:view];
-    UIImageView *downIcon = [self setupDownIconOfView:view];
-    
-    UIButton *valueBtn = [[UIButton alloc] init];
-    [valueBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
-    [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-    [valueBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-    [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
-    [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:valueBtn];
-    [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
-        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
+    UILabel *titleLabel = [[UILabel alloc] init];
+    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
+    [titleLabel setTextColor:COLOR_BLACK_333333];
+    [titleLabel setText:@"意向行业/产品"];
+    [view addSubview:titleLabel];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(view).with.offset(21.f * g_rateWidth);
         make.centerY.equalTo(view);
     }];
+    
+    [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
     
     return view;
 }
@@ -577,24 +578,13 @@
 #pragma mark - NSNotification
 
 - (void)didTextFieldChange:(NSNotification *)notification {
-    if (notification.object == self.shareDateTextField) {
-        if ([self.shareDateTextField.text isEqualToString:@""]) {
-            [self.isLongTermBtn setSelected:YES];
-        }
-        else {
-            [self.isLongTermBtn setSelected:NO];
-        }
-    }
+    
 }
 
 #pragma mark - onClick
 
 - (void)onClickIsBtn:(UIButton *)btn {
     [btn setSelected:!btn.isSelected];
-    
-    if (btn == self.isLongTermBtn && btn.isSelected) {
-        [self.shareDateTextField setText:@""];
-    }
 }
 
 - (void)onClickUploadBtn:(UIButton *)btn {
@@ -616,47 +606,6 @@
     }
     
     [self.dialogView show:YES];
-}
-
-- (void)onClickDistrictBtn:(UIButton *)btn {
-    if (self.districtSheetView == nil) {
-        NSDictionary *data = @{@"parent":@[@"罗湖区", @"福田区", @"南山区", @"盐田区", @"宝安区", @"龙岗区", @"坪山区", @"光明区", @"龙华区", @"大鹏新区"],
-                               @"children":@{
-                                       @"罗湖区":@[@"不限", @"布心", @"蔡屋围", @"草埔", @"翠竹", @"东湖", @"东门", @"独树村", @"国贸", @"红岗花园", @"洪湖", @"黄贝岭", @"火车站", @"莲塘", @"留医部", @"罗湖区委", @"泥岗", @"清水河", @"人民南", @"水贝", @"水库", @"笋岗", @"田贝", @"文锦渡", @"银湖", @"其他"],
-                                       @"福田区":@[@"不限", @"八卦岭", @"保税区", @"笔架山", @"彩田村", @"车公庙", @"赤尾", @"福华新村", @"福民新村", @"福田区委", @"其他", @"岗厦", @"购物公园", @"皇岗", @"华强北", @"华强南", @"景田", @"莲花北村", @"莲花一村", @"莲花二村", @"莲花三村", @"荔枝公园", @"上步", @"上梅林", @"上沙", @"沙尾", @"沙嘴", @"石厦", @"下梅林", @"香蜜湖", @"下沙", @"新洲", @"益田村", @"园岭", @"中心区", @"竹子林", @"其他"],
-                                       @"南山区":@[@"不限", @"白石洲", @"大冲", @"桂庙路口", @"海上世界", @"海王大厦", @"后海", @"华侨城", @"科技园", @"南山区政府", @"南山医院", @"南头", @"南新路口", @"南油", @"前海", @"蛇口", @"深大北门", @"深圳湾", @"桃源村", @"西丽", @"中心区", @"其他"],
-                                       @"盐田区":@[@"不限", @"沙头角", @"盐田", @"大梅沙", @"小梅沙", @"其他"],
-                                       @"宝安区":@[@"不限", @"福永", @"宝安中心区", @"沙井", @"石岩", @"松岗", @"桃源居", @"新中心区", @"西乡", @"翻身路", @"新安", @"其他"],
-                                       @"龙岗区":@[@"不限", @"横岗", @"龙岗", @"坂田", @"龙岗中心城", @"平湖", @"坪地", @"大运新城", @"万科城", @"百鸽笼", @"布吉关", @"布吉街", @"长龙", @"大芬村", @"丹竹头", @"康桥", @"丽湖", @"木棉湾", @"南岭", @"下水径", @"信义", @"又一村", @"中海怡翠", @"其他"],
-                                       @"坪山区":@[@"不限", @"坪山", @"坑梓", @"其他"],
-                                       @"光明区":@[@"其他"],
-                                       @"龙华区":@[@"不限", @"大浪", @"观澜", @"金地梅陇镇", @"锦绣江南", @"莱蒙水榭春天", @"龙华", @"龙华中心区", @"美丽365花园", @"梅林关口", @"民治", @"深圳北站", @"世纪春城", @"其他"],
-                                       @"大鹏新区":@[@"不限", @"大鹏", @"南澳", @"葵涌", @"其他"]
-                                       }};
-        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithParents:data[@"parent"] Children:data[@"children"]];
-        HPLinkageSheetView *districtSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[@"不限"] allSingleCheck:NO];
-        [districtSheetView setSelectDescription:@"选择区域（最多可选3个）"];
-        [districtSheetView setMaxCheckNum:3];
-        [districtSheetView selectCellAtParentIndex:0 childIndex:0];
-        
-        [districtSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems) {
-            NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];
-            for (NSString *checkItem in checkItems) {
-                checkItemStr = [checkItemStr stringByAppendingString:checkItem];
-                
-                if (checkItem != checkItems.lastObject) {
-                    checkItemStr = [checkItemStr stringByAppendingString:@", "];
-                }
-            }
-            
-            [btn setTitle:checkItemStr forState:UIControlStateSelected];
-            [btn setSelected:YES];
-        }];
-        
-        self.districtSheetView = districtSheetView;
-    }
-    
-    [self.districtSheetView show:YES];
 }
 
 - (void)onClickTradeBtn:(UIButton *)btn {
@@ -723,24 +672,6 @@
     [_tagDialogView show:YES];
 }
 
-- (void)onClickCalendarBtn:(UIButton *)btn {
-    if (_calendarModalView == nil) {
-        HPCalendarModalView *calendarModalView = [[HPCalendarModalView alloc] init];
-        [calendarModalView setConfirmCallback:^(NSArray *selectDates) {
-            if (selectDates.count == 0) {
-                [btn setSelected:NO];
-            }
-            else {
-                [btn setTitle:[NSString stringWithFormat:@"%ld天", selectDates.count] forState:UIControlStateSelected];
-                [btn setSelected:YES];
-            }
-        }];
-        _calendarModalView = calendarModalView;
-    }
-    
-    [_calendarModalView show:YES];
-}
-
 # pragma mark - UIGestureRecognizerDelegate
 
 - (void)onScrollViewTap {
@@ -770,6 +701,5 @@
         [textView setTextColor:COLOR_GRAY_CCCCCC];
     }
 }
-
 
 @end

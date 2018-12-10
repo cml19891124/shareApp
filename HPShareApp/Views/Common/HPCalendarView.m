@@ -13,6 +13,8 @@
     NSMutableArray *_selectedDates;
 }
 
+@property (nonatomic, weak) UIView *contentView;
+
 @property (nonatomic, strong) JTCalendarManager *calendarManager;
 
 @property (nonatomic, weak) JTHorizontalCalendarView *calendarContentView;
@@ -91,6 +93,7 @@
     [contentView.layer setCornerRadius:10.f];
     [contentView.layer setMasksToBounds:YES];
     [self addSubview:contentView];
+    _contentView = contentView;
     [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
@@ -151,6 +154,14 @@
     [_calendarManager setMenuView:calendarMenuView];
     [_calendarManager setContentView:calendarContentView];
     [_calendarManager setDate:[NSDate date]];
+}
+
+- (void)setContentCornerRadius:(CGFloat)contentCornerRadius {
+    [_contentView.layer setCornerRadius:contentCornerRadius];
+}
+
+- (CGFloat)contentCornerRadius {
+    return _contentView.layer.cornerRadius;
 }
 
 #pragma mark - JTCalendarDelegate

@@ -6,15 +6,13 @@
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPBaseModalView.h"
-
-typedef void(^CalendarBtnConfirmCallback)(NSArray *selectDates);
+#import "HPBaseDialogView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPCalendarModalView : HPBaseModalView
+@interface HPCalendarDialogView : HPBaseDialogView
 
-@property (nonatomic, strong) CalendarBtnConfirmCallback confirmCallback;
+@property (nonatomic, readonly) NSArray *selectedDates;
 
 @end
 

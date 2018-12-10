@@ -28,7 +28,7 @@
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:30.f]];
     [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:@"免费发布共享“信息”"];
+    [titleLabel setText:@"免费发布共享"];
     [view addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(view).with.offset(90.f * g_rateHeight);
@@ -100,7 +100,7 @@
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:20.f]];
     [titleLabel setTextColor:UIColor.whiteColor];
-    [titleLabel setText:@"我是业主"];
+    [titleLabel setText:@"我是店主"];
     [view addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(35.f * g_rateWidth);
@@ -149,7 +149,7 @@
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:20.f]];
     [titleLabel setTextColor:UIColor.whiteColor];
-    [titleLabel setText:@"我是创客"];
+    [titleLabel setText:@"我是租客"];
     [view addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(35.f * g_rateWidth);
