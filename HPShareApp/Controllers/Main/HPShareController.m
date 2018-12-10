@@ -129,6 +129,7 @@
     kWeakSelf(weakSelf);
     [HPHTTPSever HPGETServerWithMethod:@"/v1/area/list" paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
+            NSLog(@"cityArray: %@", responseObject[@"data"][0][@"name"]);
             weakSelf.cityArray = [HPCityModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
         }else{
             [HPProgressHUD alertMessage:MSG];

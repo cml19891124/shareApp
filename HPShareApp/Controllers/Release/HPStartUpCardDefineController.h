@@ -6,11 +6,11 @@
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPBaseTextInputController.h"
+#import "HPBaseReleaseController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPStartUpCardDefineController : HPBaseTextInputController
+@interface HPStartUpCardDefineController : HPBaseReleaseController
 
 @end
 
