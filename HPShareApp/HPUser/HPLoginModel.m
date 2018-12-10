@@ -1,9 +1,11 @@
 
 
 #import "HPLoginModel.h"
+#import "MJExtension.h"
 
 @implementation HPLoginModel
-+(instancetype)AccountStatusWithDict:(NSDictionary *)dict
+
++(instancetype)AccountStatusWithDict:(NSMutableDictionary *)dict
 {
     HPLoginModel *account= [[self alloc]init];
     account.token = dict[@"token"];
@@ -11,15 +13,7 @@
     account.userInfo = dict[@"userInfo"];
     return account;
 }
-+ (NSDictionary *)objectClassInArray
 
-{
-    
-    return @{@"cardInfo":[HPCardInfo class],
-             @"userInfo":[HPUserInfo class]
-             };
-    
-}
 /**
  *  当一个对象要归档进沙盒的时候就会调用  归档
  *  目的，在这个方法中说明这个对象的哪些属性写进沙盒
@@ -27,8 +21,8 @@
 -(void)encodeWithCoder:(NSCoder *)encoder
 {
     [encoder encodeObject:self.token forKey:@"token"];
-    [encoder encodeObject:self.cardInfo forKey:@"cardInfo"];
-    [encoder encodeObject:self.userInfo forKey:@"userInfo"];
+    [encoder encodeObject:[self.cardInfo mj_keyValues] forKey:@"cardInfo"];
+    [encoder encodeObject:[self.userInfo mj_keyValues] forKey:@"userInfo"];
 }
 
 /**

@@ -5,10 +5,10 @@
 @interface HPLoginModel : NSObject<NSCoding>
 
 @property (nonatomic, copy) NSString *token;
-@property (nonatomic, copy) HPCardInfo *cardInfo;
-@property (nonatomic, copy) HPUserInfo *userInfo;
+@property (nonatomic, strong) HPCardInfo *cardInfo;
+@property (nonatomic, strong) HPUserInfo *userInfo;
 
-+(instancetype)AccountStatusWithDict:(NSDictionary *)dict;
++(instancetype)AccountStatusWithDict:(NSMutableDictionary *)dict;
 
 @end
 
@@ -38,6 +38,7 @@
 @property (nonatomic, copy) NSString *mobile;
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *username;
+@property (nonatomic, copy) NSString *userId;
 +(instancetype)UserInfoWithDict:(NSDictionary *)dict;
 
 @end

@@ -8,7 +8,7 @@
 
 #import "HPBindPhoneController.h"
 
-@interface HPBindPhoneController ()
+@interface HPBindPhoneController ()<UITextFieldDelegate>
 @property (strong, nonatomic) UITextField *phoneNumTextField;
 @property (strong, nonatomic) UITextField *codeTextField;
 @end
@@ -138,13 +138,19 @@
 }
 
 - (void)onClickConfirmBtn:(UIButton *)btn {
-    NSInteger count = self.navigationController.viewControllers.count;
-    UIViewController *vc = self.navigationController.viewControllers[count - 3];
-    [self.navigationController popToViewController:vc animated:YES];
+    if (self.phoneNumTextField.text.length < 11) {
+        [HPProgressHUD alertMessage:@"请输入11位手机号"];
+    }else if (self.codeTextField.text.length < 6){
+        [HPProgressHUD alertMessage:@"请输入6位验证码"];
+    }
+    if (self.phoneNumTextField.text.length == 11&&self.codeTextField.text.length == 6) {
+        [self confirmTochangeBindPhone];
+    }
 }
 
 - (void)onClickCodeBtn:(UIButton *)btn {
     NSLog(@"onClickCodeBtn");
+    [self getCodeNumberInBindPhone];
 }
 
 #pragma mark - 获取验证码--
@@ -158,8 +164,7 @@
     NSString *mobile = dict[@"mobile"];
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"mobile"] = mobile;
-    dic[@"state"] = @"1";
-    dic[@"code"] = _codeTextField.text;
+    dic[@"state"] = @"-1";
     
     kWeakSelf(weakSelf);
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" paraments:dic complete:^(id  _Nonnull responseObject) {
@@ -172,5 +177,102 @@
     } Failure:^(NSError * _Nonnull error) {
         [HPProgressHUD alertMessage:@"网络错误"];
     }];
+}
+
+/**
+ 确定更改手机号
+ */
+- (void)confirmTochangeBindPhone
+{
+    HPLoginModel *model = [HPUserTool account];
+    NSDictionary *dict = (NSDictionary *)model.userInfo;
+    NSString *mobile = dict[@"mobile"];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"mobile"] = mobile;
+    dic[@"state"] = @"-1";
+    dic[@"code"] = _codeTextField.text;
+    
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/verify" paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:@"修改成功"];
+            //获取本地用户数据
+            HPLoginModel *account = [HPUserTool account];
+            NSDictionary *dic = (NSDictionary *)model.userInfo;
+            HPLog(@"userInfo original:%@  ",account.userInfo);
+            HPUserInfo *userInfo = [[HPUserInfo alloc] init];
+            userInfo.avatarUrl = dic[@"avatarUrl"]?:@"";
+            userInfo.company = dic[@"company"]?:@"";
+            userInfo.password = dic[@"password"]?:@"";
+            userInfo.realName = dic[@"realName"]?:@"";
+            userInfo.signatureContext = dic[@"signatureContext"]?:@"";
+            userInfo.telephone = dic[@"telephone"]?:@"";
+            userInfo.title = dic[@"title"]?:@"";
+            userInfo.username = dic[@"username"]?:@"";
+            userInfo.userId = dic[@"userId"]?:@"";
+
+            userInfo.mobile = weakSelf.phoneNumTextField.text;
+            account.userInfo = userInfo;
+            HPLog(@"userInfo:%@  ",account.userInfo);
+            [HPUserTool saveAccount:account];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                NSInteger count = self.navigationController.viewControllers.count;
+                UIViewController *vc = self.navigationController.viewControllers[count - 3];
+                [self.navigationController popToViewController:vc animated:YES];
+            });
+            
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        [HPProgressHUD alertMessage:@"网络错误"];
+    }];
+}
+
+#pragma mark - UITextFieldDelegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField == self.phoneNumTextField) {
+        if (textField.text.length < 11) {
+            [HPProgressHUD alertMessage:@"请输入11位手机号"];
+        }else{
+            self.phoneNumTextField.text = [textField.text substringToIndex:11];
+        }
+    }else if (textField == self.codeTextField){
+        if (textField.text.length < 6) {
+            [HPProgressHUD alertMessage:@"请输入6位验证码"];
+        }else{
+            self.codeTextField.text = [textField.text substringToIndex:6];
+        }
+    }
+    
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (textField == self.phoneNumTextField) {
+        if (textField.text.length >= 11) {
+            //            [HPProgressHUD alertMessage:@"请输入11位手机号"];
+            self.phoneNumTextField.text = [textField.text substringToIndex:11];
+            //[textField resignFirstResponder];
+            //            [self.codeTextField becomeFirstResponder];
+//            _isValidate = [HPValidatePhone validateContactNumber:textField.text];
+            
+            return YES;
+        }
+    }else if (textField == self.codeTextField){
+        if (textField.text.length >= 6) {
+            //            [HPProgressHUD alertMessage:@"请输入6位验证码"];
+            self.codeTextField.text = [textField.text substringToIndex:6];
+            //            [textField resignFirstResponder];
+            return YES;
+        }
+    }
+    return YES;
 }
 @end
