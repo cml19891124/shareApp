@@ -8,12 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		786E617DDD64F9CC68E4049B /* Pods_HPShareAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C508ECCC8CC2C9D9701839BE /* Pods_HPShareAppTests.framework */; };
+		7A54483F21BAD9B2001301F3 /* HPCityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54483E21BAD9B2001301F3 /* HPCityModel.m */; };
 		CAA2DAE424EC650C0D26D3DA /* Pods_HPShareApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */; };
 		DB490D1FA8BCD64C224C403A /* Pods_HPShareAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */; };
 		E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E611563B219AC8D7003A29C5 /* HPBaseViewController.m */; };
 		E61FE09D21B9F94500555F3F /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE09B21B9F94500555F3F /* iCarousel.m */; };
 		E61FE0A021BA0F4A00555F3F /* HPNearbyShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE09F21BA0F4A00555F3F /* HPNearbyShareView.m */; };
 		E61FE0A321BA4EEC00555F3F /* HPGradientColor.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0A221BA4EEC00555F3F /* HPGradientColor.m */; };
+		E61FE0A921BA6F5C00555F3F /* HPHTTPSever.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0A721BA6F5C00555F3F /* HPHTTPSever.m */; };
+		E61FE0AA21BA6F5C00555F3F /* HPHTTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0A821BA6F5C00555F3F /* HPHTTPManager.m */; };
+		E61FE0B021BA816D00555F3F /* HPUserTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0AC21BA816C00555F3F /* HPUserTool.m */; };
+		E61FE0B121BA816D00555F3F /* HPLoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0AD21BA816C00555F3F /* HPLoginModel.m */; };
 		E6292136219AA83000BEF16C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292135219AA83000BEF16C /* AppDelegate.m */; };
 		E629213C219AA83100BEF16C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E629213A219AA83100BEF16C /* Main.storyboard */; };
 		E629213E219AA83A00BEF16C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E629213D219AA83A00BEF16C /* Assets.xcassets */; };
@@ -143,6 +148,8 @@
 		60E49D55A6BBD2F7A38A310D /* Pods-HPShareAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareAppTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareAppTests/Pods-HPShareAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6362C162C2AF8A13DF7D21FE /* Pods-HPShareAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareAppTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareAppTests/Pods-HPShareAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		68AA020221DAA8B9DA354FFA /* Pods-HPShareAppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareAppUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareAppUITests/Pods-HPShareAppUITests.release.xcconfig"; sourceTree = "<group>"; };
+		7A54483D21BAD9B2001301F3 /* HPCityModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCityModel.h; sourceTree = "<group>"; };
+		7A54483E21BAD9B2001301F3 /* HPCityModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCityModel.m; sourceTree = "<group>"; };
 		7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareAppUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4F1B350A3EBD7380C3F015D /* Pods-HPShareApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -155,6 +162,14 @@
 		E61FE09F21BA0F4A00555F3F /* HPNearbyShareView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPNearbyShareView.m; sourceTree = "<group>"; };
 		E61FE0A121BA4EEC00555F3F /* HPGradientColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPGradientColor.h; sourceTree = "<group>"; };
 		E61FE0A221BA4EEC00555F3F /* HPGradientColor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPGradientColor.m; sourceTree = "<group>"; };
+		E61FE0A521BA6F5C00555F3F /* HPHTTPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPHTTPManager.h; sourceTree = "<group>"; };
+		E61FE0A621BA6F5C00555F3F /* HPHTTPSever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPHTTPSever.h; sourceTree = "<group>"; };
+		E61FE0A721BA6F5C00555F3F /* HPHTTPSever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPHTTPSever.m; sourceTree = "<group>"; };
+		E61FE0A821BA6F5C00555F3F /* HPHTTPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPHTTPManager.m; sourceTree = "<group>"; };
+		E61FE0AC21BA816C00555F3F /* HPUserTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPUserTool.m; sourceTree = "<group>"; };
+		E61FE0AD21BA816C00555F3F /* HPLoginModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPLoginModel.m; sourceTree = "<group>"; };
+		E61FE0AE21BA816C00555F3F /* HPUserTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPUserTool.h; sourceTree = "<group>"; };
+		E61FE0AF21BA816C00555F3F /* HPLoginModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPLoginModel.h; sourceTree = "<group>"; };
 		E6292131219AA83000BEF16C /* HPShareApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HPShareApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6292134219AA83000BEF16C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E6292135219AA83000BEF16C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -399,6 +414,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7A54483C21BAD97F001301F3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7A54483D21BAD9B2001301F3 /* HPCityModel.h */,
+				7A54483E21BAD9B2001301F3 /* HPCityModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		D29D226676E10B1AF5705590 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -444,6 +468,28 @@
 			path = iCarousel;
 			sourceTree = "<group>";
 		};
+		E61FE0A421BA6F2D00555F3F /* NetworkRequest */ = {
+			isa = PBXGroup;
+			children = (
+				E61FE0A521BA6F5C00555F3F /* HPHTTPManager.h */,
+				E61FE0A821BA6F5C00555F3F /* HPHTTPManager.m */,
+				E61FE0A621BA6F5C00555F3F /* HPHTTPSever.h */,
+				E61FE0A721BA6F5C00555F3F /* HPHTTPSever.m */,
+			);
+			path = NetworkRequest;
+			sourceTree = "<group>";
+		};
+		E61FE0AB21BA816C00555F3F /* HPUser */ = {
+			isa = PBXGroup;
+			children = (
+				E61FE0AE21BA816C00555F3F /* HPUserTool.h */,
+				E61FE0AC21BA816C00555F3F /* HPUserTool.m */,
+				E61FE0AF21BA816C00555F3F /* HPLoginModel.h */,
+				E61FE0AD21BA816C00555F3F /* HPLoginModel.m */,
+			);
+			path = HPUser;
+			sourceTree = "<group>";
+		};
 		E6292128219AA83000BEF16C = {
 			isa = PBXGroup;
 			children = (
@@ -469,6 +515,8 @@
 		E6292133219AA83000BEF16C /* HPShareApp */ = {
 			isa = PBXGroup;
 			children = (
+				E61FE0AB21BA816C00555F3F /* HPUser */,
+				E61FE0A421BA6F2D00555F3F /* NetworkRequest */,
 				E629216E219AB1DD00BEF16C /* Common */,
 				E6292176219AB76B00BEF16C /* Categories */,
 				E629216D219AB17500BEF16C /* Utility */,
@@ -476,6 +524,7 @@
 				E661B0FB21A28D7F00C86CF5 /* Vendors */,
 				E6292169219AAA2B00BEF16C /* Controllers */,
 				E6292187219AC11000BEF16C /* Views */,
+				7A54483C21BAD97F001301F3 /* Model */,
 				E6292168219AA9FF00BEF16C /* Resource */,
 				E6292167219AA9DB00BEF16C /* Storyboard */,
 				E6292166219AA99D00BEF16C /* Supporting Files */,
@@ -1149,6 +1198,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/MJExtension/MJExtension.framework",
@@ -1157,6 +1207,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJExtension.framework",
@@ -1229,6 +1280,7 @@
 				E6D75F7F21B6463400B2067C /* HPShareManageCell.m in Sources */,
 				E661B14621A68BE300C86CF5 /* HPRoundedRectPageControl.m in Sources */,
 				E61FE0A321BA4EEC00555F3F /* HPGradientColor.m in Sources */,
+				7A54483F21BAD9B2001301F3 /* HPCityModel.m in Sources */,
 				E661B12721A28E8500C86CF5 /* JTCalendarDelegateManager.m in Sources */,
 				E661B0AA219C1AE800C86CF5 /* HPBaseModalView.m in Sources */,
 				E661B0D6219D436900C86CF5 /* HPAlertSheet.m in Sources */,
@@ -1252,6 +1304,7 @@
 				E6D75F6421B2301600B2067C /* HPCirclePageControl.m in Sources */,
 				E661B0B3219C2B1300C86CF5 /* HPTextDialogView.m in Sources */,
 				E661B09A219BADB200C86CF5 /* HPInteractiveController.m in Sources */,
+				E61FE0B021BA816D00555F3F /* HPUserTool.m in Sources */,
 				E6D75F1321A78AD300B2067C /* HPSharePersonCard.m in Sources */,
 				E661B0E6219E53A500C86CF5 /* HPTagDialogView.m in Sources */,
 				E629218A219AC19D00BEF16C /* HPMainTabBarController.m in Sources */,
@@ -1262,6 +1315,7 @@
 				E61FE09D21B9F94500555F3F /* iCarousel.m in Sources */,
 				E661B0D3219D3BF500C86CF5 /* HPSelectTableLayout.m in Sources */,
 				E661B14021A6355E00C86CF5 /* HPMyCardController.m in Sources */,
+				E61FE0B121BA816D00555F3F /* HPLoginModel.m in Sources */,
 				E661B12A21A28E8500C86CF5 /* JTCalendarWeekDayView.m in Sources */,
 				E6F551D821B8C9480086094F /* HPValidatePhone.m in Sources */,
 				E61FE0A021BA0F4A00555F3F /* HPNearbyShareView.m in Sources */,
@@ -1273,6 +1327,7 @@
 				E661B094219BACE900C86CF5 /* HPShareController.m in Sources */,
 				E6D75F1E21ABEAB900B2067C /* HPIdeaExampleItem.m in Sources */,
 				E661B0DC219D49D000C86CF5 /* HPStartUpCardDefineController.m in Sources */,
+				E61FE0A921BA6F5C00555F3F /* HPHTTPSever.m in Sources */,
 				E6292175219AB32000BEF16C /* HPScreenAdapter.m in Sources */,
 				E661B097219BAD5000C86CF5 /* HPIdeaController.m in Sources */,
 				E6D75F5021B0050B00B2067C /* HPFollowController.m in Sources */,
@@ -1284,6 +1339,7 @@
 				E661B0EA219EBF3600C86CF5 /* HPShareRecommendCard.m in Sources */,
 				E661B0DF219D4C8E00C86CF5 /* HPLinkageData.m in Sources */,
 				E6292185219ABF4400BEF16C /* HPGradientUtil.m in Sources */,
+				E61FE0AA21BA6F5C00555F3F /* HPHTTPManager.m in Sources */,
 				E6292144219AA83A00BEF16C /* main.m in Sources */,
 				E6D75F5621B0D24D00B2067C /* HPHistoryController.m in Sources */,
 				E6D75F6A21B253D000B2067C /* HPPageView.m in Sources */,
