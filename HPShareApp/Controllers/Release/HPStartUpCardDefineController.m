@@ -520,7 +520,16 @@
     [param setObject:tag forKey:@"tag"];
     [param setObject:type forKey:@"type"];
     [param setObject:userId forKey:@"userId"];
-    
+    [param setObject:@"0" forKey:@"isApproved"];
+    [param setObject:@"0" forKey:@"latitude"];
+    [param setObject:@"0" forKey:@"longitude"];
+    [param setObject:@"20181209" forKey:@"shareTime"];
+    [param setObject:@"0" forKey:@"spaceId"];
+    [param setObject:@"20181209" forKey:@"shareTime"];
+    [param setObject:@"gsdghfsdgfhghfg" forKey:@"address"];
+    [param setObject:@"0" forKey:@"deleteUserId"];
+
+
     NSMutableArray *pictureIdArr = [[NSMutableArray alloc] init];
     NSArray *photos = self.addPhotoView.photos;
     
