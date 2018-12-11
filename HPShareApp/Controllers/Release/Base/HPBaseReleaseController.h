@@ -19,6 +19,8 @@
 #import "TZImagePickerController.h"
 #import "HPAddPhotoView.h"
 #import "HPTimePicker.h"
+#import "HPAreaModel.h"
+#import "HPIndustryModel.h"
 
 #define PANEL_SPACE 10.f
 
@@ -31,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) HPAlertSheet *alertSheet;
 
 @property (nonatomic, weak) HPTextDialogView *dialogView;
+
+@property (nonatomic, weak) HPLinkageSheetView *districtSheetView;
 
 @property (nonatomic, weak) HPLinkageSheetView *tradeSheetView;
 
@@ -46,6 +50,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) HPAddPhotoView *addPhotoView;
 
+@property (nonatomic, strong) NSArray *areaModels;
+
+@property (nonatomic, strong) NSArray *industryModels;
+
+@property (nonatomic, strong) HPDistrictModel *selectedDistrictModel;
+
+@property (nonatomic, strong) HPIndustryModel *selectedIndustryModel;
+
+//添加公共UI组件
+
 - (UILabel *)setupTitleLabelWithText:(NSString *)text ofView:(UIView *)view;
 
 - (UILabel *)setupOptTitleLabelWithText:(NSString *)text ofView:(UIView *)view;
@@ -56,11 +70,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (UIImageView *)setupDownIconOfView:(UIView *)view;
 
+//点击按钮触发弹窗方法
+
 - (void)onClickUploadBtn:(UIButton *)btn;
 
 - (void)onClickBackBtn;
-
-- (void)onClickReleaseBtn;
 
 - (void)onClickDistrictBtn:(UIButton *)btn;
 
@@ -73,6 +87,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onClickCalendarBtn:(UIButton *)btn;
 
 - (void)onClickAlbumOrPhotoSheetWithTag:(NSInteger)tag;
+
+//网络请求
+
+- (void)getAreaList;
+
+- (void)getTradeList;
 
 @end
 

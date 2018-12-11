@@ -126,6 +126,7 @@
         UIButton *item = self.btnArray[i];
         if (item == btn) {
             [self setBtn:item selected:YES];
+            _selectedIndex = i;
             if (_delegate) {
                 if ([((NSObject *)_delegate) respondsToSelector:@selector(selectTable:didSelectText:atIndex:)]) {
                     [_delegate selectTable:self didSelectText:btn.titleLabel.text atIndex:i];
@@ -170,6 +171,7 @@
         UIButton *btn = self.btnArray[i];
         if (i == index) {
             [self setBtn:btn selected:YES];
+            _selectedIndex = i;
         }
         else {
             [self setBtn:btn selected:NO];

@@ -13,9 +13,21 @@
 
 @interface HPStartUpCardDefineController ()
 
-@property (nonatomic, weak) UITextField *shareDateTextField;
+@property (nonatomic, weak) UITextField *titleField;//发布标题
 
-@property (nonatomic, weak) UITextView *remarkTextView;
+@property (nonatomic, weak) UITextField *areaField;//期望面积
+
+@property (nonatomic, weak) UITextField *priceField;//期望价格
+
+@property (nonatomic, weak) HPSelectTable *unitSelectTable;//价格单位
+
+@property (nonatomic, weak) UITextField *intentSpaceField;//意向空间
+
+@property (nonatomic, weak) UITextField *contactField;//联系人
+
+@property (nonatomic, weak) UITextField *phoneNumField;//手机号码
+
+@property (nonatomic, weak) UITextView *remarkTextView;//备注信息
 
 @end
 
@@ -32,6 +44,12 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self getAreaList];
+    [self getTradeList];
 }
 
 /*
@@ -184,7 +202,7 @@
     UIView *view = [[UIView alloc] init];
     
     [self setupTitleLabelWithText:@"发布标题" ofView:view];
-    [self setupTextFieldWithPlaceholder:@"例：优品小店深圳急求共享铺位" ofView:view rightTo:view];
+    _titleField = [self setupTextFieldWithPlaceholder:@"例：优品小店深圳急求共享铺位" ofView:view rightTo:view];
     
     return view;
 }
@@ -253,6 +271,7 @@
     
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"不填默认不限" ofView:view rightTo:unitLabel];
     [textField setKeyboardType:UIKeyboardTypeDecimalPad];
+    _areaField = textField;
     
     return view;
 }
@@ -275,6 +294,7 @@
     HPSelectTable *unitSelectTable = [[HPSelectTable alloc] initWithOptions:options layout:layout];
     [unitSelectTable setBtnAtIndex:0 selected:YES];
     [view addSubview:unitSelectTable];
+    _unitSelectTable = unitSelectTable;
     [unitSelectTable mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(view).with.offset(-10.f * g_rateWidth);
         make.centerY.equalTo(view);
@@ -282,6 +302,7 @@
     
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"不填默认面议" ofView:view rightTo:unitSelectTable];
     [textField setKeyboardType:UIKeyboardTypeDecimalPad];
+    _priceField = textField;
     
     return view;
 }
@@ -348,7 +369,7 @@
     [calendarBtn setImage:[UIImage imageNamed:@"customizing_business_calendar"] forState:UIControlStateNormal];
     [calendarBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [calendarBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -15.f, 0.f, 15.f)];
-    [calendarBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, 152.f, 0.f, -152.f)];
+    [calendarBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, getWidth(233.f)-15.f, 0.f, -(getWidth(233.f)-15.f))];
     [calendarBtn addTarget:self action:@selector(onClickCalendarBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:calendarBtn];
     [calendarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -364,7 +385,7 @@
     UIView *view = [[UIView alloc] init];
     
     [self setupTitleLabelWithText:@"意向空间" ofView:view];
-    [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
+    _intentSpaceField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
     
     return view;
 }
@@ -372,7 +393,7 @@
 - (UIView *)setupContactRowView {
     UIView *view = [[UIView alloc] init];
     [self setupTitleLabelWithText:@"联系人" ofView:view];
-    [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
+    _contactField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
     return view;
 }
 
@@ -381,6 +402,7 @@
     [self setupTitleLabelWithText:@"手机号码" ofView:view];
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
+    _phoneNumField = textField;
     return view;
 }
 
@@ -407,7 +429,7 @@
     [textView setContentInset:UIEdgeInsetsMake(2.f, 5.f, 2.f, 5.f)];
     [textView setDelegate:self];
     [view addSubview:textView];
-    self.remarkTextView = textView;
+    _remarkTextView = textView;
     [textView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(titleLabel.mas_bottom).with.offset(16.f * g_rateWidth);
         make.centerX.equalTo(view);
@@ -415,8 +437,6 @@
     }];
     return view;
 }
-
-#pragma mark - onClick
 
 #pragma mark - UITextViewDelegate
 
@@ -432,6 +452,49 @@
         [textView setText:TEXT_VIEW_PLACEHOLDER];
         [textView setTextColor:COLOR_GRAY_CCCCCC];
     }
+}
+
+#pragma mark - onClick
+
+- (void)onClickReleaseBtn {
+    NSArray *photos = self.addPhotoView.photos;
+    NSString *title = _titleField.text;
+    NSString *area = self.selectedDistrictModel.name;
+    NSString *areaId = self.selectedDistrictModel.areaId;
+    NSString *districtId = self.selectedDistrictModel.districtId;
+    NSString *industryId = self.selectedIndustryModel.pid;
+    NSString *subIndustryId = self.selectedIndustryModel.industryId;
+    NSArray *pictureIdArr = @[];
+    NSString *rent = _priceField.text;
+    NSString *rentType = self.unitSelectTable.selectedIndex == 0 ? @"1" : @"2";
+    NSString *shareTime = [self.timePicker getTimeStr];
+    NSString *shareDays = @"";
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    for (NSDate *date in self.calendarDialogView.selectedDates) {
+        NSString *dateStr = [dateFormatter stringFromDate:date];
+        shareDays = [shareDays stringByAppendingString:dateStr];
+        if (date != self.calendarDialogView.selectedDates.lastObject) {
+            shareDays = [shareDays stringByAppendingString:@","];
+        }
+    }
+    
+    NSString *contact = _contactField.text;
+    NSString *contactMobile = _phoneNumField.text;
+    NSString *intention = _intentSpaceField.text;
+    NSString *remark = _remarkTextView.text;
+    
+    NSString *tag = @"";
+    for (NSString *tagItem in self.tagDialogView.checkItems) {
+        tag = [tag stringByAppendingString:tagItem];
+        if (tagItem != self.tagDialogView.checkItems.lastObject) {
+            tag = [tag stringByAppendingString:@","];
+        }
+    }
+    
+    NSString *type = @"2";
+    NSString *userId = @"";
 }
 
 @end

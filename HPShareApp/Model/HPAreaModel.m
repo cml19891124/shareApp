@@ -6,17 +6,17 @@
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPCityModel.h"
+#import "HPAreaModel.h"
 
-@implementation HPCityModel
-+ (NSDictionary *)objectClassInArray
-
-{
-    
-    return @{@"children":[HPDistrictModel class]
-             };
-    
-}
+@implementation HPAreaModel
+//+ (NSDictionary *)objectClassInArray
+//
+//{
+//    
+//    return @{@"children":[HPDistrictModel class]
+//             };
+//    
+//}
 @end
 
 

@@ -135,9 +135,6 @@
     [self.alertSheet show:YES];
 }
 
-- (void)onClickReleaseBtn {
-}
-
 - (void)onClickBackBtn {
     if (self.dialogView == nil) {
         HPTextDialogView *dialogView = [[HPTextDialogView alloc] init];
@@ -153,23 +150,13 @@
 }
 
 - (void)onClickDistrictBtn:(UIButton *)btn {
-}
-
-- (void)onClickTradeBtn:(UIButton *)btn {
-    if (self.tradeSheetView == nil) {
-        NSDictionary *data = @{@"parent":@[@"餐饮美食", @"购物消费", @"休闲娱乐", @"其他"],
-                               @"children":@{
-                                       @"餐饮美食":@[@"不限", @"粤菜", @"湘菜", @"川菜", @"东北菜", @"西北菜", @"江浙菜", @"台湾菜", @"烧烤", @"火锅", @"海鲜", @"粥粉面", @"自助餐", @"快餐简餐", @"茶餐厅", @"咖啡厅", @"面包甜点", @"奶茶饮品", @"韩式", @"日料", @"西餐厅", @"东南亚菜"],
-                                       @"购物消费":@[@"不限", @"购物消费1", @"购物消费2", @"购物消费3", @"购物消费4"],
-                                       @"休闲娱乐":@[@"不限", @"休闲娱乐1", @"休闲娱乐2", @"休闲娱乐3", @"休闲娱乐4"],
-                                       @"其他":@[@"不限", @"其他1", @"其他2", @"其他3", @"其他4"]}};
-        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithParents:data[@"parent"] Children:data[@"children"]];
-        HPLinkageSheetView *tradeSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[@"不限"] allSingleCheck:NO];
-        [tradeSheetView setSelectDescription:@"选择行业"];
-        [tradeSheetView setMaxCheckNum:3];
-        [tradeSheetView selectCellAtParentIndex:0 childIndex:0];
+    if (self.districtSheetView == nil) {
+        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:_areaModels];
+        HPLinkageSheetView *districtSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[] allSingleCheck:YES];
+        [districtSheetView setSelectDescription:@"选择区域"];
+        [districtSheetView selectCellAtParentIndex:0 childIndex:0];
         
-        [tradeSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems) {
+        [districtSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems, NSObject *selectedChildModel) {
             NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];;
             for (NSString *checkItem in checkItems) {
                 checkItemStr = [checkItemStr stringByAppendingString:checkItem];
@@ -179,6 +166,37 @@
                 }
             }
             
+            self.selectedDistrictModel = (HPDistrictModel *)selectedChildModel;
+            [btn setTitle:checkItemStr forState:UIControlStateSelected];
+            [btn setSelected:YES];
+        }];
+        
+        _districtSheetView = districtSheetView;
+    }
+    
+    [_districtSheetView show:YES];
+}
+
+- (void)onClickTradeBtn:(UIButton *)btn {
+    if (self.tradeSheetView == nil) {
+        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:_industryModels];
+        [linkageData setParentNameKey:@"industryName"];
+        [linkageData setChildNameKey:@"industryName"];
+        HPLinkageSheetView *tradeSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[] allSingleCheck:YES];
+        [tradeSheetView setSelectDescription:@"选择行业"];
+        [tradeSheetView selectCellAtParentIndex:0 childIndex:0];
+        
+        [tradeSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems, NSObject *selectedChildModel) {
+            NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];;
+            for (NSString *checkItem in checkItems) {
+                checkItemStr = [checkItemStr stringByAppendingString:checkItem];
+                
+                if (checkItem != checkItems.lastObject) {
+                    checkItemStr = [checkItemStr stringByAppendingString:@", "];
+                }
+            }
+            
+            self.selectedIndustryModel = (HPIndustryModel *)selectedChildModel;
             [btn setTitle:checkItemStr forState:UIControlStateSelected];
             [btn setSelected:YES];
         }];
@@ -297,7 +315,6 @@
 #pragma mark - UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
-    NSLog(@"UIImagePickerController");
     if (_addPhotoView) {
         [_addPhotoView setHidden:NO];
         UIImage *photo = info[UIImagePickerControllerOriginalImage];
@@ -311,8 +328,6 @@
 #pragma mark - TZImagePickerControllerDelegate
 
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-    NSLog(@"didFinishPickingPhotos: %ld", photos.count);
-    
     if (_addPhotoView) {
         [_addPhotoView setHidden:NO];
         
@@ -321,6 +336,34 @@
             [self.imagePicker setMaxImagesCount:self.imagePicker.maxImagesCount - 1];
         }
     }
+}
+
+#pragma mark - NetWork
+
+- (void)getAreaList {
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/area/list" paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            weakSelf.areaModels = [HPAreaModel mj_objectArrayWithKeyValuesArray:DATA];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        
+    }];
+}
+
+- (void)getTradeList {
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/industry/listWithChildren" paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            weakSelf.industryModels = [HPIndustryModel mj_objectArrayWithKeyValuesArray:DATA];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        
+    }];
 }
 
 @end

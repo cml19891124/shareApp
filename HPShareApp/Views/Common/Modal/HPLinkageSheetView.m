@@ -29,6 +29,11 @@
 @property (nonatomic, strong) HPLinkageData *data;
 
 /**
+ 选中的父类选项索引
+ */
+@property (nonatomic, assign) NSInteger selectedParentIndex;
+
+/**
  选项描述Label
  */
 @property (nonatomic, weak) UILabel *selectDescLabel;
@@ -67,7 +72,8 @@
 
 - (instancetype)initWithData:(HPLinkageData *)data singleTitles:(NSArray *)singleTitles allSingleCheck:(BOOL)isAllSingle {
     _data = data;
-    _selectedParent = [data getParentAtIndex:0];
+    _selectedParent = [data getParentNameAtIndex:0];
+    _selectedParentIndex = 0;
     _checkItems = [[NSMutableArray alloc] init];
     _singleTitles = singleTitles;
     _maxCheckNum = 3;
@@ -165,7 +171,7 @@
     else {
         [self show:NO];
         if (self.confirmCallback) {
-            _confirmCallback(_selectedParent, _checkItems);
+            _confirmCallback(_selectedParent, _checkItems, _selectedChildModel);
         }
     }
 }
@@ -188,6 +194,7 @@
         }
         else {
             [self.checkCells removeObject:cell];
+            self.selectedChildModel = nil;
         }
     }
     else {
@@ -197,6 +204,8 @@
         }
         
         [cell setCheck:YES];
+        NSIndexPath *indexPath = [_rightTableView indexPathForCell:cell];
+        self.selectedChildModel = [_data getChildModelOfParentIndex:_selectedParentIndex atChildIndex:indexPath.row];
         
         [self.checkItems addObject:cell.title];
         if (cell.isSingle) {
@@ -242,7 +251,8 @@
 - (void)selectCellAtParentIndex:(NSInteger)pIndex childIndex:(NSInteger)cIndex{
     NSIndexPath *parentIndex = [NSIndexPath indexPathForRow:pIndex inSection:0];
     [self.leftTableView selectRowAtIndexPath:parentIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
-    _selectedParent = [_data getParentAtIndex:pIndex];
+    _selectedParentIndex = pIndex;
+    _selectedParent = [_data getParentNameAtIndex:pIndex];
     [self.rightTableView reloadData];
     
     NSIndexPath *childIndex = [NSIndexPath indexPathForRow:cIndex inSection:0];
@@ -263,6 +273,7 @@
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         if (![cell.textLabel.text isEqualToString:_selectedParent]) {
             _selectedParent = cell.textLabel.text;
+            _selectedParentIndex = indexPath.row;
             [self clearCheck];
             [_rightTableView reloadData];
         }
@@ -307,13 +318,13 @@
             [cell setIndentationLevel:1];
         }
         
-        [cell.textLabel setText:[_data getParentAtIndex:indexPath.row]];
+        [cell.textLabel setText:[_data getParentNameAtIndex:indexPath.row]];
         
         return cell;
     }
     else {
         HPCheckTableCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        NSString *child = [_data getChildOfParent:_selectedParent atIndex:indexPath.row];
+        NSString *child = [_data getChildNameOfParentIndex:_selectedParentIndex atChildIndex:indexPath.row];
         
         if (cell == nil) {
             cell = [[HPCheckTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
@@ -350,7 +361,7 @@
         return [_data getParentCount];
     }
     else {
-        return [_data getChildrenCountOfParent:_selectedParent];
+        return [_data getChildrenCountOfParentIndex:_selectedParentIndex];
     }
 }
 

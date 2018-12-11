@@ -12,15 +12,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPLinkageData : NSObject
 
-- (instancetype)initWithParents:( NSArray * _Nonnull )parents Children:( NSDictionary * _Nonnull )children;
+@property (nonatomic, copy) NSString *parentNameKey;
 
-- (NSString *)getParentAtIndex:(NSInteger)index;
+@property (nonatomic, copy) NSString *childNameKey;
 
-- (NSString *)getChildOfParent:(NSString *)parent atIndex:(NSInteger)index;
+- (instancetype)initWithModels:(NSArray * _Nonnull)models;
+
+- (NSString *)getParentNameAtIndex:(NSInteger)index;
+
+- (NSString *)getChildNameOfParentIndex:(NSInteger)parentIndex atChildIndex:(NSInteger)childIndex;
+
+- (NSObject *)getChildModelOfParentIndex:(NSInteger)parentIndex atChildIndex:(NSInteger)childIndex;
 
 - (NSInteger)getParentCount;
 
-- (NSInteger)getChildrenCountOfParent:(NSString *)parent;
+- (NSInteger)getChildrenCountOfParentIndex:(NSInteger)index;
 
 @end
 

@@ -15,7 +15,7 @@
  @param selectedParent 选中的父类选项
  @param checkItems 选中的子类选项
  */
-typedef void(^BtnConfirmCallback)(NSString * _Nullable selectedParent, NSArray * _Nullable checkItems);
+typedef void(^BtnConfirmCallback)(NSString * _Nullable selectedParent, NSArray * _Nullable checkItems, NSObject * _Nullable selectedChildModel);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -43,6 +43,11 @@ NS_ASSUME_NONNULL_BEGIN
  选中的子类选项数组
  */
 @property (nonatomic, strong) NSMutableArray *checkItems;
+
+/**
+ 选中的子类选项model
+ */
+@property (nonatomic, strong) NSObject * _Nullable selectedChildModel;
 
 /**
  点击确认按钮触发回调

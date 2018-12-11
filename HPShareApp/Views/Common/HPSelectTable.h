@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface HPSelectTable : HPBaseView
 
+@property (nonatomic, assign) NSInteger selectedIndex;
+
 @property (nonatomic, weak) id<HPSelectTableDelegate> delegate;
 
 /**

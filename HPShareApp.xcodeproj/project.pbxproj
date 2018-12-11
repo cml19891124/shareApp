@@ -10,8 +10,9 @@
 		69165CC621BDFB4100593D25 /* HPBaseReleaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CC521BDFB4100593D25 /* HPBaseReleaseController.m */; };
 		69165CCB21BE098100593D25 /* HPAddPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CCA21BE098100593D25 /* HPAddPhotoView.m */; };
 		69165CCE21BE402E00593D25 /* HPTimePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CCD21BE402E00593D25 /* HPTimePicker.m */; };
+		69165CD421BF69C700593D25 /* HPIndustryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CD321BF69C700593D25 /* HPIndustryModel.m */; };
 		786E617DDD64F9CC68E4049B /* Pods_HPShareAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C508ECCC8CC2C9D9701839BE /* Pods_HPShareAppTests.framework */; };
-		7A54483F21BAD9B2001301F3 /* HPCityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54483E21BAD9B2001301F3 /* HPCityModel.m */; };
+		7A54483F21BAD9B2001301F3 /* HPAreaModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54483E21BAD9B2001301F3 /* HPAreaModel.m */; };
 		CAA2DAE424EC650C0D26D3DA /* Pods_HPShareApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */; };
 		DB490D1FA8BCD64C224C403A /* Pods_HPShareAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */; };
 		E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E611563B219AC8D7003A29C5 /* HPBaseViewController.m */; };
@@ -159,8 +160,10 @@
 		69165CCA21BE098100593D25 /* HPAddPhotoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAddPhotoView.m; sourceTree = "<group>"; };
 		69165CCC21BE402E00593D25 /* HPTimePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPTimePicker.h; sourceTree = "<group>"; };
 		69165CCD21BE402E00593D25 /* HPTimePicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPTimePicker.m; sourceTree = "<group>"; };
-		7A54483D21BAD9B2001301F3 /* HPCityModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCityModel.h; sourceTree = "<group>"; };
-		7A54483E21BAD9B2001301F3 /* HPCityModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCityModel.m; sourceTree = "<group>"; };
+		69165CD221BF69C700593D25 /* HPIndustryModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIndustryModel.h; sourceTree = "<group>"; };
+		69165CD321BF69C700593D25 /* HPIndustryModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIndustryModel.m; sourceTree = "<group>"; };
+		7A54483D21BAD9B2001301F3 /* HPAreaModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaModel.h; sourceTree = "<group>"; };
+		7A54483E21BAD9B2001301F3 /* HPAreaModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAreaModel.m; sourceTree = "<group>"; };
 		7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareAppUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4F1B350A3EBD7380C3F015D /* Pods-HPShareApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -462,8 +465,10 @@
 		7A54483C21BAD97F001301F3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7A54483D21BAD9B2001301F3 /* HPCityModel.h */,
-				7A54483E21BAD9B2001301F3 /* HPCityModel.m */,
+				7A54483D21BAD9B2001301F3 /* HPAreaModel.h */,
+				7A54483E21BAD9B2001301F3 /* HPAreaModel.m */,
+				69165CD221BF69C700593D25 /* HPIndustryModel.h */,
+				69165CD321BF69C700593D25 /* HPIndustryModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1329,7 +1334,7 @@
 				E6D75F7F21B6463400B2067C /* HPShareManageCell.m in Sources */,
 				E661B14621A68BE300C86CF5 /* HPRoundedRectPageControl.m in Sources */,
 				E61FE0A321BA4EEC00555F3F /* HPGradientColor.m in Sources */,
-				7A54483F21BAD9B2001301F3 /* HPCityModel.m in Sources */,
+				7A54483F21BAD9B2001301F3 /* HPAreaModel.m in Sources */,
 				E661B12721A28E8500C86CF5 /* JTCalendarDelegateManager.m in Sources */,
 				E661B0AA219C1AE800C86CF5 /* HPBaseModalView.m in Sources */,
 				E661B0D6219D436900C86CF5 /* HPAlertSheet.m in Sources */,
@@ -1391,6 +1396,7 @@
 				E661B12821A28E8500C86CF5 /* JTCalendarManager.m in Sources */,
 				E6D75F8221B646B000B2067C /* HPShareManageController.m in Sources */,
 				E661B0EA219EBF3600C86CF5 /* HPShareRecommendCard.m in Sources */,
+				69165CD421BF69C700593D25 /* HPIndustryModel.m in Sources */,
 				E661B0DF219D4C8E00C86CF5 /* HPLinkageData.m in Sources */,
 				E6292185219ABF4400BEF16C /* HPGradientUtil.m in Sources */,
 				E61FE0AA21BA6F5C00555F3F /* HPHTTPManager.m in Sources */,

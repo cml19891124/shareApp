@@ -616,27 +616,27 @@
                                        @"购物消费":@[@"不限", @"购物消费1", @"购物消费2", @"购物消费3", @"购物消费4"],
                                        @"休闲娱乐":@[@"不限", @"休闲娱乐1", @"休闲娱乐2", @"休闲娱乐3", @"休闲娱乐4"],
                                        @"其他":@[@"不限", @"其他1", @"其他2", @"其他3", @"其他4"]}};
-        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithParents:data[@"parent"] Children:data[@"children"]];
-        HPLinkageSheetView *tradeSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[@"不限"] allSingleCheck:NO];
-        [tradeSheetView setSelectDescription:@"选择行业"];
-        [tradeSheetView setMaxCheckNum:3];
-        [tradeSheetView selectCellAtParentIndex:0 childIndex:0];
-        
-        [tradeSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems) {
-            NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];;
-            for (NSString *checkItem in checkItems) {
-                checkItemStr = [checkItemStr stringByAppendingString:checkItem];
-                
-                if (checkItem != checkItems.lastObject) {
-                    checkItemStr = [checkItemStr stringByAppendingString:@", "];
-                }
-            }
-            
-            [btn setTitle:checkItemStr forState:UIControlStateSelected];
-            [btn setSelected:YES];
-        }];
-        
-        self.tradeSheetView = tradeSheetView;
+//        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithParents:data[@"parent"] Children:data[@"children"]];
+//        HPLinkageSheetView *tradeSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[@"不限"] allSingleCheck:NO];
+//        [tradeSheetView setSelectDescription:@"选择行业"];
+//        [tradeSheetView setMaxCheckNum:3];
+//        [tradeSheetView selectCellAtParentIndex:0 childIndex:0];
+//        
+//        [tradeSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems) {
+//            NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];;
+//            for (NSString *checkItem in checkItems) {
+//                checkItemStr = [checkItemStr stringByAppendingString:checkItem];
+//                
+//                if (checkItem != checkItems.lastObject) {
+//                    checkItemStr = [checkItemStr stringByAppendingString:@", "];
+//                }
+//            }
+//            
+//            [btn setTitle:checkItemStr forState:UIControlStateSelected];
+//            [btn setSelected:YES];
+//        }];
+//        
+//        self.tradeSheetView = tradeSheetView;
     }
     
     [self.tradeSheetView show:YES];

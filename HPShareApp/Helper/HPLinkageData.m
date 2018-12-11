@@ -7,40 +7,52 @@
 //
 
 #import "HPLinkageData.h"
+#import <objc/runtime.h>
 
 @interface HPLinkageData ()
 
-@property (nonatomic, copy) NSArray *parents;
+@property (nonatomic, strong) NSArray *models;
 
-@property (nonatomic, copy) NSDictionary *children;
+@property (nonatomic, copy) NSString *childrenKey;
+
+@property (nonatomic, assign) Class parentClass;
 
 @end
 
 @implementation HPLinkageData
 
-- (instancetype)initWithParents:( NSArray * _Nonnull )parents Children:( NSDictionary * _Nonnull )children {
-    self = [self init];
+- (instancetype)initWithModels:(NSArray *)models {
+    self = [super init];
     if (self) {
-        _parents = parents;
-        _children = children;
+        _models = models;
+        if (models.count > 0) {
+            _parentClass = ((NSObject *)models[0]).class;
+        }
+        _parentNameKey = @"name";
+        _childNameKey = @"name";
+        _childrenKey = [self getChildrenKey];
     }
     return self;
 }
 
-- (NSString *)getParentAtIndex:(NSInteger)index {
-    if (index >= _parents.count || index < 0) {
+- (NSString *)getParentNameAtIndex:(NSInteger)index {
+    if (index >= _models.count || index < 0) {
         return nil;
     }
     
-    return _parents[index];
+    return [_models[index] valueForKey:_parentNameKey];;
 }
 
 - (NSInteger)getParentCount {
-    return _parents.count;
+    return _models.count;
 }
 
-- (NSInteger)getChildrenCountOfParent:(NSString *)parent {
-    NSArray *childrenArray = _children[parent];
+- (NSInteger)getChildrenCountOfParentIndex:(NSInteger)index {
+    if (index >= _models.count) {
+        return 0;
+    }
+    
+    NSArray *childrenArray = [_models[index] valueForKey:_childrenKey];
     
     if (childrenArray && [childrenArray isKindOfClass:NSArray.class]) {
         return childrenArray.count;
@@ -49,14 +61,60 @@
         return 0;
 }
 
-- (NSString *)getChildOfParent:(NSString *)parent atIndex:(NSInteger)index {
-    NSArray *childrenArray = _children[parent];
+- (NSString *)getChildNameOfParentIndex:(NSInteger)parentIndex atChildIndex:(NSInteger)childIndex {
+    if (parentIndex >= _models.count) {
+        return nil;
+    }
     
-    if (childrenArray && [childrenArray isKindOfClass:NSArray.class] &&index < childrenArray.count && index >= 0) {
-        return childrenArray[index];
+    NSArray *childrenArray = [_models[parentIndex] valueForKey:_childrenKey];
+    
+    if (childrenArray && [childrenArray isKindOfClass:NSArray.class] &&childIndex < childrenArray.count && childIndex >= 0) {
+        return [childrenArray[childIndex] valueForKey:_childNameKey];
     }
     else
         return nil;
+}
+
+- (NSObject *)getChildModelOfParentIndex:(NSInteger)parentIndex atChildIndex:(NSInteger)childIndex {
+    if (parentIndex >= _models.count) {
+        return nil;
+    }
+    
+    NSArray *childrenArray = [_models[parentIndex] valueForKey:_childrenKey];
+    
+    if (childrenArray && [childrenArray isKindOfClass:NSArray.class] &&childIndex < childrenArray.count && childIndex >= 0) {
+        return childrenArray[childIndex];
+    }
+    else
+        return nil;
+}
+
+- (NSString *)getChildrenKey {
+    if (_models.count <= 0){
+        return @"children";
+    }else {
+        NSObject *valueObj = [_models[0] valueForKey:@"children"];
+        if ([valueObj isKindOfClass:NSArray.class]) {
+            return @"children";
+        }
+    }
+    
+    u_int count;
+    objc_property_t *properties  =class_copyPropertyList(_parentClass, &count);
+    
+    for (int i = 0; i<count; i++) {
+        const char* char_f  =property_getName(properties[i]);
+        NSString *propertyName = [NSString stringWithUTF8String:char_f];
+        NSObject *valueObj = [_models[0] valueForKey:propertyName];
+        if ([valueObj isKindOfClass:NSArray.class]) {
+            free(properties);
+            return propertyName;
+        }
+    }
+    
+    free(properties);
+    
+    return @"children";
 }
 
 @end

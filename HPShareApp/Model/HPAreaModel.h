@@ -10,7 +10,7 @@
 @class HPDistrictModel;
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPCityModel : NSObject
+@interface HPAreaModel : NSObject
 @property (nonatomic, copy) NSString *areaId;
 @property (nonatomic, strong) NSArray *children;
 @property (nonatomic, copy) NSString *cityId;

@@ -22,7 +22,7 @@
 #import <MAMapKit/MAMapKit.h>
 #import <AMapLocationKit/AMapLocationKit.h>
 #import "HPNearbyShareView.h"
-#import "HPCityModel.h"
+#import "HPAreaModel.h"
 #import "HPLinkageSheetView.h"
 @interface HPShareController () <HPBannerViewDelegate,iCarouselDelegate,iCarouselDataSource,HPSharePersonCardDelegate,MAMapViewDelegate,AMapLocationManagerDelegate,CLLocationManagerDelegate,AMapSearchDelegate>
 @property (nonatomic, strong) UIView *localMapView;
@@ -129,8 +129,8 @@
     kWeakSelf(weakSelf);
     [HPHTTPSever HPGETServerWithMethod:@"/v1/area/list" paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
-            NSLog(@"cityArray: %@", responseObject[@"data"][0][@"name"]);
-            weakSelf.cityArray = [HPCityModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+            NSLog(@"**************");
+            weakSelf.cityArray = [HPAreaModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
         }else{
             [HPProgressHUD alertMessage:MSG];
         }
@@ -142,30 +142,13 @@
 - (void)onClickCityBtn:(UIButton *)btn {
     if (self.districtSheetView == nil) {
 
-        for (int i = 0; i < _cityArray.count; i ++) {
-            HPCityModel *model = _cityArray[i];
-            [_disArray addObject:model.name];
-            NSMutableArray *streetArray = [NSMutableArray array];
-
-            for (int j = 0; j < model.children.count; j++) {
-                HPDistrictModel *disModel = model.children[j];
-                if ([disModel.areaId intValue] == [model.areaId intValue]) {
-                    if (j <= model.children.count - 1) {
-                        [streetArray addObject:disModel.name];
-                    }
-                }
-            }
-            NSMutableArray *perArray = [streetArray copy];
-            _streetDic[model.name] = perArray;
-        }
-
-                HPLinkageData *linkageData = [[HPLinkageData alloc] initWithParents:_disArray Children:_streetDic];
+        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:_cityArray];
                 HPLinkageSheetView *tradeSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[@"不限"] allSingleCheck:NO];
                 [tradeSheetView setSelectDescription:@"选择城市"];
                 [tradeSheetView setMaxCheckNum:3];
                 [tradeSheetView selectCellAtParentIndex:0 childIndex:0];
                 
-                [tradeSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems) {
+                [tradeSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems, NSObject *selectedChildModel) {
                     NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];;
                     for (NSString *checkItem in checkItems) {
                         checkItemStr = [checkItemStr stringByAppendingString:checkItem];
