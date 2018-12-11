@@ -7,6 +7,8 @@
 //
 
 #import "HPStartUpCardDefineController.h"
+#import "HPUploadImageHandle.h"
+#import "HPPictureModel.h"
 
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：无需寄存货物，随到随卖，只需提供座椅，诚信经营，求长期合作。"
@@ -457,14 +459,12 @@
 #pragma mark - onClick
 
 - (void)onClickReleaseBtn {
-    NSArray *photos = self.addPhotoView.photos;
     NSString *title = _titleField.text;
     NSString *area = self.selectedDistrictModel.name;
     NSString *areaId = self.selectedDistrictModel.areaId;
     NSString *districtId = self.selectedDistrictModel.districtId;
     NSString *industryId = self.selectedIndustryModel.pid;
     NSString *subIndustryId = self.selectedIndustryModel.industryId;
-    NSArray *pictureIdArr = @[];
     NSString *rent = _priceField.text;
     NSString *rentType = self.unitSelectTable.selectedIndex == 0 ? @"1" : @"2";
     NSString *shareTime = [self.timePicker getTimeStr];
@@ -494,7 +494,67 @@
     }
     
     NSString *type = @"2";
-    NSString *userId = @"";
+    HPLoginModel *loginModel = [HPUserTool account];
+    if (!loginModel.token) {
+        [HPProgressHUD alertMessage:@"用户未登录"];
+        return;
+    }
+    
+    NSString *userId = ((NSDictionary *)loginModel.userInfo)[@"userId"];
+    
+    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+    [param setObject:title forKey:@"title"];
+    [param setObject:area forKey:@"area"];
+    [param setObject:areaId forKey:@"areaId"];
+    [param setObject:districtId forKey:@"districtId"];
+    [param setObject:industryId forKeyedSubscript:@"industryId"];
+    [param setObject:subIndustryId forKeyedSubscript:@"subIndustryId"];
+    [param setObject:rent forKeyedSubscript:@"rent"];
+    [param setObject:rentType forKey:@"rentType"];
+    [param setObject:shareTime forKey:@"shareTime"];
+    [param setObject:shareDays forKey:@"shareDays"];
+    [param setObject:contact forKey:@"contact"];
+    [param setObject:contactMobile forKey:@"contactMobile"];
+    [param setObject:intention forKey:@"intention"];
+    [param setObject:remark forKey:@"remark"];
+    [param setObject:tag forKey:@"tag"];
+    [param setObject:type forKey:@"type"];
+    [param setObject:userId forKey:@"userId"];
+    
+    NSMutableArray *pictureIdArr = [[NSMutableArray alloc] init];
+    NSArray *photos = self.addPhotoView.photos;
+    
+    [HPUploadImageHandle upLoadImages:photos withUrl:kBaseUrl@"/v1/file/uploadPictures" parameterName:@"files" success:^(id responseObject) {
+        if (CODE == 200) {
+            NSArray<HPPictureModel *> *pictureModels = [HPPictureModel mj_objectArrayWithKeyValuesArray:DATA];
+            for (HPPictureModel *pictureModel in pictureModels) {
+                [pictureIdArr addObject:pictureModel.pictureId];
+            }
+            
+            [param setObject:pictureIdArr forKey:@"pictureIdArr"];
+            
+            [self releaseInfo:param];
+        }
+        else {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } fail:^(NSError *error) {
+        ErrorNet
+    }];
+}
+
+- (void)releaseInfo:(NSDictionary *)param {
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/space/post" paraments:param needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:@"发布成功"];
+        }
+        else {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        NSLog(@"+++++++发布失败++++++");
+        NSLog(@"error: %@", error);
+    }];
 }
 
 @end

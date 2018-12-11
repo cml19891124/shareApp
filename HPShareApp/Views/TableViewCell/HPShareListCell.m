@@ -327,6 +327,6 @@
 {
     _model = model;
     _titleLabel.text = model.title;
-    _tradeLabel.text = model.tr
+//    _tradeLabel.text = model.tr
 }
 @end

@@ -209,12 +209,12 @@
 //    [cell setArea:area];
 //    [cell setPrice:price];
     cell.model = model;
-    if ([type isEqualToString:@"startup"]) {
-        [cell setTagType:HPShareListCellTypeStartup];
-    }
-    else if ([type isEqualToString:@"owner"]) {
-        [cell setTagType:HPShareListCellTypeOwner];
-    }
+//    if ([type isEqualToString:@"startup"]) {
+//        [cell setTagType:HPShareListCellTypeStartup];
+//    }
+//    else if ([type isEqualToString:@"owner"]) {
+//        [cell setTagType:HPShareListCellTypeOwner];
+//    }
     
     [cell setCheckEnabled:_isEdited];
     
