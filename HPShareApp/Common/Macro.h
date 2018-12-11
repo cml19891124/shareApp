@@ -115,7 +115,7 @@
 /* 平方-粗体 */
 #define kFont_Bold(font)  [UIFont fontWithName:@"PingFangSC-Bold"size:font]
 //#define kBaseUrl  @"https://app.hepaicn.com"
-#define kBaseUrl  @"http://192.106.0.147:8083"
+#define kBaseUrl  @"http://192.168.0.147:8083"
 
 #define BoundWithSize(str,width,font)   ([str boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:font]} context:nil])
 //APP版本号
@@ -129,7 +129,7 @@
 #define MSG                 [responseObject objectForKey:@"msg"]
 #define ErrorNet                 [HPProgressHUD alertMessage:@"网络错误"];
 //弱引用/强引用
-#define kWeakSelf(weakSelf)  __weak __typeof(&*self)weakSelf = self;
+#define kWeakSelf(weakSelf)  __weak __typeof(&*self) weakSelf = self;
 #define kStrongSelf(weakSelf) __strong typeof(&*weakSelf) strongSelf = weakSelf;
 
 #import "MJExtension.h"
