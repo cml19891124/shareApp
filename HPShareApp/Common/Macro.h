@@ -127,6 +127,7 @@
 #define iPhone5 ([[UIScreen mainScreen] bounds].size.height == 568)
 #define CODE                 [[responseObject objectForKey:@"code"] integerValue]
 #define MSG                 [responseObject objectForKey:@"msg"]
+#define DATA                 [responseObject objectForKey:@"data"]
 #define ErrorNet                 [HPProgressHUD alertMessage:@"网络错误"];
 //弱引用/强引用
 #define kWeakSelf(weakSelf)  __weak __typeof(&*self)weakSelf = self;

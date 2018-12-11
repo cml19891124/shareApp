@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void(^Sucesse)( id  _Nonnull responseObject) ;
+typedef void(^Success)( id  _Nonnull responseObject) ;
 typedef void(^Failure)(NSError * _Nonnull  error) ;
 
 @interface HPHTTPSever : NSObject
 
-+ (void)HPServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Sucesse)secesse Failure:(nonnull Failure)failure;
-+ (void)HPGETServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Sucesse)secesse Failure:(nonnull Failure)failure;
-+ (void)HPSecretServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Sucesse)secesse Failure:(nonnull Failure)failure;
-+ (void)HPGETTokenServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Sucesse)secesse Failure:(nonnull Failure)failure;
++ (void)HPServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure;
++ (void)HPGETServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure;
++ (void)HPSecretServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure;
++ (void)HPGETTokenServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure;
 @end
