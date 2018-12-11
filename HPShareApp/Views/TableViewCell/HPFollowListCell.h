@@ -7,6 +7,7 @@
 //
 
 #import "HPBaseTableViewCell.h"
+#import "HPFansListModel.h"
 
 @class HPFollowListCell;
 @protocol HPFollowListCellDelegate <NSObject>
@@ -26,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) NSString *company;
 
 @property (nonatomic, weak) id<HPFollowListCellDelegate> delegate;
+
+@property (nonatomic, strong) HPFansListModel *model;
 
 - (void)setPortrait:(UIImage *)image;
 

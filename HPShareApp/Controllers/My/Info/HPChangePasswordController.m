@@ -25,7 +25,7 @@
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.font = kFont_Bold(23);
     titleLabel.textColor = COLOR_BLACK_444444;
-    titleLabel.text = @"找回密码";
+    titleLabel.text = @"修改密码";
     [self.view addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(getWidth(25.f));
@@ -206,11 +206,11 @@
         if (CODE == 200) {
             account.userInfo = [HPUserInfo mj_objectWithKeyValues:responseObject[@"data"][@"userInfo"]];
             [HPUserTool saveAccount:account];
-            HPLoginModel *account = [HPUserTool account];
+            [self.navigationController popToRootViewControllerAnimated:YES];
 
         }
     } Failure:^(NSError * _Nonnull error) {
-        
+        ErrorNet
     }];
 }
 #pragma mark - UITextFieldDelegate

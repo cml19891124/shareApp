@@ -76,9 +76,9 @@
 }
 + (void)HPGETServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure{
     HPHTTPManager *manager = [HPHTTPManager shareHPHTTPManage];
-    if ([method isEqualToString:@"/v1/user/updateUser"]) {
+    if ([method isEqualToString:@"/v1/user/updateUser"]||[method isEqualToString:@"/v1/back/freeBack"]||[method isEqualToString:@"/v1/user/logOut"]||[method isEqualToString:@"/v1/user/center"]) {
         HPLoginModel *account = [HPUserTool account];
-        [manager.requestSerializer setValue:account.token forHTTPHeaderField:@"token"];
+        [manager.requestSerializer setValue:account.token?:@"" forHTTPHeaderField:@"token"];
     }
     manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/html",@"text/json",@"text/plain", nil];

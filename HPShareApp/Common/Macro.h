@@ -115,7 +115,7 @@
 /* 平方-粗体 */
 #define kFont_Bold(font)  [UIFont fontWithName:@"PingFangSC-Bold"size:font]
 #define kBaseUrl  @"https://app.hepaicn.com"
-//#define kBaseUrl  @"http://192.106.0.147:8083"
+//#define kBaseUrl  @"http://192.168.0.147:8083"
 
 #define BoundWithSize(str,width,font)   ([str boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:font]} context:nil])
 //APP版本号
@@ -130,7 +130,7 @@
 #define DATA                 [responseObject objectForKey:@"data"]
 #define ErrorNet                 [HPProgressHUD alertMessage:@"网络错误"];
 //弱引用/强引用
-#define kWeakSelf(weakSelf)  __weak __typeof(&*self)weakSelf = self;
+#define kWeakSelf(weakSelf)  __weak __typeof(&*self) weakSelf = self;
 #define kStrongSelf(weakSelf) __strong typeof(&*weakSelf) strongSelf = weakSelf;
 
 #import "MJExtension.h"
@@ -139,7 +139,8 @@
 #import "HPProgressHUD.h"
 #import "HPLoginModel.h"
 #import "HPUserTool.h"
-
+#import "MJRefresh.h"
+#import "UIImageView+WebCache.h"
 //自定义打印语句
 #ifdef DEBUG
 # define HPLog(fmt, ...) NSLog((@"[文件名:%s]\n" "[函数名:%s]\n" "[行号:%d] \n" fmt), __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);

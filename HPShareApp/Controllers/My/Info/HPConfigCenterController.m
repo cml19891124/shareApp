@@ -52,13 +52,13 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [super viewWillAppear:animated];
     HPLoginModel *model = [HPUserTool account];
     NSDictionary *dic = (NSDictionary *)model.userInfo;
-    NSString *realName = dic[@"realName"];
-    NSString *company = dic[@"company"];
+//    NSString *realName = dic[@"realName"];
+//    NSString *company = dic[@"company"];
     NSString *username = dic[@"username"];
-    NSString *signatureContext = dic[@"signatureContext"];
+//    NSString *signatureContext = dic[@"signatureContext"];
     NSString *mobile = dic[@"mobile"];
     NSString *fianlMobile = mobile.length > 0?[mobile stringByReplacingCharactersInRange:NSMakeRange(3,4) withString:@"****"]:@"未填写";
-    NSString *telephone = dic[@"telephone"];
+//    NSString *telephone = dic[@"telephone"];
     NSString *password = dic[@"password"];
 
     [self setPortrait:[UIImage imageNamed:@"my_business_card_default_head_image"]];
@@ -68,7 +68,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [self setText:username.length > 0?username:@"未填写" ofBtnWithType:HPConfigGotoUserName];
 //    [self setText:signatureContext.length > 0?signatureContext:@"未填写" ofBtnWithType:HPConfigGotoMail];
     [self setText:fianlMobile > 0?fianlMobile:@"未填写" ofBtnWithType:HPConfigGotoPhoneNum];
-    [self setText:password.length > 0?@"修改":@"未设置" ofBtnWithType:HPConfigGotoPassword];
+    [self setText:password?@"修改":@"未设置" ofBtnWithType:HPConfigGotoPassword];
     [self setText:@"V1.1.0" ofBtnWithType:HPConfigGotoVersion];
     [self setText:@"16.8MB" ofBtnWithType:HPConfigGotoCache];
 }
@@ -187,12 +187,21 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 切换账号
 - (void)swithAccountOfOthers:(UIButton *)button
 {
-    HPLoginModel *model = [HPUserTool account];
-    if (model.token) {
-        [HPUserTool deleteAccount];
-    }
-    [self.navigationController popViewControllerAnimated:YES];
+    [self switchAccount];
+}
 
+- (void)switchAccount
+{
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/logOut" paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPUserTool deleteAccount];
+            [self.navigationController popViewControllerAnimated:YES];
+
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        
+    }];
 }
 - (void)setupPersonInfoPanel:(UIView *)view {
     UIView *portraitRow = [self addRowOfParentView:view withHeight:63.f * g_rateWidth margin:0.f isEnd:NO];

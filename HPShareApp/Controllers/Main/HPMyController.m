@@ -13,6 +13,8 @@
 #import "HPCustomerServiceModalView.h"
 #import "HPUploadImageHandle.h"
 #import "HPTimeString.h"
+#import "HPUploadImageHandle.h"
+#import "HPPersonCenterModel.h"
 
 @interface HPMyController ()
 
@@ -33,7 +35,9 @@
 @property (nonatomic, weak) UILabel *historyNumLabel;
 
 @property (nonatomic, weak) HPCustomerServiceModalView *customerServiceModalView;
+@property (nonatomic, strong) NSMutableArray *userInfoArray;
 
+@property (nonatomic, strong) HPPersonCenterModel *infoModel;
 @end
 
 @implementation HPMyController
@@ -48,13 +52,15 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     HPLoginModel *model = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)model.userInfo;
+    NSString *username = dic[@"username"];
     if (model.token) {
         [_portraitBtn setImage:[UIImage imageNamed:@"personal_center_login_head"] forState:UIControlStateNormal];
-        [_loginBtn setTitle:@"早上好，董晓丽" forState:UIControlStateDisabled];
+        [_loginBtn setTitle:username.length > 0? username:@"未填写" forState:UIControlStateDisabled];
         [_loginBtn setEnabled:NO];
-        [_keepNumLabel setText:@"1,390"];
-        [_followNumLabel setText:@"364"];
-        [_historyNumLabel setText:@"1,280"];
+        [_keepNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.collectionNum]];
+        [_followNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.followingNum]];
+        [_historyNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.browseNum]];
         [_descLabel setHidden:YES];
         
         if (g_isCertified) {
@@ -74,65 +80,58 @@
         [_followNumLabel setText:@"--"];
         [_historyNumLabel setText:@"--"];
     }
-    
-    [self uploadLocalImageGetAvatarUrl];
+    NSString *avatarUrl = dic[@"avatarUrl"];
+    if (avatarUrl.length <= 0) {
+        [self uploadLocalImageGetAvatarUrl];
+    }
+    [self getUserInfosListData];
 }
 
+#pragma  mark - 上传一张图片
 - (void)uploadLocalImageGetAvatarUrl
 {
+    NSString *url = [NSString stringWithFormat:@"%@/v1/file/uploadPicture",kBaseUrl];//放上传图片的网址
     HPLoginModel *account = [HPUserTool account];
     NSDictionary *dic = (NSDictionary *)account.userInfo;
-    NSString *url = [NSString stringWithFormat:@"%@/v1/file/uploadPicture",kBaseUrl];//放上传图片的网址
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];//初始化请求对象
-//    [manager setValue:account.token forKey:@"token"];
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];//设置服务器允许的请求格式内容
     NSString *historyTime = [HPTimeString getNowTimeTimestamp];
-
-    //上传图片/文字，只能POST
-    [manager POST:url parameters:@{@"file":historyTime} constructingBodyWithBlock:^(id  _Nonnull formData) {
-        //对于图片进行压缩
-        UIImage *image = [UIImage imageNamed:@"personal_center_not_login_head"];
-        NSData *data = UIImageJPEGRepresentation(image, 0.1);
-        //第一个代表文件转换后data数据，第二个代表图片的名字，第三个代表图片放入文件夹的名字，第四个代表文件的类型
-        [formData appendPartWithFileData:data name:@"file" fileName:@"image.jpg" mimeType:@"image/jpg"];
-    } progress:^(NSProgress * _Nonnull uploadProgress) {
-//        NSLog(@"uploadProgress = %@",uploadProgress);
-    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-//        NSLog(@"responseObject = %@, task = %@",responseObject,task);
-        id obj = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
-        NSLog(@"obj = %@",obj);
+    [HPUploadImageHandle sendPOSTWithUrl:url parameters:@{@"file":historyTime} success:^(id data) {
         
-        HPUserInfo *userInfo = [[HPUserInfo alloc] init];
-        userInfo.avatarUrl = [obj[@"data"]firstObject][@"url"]?:@"";
-        userInfo.company = dic[@"company"]?:@"";
-        userInfo.password = dic[@"password"]?:@"";
-        userInfo.realName = dic[@"realName"]?:@"";
-        userInfo.signatureContext = dic[@"signatureContext"]?:@"";
-        userInfo.telephone = dic[@"telephone"]?:@"";
-        userInfo.title = dic[@"title"]?:@"";
-        userInfo.username = dic[@"username"]?:@"";
-        userInfo.userId = dic[@"userId"]?:@"";
-        userInfo.mobile = dic[@"mobile"]?:@"";
-        account.userInfo = userInfo;
-        [HPUserTool saveAccount:account];
-                
-
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-//        NSLog(@"error = %@",error);
+         HPUserInfo *userInfo = [[HPUserInfo alloc] init];
+         userInfo.avatarUrl = [data[@"data"]firstObject][@"url"]?:@"";
+         userInfo.company = dic[@"company"]?:@"";
+         userInfo.password = dic[@"password"]?:@"";
+         userInfo.realName = dic[@"realName"]?:@"";
+         userInfo.signatureContext = dic[@"signatureContext"]?:@"";
+         userInfo.telephone = dic[@"telephone"]?:@"";
+         userInfo.title = dic[@"title"]?:@"";
+         userInfo.username = dic[@"username"]?:@"";
+         userInfo.userId = dic[@"userId"]?:@"";
+         userInfo.mobile = dic[@"mobile"]?:@"";
+         account.userInfo = userInfo;
+         [HPUserTool saveAccount:account];
+    } fail:^(NSError *error) {
+        
     }];
     
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+#pragma mark - 获取个心中心统计数据
+- (void)getUserInfosListData
+{
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/center" paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            weakSelf.infoModel = [HPPersonCenterModel mj_objectWithKeyValues:responseObject[@"data"]];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
-*/
 
 - (void)setupUI {
+    
     UIImageView *bgView = [[UIImageView alloc] init];
     [bgView setImage:[UIImage imageNamed:@"my_bg"]];
     [self.view addSubview:bgView];

@@ -12,7 +12,7 @@
 
 #define TEXT_VIEW_PLACEHOLDER @"请输入您反馈的具体信息，我们将竭尽全力包您满意。"
 
-@interface HPFeedbackController () <UITextViewDelegate>
+@interface HPFeedbackController () <UITextViewDelegate,HPSelectTableDelegate>
 
 @property (nonatomic, strong) NSTimer *timer;
 
@@ -20,6 +20,16 @@
 
 @property (nonatomic, assign) NSInteger timerCount;
 
+/**
+ 选中的选项
+ */
+@property (nonatomic, copy) NSString *selectedText;
+@property (nonatomic, strong) UITextView *textView;
+
+/**
+ 意见反馈类型
+ */
+@property (nonatomic, copy) NSString *typs;
 @end
 
 @implementation HPFeedbackController
@@ -27,7 +37,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-
+    _typs = @"0";
     _timerCount = 3;
     
     [self setupUI];
@@ -71,6 +81,7 @@
     NSArray *options = @[@"产品建议", @"我要吐槽", @"虚假信息举报", @"登录注册问题", @"异常退出问题", @"其他问题"];
     HPSelectTable *selectTable = [[HPSelectTable alloc] initWithOptions:options layout:layout];
     [selectTable setBtnAtIndex:0 selected:YES];
+    selectTable.delegate = self;
     [self.view addSubview:selectTable];
     [selectTable mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(typeTitleView);
@@ -142,6 +153,7 @@
     [textView setText:TEXT_VIEW_PLACEHOLDER];
     [textView setDelegate:self];
     [view addSubview:textView];
+    self.textView = textView;
     [textView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsMake(5.f, 5.f, 5.f, 5.f));
     }];
@@ -182,6 +194,17 @@
 - (void)onClickCommitBtn:(UIButton *)btn {
     NSLog(@"onClickCommitBtn");
     
+    if (_typs.length == 0) {
+        [HPProgressHUD alertMessage:@"请选择反馈类型"];
+    }else if (_textView.text.length == 0) {
+        [HPProgressHUD alertMessage:@"请填写反馈内容"];
+    }else if(_typs.length != 0 && _textView.text.length != 0){
+        [self feedbackOwnerComments];
+    }
+}
+#pragma mark - 意见反馈
+- (void)feedbackOwnerComments
+{
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     _hud = hud;
     [hud setRemoveFromSuperViewOnHide:YES];
@@ -194,6 +217,25 @@
     
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(onTimerTriggered) userInfo:nil repeats:YES];
     _timer = timer;
-}
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"context"] = _textView.text;
+    dic[@"types"] = _typs;
 
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/back/freeBack" paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE==200) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }else
+        {
+            MSG;
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+#pragma mark - HPSelectTableDelegate
+- (void)selectTable:(HPSelectTable *)selectTable didSelectText:(NSString *)text atIndex:(NSInteger)index
+{
+    _selectedText = text;
+    _typs = [NSString stringWithFormat:@"%ld",index];
+}
 @end

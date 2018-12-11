@@ -281,6 +281,7 @@
 
 - (void)onClickForgetBtn:(UIButton *)btn {
     [self pushVCByClassName:@"HPForgetPasswordController"];
+
 }
 
 - (void)onClickThirdPartBtn:(UIButton *)btn {
