@@ -14,7 +14,7 @@
 
 
 @implementation HPHTTPSever
-+ (void)HPServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Sucesse)secesse Failure:(nonnull Failure)failure{
++ (void)HPServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure{
     
    
     HPHTTPManager *manager = [HPHTTPManager shareHPHTTPManage];
@@ -28,9 +28,9 @@
     
     [manager POST:urlString parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
-        if (secesse) {
+        if (success) {
             
-            secesse(responseObject);
+            success(responseObject);
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         //            请求失败。
@@ -46,7 +46,7 @@
     }];
 
 }
-+ (void)HPSecretServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Sucesse)secesse Failure:(nonnull Failure)failure{
++ (void)HPSecretServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure{
     
     //  AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     HPHTTPManager *manager = [HPHTTPManager shareHPHTTPManage];
@@ -59,8 +59,8 @@
     NSString * urlString  = [NSString stringWithFormat:@"%@%@",MHBaseUrl,method];
     
     [manager POST:urlString parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (secesse) {
-            secesse(responseObject);
+        if (success) {
+            success(responseObject);
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         //            请求失败。
@@ -74,7 +74,7 @@
     }];
     
 }
-+ (void)HPGETServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Sucesse)secesse Failure:(nonnull Failure)failure{
++ (void)HPGETServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure{
     HPHTTPManager *manager = [HPHTTPManager shareHPHTTPManage];
     if ([method isEqualToString:@"/v1/user/updateUser"]) {
         HPLoginModel *account = [HPUserTool account];
@@ -87,9 +87,9 @@
     
     [manager GET:urlString parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
-        if (secesse) {
+        if (success) {
             
-            secesse(responseObject);
+            success(responseObject);
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         //            请求失败。
@@ -114,10 +114,10 @@
 
  @param method <#method description#>
  @param dic <#dic description#>
- @param secesse <#secesse description#>
+ @param success <#success description#>
  @param failure <#failure description#>
  */
-+ (void)HPGETTokenServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Sucesse)secesse Failure:(nonnull Failure)failure{
++ (void)HPGETTokenServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure{
     HPHTTPManager *manager = [HPHTTPManager shareHPHTTPManage];
     manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/html",@"text/json",@"text/plain", nil];
@@ -126,9 +126,9 @@
     
     [manager GET:urlString parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
-        if (secesse) {
+        if (success) {
             
-            secesse(responseObject);
+            success(responseObject);
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         //            请求失败。
