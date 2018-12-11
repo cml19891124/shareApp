@@ -51,6 +51,13 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    
+    [self getUserInfosListData];
+}
+
+- (void)setUserInfo
+{
     HPLoginModel *model = [HPUserTool account];
     NSDictionary *dic = (NSDictionary *)model.userInfo;
     NSString *username = dic[@"username"];
@@ -80,13 +87,12 @@
         [_followNumLabel setText:@"--"];
         [_historyNumLabel setText:@"--"];
     }
+    
     NSString *avatarUrl = dic[@"avatarUrl"];
     if (avatarUrl.length <= 0) {
         [self uploadLocalImageGetAvatarUrl];
     }
-    [self getUserInfosListData];
 }
-
 #pragma  mark - 上传一张图片
 - (void)uploadLocalImageGetAvatarUrl
 {
@@ -122,6 +128,7 @@
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/center" paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             weakSelf.infoModel = [HPPersonCenterModel mj_objectWithKeyValues:responseObject[@"data"]];
+            [self setUserInfo];
         }else{
             [HPProgressHUD alertMessage:MSG];
         }

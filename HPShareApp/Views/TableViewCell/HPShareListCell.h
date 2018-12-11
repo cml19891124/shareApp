@@ -8,6 +8,7 @@
 
 #import "HPBaseTableViewCell.h"
 #import "HPCollectListModel.h"
+#import "HPIndustryModel.h"
 
 typedef NS_ENUM(NSInteger, HPShareListCellType) {
     HPShareListCellTypeStartup = 0,
@@ -20,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isChecked;
 @property (nonatomic, strong) HPCollectListModel *model;
+@property (nonatomic, strong)  HPIndustryModel *industryModel;
 
 - (void)setTitle:(NSString *)title;
 

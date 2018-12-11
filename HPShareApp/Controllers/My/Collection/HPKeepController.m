@@ -11,6 +11,7 @@
 #import "HPImageUtil.h"
 #import "HPTextDialogView.h"
 #import "HPCollectListModel.h"
+#import "HPIndustryModel.h"
 
 @interface HPKeepController ()
 
@@ -30,6 +31,8 @@
 @property (nonatomic, assign) int                        count;
 @property (nonatomic, strong) UIImageView *waitingView;
 @property (nonatomic, strong) UILabel *waitingLabel;
+
+@property (nonatomic, strong) NSMutableArray *industryModels;
 @end
 
 @implementation HPKeepController
@@ -53,7 +56,22 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    _industryModels = [NSMutableArray array];
     [self loadtableViewFreshUi];
+    [self getTradeList];
+}
+
+- (void)getTradeList {
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/industry/listWithChildren" paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            weakSelf.industryModels = [HPIndustryModel mj_objectArrayWithKeyValuesArray:DATA];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        
+    }];
 }
 #pragma mark - 上下啦刷新控件
 - (void)loadtableViewFreshUi
@@ -75,8 +93,8 @@
 - (void)getFansListData
 {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"page"] = @(self.count);
-    dic[@"pageSize"] = @(10);
+    dic[@"page"] = [NSString stringWithFormat:@"%d",self.count];
+    dic[@"pageSize"] = @"10";
     kWeakSelf(weakSelf);
     [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/list" paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
@@ -99,7 +117,7 @@
                 
                 
                 UILabel *waitingLabel = [[UILabel alloc] init];
-                waitingLabel.text = @"您还没有添加关注哦～";
+                waitingLabel.text = @"您还没有添加收藏哦～";
                 waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
                 waitingLabel.textColor = COLOR_GRAY_BBBBBB;
                 waitingLabel.textAlignment = NSTextAlignmentCenter;
@@ -195,7 +213,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
     HPCollectListModel *model = self.dataArray[indexPath.row];
-    
+    HPIndustryModel *industryModel = self.industryModels[indexPath.row];
+    cell.model = model;
+    cell.industryModel = industryModel;
 //    NSString *title = dict[@"title"];
 //    NSString *trade = dict[@"trade"];
 //    NSString *rentTime = dict[@"rentTime"];
@@ -208,13 +228,13 @@
 //    [cell setRentTime:rentTime];
 //    [cell setArea:area];
 //    [cell setPrice:price];
-    cell.model = model;
-    if ([type isEqualToString:@"startup"]) {
-        [cell setTagType:HPShareListCellTypeStartup];
-    }
-    else if ([type isEqualToString:@"owner"]) {
-        [cell setTagType:HPShareListCellTypeOwner];
-    }
+    
+//    if ([type isEqualToString:@"startup"]) {
+//        [cell setTagType:HPShareListCellTypeStartup];
+//    }
+//    else if ([type isEqualToString:@"owner"]) {
+//        [cell setTagType:HPShareListCellTypeOwner];
+//    }
     
     [cell setCheckEnabled:_isEdited];
     

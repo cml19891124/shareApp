@@ -19,7 +19,11 @@
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 
 @property (nonatomic, strong) NSMutableArray *sectionDataArray;
+@property (nonatomic, assign) int count;
 
+@property (nonatomic, strong) UIImageView *waitingView;
+@property (nonatomic, strong) UILabel *waitingLabel;
+@property (nonatomic, strong) NSMutableArray *industryModels;
 @end
 
 @implementation HPHistoryController
@@ -36,6 +40,84 @@
     [self reloadData];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    _industryModels = [NSMutableArray array];
+    [self loadtableViewFreshUi];
+}
+#pragma mark - 上下啦刷新控件
+- (void)loadtableViewFreshUi
+{
+    [self getBrowsListData];
+    
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        
+        self.count = 1;
+        [self getBrowsListData];
+    }];
+    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        
+        self.count++;
+        [self getBrowsListData];
+    }];
+}
+#pragma mark - 获取浏览历史数据
+- (void)getBrowsListData
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"page"] = @(self.count);
+    dic[@"pageSize"] = @(10);
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/list" paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [self.tableView.mj_header endRefreshing];
+            [self.tableView.mj_footer endRefreshing];
+            [self.dataArray removeAllObjects];
+            weakSelf.dataArray = [HPCollectListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
+            if ([responseObject[@"data"][@"total"] integerValue] == 0) {
+                //                [HPProgressHUD alertMessage:@"您还没有添加关注哦～"];
+                UIImage *image = ImageNamed(@"waiting");
+                UIImageView *waitingView = [[UIImageView alloc] init];
+                waitingView.image = image;
+                [self.tableView addSubview:waitingView];
+                self.waitingView = waitingView;
+                [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    
+                    make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
+                    make.center.mas_equalTo(self.tableView);
+                }];
+                
+                
+                UILabel *waitingLabel = [[UILabel alloc] init];
+                waitingLabel.text = @"您还没有浏览记录哦～";
+                waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
+                waitingLabel.textColor = COLOR_GRAY_BBBBBB;
+                waitingLabel.textAlignment = NSTextAlignmentCenter;
+                [self.tableView addSubview:waitingLabel];
+                self.waitingLabel = waitingLabel;
+                [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.centerX.mas_equalTo(self.tableView);
+                    make.top.mas_equalTo(waitingView.mas_bottom).offset(15.f * g_rateWidth);
+                    make.width.mas_equalTo(self.tableView);
+                }];
+            }else{
+                [self.waitingView removeFromSuperview];
+                [self.waitingLabel removeFromSuperview];
+            }
+            if ([weakSelf.dataArray count] < 10) {
+                
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            }
+            [self.tableView reloadData];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+    
+}
 /*
 #pragma mark - Navigation
 
@@ -74,7 +156,7 @@
                            @{@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner", @"date":@"2018-11-27"},
                            @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"startup", @"date":@"2018-11-26"},
                            @{@"title":@ "常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner", @"date":@"2018-11-26"}];
-    self.dataArray = [NSMutableArray arrayWithArray:dataArray];
+//    self.dataArray = [NSMutableArray arrayWithArray:dataArray];
     _sectionDataArray = [[NSMutableArray alloc] init];
     
     for (int i = 0; i < self.dataArray.count; i ++) {
@@ -186,30 +268,33 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
+    HPCollectListModel *model = self.dataArray[indexPath.row];
+    HPIndustryModel *industryModel = self.industryModels[indexPath.row];
+    cell.model = model;
+    cell.industryModel = industryModel;
+//    NSDictionary *sectionData = _sectionDataArray[indexPath.section];
+//    NSArray *sectionDataIndex = sectionData[@"dataIndex"];
+//    NSInteger index = ((NSNumber *)sectionDataIndex[indexPath.row]).integerValue;
+//
+//    NSDictionary *dict = self.dataArray[index];
+//
+//    NSString *title = dict[@"title"];
+//    NSString *trade = dict[@"trade"];
+//    NSString *rentTime = dict[@"rentTime"];
+//    NSString *area = dict[@"area"];
+//    NSString *price = dict[@"price"];
+//    NSString *type = dict[@"type"];
+//
+//    [cell setTitle:title];
+//    [cell setTrade:trade];
+//    [cell setRentTime:rentTime];
+//    [cell setArea:area];
+//    [cell setPrice:price];
     
-    NSDictionary *sectionData = _sectionDataArray[indexPath.section];
-    NSArray *sectionDataIndex = sectionData[@"dataIndex"];
-    NSInteger index = ((NSNumber *)sectionDataIndex[indexPath.row]).integerValue;
-    
-    NSDictionary *dict = self.dataArray[index];
-    
-    NSString *title = dict[@"title"];
-    NSString *trade = dict[@"trade"];
-    NSString *rentTime = dict[@"rentTime"];
-    NSString *area = dict[@"area"];
-    NSString *price = dict[@"price"];
-    NSString *type = dict[@"type"];
-    
-    [cell setTitle:title];
-    [cell setTrade:trade];
-    [cell setRentTime:rentTime];
-    [cell setArea:area];
-    [cell setPrice:price];
-    
-    if ([type isEqualToString:@"startup"]) {
+    if ([model.type isEqualToString:@"startup"]) {
         [cell setTagType:HPShareListCellTypeStartup];
     }
-    else if ([type isEqualToString:@"owner"]) {
+    else if ([model.type isEqualToString:@"owner"]) {
         [cell setTagType:HPShareListCellTypeOwner];
     }
     

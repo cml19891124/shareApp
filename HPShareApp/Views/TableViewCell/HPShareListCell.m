@@ -327,6 +327,13 @@
 {
     _model = model;
     _titleLabel.text = model.title;
-    _tradeLabel.text = model.tr
+    _tradeLabel.text = _industryModel.industryName;
+    _rentTimeLabel.text = model.rentType;
+    _priceLabel.text = model.rent;
+}
+
+- (void)setIndustryModel:(HPIndustryModel *)industryModel
+{
+    _industryModel = industryModel;
 }
 @end

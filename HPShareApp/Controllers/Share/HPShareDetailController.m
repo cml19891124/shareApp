@@ -573,6 +573,7 @@
     [keepBtn setBackgroundColor:COLOR_RED_FE2A3B];
     [keepBtn setTitle:@"收藏" forState:UIControlStateNormal];
     [view addSubview:keepBtn];
+    [keepBtn addTarget:self action:@selector(getCollectionInfo:) forControlEvents:UIControlEventTouchUpInside];
     [keepBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.and.bottom.equalTo(view);
         make.right.equalTo(phoneBtn.mas_left);
@@ -580,6 +581,20 @@
     }];
 }
 
+#pragma mark - 添加收藏
+- (void)getCollectionInfo:(UIButton *)button
+{
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/add" paraments:@{@"spaceId":@"12"} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+        }else
+        {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
 #pragma mark - HPbannerViewDelegate
 
 - (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
