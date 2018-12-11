@@ -134,4 +134,11 @@
     [_companyLabel setText:company];
 }
 
+
+- (void)setModel:(HPFansListModel *)model{
+    _model = model;
+    _userNameLabel.text = model.username;
+    [_portraitView sd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
+    _companyLabel.text = model.company;
+}
 @end

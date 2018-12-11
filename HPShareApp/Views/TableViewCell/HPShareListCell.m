@@ -323,4 +323,10 @@
     _isChecked = isChecked;
 }
 
+- (void)setModel:(HPCollectListModel *)model
+{
+    _model = model;
+    _titleLabel.text = model.title;
+    _tradeLabel.text = model.tr
+}
 @end

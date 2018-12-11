@@ -10,6 +10,7 @@
 #import "HPShareListCell.h"
 #import "HPImageUtil.h"
 #import "HPTextDialogView.h"
+#import "HPCollectListModel.h"
 
 @interface HPKeepController ()
 
@@ -26,7 +27,9 @@
 @property (nonatomic, strong) NSMutableArray *checkArray;
 
 @property (nonatomic, assign) BOOL isEdited;
-
+@property (nonatomic, assign) int                        count;
+@property (nonatomic, strong) UIImageView *waitingView;
+@property (nonatomic, strong) UILabel *waitingLabel;
 @end
 
 @implementation HPKeepController
@@ -37,7 +40,7 @@
     
     _isEdited = NO;
     
-    self.dataArray = [NSMutableArray arrayWithArray:self.testDataArray];
+//    self.dataArray = [NSMutableArray arrayWithArray:self.testDataArray];
     
     _checkArray = [[NSMutableArray alloc] init];
     for (int i = 0; i < self.dataArray.count; i ++) {
@@ -47,15 +50,83 @@
     [self setupUI];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self loadtableViewFreshUi];
 }
-*/
+#pragma mark - 上下啦刷新控件
+- (void)loadtableViewFreshUi
+{
+    [self getFansListData];
+    
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        
+        self.count = 1;
+        [self getFansListData];
+    }];
+    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        
+        self.count++;
+        [self getFansListData];
+    }];
+}
+#pragma mark - 获取收藏数据
+- (void)getFansListData
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"page"] = @(self.count);
+    dic[@"pageSize"] = @(10);
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/list" paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [self.tableView.mj_header endRefreshing];
+            [self.tableView.mj_footer endRefreshing];
+            [self.dataArray removeAllObjects];
+            weakSelf.dataArray = [HPCollectListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
+            if ([responseObject[@"data"][@"total"] integerValue] == 0) {
+                //                [HPProgressHUD alertMessage:@"您还没有添加关注哦～"];
+                UIImage *image = ImageNamed(@"waiting");
+                UIImageView *waitingView = [[UIImageView alloc] init];
+                waitingView.image = image;
+                [self.tableView addSubview:waitingView];
+                self.waitingView = waitingView;
+                [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    
+                    make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
+                    make.center.mas_equalTo(self.tableView);
+                }];
+                
+                
+                UILabel *waitingLabel = [[UILabel alloc] init];
+                waitingLabel.text = @"您还没有添加关注哦～";
+                waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
+                waitingLabel.textColor = COLOR_GRAY_BBBBBB;
+                waitingLabel.textAlignment = NSTextAlignmentCenter;
+                [self.tableView addSubview:waitingLabel];
+                self.waitingLabel = waitingLabel;
+                [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.centerX.mas_equalTo(self.tableView);
+                    make.top.mas_equalTo(waitingView.mas_bottom).offset(15.f * g_rateWidth);
+                    make.width.mas_equalTo(self.tableView);
+                }];
+            }else{
+                [self.waitingView removeFromSuperview];
+                [self.waitingLabel removeFromSuperview];
+            }
+            if ([weakSelf.dataArray count] < 10) {
+                
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            }
+            [self.tableView reloadData];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+    
+}
 
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_WHITE_FCFDFF];
@@ -123,21 +194,21 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
-    NSDictionary *dict = self.dataArray[indexPath.row];
+    HPCollectListModel *model = self.dataArray[indexPath.row];
     
-    NSString *title = dict[@"title"];
-    NSString *trade = dict[@"trade"];
-    NSString *rentTime = dict[@"rentTime"];
-    NSString *area = dict[@"area"];
-    NSString *price = dict[@"price"];
-    NSString *type = dict[@"type"];
-    
-    [cell setTitle:title];
-    [cell setTrade:trade];
-    [cell setRentTime:rentTime];
-    [cell setArea:area];
-    [cell setPrice:price];
-    
+//    NSString *title = dict[@"title"];
+//    NSString *trade = dict[@"trade"];
+//    NSString *rentTime = dict[@"rentTime"];
+//    NSString *area = dict[@"area"];
+//    NSString *price = dict[@"price"];
+//    NSString *type = dict[@"type"];
+//
+//    [cell setTitle:title];
+//    [cell setTrade:trade];
+//    [cell setRentTime:rentTime];
+//    [cell setArea:area];
+//    [cell setPrice:price];
+    cell.model = model;
     if ([type isEqualToString:@"startup"]) {
         [cell setTagType:HPShareListCellTypeStartup];
     }
