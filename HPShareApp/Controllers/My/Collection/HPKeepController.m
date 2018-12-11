@@ -228,7 +228,9 @@
 //    [cell setRentTime:rentTime];
 //    [cell setArea:area];
 //    [cell setPrice:price];
-    
+
+    cell.model = model;
+
 //    if ([type isEqualToString:@"startup"]) {
 //        [cell setTagType:HPShareListCellTypeStartup];
 //    }

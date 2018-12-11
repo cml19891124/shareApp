@@ -9,14 +9,14 @@
 #import "HPAreaModel.h"
 
 @implementation HPAreaModel
-//+ (NSDictionary *)objectClassInArray
-//
-//{
-//    
-//    return @{@"children":[HPDistrictModel class]
-//             };
-//    
-//}
++ (NSDictionary *)objectClassInArray
+
+{
+    
+    return @{@"children":[HPDistrictModel class]
+             };
+    
+}
 @end
 
 

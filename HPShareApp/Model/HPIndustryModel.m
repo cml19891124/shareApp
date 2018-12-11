@@ -10,4 +10,8 @@
 
 @implementation HPIndustryModel
 
++ (NSDictionary *)objectClassInArray {
+    return @{@"children":[HPIndustryModel class]};
+}
+
 @end

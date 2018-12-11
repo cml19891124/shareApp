@@ -28,9 +28,9 @@ PODS:
   - MBProgressHUD (1.1.0)
   - MJExtension (3.0.15.1)
   - MJRefresh (3.1.15.3)
-  - SDWebImage (5.0.0-beta):
-    - SDWebImage/Core (= 5.0.0-beta)
-  - SDWebImage/Core (5.0.0-beta)
+  - SDWebImage (4.4.1):
+    - SDWebImage/Core (= 4.4.1)
+  - SDWebImage/Core (4.4.1)
   - TZImagePickerController (2.1.6)
 
 DEPENDENCIES:
@@ -43,7 +43,7 @@ DEPENDENCIES:
   - MBProgressHUD (~> 1.1.0)
   - MJExtension (~> 3.0.15.1)
   - MJRefresh (~> 3.1.15.3)
-  - SDWebImage (~> 5.0.0-beta)
+  - SDWebImage (~> 4.4.1)
   - TZImagePickerController
 
 SPEC REPOS:
@@ -72,9 +72,9 @@ SPEC CHECKSUMS:
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
   MJRefresh: b48380ae2b927b46c4ef000de9adb8dc748e1df7
-  SDWebImage: 55c787b164fabe07f2a4d5307f6e1be7960fb9be
+  SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   TZImagePickerController: bc25e933c9d970a622d052f0d4de16202bbcd863
 
-PODFILE CHECKSUM: e2d1e817501f165b1a8dadb5d7afcb2e789335d2
+PODFILE CHECKSUM: 6433a5ae1c5ccde109d7064c0f0e60860b226412
 
 COCOAPODS: 1.5.3

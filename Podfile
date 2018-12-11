@@ -11,7 +11,7 @@ target 'HPShareApp' do
   pod 'TZImagePickerController'
   pod 'AFNetworking', '~> 3.2.1'
   pod 'MJRefresh', '~> 3.1.15.3'
-  pod 'SDWebImage', '~> 5.0.0-beta'
+  pod 'SDWebImage', '~> 4.4.1'
   use_frameworks!
   pod 'Charts'
 
