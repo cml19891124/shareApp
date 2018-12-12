@@ -19,12 +19,14 @@
    
     HPHTTPManager *manager = [HPHTTPManager shareHPHTTPManage];
     
+    manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
+    
     if (isNeed) {
         HPLoginModel *account = [HPUserTool account];
         [manager.requestSerializer setValue:account.token?:@"" forHTTPHeaderField:@"token"];
     }
     
-    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [manager.requestSerializer setValue:@"application/json;charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
     
     manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/html",@"text/json",@"text/plain", nil];

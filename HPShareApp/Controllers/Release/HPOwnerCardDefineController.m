@@ -214,7 +214,7 @@
 - (UIView *)setupSpaceAddressRowView {
     UIView *view = [[UIView alloc] init];
     
-    [self setupTitleLabelWithText:@"空间地址" ofView:view];
+    [self setupTitleLabelWithText:@"店铺地址" ofView:view];
     UIImageView *downIcon = [self setupDownIconOfView:view];
     
     UIButton *valueBtn = [[UIButton alloc] init];
@@ -288,7 +288,7 @@
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
     [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:@"空间标签"];
+    [titleLabel setText:@"店铺标签"];
     [view addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(21.f * g_rateWidth);

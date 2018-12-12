@@ -460,13 +460,13 @@
 
 - (void)onClickReleaseBtn {
     NSString *title = _titleField.text;
-    NSString *area = self.selectedDistrictModel.name;
-    NSString *areaId = self.selectedDistrictModel.areaId;
-    NSString *districtId = self.selectedDistrictModel.districtId;
-    NSString *industryId = self.selectedIndustryModel.pid;
-    NSString *subIndustryId = self.selectedIndustryModel.industryId;
-    NSString *rent = _priceField.text;
-    NSString *rentType = self.unitSelectTable.selectedIndex == 0 ? @"1" : @"2";
+    NSString *area = _areaField.text;
+    NSNumber *areaId = [NSNumber numberWithInteger:self.selectedDistrictModel.areaId.integerValue];
+    NSNumber *districtId = [NSNumber numberWithInteger:self.selectedDistrictModel.districtId.integerValue];
+    NSNumber *industryId = [NSNumber numberWithInteger:self.selectedIndustryModel.pid.integerValue];
+    NSNumber *subIndustryId = [NSNumber numberWithInteger:self.selectedIndustryModel.industryId.integerValue];
+    NSNumber *rent = [NSNumber numberWithInteger:_priceField.text.integerValue];
+    NSNumber *rentType = self.unitSelectTable.selectedIndex == 0 ? @1 : @2;
     NSString *shareTime = [self.timePicker getTimeStr];
     NSString *shareDays = @"";
     
@@ -493,14 +493,15 @@
         }
     }
     
-    NSString *type = @"2";
+    NSNumber *type = @2;
     HPLoginModel *loginModel = [HPUserTool account];
     if (!loginModel.token) {
         [HPProgressHUD alertMessage:@"用户未登录"];
         return;
     }
     
-    NSString *userId = ((NSDictionary *)loginModel.userInfo)[@"userId"];
+//    NSNumber *userId = ((NSDictionary *)loginModel.userInfo)[@"userId"];
+    NSNumber *userId = @12;
     
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setObject:title forKey:@"title"];
@@ -520,6 +521,7 @@
     [param setObject:tag forKey:@"tag"];
     [param setObject:type forKey:@"type"];
     [param setObject:userId forKey:@"userId"];
+    [param setObject:@0 forKey:@"isApproved"];
     
     NSMutableArray *pictureIdArr = [[NSMutableArray alloc] init];
     NSArray *photos = self.addPhotoView.photos;
