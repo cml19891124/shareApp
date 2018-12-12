@@ -11,8 +11,6 @@
 		69165CCB21BE098100593D25 /* HPAddPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CCA21BE098100593D25 /* HPAddPhotoView.m */; };
 		69165CCE21BE402E00593D25 /* HPTimePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CCD21BE402E00593D25 /* HPTimePicker.m */; };
 		69165CD421BF69C700593D25 /* HPIndustryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CD321BF69C700593D25 /* HPIndustryModel.m */; };
-		69165CDF21BFA0EE00593D25 /* HPCollectListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CDB21BFA0ED00593D25 /* HPCollectListModel.m */; };
-		69165CE021BFA0EE00593D25 /* HPFansListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CDD21BFA0ED00593D25 /* HPFansListModel.m */; };
 		69165CE121BFA0EE00593D25 /* HPPersonCenterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CDE21BFA0ED00593D25 /* HPPersonCenterModel.m */; };
 		69165CE421BFB36500593D25 /* HPPictureModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CE321BFB36500593D25 /* HPPictureModel.m */; };
 		786E617DDD64F9CC68E4049B /* Pods_HPShareAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C508ECCC8CC2C9D9701839BE /* Pods_HPShareAppTests.framework */; };
@@ -45,6 +43,8 @@
 		E6292182219ABE6500BEF16C /* HPImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292181219ABE6500BEF16C /* HPImageUtil.m */; };
 		E6292185219ABF4400BEF16C /* HPGradientUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292184219ABF4400BEF16C /* HPGradientUtil.m */; };
 		E629218A219AC19D00BEF16C /* HPMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292189219AC19D00BEF16C /* HPMainTabBarController.m */; };
+		E654C7DE21BFE58E0066C506 /* HPFansListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CDD21BFA0ED00593D25 /* HPFansListModel.m */; };
+		E654C7DF21BFE6160066C506 /* HPCollectListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CDB21BFA0ED00593D25 /* HPCollectListModel.m */; };
 		E661B094219BACE900C86CF5 /* HPShareController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B093219BACE900C86CF5 /* HPShareController.m */; };
 		E661B097219BAD5000C86CF5 /* HPIdeaController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B096219BAD5000C86CF5 /* HPIdeaController.m */; };
 		E661B09A219BADB200C86CF5 /* HPInteractiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B099219BADB200C86CF5 /* HPInteractiveController.m */; };
@@ -235,6 +235,10 @@
 		E636357C21BF8937002F11DC /* HPPersonCenterModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPPersonCenterModel.m; sourceTree = "<group>"; };
 		E636357F21BF8BBA002F11DC /* HPFansListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPFansListModel.m; sourceTree = "<group>"; };
 		E636358221BF96F0002F11DC /* HPCollectListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCollectListModel.m; sourceTree = "<group>"; };
+		E636359021BFA105002F11DC /* HPPersonCenterModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPPersonCenterModel.m; sourceTree = "<group>"; };
+		E636359121BFA105002F11DC /* HPFansListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPFansListModel.m; sourceTree = "<group>"; };
+		E636359221BFA105002F11DC /* HPCollectListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPCollectListModel.m; sourceTree = "<group>"; };
+		E654C7DC21BFD6460066C506 /* HPMyCardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPMyCardController.m; sourceTree = "<group>"; };
 		E661B092219BACE900C86CF5 /* HPShareController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareController.h; sourceTree = "<group>"; };
 		E661B093219BACE900C86CF5 /* HPShareController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareController.m; sourceTree = "<group>"; };
 		E661B095219BAD5000C86CF5 /* HPIdeaController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaController.h; sourceTree = "<group>"; };
@@ -483,6 +487,10 @@
 				E636357F21BF8BBA002F11DC /* HPFansListModel.m */,
 				E636357C21BF8937002F11DC /* HPPersonCenterModel.m */,
 				E636358221BF96F0002F11DC /* HPCollectListModel.m */,
+				E636359021BFA105002F11DC /* HPPersonCenterModel.m */,
+				E636359121BFA105002F11DC /* HPFansListModel.m */,
+				E654C7DC21BFD6460066C506 /* HPMyCardController.m */,
+				E636359221BFA105002F11DC /* HPCollectListModel.m */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1354,6 +1362,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E654C7DF21BFE6160066C506 /* HPCollectListModel.m in Sources */,
+				E654C7DE21BFE58E0066C506 /* HPFansListModel.m in Sources */,
 				E661B12921A28E8500C86CF5 /* JTVerticalCalendarView.m in Sources */,
 				E6D75F4D21AFF48200B2067C /* HPBindPhoneController.m in Sources */,
 				E6292172219AB28700BEF16C /* HPGlobalVariable.m in Sources */,
@@ -1363,7 +1373,6 @@
 				E661B0BD219C2DF700C86CF5 /* HPLinkageSheetView.m in Sources */,
 				E6F551DE21B901820086094F /* HPTimeString.m in Sources */,
 				E661B12E21A28E8500C86CF5 /* JTCalendarPageView.m in Sources */,
-				69165CE021BFA0EE00593D25 /* HPFansListModel.m in Sources */,
 				E6292179219AB7B800BEF16C /* UIColor+Hex.m in Sources */,
 				E6D75F2521AD1B3900B2067C /* HPLoginController.m in Sources */,
 				E6D75F7C21B54FDD00B2067C /* HPShareGoodViewController.m in Sources */,
@@ -1428,7 +1437,6 @@
 				E61FE0A921BA6F5C00555F3F /* HPHTTPSever.m in Sources */,
 				E6292175219AB32000BEF16C /* HPScreenAdapter.m in Sources */,
 				E661B097219BAD5000C86CF5 /* HPIdeaController.m in Sources */,
-				69165CDF21BFA0EE00593D25 /* HPCollectListModel.m in Sources */,
 				E6D75F5021B0050B00B2067C /* HPFollowController.m in Sources */,
 				E661B12521A28E8500C86CF5 /* JTDateHelper.m in Sources */,
 				E661B0C4219CFE6D00C86CF5 /* HPCheckTableCell.m in Sources */,
