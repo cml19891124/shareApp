@@ -1,26 +1,23 @@
 //
-//  HPSystemNotiController.m
+//  HPPartyCenterController.m
 //  HPShareApp
 //
-//  Created by HP on 2018/12/12.
+//  Created by caominglei on 2018/12/13.
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPSystemNotiController.h"
-#import "HPSystemNotiCell.h"
-#import "HPSystemNotiModel.h"
+#import "HPPartyCenterController.h"
+#import "HPPartyCenterModel.h"
+#import "HPPartyCenterCell.h"
 
-@interface HPSystemNotiController ()<UITableViewDelegate,UITableViewDataSource,HPSystemNotiCellDelegate,HPBaseViewControllerDelegate>
+@interface HPPartyCenterController ()<UITableViewDelegate,UITableViewDataSource,HPBaseViewControllerDelegate,HPPartyCenterCellDelegate>
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray *systemNotiArray;
+@property (nonatomic, strong) NSArray *partyArray;
 @end
 
-@implementation HPSystemNotiController
-static NSString *systemNotiCell = @"systemNotiCell";
-- (void)clickRightButtonToHandle
-{
-    HPLog(@"delegate");
-}
+@implementation HPPartyCenterController
+static NSString *partyCenterCell = @"partyCenterCell";
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -29,9 +26,9 @@ static NSString *systemNotiCell = @"systemNotiCell";
     [self setupNavigationBarWithTitle:@"系统通知"];
     [self setupRightBarbuttonBtn:@"一键已读"];
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
-    NSArray *systemNotiArray = @[@{@"createTime":@"1495453213",@"title":@"版本更新",@"message":@"合店站1.1.0版本更新。新版本中'人力共享'功能正式上线，店主可以通过该板块招募短工，降低招募正式员工的人力成本。同时用户也可以发…"},
-                               @{@"createTime":@"1495453229",@"title":@"注册成功",@"message":@"尊敬的用户，恭喜您成为“合店站”会员，赶紧去制作你的专属名片，开启共享之旅吧!"}];
-    _systemNotiArray = [HPSystemNotiModel mj_objectArrayWithKeyValuesArray:systemNotiArray];
+    NSArray *partyArray = @[@{@"createTime":@"1495453213",@"image":@"party",@"title":@"锦鲤附身，您有1份新用户大礼包待领取",@"message":@"为了感谢广大用户对“合店站”的支持与信任，我们给每一位新入驻“合店站”的小伙伴精心准备了一份大礼包～戳我领取"},
+                                 @{@"createTime":@"1495453229",@"image":@"party",@"title":@"锦鲤附身，您有1份新",@"message":@"对“合店站”的支持与信任，我们给每一位新入驻“合店站”的小伙伴精心准备了一份"}];
+    _partyArray = [HPPartyCenterModel mj_objectArrayWithKeyValuesArray:partyArray];
     [_tableView reloadData];
 }
 
@@ -45,7 +42,7 @@ static NSString *systemNotiCell = @"systemNotiCell";
     tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, CGFLOAT_MIN)];
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, CGFLOAT_MIN)];
     
-    [tableView registerClass:HPSystemNotiCell.class forCellReuseIdentifier:systemNotiCell];
+    [tableView registerClass:HPPartyCenterCell.class forCellReuseIdentifier:partyCenterCell];
     [self.view addSubview:tableView];
     self.tableView = tableView;
     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -55,7 +52,6 @@ static NSString *systemNotiCell = @"systemNotiCell";
     }];
 }
 
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -63,12 +59,12 @@ static NSString *systemNotiCell = @"systemNotiCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _systemNotiArray.count;
+    return _partyArray.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    HPSystemNotiModel *model = _systemNotiArray[indexPath.row];
-    HPSystemNotiCell *cell = [tableView dequeueReusableCellWithIdentifier:systemNotiCell];
+    HPPartyCenterModel *model = _partyArray[indexPath.row];
+    HPPartyCenterCell *cell = [tableView dequeueReusableCellWithIdentifier:partyCenterCell];
     cell.model = model;
     cell.delegate = self;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -82,12 +78,17 @@ static NSString *systemNotiCell = @"systemNotiCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return getWidth(195.f);
+    return getWidth(335.f);
 }
 
 #pragma mark - HPSystemNotiCellDelegate
-- (void)clickToCheckMoreNoti:(HPSystemNotiModel *)model
+- (void)clickTocheckMoreInfo:(HPPartyCenterModel *)model
 {
-    HPLog(@"HPSystemNotiModel");
+    HPLog(@"HPPartyCenterModel");
+}
+
+- (void)clickRightButtonToHandle
+{
+    HPLog(@"clickRightButtonToHandle");
 }
 @end

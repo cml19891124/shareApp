@@ -13,6 +13,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
     HPEditGotoFullName,
     HPEditGotoCompany,
     HPEditGotoContact,
+    HPEditGotoSign
 };
 @interface HPEditPersonOInfoController ()<UITextFieldDelegate>
 @property (nonatomic, strong) UIView *accountInfoPanel;
@@ -64,8 +65,67 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
         make.height.mas_equalTo(200.f * g_rateWidth);
     }];
     [self setupShadowOfPanel:accountInfoPanel];
+    
+    UILabel *signInfoLabel = [[UILabel alloc] init];
+    [signInfoLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
+    [signInfoLabel setTextColor:COLOR_BLACK_333333];
+    [signInfoLabel setText:@"签名信息"];
+    [scrollView addSubview:signInfoLabel];
+    [signInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(accountInfoPanel.mas_bottom).with.offset(19.f * g_rateWidth);
+        make.left.equalTo(scrollView).with.offset(15.f * g_rateWidth);
+        make.height.mas_equalTo(signInfoLabel.font.pointSize);
+    }];
+    
+    UIView *signView = [[UIView alloc] init];
+    [scrollView addSubview:signView];
+    [signView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(signInfoLabel.mas_bottom ).with.offset(14.f * g_rateWidth);
+        make.centerX.equalTo(scrollView);
+        make.width.mas_equalTo(345.f * g_rateWidth);
+        make.height.mas_equalTo(45.f * g_rateWidth);
+    }];
+//    self.signView = signView;
+    [self setUpSignInfoView:signView];
+    
 }
 
+
+- (void)setUpSignInfoView:(UIView *)view
+{
+    view.backgroundColor = UIColor.whiteColor;
+    [view.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
+    [view.layer setShadowOffset:CGSizeMake(0.f, 4.f)];
+    [view.layer setShadowRadius:15.f];
+    [view.layer setShadowOpacity:0.3f];
+    [view.layer setCornerRadius:15.f];
+    
+    UIView *nameView = [[UIView alloc] init];
+    [view addSubview:nameView];
+    [nameView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(view);
+        make.height.mas_equalTo(getWidth(45.f));
+        make.top.mas_equalTo(view).offset(getWidth(0.f));
+
+    }];
+    UILabel *nameLabel = [self setupTitleLabelWithTitle:@"签名"];
+    [nameView addSubview:nameLabel];
+    [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(nameView).with.offset(18.f * g_rateWidth);
+        make.centerY.equalTo(nameView);
+        make.height.mas_equalTo(nameLabel.font.pointSize);
+        make.right.equalTo(nameView).with.offset(-18.f * g_rateWidth);
+        
+    }];
+    
+    HPRightImageButton *nameBtn = [self setupGotoBtnWithTitle:@"未填写"];
+    [nameView addSubview:nameBtn];
+    [nameBtn setTag:HPEditGotoSign];
+    [nameBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(getWidth(-18.f));
+        make.centerY.mas_equalTo(nameView);
+    }];
+}
 - (HPRightImageButton *)setupGotoBtnWithTitle:(NSString *)title {
     HPRightImageButton *btn = [[HPRightImageButton alloc] init];
     [btn setImage:[UIImage imageNamed:@"shouye_gengduo"]];
@@ -89,6 +149,8 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
         HPLog(@"HPEditGotoCompany");
     }else if (button.tag == HPEditGotoContact) {
         HPLog(@"HPEditGotoContact");
+    }else if (button.tag == HPEditGotoSign) {
+        HPLog(@"HPEditGotoSign");
     }
     
 }

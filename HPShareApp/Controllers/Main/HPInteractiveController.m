@@ -156,6 +156,8 @@ static NSString *interactiveCell = @"interactiveCell";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 0 && indexPath.row == 0) {
         [self pushVCByClassName:@"HPSystemNotiController"];
+    }else if (indexPath.section == 0 && indexPath.row == 1){
+        [self pushVCByClassName:@"HPPartyCenterController"];
     }
 }
 @end
