@@ -25,6 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *realName;
 @property (nonatomic, copy) NSString *email;
 
+/**
+ 选中是否取消关注
+ */
+@property (nonatomic, assign) BOOL selected;
 @end
 
 NS_ASSUME_NONNULL_END

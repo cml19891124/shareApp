@@ -26,6 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) NSString *company;
 
+/**
+ 是否关注按钮
+ */
+@property (nonatomic, strong) UIButton *followBtn;
 @property (nonatomic, weak) id<HPFollowListCellDelegate> delegate;
 
 @property (nonatomic, strong) HPFansListModel *model;

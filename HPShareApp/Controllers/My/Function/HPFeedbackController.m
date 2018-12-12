@@ -221,7 +221,7 @@
     dic[@"context"] = _textView.text;
     dic[@"types"] = _typs;
 
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/back/freeBack" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/back/freeBack" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE==200) {
             [self.navigationController popViewControllerAnimated:YES];
         }else

@@ -35,12 +35,20 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"找回密码"];
+    UIView *navigationView;
+    
     
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:23.f]];
     [titleLabel setTextColor:COLOR_BLACK_444444];
-    [titleLabel setText:@"找回密码"];
+    if ([self.param[@"isForget"] isEqualToString:@"0"]) {
+        navigationView = [self setupNavigationBarWithTitle:@"找回密码"];
+        [titleLabel setText:@"找回密码"];
+    }else{
+        navigationView = [self setupNavigationBarWithTitle:@"修改密码"];
+        [titleLabel setText:@"修改密码"];
+    }
+    
     [self.view addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(navigationView.mas_bottom).with.offset(55.f * g_rateWidth);
@@ -262,7 +270,7 @@
     dic[@"password"] = _PassNewTextField.text;
     dic[@"code"] = _codeTextField.text;
     
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/updateUser" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/updateUser" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
             model.userInfo = [HPUserInfo mj_objectWithKeyValues:responseObject[@"data"][@"userInfo"]];
@@ -294,7 +302,7 @@
     dic[@"mobile"] = self.phoneNumTextField.text;
     dic[@"state"] = @"1";
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"发送成功"];
             weakSelf.codeTextField.text = responseObject[@"data"];

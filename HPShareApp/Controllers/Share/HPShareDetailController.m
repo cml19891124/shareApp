@@ -98,6 +98,23 @@
     [super viewDidAppear:animated];
     
     [_bannerView startAutoScrollWithInterval:2.0];
+    UIView *contactRegion = [[UIView alloc] init];
+    [contactRegion setBackgroundColor:UIColor.whiteColor];
+    [contactRegion.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
+    [contactRegion.layer setShadowOffset:CGSizeMake(0.f, -2.f)];
+    [contactRegion.layer setShadowOpacity:0.19f];
+    
+    [kAppdelegateWindow addSubview:contactRegion];
+    self.contactRegion = contactRegion;
+    [contactRegion mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(kAppdelegateWindow.mas_bottom).with.offset(-60.f * g_rateWidth);
+        make.left.and.width.equalTo(kAppdelegateWindow);
+        make.height.mas_equalTo(60.f * g_rateWidth);
+        
+        make.bottom.equalTo(kAppdelegateWindow);
+    }];
+    [self setupContactRegion:contactRegion];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -207,29 +224,7 @@
     }];
     [self setupRemarkRegion:remarkRegion];
     
-    UIView *contactRegion = [[UIView alloc] init];
-    [contactRegion setBackgroundColor:UIColor.whiteColor];
-    [contactRegion.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
-    [contactRegion.layer setShadowOffset:CGSizeMake(0.f, -2.f)];
-    [contactRegion.layer setShadowOpacity:0.19f];
-    UIWindow *window = [UIApplication sharedApplication].delegate.window;
-    [window addSubview:contactRegion];
-    self.contactRegion = contactRegion;
-    [contactRegion mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(window.mas_bottom).with.offset(-60.f * g_rateWidth);
-        make.left.and.width.equalTo(window);
-        if (IPHONE_HAS_NOTCH) {
-            //改变tabbar背景颜色
-            
-            [[UITabBar appearance] setTintColor:UIColor.whiteColor];
-            
-        }else{
-        }
-        make.height.mas_equalTo(60.f * g_rateWidth);
 
-        make.bottom.equalTo(window);
-    }];
-    [self setupContactRegion:contactRegion];
 }
 
 - (void)setupTitleRegion:(UIView *)view {
@@ -525,13 +520,15 @@
 }
 - (void)MyCardVC:(UITapGestureRecognizer *)tap
 {
- [self pushVCByClassName:@"HPMyCardController"];
+    
+    [self pushVCByClassName:@"HPMyCardController" withParam:self.param];
 }
 - (void)setupContactRegion:(UIView *)view {
     UIImageView *portrait = [[UIImageView alloc] init];
     [portrait.layer setMasksToBounds:YES];
     [portrait.layer setCornerRadius:20.f * g_rateWidth];
     portrait.userInteractionEnabled = YES;
+    portrait.image = ImageNamed(@"shared_shop_details_head_portrait");
     [view addSubview:portrait];
     _portrait = portrait;
     [portrait mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -547,6 +544,7 @@
     [userNameLabel setTextColor:COLOR_BLACK_333333];
     [view addSubview:userNameLabel];
     _userNameLabel = userNameLabel;
+    [_userNameLabel setText:@"高小薇"];
     [userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(portrait.mas_right).with.offset(14.f * g_rateWidth);
         make.centerY.equalTo(view);
@@ -573,7 +571,7 @@
     [keepBtn setBackgroundColor:COLOR_RED_FE2A3B];
     [keepBtn setTitle:@"收藏" forState:UIControlStateNormal];
     [view addSubview:keepBtn];
-    [keepBtn addTarget:self action:@selector(getCollectionInfo:) forControlEvents:UIControlEventTouchUpInside];
+    [keepBtn addTarget:self action:@selector(getAddCollectionInfo:) forControlEvents:UIControlEventTouchUpInside];
     [keepBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.and.bottom.equalTo(view);
         make.right.equalTo(phoneBtn.mas_left);
@@ -582,9 +580,9 @@
 }
 
 #pragma mark - 添加收藏
-- (void)getCollectionInfo:(UIButton *)button
+- (void)getAddCollectionInfo:(UIButton *)button
 {
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/add" paraments:@{@"spaceId":@"12"} complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/add" isNeedToken:YES paraments:@{@"spaceId":self.param[@"spaceId"]} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:MSG];
         }else

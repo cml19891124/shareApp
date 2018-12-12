@@ -167,7 +167,7 @@
     dic[@"state"] = @"-1";
     
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"发送成功"];
             weakSelf.codeTextField.text = responseObject[@"data"];
@@ -193,7 +193,7 @@
     dic[@"code"] = _codeTextField.text;
     
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/verify" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/verify" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"修改成功"];
             //获取本地用户数据

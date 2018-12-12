@@ -255,7 +255,7 @@
     dic[@"mobile"] = _phoneNumTextField.text;
     dic[@"state"] = @"1";
     
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/login" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/login" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             HPLoginModel *model = [HPLoginModel AccountStatusWithDict:responseObject[@"data"]];
             [HPUserTool saveAccount:model];
@@ -280,7 +280,8 @@
 }
 
 - (void)onClickForgetBtn:(UIButton *)btn {
-    [self pushVCByClassName:@"HPForgetPasswordController"];
+//    [self pushVCByClassName:@"HPForgetPasswordController"];
+    [self pushVCByClassName:@"HPForgetPasswordController" withParam:@{@"isForget":@"0"}];
 
 }
 

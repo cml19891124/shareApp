@@ -44,6 +44,7 @@
 {
     [super viewWillAppear:animated];
     _industryModels = [NSMutableArray array];
+    self.count = 1;
     [self loadtableViewFreshUi];
 }
 #pragma mark - 上下啦刷新控件
@@ -61,6 +62,20 @@
         self.count++;
         [self getBrowsListData];
     }];
+    
+    // 马上进入刷新状态
+    [self.tableView.mj_header beginRefreshing];
+    
+    if (@available(iOS 11.0, *)) {
+        
+        _tableView.estimatedRowHeight = 0;
+        
+        _tableView.estimatedSectionFooterHeight = 0;
+        
+        _tableView.estimatedSectionHeaderHeight = 0;
+        _tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
+        
+    }
 }
 #pragma mark - 获取浏览历史数据
 - (void)getBrowsListData
@@ -69,7 +84,7 @@
     dic[@"page"] = @(self.count);
     dic[@"pageSize"] = @(10);
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/list" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/browseHistory/list" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [self.tableView.mj_header endRefreshing];
             [self.tableView.mj_footer endRefreshing];

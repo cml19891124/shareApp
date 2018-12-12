@@ -95,6 +95,7 @@
     [followBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, -2.5f, 0.f, 2.5f)];
     [followBtn addTarget:self action:@selector(onClickFollowBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:followBtn];
+    _followBtn = followBtn;
     [followBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self).with.offset(-15.f * g_rateWidth);
         make.centerY.equalTo(userNameLabel);
@@ -140,5 +141,6 @@
     _userNameLabel.text = model.username;
     [_portraitView sd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
     _companyLabel.text = model.company;
+    _followBtn.selected = model.selected;
 }
 @end

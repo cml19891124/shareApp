@@ -22,6 +22,9 @@
 @property (nonatomic, assign) int                        count;
 @property (nonatomic, strong) UIImageView *waitingView;
 @property (nonatomic, strong) UILabel *waitingLabel;
+@property (strong, nonatomic) HPFansListModel *model;
+
+@property (nonatomic, strong) HPFansListModel *selectedModel;
 @end
 
 @implementation HPFollowController
@@ -51,6 +54,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.count = 1;
     [self loadtableViewFreshUi];
 }
 #pragma mark - 上下啦刷新控件
@@ -68,6 +72,20 @@
         self.count++;
         [self getFansListData];
     }];
+    
+    // 马上进入刷新状态
+    [self.tableView.mj_header beginRefreshing];
+    
+    if (@available(iOS 11.0, *)) {
+        
+        _tableView.estimatedRowHeight = 0;
+        
+        _tableView.estimatedSectionFooterHeight = 0;
+        
+        _tableView.estimatedSectionHeaderHeight = 0;
+        _tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
+        
+    }
 }
 #pragma mark - 获取关注数据
 - (void)getFansListData
@@ -80,7 +98,7 @@
     dic[@"pageSize"] = @"10";
     dic[@"userId"] = userId;
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/fans/list" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/fans/list" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [self.tableView.mj_header endRefreshing];
             [self.tableView.mj_footer endRefreshing];
@@ -186,15 +204,61 @@
         [textDialogView setModalTop:279.f * g_rateHeight];
         _textDialogView = textDialogView;
     }
-    
+    kWeakSelf(weakSlef);
     [_textDialogView setConfirmCallback:^{
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-        NSLog(@"indexPath: %ld", (long)indexPath.row);
-        [self.dataArray removeObjectAtIndex:indexPath.row];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+//        NSLog(@"indexPath: %ld", (long)indexPath.row);
+//        [self.dataArray removeObjectAtIndex:indexPath.row];
+//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/cancel" paraments:@{@"shareFans":weakSlef.selectedModel.followed_id} needToken:YES complete:^(id  _Nonnull responseObject) {
+            if (CODE == 200) {
+                [HPProgressHUD alertMessage:MSG];
+                [self getFansListData];
+            }else{
+                [HPProgressHUD alertMessage:MSG];
+            }
+        } Failure:^(NSError * _Nonnull error) {
+            ErrorNet
+        }];
     }];
     
     [_textDialogView show:YES];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    _selectedModel = self.dataArray[indexPath.row];
+    
+    HPFansListModel *model = self.dataArray[indexPath.row];
+    
+    //    model.selected = !model.selected;//默认选一种，不可不选
+    //    self.selectedModel.selected = NO;
+    //    model.selected = YES;
+    //    self.selectedModel = model;
+    
+    if(self.selectedModel.followed_id != model.followed_id){//默认选一种，可不选
+        //点击不同的spaceId，当原来的spaceId选中时，设置原来的不选中
+        if(self.selectedModel.selected){
+            self.selectedModel.selected = !self.selectedModel.selected;
+        }
+        model.selected = !model.selected;
+        self.selectedModel = model;
+    }else{
+        model.selected = !model.selected;
+        self.selectedModel = model;
+    }
+    
+    _model = model;
+    HPFollowListCell *cell = (HPFollowListCell *)[tableView cellForRowAtIndexPath:indexPath];
+    
+    cell.model = model;
+    //没有动画闪烁问题
+    [UIView performWithoutAnimation:^{
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+    }];
+    
+    [UIView performWithoutAnimation:^{
+        [self.tableView reloadData];
+    }];
+}
 @end

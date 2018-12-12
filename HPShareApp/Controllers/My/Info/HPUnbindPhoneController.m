@@ -139,7 +139,7 @@
     dic[@"code"] = _codeTextField.text;
 
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"发送成功"];
             weakSelf.codeTextField.text = responseObject[@"data"];
@@ -147,7 +147,7 @@
             [HPProgressHUD alertMessage:MSG];
         }
     } Failure:^(NSError * _Nonnull error) {
-        [HPProgressHUD alertMessage:@"网络错误"];
+        ErrorNet
     }];
 }
 - (void)onClickConfirmBtn:(UIButton *)btn {

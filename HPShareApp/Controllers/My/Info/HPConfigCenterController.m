@@ -193,14 +193,16 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 - (void)switchAccount
 {
     
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/logOut" paraments:@{} complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/logOut" isNeedToken:YES paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPUserTool deleteAccount];
             [self.navigationController popViewControllerAnimated:YES];
-
+        }else
+        {
+            [HPProgressHUD alertMessage:MSG];
         }
     } Failure:^(NSError * _Nonnull error) {
-        
+        ErrorNet
     }];
 }
 - (void)setupPersonInfoPanel:(UIView *)view {
@@ -534,7 +536,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         
         case HPConfigGotoPassword:
             NSLog(@"HPConfigGotoPassword");
-            [self pushVCByClassName:@"HPChangePasswordController"];
+            [self pushVCByClassName:@"HPForgetPasswordController" withParam:@{@"isForget":@"1"}];
             break;
             
         case HPConfigGotoVersion:

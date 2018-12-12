@@ -185,7 +185,17 @@
     [editBtn.layer setMasksToBounds:YES];
     [editBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:10.f]];
     [editBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)account.userInfo;
+    if ([self.param[@"userId"] intValue] == [dic[@"userId"] intValue]) {
+        [editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
+        [editBtn addTarget:self action:@selector(editPersonalInfo:) forControlEvents:UIControlEventTouchUpInside];
+
+    }else{
+        [editBtn setTitle:@"关注" forState:UIControlStateNormal];
+        [editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
+
+    }
     [editBtn setBackgroundColor:COLOR_RED_FF3455];
     [view addSubview:editBtn];
     [editBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -234,7 +244,26 @@
         make.bottom.equalTo(view).with.offset(- 10.f * g_rateWidth);
     }];
 }
-
+#pragma mark - 关注某人
+- (void)focusSBToFansList:(UIButton *)button
+{
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)account.userInfo;
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/add" paraments:@{@"userId":dic[@"userId"],@"followedId":self.param[@"followedId"]} needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+#pragma mark - 编辑个人信息界面
+- (void)editPersonalInfo:(UIButton *)button
+{
+    [self pushVCByClassName:@"HPEditPersonOInfoController"];
+}
 - (void)setupInfoRegion:(UIView *)view {
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];

@@ -238,7 +238,7 @@
     dic[@"mobile"] = self.phoneNumTextField.text;
     dic[@"state"] = _state;
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"发送成功"];
             weakSelf.codeTextField.text = responseObject[@"data"];
@@ -259,7 +259,7 @@
     dic[@"mobile"] = self.phoneNumTextField.text;
     dic[@"password"] = self.passwordTextField.text;
     
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/register" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/register" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"注册成功"];
             [self.navigationController popViewControllerAnimated:YES];
@@ -267,7 +267,7 @@
             [HPProgressHUD alertMessage:MSG];
         }
     } Failure:^(NSError * _Nonnull error) {
-        [HPProgressHUD alertMessage:@"网络错误"];
+        ErrorNet
 
     }];
 }

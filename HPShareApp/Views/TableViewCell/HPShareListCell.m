@@ -262,13 +262,9 @@
     [_priceLabel setText:price];
 }
 
-- (void)setTagType:(HPShareListCellType)type {
-    if (type == HPShareListCellTypeStartup) {
-        [_tagIcon setImage:[UIImage imageNamed:@"share_startup"]];
-    }
-    else if (type == HPShareListCellTypeOwner) {
-        [_tagIcon setImage:[UIImage imageNamed:@"share_owner"]];
-    }
+- (void)setTagType:(HPShareListCellType)type
+{
+    
 }
 
 - (void)setCheckEnabled:(BOOL)enabled {
@@ -327,15 +323,25 @@
 {
     _model = model;
     _titleLabel.text = model.title;
-
-    _tradeLabel.text = _industryModel.industryName;
     _rentTimeLabel.text = model.rentType;
+    _areaLabel.text = model.area;
     _priceLabel.text = model.rent;
+        if ([model.type isEqualToString:@"2"]) {
+            [_tagIcon setImage:ImageNamed(@"share_startup")];
+        }
+        else if ([model.type isEqualToString:@"1"]) {
+            [_tagIcon setImage:ImageNamed(@"share_owner")];
+        }
+    _checkBtn.selected = model.selected;
 }
 
 - (void)setIndustryModel:(HPIndustryModel *)industryModel
 {
     _industryModel = industryModel;
+    if ([industryModel.industryId intValue] == [_model.industryId intValue]) {
+        _tradeLabel.text = _industryModel.industryName;
+
+    }
 
 }
 @end

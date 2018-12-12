@@ -65,9 +65,9 @@
         [_portraitBtn setImage:[UIImage imageNamed:@"personal_center_login_head"] forState:UIControlStateNormal];
         [_loginBtn setTitle:username.length > 0? username:@"未填写" forState:UIControlStateDisabled];
         [_loginBtn setEnabled:NO];
-        [_keepNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.collectionNum]];
-        [_followNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.followingNum]];
-        [_historyNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.browseNum]];
+        [_keepNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.collectionNum]?:@"--"];
+        [_followNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.followingNum]?:@"--"];
+        [_historyNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.browseNum]?:@"--"];
         [_descLabel setHidden:YES];
         
         if (g_isCertified) {
@@ -89,7 +89,7 @@
     }
     
     NSString *avatarUrl = dic[@"avatarUrl"];
-    if (avatarUrl.length <= 0) {
+    if (avatarUrl.length <= 0 && model.token) {
         [self uploadLocalImageGetAvatarUrl];
     }
 }
@@ -100,7 +100,7 @@
     HPLoginModel *account = [HPUserTool account];
     NSDictionary *dic = (NSDictionary *)account.userInfo;
     NSString *historyTime = [HPTimeString getNowTimeTimestamp];
-    [HPUploadImageHandle sendPOSTWithUrl:url parameters:@{@"file":historyTime} success:^(id data) {
+    [HPUploadImageHandle sendPOSTWithUrl:url isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
         
          HPUserInfo *userInfo = [[HPUserInfo alloc] init];
          userInfo.avatarUrl = [data[@"data"]firstObject][@"url"]?:@"";
@@ -116,7 +116,7 @@
          account.userInfo = userInfo;
          [HPUserTool saveAccount:account];
     } fail:^(NSError *error) {
-        
+        ErrorNet
     }];
     
 }
@@ -125,12 +125,17 @@
 - (void)getUserInfosListData
 {
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/center" paraments:@{} complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/center" isNeedToken:YES paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             weakSelf.infoModel = [HPPersonCenterModel mj_objectWithKeyValues:responseObject[@"data"]];
             [self setUserInfo];
         }else{
-            [HPProgressHUD alertMessage:MSG];
+//            [HPProgressHUD alertMessage:MSG];
+            [self setUserInfo];
+
+//            [weakSelf.keepNumLabel setText:[NSString stringWithFormat:@"%ld",weakSelf.infoModel.collectionNum]?:@"--"];
+//            [weakSelf.followNumLabel setText:[NSString stringWithFormat:@"%ld",weakSelf.infoModel.followingNum]?:@"--"];
+//            [weakSelf.historyNumLabel setText:[NSString stringWithFormat:@"%ld",weakSelf.infoModel.browseNum]?:@"--"];
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
@@ -574,7 +579,9 @@
     
     NSLog(@"function btn: %@", btn.text);
     if ([btn.text isEqualToString:@"我的名片"]) {
-        [self pushVCByClassName:@"HPMyCardController"];
+        HPLoginModel *account = [HPUserTool account];
+        NSDictionary *dic = (NSDictionary *)account.userInfo;
+        [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":dic[@"userId"]}];
     }
     else if ([btn.text isEqualToString:@"共享管理"]) {
         [self pushVCByClassName:@"HPShareManageController"];

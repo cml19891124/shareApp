@@ -307,7 +307,7 @@
     dic[@"mobile"] = _phoneNumTextField.text;
     dic[@"state"] = @"0";
 
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/login" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/login" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
             HPUserInfo *userInfo = [HPUserInfo mj_objectWithKeyValues:responseObject[@"data"][@"userInfo"]];
@@ -351,7 +351,7 @@
     dic[@"mobile"] = self.phoneNumTextField.text;
     dic[@"state"] = @"-1";
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"发送成功"];
             weakSelf.codeTextField.text = responseObject[@"data"];

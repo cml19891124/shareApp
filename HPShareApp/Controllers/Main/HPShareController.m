@@ -127,7 +127,7 @@
 - (void)getAreaListInShenzhen
 {
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/area/list" paraments:@{} complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/area/list" isNeedToken:NO paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             NSLog(@"**************");
             weakSelf.cityArray = [HPAreaModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
@@ -195,11 +195,11 @@
     [_shareCard_2 setPrice:@"80"];
     [_shareCard_2 setTagType:HPShareRecommendCardTypeStartup];
     
-    NSArray *sharePersonData = @[@{@"portrait":[UIImage imageNamed:@"share_person_portrait"], @"userName":@"董晓丽", @"company":@"深圳大兴大宝汽车有限公司", @"signature":@"有朋自远方来，不亦乐乎。", @"desc":@"我们4S汽车店专注于服务与品质，我们欢迎一切专注于服务客户的品牌商、创业者加入我们。我们共享的不只是空间，也是资源、信息与服务的共享。"},
-                                 @{@"portrait":[UIImage imageNamed:@"share_person_portrait"], @"userName":@"董晓丽", @"company":@"深圳大兴大宝汽车有限公司", @"signature":@"有朋自远方来，不亦乐乎。", @"desc":@"我们4S汽车店专注于服务与品质，我们欢迎一切专注于服务客户的品牌商、创业者加入我们。我们共享的不只是空间，也是资源、信息与服务的共享。"},
-                                 @{@"portrait":[UIImage imageNamed:@"share_person_portrait"], @"userName":@"董晓丽", @"company":@"深圳大兴大宝汽车有限公司", @"signature":@"有朋自远方来，不亦乐乎。", @"desc":@"我们4S汽车店专注于服务与品质，我们欢迎一切专注于服务客户的品牌商、创业者加入我们。我们共享的不只是空间，也是资源、信息与服务的共享。"},
-                                 @{@"portrait":[UIImage imageNamed:@"share_person_portrait"], @"userName":@"董晓丽", @"company":@"深圳大兴大宝汽车有限公司", @"signature":@"有朋自远方来，不亦乐乎。", @"desc":@"我们4S汽车店专注于服务与品质，我们欢迎一切专注于服务客户的品牌商、创业者加入我们。我们共享的不只是空间，也是资源、信息与服务的共享。"},
-                                 @{@"portrait":[UIImage imageNamed:@"share_person_portrait"], @"userName":@"董晓丽", @"company":@"深圳大兴大宝汽车有限公司", @"signature":@"有朋自远方来，不亦乐乎。", @"desc":@"我们4S汽车店专注于服务与品质，我们欢迎一切专注于服务客户的品牌商、创业者加入我们。我们共享的不只是空间，也是资源、信息与服务的共享。"}];
+    NSArray *sharePersonData = @[@{@"followed_id":@"1",@"portrait":[UIImage imageNamed:@"share_person_portrait"], @"userName":@"董晓丽", @"company":@"深圳大兴大宝汽车有限公司", @"signature":@"有朋自远方来，不亦乐乎。", @"desc":@"我们4S汽车店专注于服务与品质，我们欢迎一切专注于服务客户的品牌商、创业者加入我们。我们共享的不只是空间，也是资源、信息与服务的共享。"},
+                                 @{@"followed_id":@"12",@"portrait":[UIImage imageNamed:@"share_person_portrait"], @"userName":@"董晓丽", @"company":@"深圳大兴大宝汽车有限公司", @"signature":@"有朋自远方来，不亦乐乎。", @"desc":@"我们4S汽车店专注于服务与品质，我们欢迎一切专注于服务客户的品牌商、创业者加入我们。我们共享的不只是空间，也是资源、信息与服务的共享。"},
+                                 @{@"followed_id":@"10",@"portrait":[UIImage imageNamed:@"share_person_portrait"], @"userName":@"董晓丽", @"company":@"深圳大兴大宝汽车有限公司", @"signature":@"有朋自远方来，不亦乐乎。", @"desc":@"我们4S汽车店专注于服务与品质，我们欢迎一切专注于服务客户的品牌商、创业者加入我们。我们共享的不只是空间，也是资源、信息与服务的共享。"},
+                                 @{@"followed_id":@"2",@"portrait":[UIImage imageNamed:@"share_person_portrait"], @"userName":@"董晓丽", @"company":@"深圳大兴大宝汽车有限公司", @"signature":@"有朋自远方来，不亦乐乎。", @"desc":@"我们4S汽车店专注于服务与品质，我们欢迎一切专注于服务客户的品牌商、创业者加入我们。我们共享的不只是空间，也是资源、信息与服务的共享。"},
+                                 @{@"followed_id":@"3",@"portrait":[UIImage imageNamed:@"share_person_portrait"], @"userName":@"董晓丽", @"company":@"深圳大兴大宝汽车有限公司", @"signature":@"有朋自远方来，不亦乐乎。", @"desc":@"我们4S汽车店专注于服务与品质，我们欢迎一切专注于服务客户的品牌商、创业者加入我们。我们共享的不只是空间，也是资源、信息与服务的共享。"}];
     [self reloadShareRecommendRegionWithDate:sharePersonData];
 }
 
@@ -733,17 +733,17 @@
 }
 
 - (void)onClickShareBtn:(HPAlignCenterButton *)btn {
-    if ([btn.text isEqualToString:@"共享空间"]) {
-        [self pushVCByClassName:@"HPShareSpaceListController"];
+    if ([btn.text isEqualToString:@"人力共享"]) {
+        [self pushVCByClassName:@"HPShareSpaceListController" withParam:@{@"shareType":@"0"}];
     }
-    else if ([btn.text isEqualToString:@"共享店铺"]) {
-        [self pushVCByClassName:@"HPShareShopListController"];
+    else if ([btn.text isEqualToString:@"店铺共享"]) {
+        [self pushVCByClassName:@"HPShareShopListController" withParam:@{@"shareType":@"1"}];
     }
-    else if ([btn.text isEqualToString:@"共享货品"]) {
-        [self pushVCByClassName:@"HPShareGoodViewController"];
+    else if ([btn.text isEqualToString:@"货品共享"]) {
+        [self pushVCByClassName:@"HPShareGoodViewController" withParam:@{@"shareType":@"2"}];
     }
     else if ([btn.text isEqualToString:@"共享地图"]) {
-        [self pushVCByClassName:@"HPShareMapController"];
+        [self pushVCByClassName:@"HPShareMapController" withParam:@{@"shareType":@"3"}];
     }
 }
 #pragma mark - iCarouselDataSource
@@ -758,12 +758,14 @@
     {
         view = [[UIView alloc] initWithFrame:CGRectMake(0, 0,291.f * g_rateWidth, 187.f * g_rateWidth)];
         NSDictionary *dict = _sharePersonData[index];
+        
         HPSharePersonCard *sharePersonCard = [[HPSharePersonCard alloc] init];
         [sharePersonCard setPortrait:dict[@"portrait"]];
         [sharePersonCard setUserName:dict[@"userName"]];
         [sharePersonCard setCompany:dict[@"company"]];
         [sharePersonCard setSignature:dict[@"signature"]];
         [sharePersonCard setDescription:dict[@"desc"]];
+
         sharePersonCard.delegate = self;
         [view addSubview:sharePersonCard];
         [sharePersonCard mas_makeConstraints:^(MASConstraintMaker *make) {

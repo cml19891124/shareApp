@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  发送一张图片
  */
-+ (void)sendPOSTWithUrl:(NSString *)url parameters:(NSDictionary *)dict success:(SuccessBlock)successBlock fail:(FailBlock)failBlock;
++ (void)sendPOSTWithUrl:(NSString *)url isNeedToken:(BOOL)isNeed parameters:(NSDictionary *)dict success:(SuccessBlock)successBlock fail:(FailBlock)failBlock;
 + (void)sendPOSTWithUrlStr:(NSString *)url parameters:(NSString *)string success:(SuccessBlock)successBlock fail:(FailBlock)failBlock;
 
 /**

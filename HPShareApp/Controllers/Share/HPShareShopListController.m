@@ -56,7 +56,7 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"共享店铺"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"人力共享"];
     
     UITableView *tableView = [[UITableView alloc] init];
     [tableView setBackgroundColor:UIColor.clearColor];

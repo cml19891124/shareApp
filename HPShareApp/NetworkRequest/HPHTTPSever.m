@@ -18,7 +18,7 @@
 + (void)HPPostServerWithMethod:(nonnull NSString*)method paraments:(nonnull NSDictionary *)dic needToken:(BOOL)isNeed complete:(nonnull Success)success Failure:(nonnull Failure)failure{
    
     HPHTTPManager *manager = [HPHTTPManager shareHPHTTPManage];
-    
+    // 解析数据需要
     manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
     
     if (isNeed) {
@@ -82,9 +82,9 @@
     }];
     
 }
-+ (void)HPGETServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure{
++ (void)HPGETServerWithMethod:(nonnull NSString*)method isNeedToken:(BOOL)isNeed paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure{
     HPHTTPManager *manager = [HPHTTPManager shareHPHTTPManage];
-    if ([method isEqualToString:@"/v1/user/updateUser"]||[method isEqualToString:@"/v1/back/freeBack"]||[method isEqualToString:@"/v1/user/logOut"]||[method isEqualToString:@"/v1/user/center"]) {
+    if (isNeed) {//[method isEqualToString:@"/v1/user/updateUser"]||[method isEqualToString:@"/v1/back/freeBack"]||[method isEqualToString:@"/v1/user/logOut"]||[method isEqualToString:@"/v1/user/center"]
         HPLoginModel *account = [HPUserTool account];
         [manager.requestSerializer setValue:account.token?:@"" forHTTPHeaderField:@"token"];
     }

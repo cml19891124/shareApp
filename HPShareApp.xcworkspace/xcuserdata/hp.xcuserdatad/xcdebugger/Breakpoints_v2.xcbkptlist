@@ -10,70 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/NetworkRequest/HPHTTPSever.m"
-            timestampString = "566227340.241619"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
-            landmarkName = "+HPPostServerWithMethod:paraments:needToken:complete:Failure:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "+[HPHTTPSever HPPostServerWithMethod:paraments:needToken:complete:Failure:]"
-                  moduleName = "HPShareApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hp/Documents/Xcode/HPShareApp/HPShareApp/NetworkRequest/HPHTTPSever.m"
-                  timestampString = "566227341.286804"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "35"
-                  endingLineNumber = "35"
-                  offsetFromSymbolStart = "1067">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__75+[HPHTTPSever HPPostServerWithMethod:paraments:needToken:complete:Failure:]_block_invoke"
-                  moduleName = "HPShareApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hp/Documents/Xcode/HPShareApp/HPShareApp/NetworkRequest/HPHTTPSever.m"
-                  timestampString = "566227341.2883739"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "35"
-                  endingLineNumber = "35"
-                  offsetFromSymbolStart = "16">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__destroy_helper_block_"
-                  moduleName = "HPShareApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hp/Documents/Xcode/HPShareApp/HPShareApp/NetworkRequest/HPHTTPSever.m"
-                  timestampString = "566227341.289856"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "35"
-                  endingLineNumber = "35"
-                  offsetFromSymbolStart = "16">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HPShareApp/NetworkRequest/HPHTTPSever.m"
-            timestampString = "566227340.242161"
+            timestampString = "566305901.845955"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "50"
@@ -85,16 +22,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "HPShareApp/Controllers/Main/HPMyController.m"
+            timestampString = "566305901.846035"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
+            landmarkName = "-getUserInfosListData"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "HPShareApp/NetworkRequest/HPHTTPSever.m"
-            timestampString = "566227340.24242"
+            filePath = "HPShareApp/Views/TableViewCell/HPFollowListCell.m"
+            timestampString = "566305901.846421"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
-            landmarkName = "+HPPostServerWithMethod:paraments:needToken:complete:Failure:"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
+            landmarkName = "-setModel:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

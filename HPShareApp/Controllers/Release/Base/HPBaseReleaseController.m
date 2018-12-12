@@ -342,7 +342,7 @@
 
 - (void)getAreaList {
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/area/list" paraments:@{} complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/area/list" isNeedToken:NO paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             weakSelf.areaModels = [HPAreaModel mj_objectArrayWithKeyValuesArray:DATA];
         }else{
@@ -355,7 +355,7 @@
 
 - (void)getTradeList {
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/industry/listWithChildren" paraments:@{} complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/industry/listWithChildren" isNeedToken:NO paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             weakSelf.industryModels = [HPIndustryModel mj_objectArrayWithKeyValuesArray:DATA];
         }else{

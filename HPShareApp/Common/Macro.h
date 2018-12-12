@@ -122,6 +122,7 @@
 #define kAppVersion [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
 //系统版本号
 #define kSystemVersion [[UIDevice currentDevice] systemVersion]
+#define kAppdelegateWindow    [UIApplication sharedApplication].delegate.window
 #define kUserDefaults       [NSUserDefaults standardUserDefaults]
 #define kNotificationCenter [NSNotificationCenter defaultCenter]
 #define iPhone5 ([[UIScreen mainScreen] bounds].size.height == 568)
