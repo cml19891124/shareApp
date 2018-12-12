@@ -56,7 +56,9 @@
 #define COLOR_YELLOW_FFAF47 [UIColor colorWithHexString:@"#FFAF47"]
 
 #define COLOR_ORANGE_F59C40 [UIColor colorWithHexString:@"#F59C40"]
-
+#define COLOR_BLUE_2AA5FC [UIColor colorWithHexString:@"#2AA5FC"]
+#define COLOR_GRAY_F2F2F2 [UIColor colorWithHexString:@"#F2F2F2"]
+#define COLOR_GRAY_AAAAAA  [UIColor colorWithHexString:@"#AAAAAA"]
 #define COLOR_BLACK_333333 [UIColor colorWithHexString:@"#333333"]
 #define COLOR_BLACK_444444 [UIColor colorWithHexString:@"#444444"]
 #define COLOR_BLACK_666666 [UIColor colorWithHexString:@"#666666"]
@@ -115,6 +117,8 @@
 #define kFont_Medium(font)  [UIFont fontWithName:@"PingFangSC-Medium"size:font]
 /* 平方-粗体 */
 #define kFont_Bold(font)  [UIFont fontWithName:@"PingFangSC-Bold"size:font]
+#define kFont_Regular(font)  [UIFont fontWithName:@"PingFangSC-Regular"size:font]
+
 #define kBaseUrl  @"https://app.hepaicn.com"
 //#define kBaseUrl  @"http://192.168.0.147:8083"
 

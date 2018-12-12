@@ -150,4 +150,12 @@ static NSString *interactiveCell = @"interactiveCell";
     headerV.backgroundColor = COLOR_GRAY_F7F7F7;
     return headerV;
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        [self pushVCByClassName:@"HPSystemNotiController"];
+    }
+}
 @end

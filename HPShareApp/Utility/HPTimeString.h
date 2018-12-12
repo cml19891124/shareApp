@@ -21,6 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 //获取当前时间戳  （以毫秒为单位）
 
 +(NSString *)getNowTimeTimestamp3;
+
+/**
+ 今天/昨天的时间字符串
+ */
++ (NSString *)getPassTimeSometimeWith:(NSDate *)date;
 @end
 
 NS_ASSUME_NONNULL_END

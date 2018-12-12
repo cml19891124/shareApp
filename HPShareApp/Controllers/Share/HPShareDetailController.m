@@ -10,6 +10,7 @@
 #import "HPBannerView.h"
 #import "HPCalendarView.h"
 #import "HPPageControlFactory.h"
+#import "HPTimeString.h"
 
 @interface HPShareDetailController () <HPBannerViewDelegate>
 
@@ -93,10 +94,55 @@
     NSArray *selectedDates = @[date_1, date_2, date_3, date_4, date_5];
     [_calendarView setSelectedDates:selectedDates];
 }
-
+#pragma mark - 获取店铺详情
+- (void)getStoresDetailInfos
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"address"] = @"深圳市南山区 色河南郑州呢玩";
+    dic[@"area"] = @(10);
+    dic[@"areaId"] = @(23);
+    dic[@"contact"] = @"caominglei";
+    dic[@"contactMobile"] = @"158174749363";
+    dic[@"createTime"] = @"2018-12-12";
+    dic[@"createTimeOrderType"] = @"14";
+    dic[@"createTimePeriod"] = [HPTimeString getNowTimeTimestamp2];
+    dic[@"deleteTime"] = @"2018-12-12";
+    dic[@"deleteUserId"] = @(23);
+    dic[@"districtId"] = @(15);
+    dic[@"industryId"] = @(15);
+    dic[@"intention"] = @"胡歌好好过快快好个 很高";
+    dic[@"isApproved"] = @"0";
+    dic[@"latitude"] = @"0";
+    dic[@"longitude"] = @"0";
+    dic[@"page"] = @(1);
+    dic[@"pageSize"] = @(10);
+    dic[@"remark"] = @"gfgdf";
+    dic[@"rent"] = @(1);
+    dic[@"rentOrderType"] = @(1);
+    dic[@"rentType"] = @(1);
+    dic[@"shareDays"] = @(1);
+    dic[@"shareTime"] = [HPTimeString getNowTimeTimestamp2];
+    dic[@"spaceId"] = @"16";
+    dic[@"subIndustryId"] = @(19);
+    dic[@"tag"] = @(1);
+    dic[@"title"] = @(1);
+    dic[@"type"] = @"1";
+    dic[@"updateTime"] = @"2018-12-12";
+    dic[@"userId"] = @(27);
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/detail" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+    [self getStoresDetailInfos];
     [_bannerView startAutoScrollWithInterval:2.0];
     UIView *contactRegion = [[UIView alloc] init];
     [contactRegion setBackgroundColor:UIColor.whiteColor];
