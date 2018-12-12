@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)pushVCByClassName:(NSString *)name withParam:(NSDictionary * _Nullable)param;
 
+- (void)popWithParam:(NSDictionary *)param;
+
 @end
 
 NS_ASSUME_NONNULL_END

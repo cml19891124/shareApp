@@ -121,4 +121,15 @@
     }
 }
 
+- (void)popWithParam:(NSDictionary *)param {
+    NSInteger count = self.navigationController.viewControllers.count;
+    UIViewController *lastVC = self.navigationController.viewControllers[count - 2];
+    
+    if ([lastVC isKindOfClass:HPBaseViewController.class]) {
+        HPBaseViewController *lastBaseVC = (HPBaseViewController *)lastVC;
+        lastBaseVC.param = param;
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
 @end
