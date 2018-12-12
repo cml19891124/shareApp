@@ -64,6 +64,7 @@
 #define COLOR_BLACK_111111 [UIColor colorWithHexString:@"#111111"]
 #define COLOR_BLACK_101010 [UIColor colorWithHexString:@"#101010"]
 #define COLOR_BLACK_4A4A4B [UIColor colorWithHexString:@"#4A4A4B"]
+#define COLOR_BLACK_090103 [UIColor colorWithHexString:@"#090103"]
 #define COLOR_BLACK_TRANS_1111119b [UIColor colorWithHexString:@"#1111119b"]
 
 #define COLOR_GRAY_DBDBDB [UIColor colorWithHexString:@"#dbdbdb"]

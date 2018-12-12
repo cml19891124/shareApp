@@ -16,27 +16,34 @@
 #import "HPSelectTable.h"
 #import "HPTagDialogView.h"
 #import "TZPhotoPickerController.h"
+#import "HPAddressModel.h"
+#import "HPUploadImageHandle.h"
+#import "HPPictureModel.h"
 
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：入驻本店需事先准备相关产品质检材料，入店时需确认，三无产品请绕道..."
 
-@interface HPOwnerCardDefineController () <UIGestureRecognizerDelegate>
+@interface HPOwnerCardDefineController () {
+    BOOL _canRelease;
+}
 
-@property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, weak) UIButton *addressBtn;
 
-@property (nonatomic, weak) HPAlertSheet *alertSheet;
+@property (nonatomic, weak) UITextField *titleField;//发布标题
 
-@property (nonatomic, weak) HPTextDialogView *dialogView;
+@property (nonatomic, weak) UITextField *areaField;//期望面积
 
-@property (nonatomic, weak) HPLinkageSheetView *tradeSheetView;
+@property (nonatomic, weak) UITextField *priceField;//期望价格
 
-@property (nonatomic, weak) UIButton *isLongTermBtn;
+@property (nonatomic, weak) HPSelectTable *unitSelectTable;//价格单位
 
-@property (nonatomic, weak) UITextView *remarkTextView;
+@property (nonatomic, weak) UITextField *intentSpaceField;//意向行业/产品
 
-@property (nonatomic, weak) HPTagDialogView *tagDialogView;
+@property (nonatomic, weak) UITextField *contactField;//联系人
 
-@property (nonatomic, weak) TZPhotoPickerController *photoPicker;
+@property (nonatomic, weak) UITextField *phoneNumField;//手机号码
+
+@property (nonatomic, weak) UITextView *remarkTextView;//备注信息
 
 @end
 
@@ -47,9 +54,8 @@
     // Do any additional setup after loading the view.
     [self setupNavigationBarWithTitle:@"空间发布"];
     self.isPopGestureRecognize = NO;
+    _canRelease = YES;
     [self setupUI];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didTextFieldChange:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -57,10 +63,18 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self getTradeList];
+    [self getAreaList];
+    
+    HPAddressModel *addressModel = self.param[@"address"];
+    if (addressModel) {
+        [_addressBtn setTitle:addressModel.POIName forState:UIControlStateSelected];
+        [_addressBtn setSelected:YES];
+    }
 }
+
 /*
  #pragma mark - Navigation
  
@@ -74,22 +88,8 @@
 #pragma mark - setupUI
 
 - (void)setupUI {
-    [self.view setBackgroundColor:COLOR_GRAY_F6F6F6];
-    
-    UIScrollView *scrollView = [[UIScrollView alloc] init];
-    [self.view addSubview:scrollView];
-    self.scrollView = scrollView;
-    [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(g_navigationBarHeight);
-        make.left.and.width.and.bottom.equalTo(self.view);
-    }];
-    
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onScrollViewTap)];
-    [tapGesture setDelegate:self];
-    [scrollView addGestureRecognizer:tapGesture];
-    
     for (int i = 0; i < 5; i++) {
-        [self setupPanelAtIndex:i ofView:scrollView];
+        [self setupPanelAtIndex:i ofView:self.scrollView];
     }
     
     UIButton *releaseBtn = [[UIButton alloc] init];
@@ -99,18 +99,23 @@
     [releaseBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
     [releaseBtn setTitle:@"确认发布" forState:UIControlStateNormal];
     [releaseBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:releaseBtn];
+    [self.scrollView addSubview:releaseBtn];
     [releaseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(scrollView).with.offset(-20.f * g_rateWidth);
-        make.centerX.equalTo(scrollView);
-        make.top.equalTo(scrollView.subviews[4].mas_bottom).with.offset(40.f * g_rateWidth);
+        make.bottom.equalTo(self.scrollView).with.offset(-20.f * g_rateWidth);
+        make.centerX.equalTo(self.scrollView);
+        make.top.equalTo(self.scrollView.subviews[4].mas_bottom).with.offset(40.f * g_rateWidth);
         make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 45.f * g_rateWidth));
     }];
     
+    kWeakSelf(weakSelf);
     HPAlertSheet *alertSheet = [[HPAlertSheet alloc] init];
-    HPAlertAction *photoAction = [[HPAlertAction alloc] initWithTitle:@"拍照" completion:nil];
+    HPAlertAction *photoAction = [[HPAlertAction alloc] initWithTitle:@"拍照" completion:^{
+        [weakSelf onClickAlbumOrPhotoSheetWithTag:0];
+    }];
     [alertSheet addAction:photoAction];
-    HPAlertAction *albumAction = [[HPAlertAction alloc] initWithTitle:@"从手机相册选择" completion:nil];
+    HPAlertAction *albumAction = [[HPAlertAction alloc] initWithTitle:@"从手机相册选择" completion:^{
+        [weakSelf onClickAlbumOrPhotoSheetWithTag:1];
+    }];
     [alertSheet addAction:albumAction];
     self.alertSheet = alertSheet;
 }
@@ -199,6 +204,19 @@
         make.height.mas_equalTo(12.f);
     }];
     
+    HPAddPhotoView *addPhotoView = [[HPAddPhotoView alloc] init];
+    [addPhotoView setMaxNum:4];
+    kWeakSelf(weakSelf);
+    [addPhotoView setAddBtnCallBack:^{
+        [weakSelf.alertSheet show:YES];
+    }];
+    [view addSubview:addPhotoView];
+    self.addPhotoView = addPhotoView;
+    [addPhotoView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(view);
+    }];
+    [addPhotoView setHidden:YES];
+    
     return view;
 }
 
@@ -206,7 +224,7 @@
     UIView *view = [[UIView alloc] init];
     
     [self setupTitleLabelWithText:@"发布标题" ofView:view];
-    [self setupTextFieldWithPlaceholder:@"例：优品小店黄金铺位共享" ofView:view rightTo:view];
+    _titleField = [self setupTextFieldWithPlaceholder:@"例：优品小店黄金铺位共享" ofView:view rightTo:view];
     
     return view;
 }
@@ -224,8 +242,9 @@
     [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
     [valueBtn setTitle:@"请输入店铺或空间地址" forState:UIControlStateNormal];
     [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [valueBtn addTarget:self action:@selector(onClickAddressbtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:valueBtn];
+    _addressBtn = valueBtn;
     [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(122.f * g_rateWidth);
         make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
@@ -322,6 +341,7 @@
     
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"不填默认不限" ofView:view rightTo:unitLabel];
     [textField setKeyboardType:UIKeyboardTypeDecimalPad];
+    _areaField = textField;
     
     return view;
 }
@@ -344,6 +364,7 @@
     HPSelectTable *unitSelectTable = [[HPSelectTable alloc] initWithOptions:options layout:layout];
     [unitSelectTable setBtnAtIndex:0 selected:YES];
     [view addSubview:unitSelectTable];
+    _unitSelectTable = unitSelectTable;
     [unitSelectTable mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(view).with.offset(-10.f * g_rateWidth);
         make.centerY.equalTo(view);
@@ -351,6 +372,7 @@
     
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"不填默认面议" ofView:view rightTo:unitSelectTable];
     [textField setKeyboardType:UIKeyboardTypeDecimalPad];
+    _priceField = textField;
     
     return view;
 }
@@ -368,7 +390,7 @@
     [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
     [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
     [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(onClickDistrictBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [valueBtn addTarget:self action:@selector(onClickTimeBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:valueBtn];
     [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(122.f * g_rateWidth);
@@ -384,27 +406,6 @@
     
     [self setupTitleLabelWithText:@"共享排期" ofView:view];
     
-    CGRect rect = CGRectMake(0.f, 0.f, 55.f, 20.f);
-    UIImage *normalImage = [HPImageUtil getImageByColor:COLOR_GRAY_CCCCCC inRect:rect];
-    UIImage *selectImage = [HPImageUtil getImageByColor:COLOR_RED_FF3C5E inRect:rect];
-    
-    UIButton *isBtn = [[UIButton alloc] init];
-    [isBtn.layer setCornerRadius:4.f];
-    [isBtn.layer setMasksToBounds:YES];
-    [isBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:12.f]];
-    [isBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [isBtn setTitle:@"面议" forState:UIControlStateNormal];
-    [isBtn setBackgroundImage:normalImage forState:UIControlStateNormal];
-    [isBtn setBackgroundImage:selectImage forState:UIControlStateSelected];
-    [isBtn addTarget:self action:@selector(onClickIsBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:isBtn];
-    self.isLongTermBtn = isBtn;
-    [isBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(view).with.offset(-20.f);
-        make.centerY.equalTo(view);
-        make.size.mas_equalTo(CGSizeMake(55.f, 20.f));
-    }];
-    
     UIButton *calendarBtn = [[UIButton alloc] init];
     [calendarBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:14.f]];
     [calendarBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
@@ -413,12 +414,13 @@
     [calendarBtn setImage:[UIImage imageNamed:@"customizing_business_calendar"] forState:UIControlStateNormal];
     [calendarBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [calendarBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -15.f, 0.f, 15.f)];
-    [calendarBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, 152.f, 0.f, -152.f)];
+    [calendarBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, getWidth(233.f)-15.f, 0.f, -(getWidth(233.f)-15.f))];
+    [calendarBtn addTarget:self action:@selector(onClickCalendarBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:calendarBtn];
     [calendarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(122.f * g_rateWidth);
         make.centerY.equalTo(view);
-        make.right.equalTo(isBtn.mas_left).with.offset(-22.f * g_rateWidth);
+        make.right.equalTo(view).with.offset(-20.f * g_rateWidth);
     }];
     
     return view;
@@ -437,7 +439,7 @@
         make.centerY.equalTo(view);
     }];
     
-    [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
+    _intentSpaceField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
     
     return view;
 }
@@ -445,7 +447,7 @@
 - (UIView *)setupContactRowView {
     UIView *view = [[UIView alloc] init];
     [self setupTitleLabelWithText:@"联系人" ofView:view];
-    [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
+    _contactField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
     return view;
 }
 
@@ -454,6 +456,7 @@
     [self setupTitleLabelWithText:@"手机号码" ofView:view];
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
+    _phoneNumField = textField;
     return view;
 }
 
@@ -480,210 +483,13 @@
     [textView setContentInset:UIEdgeInsetsMake(2.f, 5.f, 2.f, 5.f)];
     [textView setDelegate:self];
     [view addSubview:textView];
-    self.remarkTextView = textView;
+    _remarkTextView = textView;
     [textView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(titleLabel.mas_bottom).with.offset(16.f * g_rateWidth);
         make.centerX.equalTo(view);
         make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 108.f * g_rateWidth));
     }];
     return view;
-}
-
-#pragma mark - setupCommonUI
-
-- (UILabel *)setupTitleLabelWithText:(NSString *)text ofView:(UIView *)view {
-    UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
-    [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:text];
-    [view addSubview:titleLabel];
-    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(21.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
-    
-    return titleLabel;
-}
-
-- (UILabel *)setupOptTitleLabelWithText:(NSString *)text ofView:(UIView *)view {
-    UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
-    [titleLabel setTextColor:COLOR_BLACK_666666];
-    [titleLabel setText:text];
-    [view addSubview:titleLabel];
-    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(21.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
-    
-    return titleLabel;
-}
-
-- (UITextField *)setupTextFieldWithPlaceholder:(NSString *)text ofView:(UIView *)view rightTo:(UIView *)rightView {
-    UITextField *textField = [[UITextField alloc] init];
-    [textField setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
-    [textField setTextColor:COLOR_BLACK_333333];
-    
-    NSMutableAttributedString *placeholder = [[NSMutableAttributedString alloc] initWithString:text];
-    [placeholder addAttribute:NSForegroundColorAttributeName
-                        value:COLOR_GRAY_CCCCCC
-                        range:NSMakeRange(0, text.length)];
-    [placeholder addAttribute:NSFontAttributeName
-                        value:[UIFont fontWithName:FONT_MEDIUM size:15.f]
-                        range:NSMakeRange(0, text.length)];
-    [textField setAttributedPlaceholder:placeholder];
-    
-    [view addSubview:textField];
-    [textField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
-        if (rightView == view) {
-            make.right.equalTo(rightView).with.offset(-20.f * g_rateWidth);
-        }
-        else {
-            make.right.equalTo(rightView.mas_left).with.offset(-20.f * g_rateWidth);
-        }
-        make.centerY.equalTo(view);
-    }];
-    
-    return textField;
-}
-
-- (UILabel *)setupUnitLabelWithText:(NSString *)text ofView:(UIView *)view {
-    UILabel *unitLabel = [[UILabel alloc] init];
-    [unitLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:14.f]];
-    [unitLabel setTextColor:COLOR_BLACK_666666];
-    [unitLabel setTextAlignment:NSTextAlignmentRight];
-    [unitLabel setText:text];
-    [view addSubview:unitLabel];
-    [unitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(view).with.offset(-20.f * g_rateWidth);
-        make.width.mas_equalTo(45.f);
-        make.centerY.equalTo(view);
-    }];
-    
-    return unitLabel;
-}
-
-- (UIImageView *)setupDownIconOfView:(UIView *)view {
-    UIImageView *downIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"select_the_arrow_gray"]];
-    [view addSubview:downIcon];
-    [downIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(view).with.offset(-20.f * g_rateWidth);
-        make.centerY.equalTo(view);
-        make.size.mas_equalTo(CGSizeMake(8.f, 13.f));
-    }];
-    return downIcon;
-}
-
-#pragma mark - NSNotification
-
-- (void)didTextFieldChange:(NSNotification *)notification {
-    
-}
-
-#pragma mark - onClick
-
-- (void)onClickIsBtn:(UIButton *)btn {
-    [btn setSelected:!btn.isSelected];
-}
-
-- (void)onClickUploadBtn:(UIButton *)btn {
-    [self.alertSheet show:YES];
-}
-
-- (void)onClickReleaseBtn {
-}
-
-- (void)onClickBackBtn {
-    if (self.dialogView == nil) {
-        HPTextDialogView *dialogView = [[HPTextDialogView alloc] init];
-        [dialogView setText:@"确定放弃本次发布？"];
-        __weak typeof(self) weakSelf = self;
-        [dialogView setConfirmCallback:^{
-            [weakSelf.navigationController popViewControllerAnimated:YES];
-        }];
-        self.dialogView = dialogView;
-    }
-    
-    [self.dialogView show:YES];
-}
-
-- (void)onClickTradeBtn:(UIButton *)btn {
-    if (self.tradeSheetView == nil) {
-        NSDictionary *data = @{@"parent":@[@"餐饮美食", @"购物消费", @"休闲娱乐", @"其他"],
-                               @"children":@{
-                                       @"餐饮美食":@[@"不限", @"粤菜", @"湘菜", @"川菜", @"东北菜", @"西北菜", @"江浙菜", @"台湾菜", @"烧烤", @"火锅", @"海鲜", @"粥粉面", @"自助餐", @"快餐简餐", @"茶餐厅", @"咖啡厅", @"面包甜点", @"奶茶饮品", @"韩式", @"日料", @"西餐厅", @"东南亚菜"],
-                                       @"购物消费":@[@"不限", @"购物消费1", @"购物消费2", @"购物消费3", @"购物消费4"],
-                                       @"休闲娱乐":@[@"不限", @"休闲娱乐1", @"休闲娱乐2", @"休闲娱乐3", @"休闲娱乐4"],
-                                       @"其他":@[@"不限", @"其他1", @"其他2", @"其他3", @"其他4"]}};
-//        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithParents:data[@"parent"] Children:data[@"children"]];
-//        HPLinkageSheetView *tradeSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[@"不限"] allSingleCheck:NO];
-//        [tradeSheetView setSelectDescription:@"选择行业"];
-//        [tradeSheetView setMaxCheckNum:3];
-//        [tradeSheetView selectCellAtParentIndex:0 childIndex:0];
-//        
-//        [tradeSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems) {
-//            NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];;
-//            for (NSString *checkItem in checkItems) {
-//                checkItemStr = [checkItemStr stringByAppendingString:checkItem];
-//                
-//                if (checkItem != checkItems.lastObject) {
-//                    checkItemStr = [checkItemStr stringByAppendingString:@", "];
-//                }
-//            }
-//            
-//            [btn setTitle:checkItemStr forState:UIControlStateSelected];
-//            [btn setSelected:YES];
-//        }];
-//        
-//        self.tradeSheetView = tradeSheetView;
-    }
-    
-    [self.tradeSheetView show:YES];
-}
-
-- (void)onClickTagBtn:(UIButton *)btn {
-    if (_tagDialogView == nil) {
-        NSArray *items = @[@"品牌连锁", @"百年老店", @"街角旺铺", @"交通便利", @"客流量大", @"配套齐全"];
-        HPTagDialogView *tagDialogView = [[HPTagDialogView alloc] initWithItems:items];
-        [tagDialogView setModalTop:150.f * g_rateHeight];
-        [tagDialogView setModalSize:CGSizeMake(300.f * g_rateWidth, 343.f * g_rateWidth)];
-        [tagDialogView setMaxCheckNum:3];
-        __weak typeof(tagDialogView) weakTagDialogView = tagDialogView;
-        [tagDialogView setConfirmCallback:^{
-            NSArray *checkItems = weakTagDialogView.checkItems;
-            NSString *title = @"";
-            
-            for (int i = 0; i < checkItems.count; i ++) {
-                title = [title stringByAppendingString:checkItems[i]];
-                
-                if (i != checkItems.count - 1) {
-                    title = [title stringByAppendingString:@"，"];
-                }
-            }
-            
-            [btn setTitle:title forState:UIControlStateSelected];
-            [btn setSelected:YES];
-        }];
-        
-        _tagDialogView = tagDialogView;
-    }
-    
-    [_tagDialogView show:YES];
-}
-
-# pragma mark - UIGestureRecognizerDelegate
-
-- (void)onScrollViewTap {
-    [self.view endEditing:YES];
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    if ([touch.view isKindOfClass:HPAlignCenterButton.class]) {
-        return NO;
-    }
-    
-    return YES;
 }
 
 #pragma mark - UITextViewDelegate
@@ -700,6 +506,147 @@
         [textView setText:TEXT_VIEW_PLACEHOLDER];
         [textView setTextColor:COLOR_GRAY_CCCCCC];
     }
+}
+
+#pragma mark - Function
+
+- (NSString *)getAreaIdByName:(NSString *)name {
+    for (HPAreaModel *areaModel in self.areaModels) {
+        if ([areaModel.name isEqualToString:name]) {
+            return areaModel.areaId;
+        }
+    }
+    
+    return nil;
+}
+
+#pragma mark - OnClick
+
+- (void)onClickAddressbtn:(UIButton *)btn {
+    [self pushVCByClassName:@"HPShareAddressController"];
+}
+
+- (void)onClickReleaseBtn {
+    if (!_canRelease) {
+        return;
+    }
+    _canRelease = NO;
+    
+    HPAddressModel *addressModel = self.param[@"address"];
+    NSNumber *latitude;
+    NSNumber *longitude;
+    NSString *address;
+    if (addressModel) {
+        latitude = [NSNumber numberWithDouble:addressModel.lat];
+        longitude = [NSNumber numberWithDouble:addressModel.lon];
+        address = addressModel.POIName;
+    }
+    
+    NSString *title = _titleField.text;
+    NSString *area = _areaField.text;
+    NSString *areaId = [self getAreaIdByName:addressModel.district];
+    NSString *rent = _priceField.text;
+    NSString *rentType = self.unitSelectTable.selectedIndex == 0 ? @"1" : @"2";
+    NSString *shareTime = [self.timePicker getTimeStr];
+    NSString *shareDays = @"";
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    for (NSDate *date in self.calendarDialogView.selectedDates) {
+        NSString *dateStr = [dateFormatter stringFromDate:date];
+        shareDays = [shareDays stringByAppendingString:dateStr];
+        if (date != self.calendarDialogView.selectedDates.lastObject) {
+            shareDays = [shareDays stringByAppendingString:@","];
+        }
+    }
+    
+    NSString *contact = _contactField.text;
+    NSString *contactMobile = _phoneNumField.text;
+    NSString *intention = _intentSpaceField.text;
+    NSString *remark = _remarkTextView.text;
+    
+    NSString *tag = @"";
+    for (NSString *tagItem in self.tagDialogView.checkItems) {
+        tag = [tag stringByAppendingString:tagItem];
+        if (tagItem != self.tagDialogView.checkItems.lastObject) {
+            tag = [tag stringByAppendingString:@","];
+        }
+    }
+    
+    NSString *type = @"1";
+    HPLoginModel *loginModel = [HPUserTool account];
+    if (!loginModel.token) {
+        [HPProgressHUD alertMessage:@"用户未登录"];
+        return;
+    }
+    
+    NSString *userId = ((NSDictionary *)loginModel.userInfo)[@"userId"];
+    
+    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+    [param setObject:title forKey:@"title"];
+    [param setObject:area forKey:@"area"];
+    [param setObject:areaId forKey:@"areaId"];
+    [param setObject:latitude forKeyedSubscript:@"latitude"];
+    [param setObject:longitude forKeyedSubscript:@"longitude"];
+    [param setObject:address forKey:@"address"];
+    [param setObject:rent forKeyedSubscript:@"rent"];
+    [param setObject:rentType forKey:@"rentType"];
+    [param setObject:shareTime forKey:@"shareTime"];
+    [param setObject:shareDays forKey:@"shareDays"];
+    [param setObject:contact forKey:@"contact"];
+    [param setObject:contactMobile forKey:@"contactMobile"];
+    [param setObject:intention forKey:@"intention"];
+    [param setObject:remark forKey:@"remark"];
+    [param setObject:tag forKey:@"tag"];
+    [param setObject:type forKey:@"type"];
+    [param setObject:userId forKey:@"userId"];
+    [param setObject:@"0" forKey:@"isApproved"];
+    
+    NSMutableArray *pictureIdArr = [[NSMutableArray alloc] init];
+    NSArray *photos = self.addPhotoView.photos;
+    
+    [HPUploadImageHandle upLoadImages:photos withUrl:kBaseUrl@"/v1/file/uploadPictures" parameterName:@"files" success:^(id responseObject) {
+        if (CODE == 200) {
+            NSArray<HPPictureModel *> *pictureModels = [HPPictureModel mj_objectArrayWithKeyValuesArray:DATA];
+            for (HPPictureModel *pictureModel in pictureModels) {
+                [pictureIdArr addObject:pictureModel.pictureId];
+            }
+            
+            [param setObject:pictureIdArr forKey:@"pictureIdArr"];
+            
+            [self releaseInfo:param];
+        }
+        else {
+            self->_canRelease = YES;
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } fail:^(NSError *error) {
+        self->_canRelease = YES;
+        ErrorNet
+    }];
+}
+
+#pragma mark - NetWork
+
+- (void)releaseInfo:(NSDictionary *)param {
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/space/post" paraments:param needToken:YES complete:^(id  _Nonnull responseObject) {
+        self->_canRelease = YES;
+        
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:@"发布成功"];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController popViewControllerAnimated:YES];
+            });
+        }
+        else {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        self->_canRelease = YES;
+        NSLog(@"+++++++发布失败++++++");
+        NSLog(@"error: %@", error);
+    }];
 }
 
 @end

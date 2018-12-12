@@ -13,7 +13,9 @@
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：无需寄存货物，随到随卖，只需提供座椅，诚信经营，求长期合作。"
 
-@interface HPStartUpCardDefineController ()
+@interface HPStartUpCardDefineController () {
+    BOOL _canRelease;
+}
 
 @property (nonatomic, weak) UITextField *titleField;//发布标题
 
@@ -40,6 +42,7 @@
     // Do any additional setup after loading the view.
     [self setupNavigationBarWithTitle:@"需求发布"];
     self.isPopGestureRecognize = NO;
+    _canRelease = YES;
     [self setupUI];
 }
 
@@ -459,14 +462,19 @@
 #pragma mark - onClick
 
 - (void)onClickReleaseBtn {
+    if (!_canRelease) {
+        return;
+    }
+    _canRelease = NO;
+    
     NSString *title = _titleField.text;
     NSString *area = _areaField.text;
-    NSNumber *areaId = [NSNumber numberWithInteger:self.selectedDistrictModel.areaId.integerValue];
-    NSNumber *districtId = [NSNumber numberWithInteger:self.selectedDistrictModel.districtId.integerValue];
-    NSNumber *industryId = [NSNumber numberWithInteger:self.selectedIndustryModel.pid.integerValue];
-    NSNumber *subIndustryId = [NSNumber numberWithInteger:self.selectedIndustryModel.industryId.integerValue];
-    NSNumber *rent = [NSNumber numberWithInteger:_priceField.text.integerValue];
-    NSNumber *rentType = self.unitSelectTable.selectedIndex == 0 ? @1 : @2;
+    NSString *areaId = self.selectedDistrictModel.areaId;
+    NSString *districtId = self.selectedDistrictModel.districtId;
+    NSString *industryId = self.selectedIndustryModel.pid;
+    NSString *subIndustryId = self.selectedIndustryModel.industryId;
+    NSString *rent = _priceField.text;
+    NSString *rentType = self.unitSelectTable.selectedIndex == 0 ? @"1" : @"2";
     NSString *shareTime = [self.timePicker getTimeStr];
     NSString *shareDays = @"";
     
@@ -493,15 +501,14 @@
         }
     }
     
-    NSNumber *type = @2;
+    NSString *type = @"2";
     HPLoginModel *loginModel = [HPUserTool account];
     if (!loginModel.token) {
         [HPProgressHUD alertMessage:@"用户未登录"];
         return;
     }
     
-//    NSNumber *userId = ((NSDictionary *)loginModel.userInfo)[@"userId"];
-    NSNumber *userId = @12;
+    NSString *userId = ((NSDictionary *)loginModel.userInfo)[@"userId"];
     
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setObject:title forKey:@"title"];
@@ -521,7 +528,7 @@
     [param setObject:tag forKey:@"tag"];
     [param setObject:type forKey:@"type"];
     [param setObject:userId forKey:@"userId"];
-    [param setObject:@0 forKey:@"isApproved"];
+    [param setObject:@"0" forKey:@"isApproved"];
     
     NSMutableArray *pictureIdArr = [[NSMutableArray alloc] init];
     NSArray *photos = self.addPhotoView.photos;
@@ -538,22 +545,33 @@
             [self releaseInfo:param];
         }
         else {
+            self->_canRelease = YES;
             [HPProgressHUD alertMessage:MSG];
         }
     } fail:^(NSError *error) {
+        self->_canRelease = YES;
         ErrorNet
     }];
 }
 
+#pragma mark - NetWork
+
 - (void)releaseInfo:(NSDictionary *)param {
     [HPHTTPSever HPPostServerWithMethod:@"/v1/space/post" paraments:param needToken:YES complete:^(id  _Nonnull responseObject) {
+        self->_canRelease = YES;
+        
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"发布成功"];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController popViewControllerAnimated:YES];
+            });
         }
         else {
             [HPProgressHUD alertMessage:MSG];
         }
     } Failure:^(NSError * _Nonnull error) {
+        self->_canRelease = YES;
         NSLog(@"+++++++发布失败++++++");
         NSLog(@"error: %@", error);
     }];
