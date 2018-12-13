@@ -28,7 +28,41 @@
 @end
 
 @implementation HPMyCardController
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self getUserCardInfo];
 
+}
+
+#pragma mark - 获取用户信息
+- (void)getUserCardInfo
+{
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *userdic = (NSDictionary *)account.userInfo;
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"avatarUrl"] = userdic[@"avatarUrl"];
+    dic[@"cardcaseId"] = userdic[@"cardcaseId"];
+    dic[@"company"] = userdic[@"company"];
+    dic[@"createTime"] = userdic[@"createTime"];
+    dic[@"deleteTime"] = userdic[@"deleteTime"];
+    dic[@"realName"] = userdic[@"realName"];
+    dic[@"signature"] = userdic[@"signature"];
+    dic[@"telephone"] = userdic[@"telephone"];
+    dic[@"updateTime"] = userdic[@"updateTime"];
+    dic[@"title"] = userdic[@"title"];
+    dic[@"userId"] = userdic[@"userId"];
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/cardInfo" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.

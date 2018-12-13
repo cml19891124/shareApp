@@ -52,7 +52,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    
     [self getUserInfosListData];
 }
 
@@ -100,7 +99,8 @@
     HPLoginModel *account = [HPUserTool account];
     NSDictionary *dic = (NSDictionary *)account.userInfo;
     NSString *historyTime = [HPTimeString getNowTimeTimestamp];
-    [HPUploadImageHandle sendPOSTWithUrl:url isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
+    UIImage *image = [UIImage imageNamed:@"personal_center_not_login_head"];
+    [HPUploadImageHandle sendPOSTWithUrl:url withLocalImage:image isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
         
          HPUserInfo *userInfo = [[HPUserInfo alloc] init];
          userInfo.avatarUrl = [data[@"data"]firstObject][@"url"]?:@"";
@@ -130,12 +130,7 @@
             weakSelf.infoModel = [HPPersonCenterModel mj_objectWithKeyValues:responseObject[@"data"]];
             [self setUserInfo];
         }else{
-//            [HPProgressHUD alertMessage:MSG];
             [self setUserInfo];
-
-//            [weakSelf.keepNumLabel setText:[NSString stringWithFormat:@"%ld",weakSelf.infoModel.collectionNum]?:@"--"];
-//            [weakSelf.followNumLabel setText:[NSString stringWithFormat:@"%ld",weakSelf.infoModel.followingNum]?:@"--"];
-//            [weakSelf.historyNumLabel setText:[NSString stringWithFormat:@"%ld",weakSelf.infoModel.browseNum]?:@"--"];
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
@@ -191,7 +186,7 @@
     [loginBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
     [loginBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [loginBtn setTitle:@"登录/注册" forState:UIControlStateNormal];
-    [loginBtn addTarget:self action:@selector(onClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [loginBtn addTarget:self action:@selector(onClickConfigBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:loginBtn];
     _loginBtn = loginBtn;
     [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -203,7 +198,7 @@
     [descLabel.titleLabel setFont:[UIFont fontWithName:FONT_REGULAR size:12.f]];
     [descLabel.titleLabel setTextColor:COLOR_PINK_FFC5C4];
     [descLabel setTitle:@"登录即可免费发布共享信息" forState:UIControlStateNormal];
-    [descLabel addTarget:self action:@selector(onClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [descLabel addTarget:self action:@selector(onClickConfigBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:descLabel];
     _descLabel = descLabel;
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
