@@ -31,6 +31,8 @@
 
 @property (nonatomic, weak) UILabel *priceLabel;
 
+@property (nonatomic, weak) UILabel *priceUnitLabel;
+
 @property (nonatomic, weak) UIImageView *tagIcon;
 
 @property (nonatomic, weak) UIButton *checkBtn;
@@ -159,7 +161,7 @@
     }];
     
     UILabel *areaLabel = [[UILabel alloc] init];
-    [areaLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
+    [areaLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
     [areaLabel setTextColor:COLOR_RED_FF3C5E];
     [bgView addSubview:areaLabel];
     _areaLabel = areaLabel;
@@ -193,7 +195,7 @@
     }];
     
     UILabel *priceLabel = [[UILabel alloc] init];
-    [priceLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
+    [priceLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
     [priceLabel setTextColor:COLOR_RED_FF3C5E];
     [bgView addSubview:priceLabel];
     _priceLabel = priceLabel;
@@ -206,8 +208,9 @@
     UILabel *priceUnitLabel = [[UILabel alloc] init];
     [priceUnitLabel setFont:[UIFont fontWithName:FONT_BOLD size:9.f]];
     [priceUnitLabel setTextColor:COLOR_RED_FF3C5E];
-    [priceUnitLabel setText:@"/天"];
+    [priceUnitLabel setText:@"元/天"];
     [bgView addSubview:priceUnitLabel];
+    _priceUnitLabel = priceUnitLabel;
     [priceUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(priceLabel.mas_right).with.offset(3.f);
         make.bottom.equalTo(priceLabel);
@@ -262,9 +265,62 @@
     [_priceLabel setText:price];
 }
 
-- (void)setTagType:(HPShareListCellType)type
-{
+- (void)setTagType:(HPShareListCellType)type {
+    switch (type) {
+        case HPShareListCellTypeOwner:
+            [_tagIcon setImage:ImageNamed(@"share_owner")];
+            break;
+            
+        case HPShareListCellTypeStartup:
+            [_tagIcon setImage:ImageNamed(@"share_startup")];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)setUnitType:(HPSharePriceUnitType)type {
+    switch (type) {
+        case HPSharePriceUnitTypeHour:
+            [_priceUnitLabel setText:@"元/小时"];
+            break;
+            
+        case HPSharePriceUnitTypeDay:
+            [_priceUnitLabel setText:@"元/天"];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)setModel:(HPShareListModel *)model {
+    NSString *title = model.title;
+    NSString *trade = model.industryId;
     
+    NSString *shareDayStr = model.shareDays;
+    NSArray *shareDays = [shareDayStr componentsSeparatedByString:@","];
+    NSString *rentTime = [NSString stringWithFormat:@"%lu", (unsigned long)shareDays.count];
+    if ([rentTime isEqualToString:@"0"]) {
+        rentTime = @"面议";
+    }
+    else {
+        rentTime = [rentTime stringByAppendingString:@" 天"];
+    }
+    
+    NSString *area = model.area;
+    NSString *price = model.rent;
+    NSInteger tagType = model.type;
+    NSInteger unitType = model.rentType;
+    
+    [self setTitle:title];
+    [self setTrade:trade];
+    [self setRentTime:rentTime];
+    [self setArea:area];
+    [self setPrice:price];
+    [self setTagType:tagType];
+    [self setUnitType:unitType];
 }
 
 - (void)setCheckEnabled:(BOOL)enabled {
@@ -319,29 +375,4 @@
     _isChecked = isChecked;
 }
 
-- (void)setModel:(HPCollectListModel *)model
-{
-    _model = model;
-    _titleLabel.text = model.title;
-    _rentTimeLabel.text = model.rentType;
-    _areaLabel.text = model.area;
-    _priceLabel.text = model.rent;
-        if ([model.type isEqualToString:@"2"]) {
-            [_tagIcon setImage:ImageNamed(@"share_startup")];
-        }
-        else if ([model.type isEqualToString:@"1"]) {
-            [_tagIcon setImage:ImageNamed(@"share_owner")];
-        }
-    _checkBtn.selected = model.selected;
-}
-
-- (void)setIndustryModel:(HPIndustryModel *)industryModel
-{
-    _industryModel = industryModel;
-    if ([industryModel.industryId intValue] == [_model.industryId intValue]) {
-        _tradeLabel.text = _industryModel.industryName;
-
-    }
-
-}
 @end

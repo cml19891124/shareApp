@@ -15,8 +15,6 @@
 
 @interface HPKeepController ()
 
-@property (nonatomic, weak) UITableView *tableView;
-
 @property (nonatomic, weak) UIButton *editBtn;
 
 @property (nonatomic, weak) UIView *bottomDeleteView;
@@ -103,12 +101,12 @@
     
     if (@available(iOS 11.0, *)) {
         
-        _tableView.estimatedRowHeight = 0;
+        self.tableView.estimatedRowHeight = 0;
         
-        _tableView.estimatedSectionFooterHeight = 0;
+        self.tableView.estimatedSectionFooterHeight = 0;
         
-        _tableView.estimatedSectionHeaderHeight = 0;
-        _tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
+        self.tableView.estimatedSectionHeaderHeight = 0;
+        self.tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
         
         }
 }
@@ -196,7 +194,7 @@
     [tableView setDelegate:self];
     [tableView setDataSource:self];
     [self.view addSubview:tableView];
-    _tableView = tableView;
+    self.tableView = tableView;
     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(self.view);
         make.top.equalTo(navigationView.mas_bottom);
@@ -271,7 +269,7 @@
     HPCollectListModel *model = self.dataArray[indexPath.row];
     for (int i = 0; i < self.industryModels.count; i++) {
         HPIndustryModel *industryModel = self.industryModels[i];
-        cell.industryModel = industryModel;
+//        cell.industryModel = industryModel;
     }
     cell.model = model;
 //    NSString *title = dict[@"title"];
@@ -298,7 +296,7 @@
 #pragma mark - CheckCell
 
 - (void)setAllCellChecked:(BOOL)isChecked {
-    for (HPShareListCell *cell in _tableView.visibleCells) {
+    for (HPShareListCell *cell in self.tableView.visibleCells) {
         [cell setChecked:isChecked];
     }
     
@@ -315,7 +313,7 @@
         [_editBtn setImage:nil forState:UIControlStateNormal];
         [_editBtn setSelected:YES];
         _isEdited = YES;
-        [_tableView reloadData];
+        [self.tableView reloadData];
         
         if (_bottomDeleteView == nil) {
             UIView *view = [[UIView alloc] init];
@@ -371,7 +369,7 @@
         [_editBtn setImage:[UIImage imageNamed:@"collection_edit"] forState:UIControlStateNormal];
         [_editBtn setSelected:NO];
         _isEdited = NO;
-        [_tableView reloadData];
+        [self.tableView reloadData];
         
         [_bottomDeleteView setHidden:YES];
         [self setAllCellChecked:NO];

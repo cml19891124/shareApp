@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/Main/HPMyController.m"
-            timestampString = "566373683.8574899"
+            timestampString = "566375280.707592"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "133"
@@ -90,7 +90,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/My/Info/HPConfigCenterController.m"
-            timestampString = "566373683.857589"
+            timestampString = "566375280.707907"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "701"
@@ -106,7 +106,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/My/Info/HPConfigUserNameController.m"
-            timestampString = "566373683.857934"
+            timestampString = "566375280.708393"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "138"
@@ -122,7 +122,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/My/Info/HPConfigUserNameController.m"
-            timestampString = "566373683.857976"
+            timestampString = "566375280.708555"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "152"
@@ -138,7 +138,7 @@
                   moduleName = "HPShareApp"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/hp/Documents/Xcode/HPShareApp/HPShareApp/Controllers/My/Info/HPConfigUserNameController.m"
-                  timestampString = "566373685.328949"
+                  timestampString = "566375280.899165"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "152"
@@ -153,7 +153,7 @@
                   moduleName = "HPShareApp"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/hp/Documents/Xcode/HPShareApp/HPShareApp/Controllers/My/Info/HPConfigUserNameController.m"
-                  timestampString = "566373685.330577"
+                  timestampString = "566375280.901352"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "152"
@@ -170,7 +170,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/My/Info/HPConfigUserNameController.m"
-            timestampString = "566373683.858014"
+            timestampString = "566375280.7085969"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "156"
@@ -186,7 +186,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/My/Function/HPMyCardController.m"
-            timestampString = "566373683.858053"
+            timestampString = "566375280.708636"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "58"
@@ -202,7 +202,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/My/Function/HPMyCardController.m"
-            timestampString = "566373683.85809"
+            timestampString = "566375280.708786"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "56"
@@ -218,7 +218,7 @@
                   moduleName = "HPShareApp"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/hp/Documents/Xcode/HPShareApp/HPShareApp/Controllers/My/Function/HPMyCardController.m"
-                  timestampString = "566373685.340807"
+                  timestampString = "566375280.915951"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "56"
@@ -233,7 +233,7 @@
                   moduleName = "HPShareApp"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/hp/Documents/Xcode/HPShareApp/HPShareApp/Controllers/My/Function/HPMyCardController.m"
-                  timestampString = "566373685.342526"
+                  timestampString = "566375280.918007"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "57"
@@ -250,7 +250,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/My/Function/HPMyCardController.m"
-            timestampString = "566373683.858128"
+            timestampString = "566375280.708827"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "63"
@@ -266,123 +266,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/My/Info/HPConfigUserNameController.m"
-            timestampString = "566373683.858162"
+            timestampString = "566375280.7088619"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "141"
             endingLineNumber = "141"
             landmarkName = "-updateUserInfo"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HPShareApp/Controllers/My/Account/HPLoginByPasswordController.m"
-            timestampString = "566373683.858199"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "258"
-            endingLineNumber = "258"
-            landmarkName = "-isCanLogin"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[HPLoginByPasswordController isCanLogin]"
-                  moduleName = "HPShareApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hp/Documents/Xcode/HPShareApp/HPShareApp/Controllers/My/Account/HPLoginByPasswordController.m"
-                  timestampString = "566373685.352563"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "258"
-                  endingLineNumber = "258"
-                  offsetFromSymbolStart = "392">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__41-[HPLoginByPasswordController isCanLogin]_block_invoke"
-                  moduleName = "HPShareApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hp/Documents/Xcode/HPShareApp/HPShareApp/Controllers/My/Account/HPLoginByPasswordController.m"
-                  timestampString = "566373685.354057"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "259"
-                  endingLineNumber = "259"
-                  offsetFromSymbolStart = "64">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__destroy_helper_block_.298"
-                  moduleName = "HPShareApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hp/Documents/Xcode/HPShareApp/HPShareApp/Controllers/My/Account/HPLoginByPasswordController.m"
-                  timestampString = "566373685.355527"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "258"
-                  endingLineNumber = "258"
-                  offsetFromSymbolStart = "20">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HPShareApp/Controllers/My/Account/HPLoginByPasswordController.m"
-            timestampString = "566373683.858235"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "260"
-            endingLineNumber = "260"
-            landmarkName = "-isCanLogin"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HPShareApp/Controllers/My/Account/HPLoginByPasswordController.m"
-            timestampString = "566373683.858268"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "267"
-            endingLineNumber = "267"
-            landmarkName = "-isCanLogin"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HPShareApp/Controllers/My/Account/HPLoginByPasswordController.m"
-            timestampString = "566373683.858301"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "270"
-            endingLineNumber = "270"
-            landmarkName = "-isCanLogin"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

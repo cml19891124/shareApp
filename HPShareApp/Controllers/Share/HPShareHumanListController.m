@@ -1,20 +1,18 @@
 //
-//  HPShareGoodViewController.m
+//  HPShareSpaceListController.m
 //  HPShareApp
 //
-//  Created by HP on 2018/12/3.
+//  Created by HP on 2018/11/30.
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPShareGoodViewController.h"
+#import "HPShareHumanListController.h"
 #import "HPBannerView.h"
 #import "HPPageControlFactory.h"
 
 #define BANNER_SEPARATOR_HEIGHT 150.f * g_rateWidth + 10.f
 
-@interface HPShareGoodViewController () <HPBannerViewDelegate>
-
-@property (nonatomic, weak) UITableView *tableView;
+@interface HPShareHumanListController () <HPBannerViewDelegate>
 
 @property (nonatomic, weak) HPBannerView *bannerView;
 
@@ -22,7 +20,7 @@
 
 @end
 
-@implementation HPShareGoodViewController
+@implementation HPShareHumanListController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -45,18 +43,18 @@
 }
 
 /*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"货品共享"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"人力共享"];
     
     UITableView *tableView = [[UITableView alloc] init];
     [tableView setBackgroundColor:UIColor.clearColor];
@@ -97,8 +95,8 @@
     UIView *view = [[UIView alloc] init];
     
     HPBannerView *bannerView = [[HPBannerView alloc] init];
-    [bannerView setImages:@[[UIImage imageNamed:@"banner_goods1"],
-                            [UIImage imageNamed:@"banner_goods2"]]];
+    [bannerView setImages:@[[UIImage imageNamed:@"banner_human1"],
+                            [UIImage imageNamed:@"banner_human2"]]];
     [bannerView setBannerViewDelegate:self];
     [bannerView setImageContentMode:UIViewContentModeCenter];
     [view addSubview:bannerView];

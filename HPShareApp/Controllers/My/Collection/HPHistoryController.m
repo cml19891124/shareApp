@@ -12,8 +12,6 @@
 
 @interface HPHistoryController ()<UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, weak) UITableView *tableView;
-
 @property (nonatomic, strong) JTDateHelper *dateHelper;
 
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
@@ -68,12 +66,12 @@
     
     if (@available(iOS 11.0, *)) {
         
-        _tableView.estimatedRowHeight = 0;
+        self.tableView.estimatedRowHeight = 0;
         
-        _tableView.estimatedSectionFooterHeight = 0;
+        self.tableView.estimatedSectionFooterHeight = 0;
         
-        _tableView.estimatedSectionHeaderHeight = 0;
-        _tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
+        self.tableView.estimatedSectionHeaderHeight = 0;
+        self.tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
         
     }
 }
@@ -89,7 +87,7 @@
             [self.tableView.mj_header endRefreshing];
             [self.tableView.mj_footer endRefreshing];
             [self.dataArray removeAllObjects];
-            weakSelf.dataArray = [HPCollectListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
+//            weakSelf.dataArray = [HPCollectListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
             if ([responseObject[@"data"][@"total"] integerValue] == 0) {
                 //                [HPProgressHUD alertMessage:@"您还没有添加关注哦～"];
                 UIImage *image = ImageNamed(@"waiting");
@@ -154,7 +152,7 @@
     [tableView setDelegate:self];
     [tableView setDataSource:self];
     [self.view addSubview:tableView];
-    _tableView = tableView;
+    self.tableView = tableView;
     [tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.and.bottom.equalTo(self.view);
         make.top.equalTo(navigationView.mas_bottom);
@@ -204,7 +202,7 @@
         }
     }
     
-    [_tableView reloadData];
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDelegate
@@ -283,10 +281,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
-    HPCollectListModel *model = self.dataArray[indexPath.row];
-    HPIndustryModel *industryModel = self.industryModels[indexPath.row];
-    cell.model = model;
-    cell.industryModel = industryModel;
+//    HPCollectListModel *model = self.dataArray[indexPath.row];
+//    HPIndustryModel *industryModel = self.industryModels[indexPath.row];
+//    cell.model = model;
+//    cell.industryModel = industryModel;
 //    NSDictionary *sectionData = _sectionDataArray[indexPath.section];
 //    NSArray *sectionDataIndex = sectionData[@"dataIndex"];
 //    NSInteger index = ((NSNumber *)sectionDataIndex[indexPath.row]).integerValue;
@@ -306,12 +304,12 @@
 //    [cell setArea:area];
 //    [cell setPrice:price];
     
-    if ([model.type isEqualToString:@"startup"]) {
-        [cell setTagType:HPShareListCellTypeStartup];
-    }
-    else if ([model.type isEqualToString:@"owner"]) {
-        [cell setTagType:HPShareListCellTypeOwner];
-    }
+//    if ([model.type isEqualToString:@"startup"]) {
+//        [cell setTagType:HPShareListCellTypeStartup];
+//    }
+//    else if ([model.type isEqualToString:@"owner"]) {
+//        [cell setTagType:HPShareListCellTypeOwner];
+//    }
     
     return cell;
 }
