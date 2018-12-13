@@ -10,7 +10,9 @@
 #import "Macro.h"
 #import "HPGlobalVariable.h"
 #import "Masonry.h"
-
+@protocol HPBaseViewControllerDelegate  <NSObject>
+- (void)clickRightButtonToHandle;
+@end
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPBaseViewController : UIViewController
@@ -19,10 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isPopGestureRecognize;
 
+@property (nonatomic, weak) id<HPBaseViewControllerDelegate> delegate;
 - (void)setupBackBtn;
 
 - (UIView *)setupNavigationBarWithTitle:(NSString *)title;
-
+- (void)setupRightBarbuttonBtn:(NSString *)text;
 - (void)pushVCByClassName:(NSString *)name;
 
 - (void)pushVCByClassName:(NSString *)name withParam:(NSDictionary * _Nullable)param;

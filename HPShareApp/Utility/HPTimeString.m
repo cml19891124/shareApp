@@ -103,4 +103,42 @@
     return timeSp;
     
 }
+
++ (NSString *)getPassTimeSometimeWith:(NSDate *)date
+{
+    //首先，我们设置一下时间格式：
+    
+    NSDateFormatter *format = [[NSDateFormatter alloc] init];
+    [format setDateFormat:@"YYYY年MM月dd日"];
+    NSDateFormatter *fo = [[NSDateFormatter alloc] init];
+    [fo setDateFormat:@"HH:mm"];
+    
+    //获取传过来的时间的时分
+    NSString *hoursandSec = [fo stringFromDate:date];
+    
+    //获取传过来的时间的date
+    NSString *createDate = [format stringFromDate:date];
+    //然后获取今天和昨天的年月日：
+    
+    
+    //获取今天
+    NSDate *nowDate = [NSDate date];
+    NSString *today = [format stringFromDate:nowDate];
+    
+    //获取昨天
+    NSDate *yesterdayDate = [NSDate dateWithTimeIntervalSinceNow:-(24*60*60)];
+    NSString *yesterday = [format stringFromDate:yesterdayDate];
+    //然后对比返回数据即可：
+
+    if ([createDate isEqualToString:today]) {
+        return [NSString stringWithFormat:@"今天%@",hoursandSec];
+    }else if ([createDate isEqualToString:yesterday])
+    {
+        return [NSString stringWithFormat:@"昨天%@",hoursandSec];
+    }else
+    {
+        return [NSString stringWithFormat:@"%@ %@",createDate,hoursandSec];
+    }
+
+}
 @end

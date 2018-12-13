@@ -77,7 +77,7 @@
     }];
     
     [self setupBackBtn];
-    
+    [self setupRightBarbuttonBtn:@""];
     return navigationBar;
 }
 
@@ -93,6 +93,36 @@
     }];
 }
 
+- (void)setupRightBarbuttonBtn:(NSString *)text {
+    UIButton *rightBarbuttonBtn = [[UIButton alloc] init];
+    if (text.length > 0) {
+        rightBarbuttonBtn.hidden = NO;
+    }else{
+        rightBarbuttonBtn.hidden = YES;
+
+    }
+    [rightBarbuttonBtn addTarget:self action:@selector(onClickRightButtonBtn) forControlEvents:UIControlEventTouchUpInside];
+    CGFloat textW = BoundWithSize(text, kScreenWidth, 15).size.width;
+    [rightBarbuttonBtn setTitle:text forState:UIControlStateNormal];
+    [rightBarbuttonBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+    rightBarbuttonBtn.titleLabel.font = kFont_Medium(15);
+    rightBarbuttonBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    [self.view addSubview:rightBarbuttonBtn];
+    
+    [rightBarbuttonBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).with.offset(g_statusBarHeight);
+        make.right.equalTo(self.view).offset(getWidth(-15.f));
+        make.width.mas_equalTo(textW);
+        make.height.mas_equalTo(44.f);
+    }];
+}
+
+- (void)onClickRightButtonBtn
+{
+    if ([self.delegate respondsToSelector:@selector(clickRightButtonToHandle)]) {
+        [self.delegate clickRightButtonToHandle];
+    }
+}
 - (void)onClickBackBtn {
     [self.navigationController popViewControllerAnimated:YES];
 }
