@@ -61,6 +61,7 @@
     [textField setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];
     [textField setTextColor:COLOR_BLACK_333333];
     [textField setTintColor:COLOR_RED_FF3C5E];
+    textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     self.textField = textField;
     NSString *inputstr;
     if ([self.param[@"title"] isEqualToString:@"设置您的用户名"]) {
@@ -115,36 +116,69 @@
 }
 
 - (void)onClickConfirmBtn:(UIButton *)btn {
+    [self.view endEditing:YES];
     if (self.textField.text.length) {
-        [self updateUserInfo];
+        [self updateUserCardInfo];
     }
 }
 
-- (void)updateUserInfo
+- (void)updateUserCardInfo
 {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSString *method = @"/v1/user/cardInfo";
     NSString *inputstr;
     if ([self.param[@"title"] isEqualToString:@"设置您的用户名"]) {
         inputstr = @"username";
+        method = @"/v1/user/updateUser";
     }else if ([self.param[@"title"] isEqualToString:@"编辑您的姓名"]) {
         inputstr = @"realName";
-
     }else if ([self.param[@"title"] isEqualToString:@"编辑您的公司名"]) {
         inputstr = @"company";
-
     }else if ([self.param[@"title"] isEqualToString:@"编辑您的联系方式"]) {
         inputstr = @"telephone";
     }
     dic[inputstr] = self.textField.text;
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/updateUser" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *userdic = (NSDictionary *)account.userInfo;
+    NSDictionary *carddic = (NSDictionary *)account.cardInfo;
+
+    [HPHTTPSever HPGETServerWithMethod:method isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
-            [HPProgressHUD alertMessage:MSG];
-            HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
-            HPUserInfo *userInfo = [HPUserInfo mj_objectWithKeyValues:responseObject[@"data"][@"userInfo"]];
-            HPCardInfo *cardInfo = [HPCardInfo mj_objectWithKeyValues:responseObject[@"data"][@"cardInfo"]];
-            model.userInfo = userInfo;
-            model.cardInfo = cardInfo;
-            [HPUserTool saveAccount:model];
+            
+            NSDictionary *result = responseObject[@"data"];
+            HPUserInfo *userInfo = [[HPUserInfo alloc] init];
+            HPCardInfo *cardInfo = [[HPCardInfo alloc] init];
+
+            NSString *inputstr;
+            if ([self.param[@"title"] isEqualToString:@"设置您的用户名"]) {
+                inputstr = @"username";
+                userInfo.username = result[@"username"]?:@"";
+            }else if ([self.param[@"title"] isEqualToString:@"编辑您的姓名"]) {
+                inputstr = @"realName";
+                cardInfo.realName = result[@"realName"]?:@"";
+
+            }else if ([self.param[@"title"] isEqualToString:@"编辑您的公司名"]) {
+                inputstr = @"company";
+                cardInfo.company = result[@"company"]?:@"";
+
+            }else if ([self.param[@"title"] isEqualToString:@"编辑您的联系方式"]) {
+                inputstr = @"telephone";
+                cardInfo.telephone = result[@"telephone"]?:@"";
+            }
+            userInfo.avatarUrl = userdic[@"avatarUrl"]?:@"";
+            userInfo.password = userdic[@"password"]?:@"";
+            userInfo.signatureContext = userdic[@"signatureContext"]?:@"";
+            userInfo.title = userdic[@"title"]?:@"";
+            userInfo.userId = userdic[@"userId"]?:@"";
+            userInfo.mobile = userdic[@"mobile"]?:@"";
+            account.userInfo = userInfo;
+            
+            cardInfo.avatarUrl = carddic[@"avatarUrl"]?:@"";
+            cardInfo.signature = carddic[@"signature"]?:@"";
+            cardInfo.title = carddic[@"title"]?:@"";
+            cardInfo.userId = carddic[@"userId"]?:@"";
+            account.cardInfo = cardInfo;
+            [HPUserTool saveAccount:account];
             [HPProgressHUD alertMessage:@"修改成功"];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.navigationController popToRootViewControllerAnimated:YES];
@@ -161,7 +195,7 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if (textField.text.length) {
-        [self updateUserInfo];
+        [self updateUserCardInfo];
     }
     [self.view endEditing:YES];
     return YES;

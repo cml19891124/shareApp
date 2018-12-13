@@ -44,7 +44,16 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:COLOR_GRAY_F7F7F7];
+
+
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     UIView *navigationView = [self setupNavigationBarWithTitle:@"编辑名片"];
+    [self setUpUI];
     kWeakSelf(weakSelf);
     HPAlertSheet *alertSheet = [[HPAlertSheet alloc] init];
     HPAlertAction *photoAction = [[HPAlertAction alloc] initWithTitle:@"拍照" completion:^{
@@ -56,8 +65,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
     }];
     [alertSheet addAction:albumAction];
     self.alertSheet = alertSheet;
-    [self setUpUI];
-    
+
 }
 
 - (void)setUpUI{
@@ -95,7 +103,13 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
     UILabel *signInfoLabel = [[UILabel alloc] init];
     [signInfoLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
     [signInfoLabel setTextColor:COLOR_BLACK_333333];
-    [signInfoLabel setText:@"签名信息"];
+    [signInfoLabel setText:@"签名信息(完善签名，让用户更懂你)"];
+    NSMutableAttributedString *signstr = [[NSMutableAttributedString alloc] initWithString:signInfoLabel.text];
+    [signstr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(0, 4)];
+    [signstr addAttribute:NSFontAttributeName value:[UIFont fontWithName:FONT_BOLD size:16.f] range:NSMakeRange(0, 4)];
+    [signstr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(4,signstr.length - 4)];
+    [signstr addAttribute:NSFontAttributeName value:[UIFont fontWithName:FONT_BOLD size:12.f] range:NSMakeRange(4,signstr.length - 4)];
+    signInfoLabel.attributedText = signstr;
     [scrollView addSubview:signInfoLabel];
     [signInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(accountInfoPanel.mas_bottom).with.offset(19.f * g_rateWidth);
@@ -111,7 +125,6 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
         make.width.mas_equalTo(345.f * g_rateWidth);
         make.height.mas_equalTo(45.f * g_rateWidth);
     }];
-//    self.signView = signView;
     [self setUpSignInfoView:signView];
     
 }
@@ -119,6 +132,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 
 - (void)setUpSignInfoView:(UIView *)view
 {
+
     view.backgroundColor = UIColor.whiteColor;
     [view.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
     [view.layer setShadowOffset:CGSizeMake(0.f, 4.f)];
@@ -134,7 +148,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
         make.top.mas_equalTo(view).offset(getWidth(0.f));
 
     }];
-    UILabel *nameLabel = [self setupTitleLabelWithTitle:@"签名"];
+    UILabel *nameLabel = [self setupTitleLabelWithTitle:@"我的签名"];
     [nameView addSubview:nameLabel];
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(nameView).with.offset(18.f * g_rateWidth);
@@ -144,7 +158,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
         
     }];
     
-    HPRightImageButton *nameBtn = [self setupGotoBtnWithTitle:@"未填写"];
+    HPRightImageButton *nameBtn = [self setupGotoBtnWithTitle:@"修改"];
     [nameView addSubview:nameBtn];
     [nameBtn setTag:HPEditGotoSign];
     [nameBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -182,10 +196,21 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 
     }else if (button.tag == HPEditGotoSign) {
         HPLog(@"HPEditGotoSign");
+        [self pushVCByClassName:@"HPSignInfoController" withParam:@{@"title":@"我的签名"}];
+
     }
     
 }
 - (void)setupShadowOfPanel:(UIView *)view {
+    HPLoginModel *model = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)model.cardInfo;
+    NSDictionary *userdic = (NSDictionary *)model.userInfo;
+
+    NSString *realName = dic[@"realName"];
+    NSString *avatarUrl = dic[@"avatarUrl"];
+    NSString *contact = userdic[@"mobile"];
+    NSString *company = dic[@"company"];
+
     view.backgroundColor = UIColor.whiteColor;
     [view.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
     [view.layer setShadowOffset:CGSizeMake(0.f, 4.f)];
@@ -211,7 +236,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
     UIButton *portraitView = [[UIButton alloc] init];
     [portraitView.layer setCornerRadius:23.f];
     [portraitView.layer setMasksToBounds:YES];
-    [portraitView setImage:ImageNamed(@"my_business_card_default_head_image") forState:UIControlStateNormal];
+    [portraitView sd_setImageWithURL:[NSURL URLWithString:avatarUrl.length > 0 ?avatarUrl:@""] forState:UIControlStateNormal];
     [headerView addSubview:portraitView];
     self.portraitView = portraitView;
     [portraitView addTarget:self action:@selector(onClickGotoCtrl:) forControlEvents:UIControlEventTouchUpInside];
@@ -256,7 +281,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 
     }];
     
-    HPRightImageButton *nameBtn = [self setupGotoBtnWithTitle:@"未填写"];
+    HPRightImageButton *nameBtn = [self setupGotoBtnWithTitle:realName.length > 0?realName:@"未填写"];
     [nameView addSubview:nameBtn];
     [nameBtn setTag:HPEditGotoFullName];
     [nameBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -281,7 +306,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 
     }];
 
-    HPRightImageButton *companyBtn = [self setupGotoBtnWithTitle:@"未填写"];
+    HPRightImageButton *companyBtn = [self setupGotoBtnWithTitle:company.length > 0?company:@"未填写"];
     [companyView addSubview:companyBtn];
     [companyBtn setTag:HPEditGotoCompany];
     [companyBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -305,7 +330,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
         make.right.equalTo(contactView).with.offset(-18.f * g_rateWidth);
     }];
 
-    HPRightImageButton *contactBtn = [self setupGotoBtnWithTitle:@"未填写"];
+    HPRightImageButton *contactBtn = [self setupGotoBtnWithTitle:contact.length > 0?contact:@"未填写"];
     [contactView addSubview:contactBtn];
     [contactBtn setTag:HPEditGotoContact];
     [contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -360,13 +385,6 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 #pragma mark - TZImagePickerControllerDelegate
 
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-    //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    //        for (int i=0; i<photos.count; i++) {
-    //            NSArray *asset=assets[i];
-    //
-    //        }
-    //    });
-    
     UIImage *photo = photos[0];
     _photo = photo;
     [self uploadLocalImageGetAvatarUrl];
@@ -377,23 +395,8 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 {
     NSString *url = [NSString stringWithFormat:@"%@/v1/file/uploadPicture",kBaseUrl];//放上传图片的网址
     HPLoginModel *account = [HPUserTool account];
-    //    NSDictionary *dic = (NSDictionary *)account.userInfo;
     NSString *historyTime = [HPTimeString getNowTimeTimestamp];
     [HPUploadImageHandle sendPOSTWithUrl:url withLocalImage:_photo isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
-        
-        //        HPUserInfo *userInfo = [[HPUserInfo alloc] init];
-        //        userInfo.avatarUrl = [data[@"data"]firstObject][@"url"]?:@"";
-        //        userInfo.company = dic[@"company"]?:@"";
-        //        userInfo.password = dic[@"password"]?:@"";
-        //        userInfo.realName = dic[@"realName"]?:@"";
-        //        userInfo.signatureContext = dic[@"signatureContext"]?:@"";
-        //        userInfo.telephone = dic[@"telephone"]?:@"";
-        //        userInfo.title = dic[@"title"]?:@"";
-        //        userInfo.username = dic[@"username"]?:@"";
-        //        userInfo.userId = dic[@"userId"]?:@"";
-        //        userInfo.mobile = dic[@"mobile"]?:@"";
-        //        account.userInfo = userInfo;
-        //        [HPUserTool saveAccount:account];
         NSString *url = [data[@"data"]firstObject][@"url"]?:@"";
         if (url) {
             [self onClickChangeUpdateUser:url];
@@ -407,17 +410,23 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 #pragma mark - 完成修改密码操作
 - (void)onClickChangeUpdateUser:(NSString *)avatarUrl
 {
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *carddic = (NSDictionary *)account.cardInfo;
+
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"avatarUrl"] = avatarUrl;
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/updateUser" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
-            HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
-            model.userInfo = [HPUserInfo mj_objectWithKeyValues:responseObject[@"data"][@"userInfo"]];
-            model.cardInfo = [HPCardInfo mj_objectWithKeyValues:responseObject[@"data"][@"cardInfo"]];
-            
-            [HPUserTool saveAccount:model];
+            NSDictionary *result= responseObject[@"data"];
+            HPCardInfo *cardInfo = [[HPCardInfo alloc] init];
+            [self.portraitView sd_setImageWithURL:[NSURL URLWithString:result[@"avatarUrl"]?:@""] forState:UIControlStateNormal];
+            cardInfo.avatarUrl = result[@"avatarUrl"]?:@"";
+            cardInfo.signature = carddic[@"signature"]?:@"";
+            cardInfo.title = carddic[@"title"]?:@"";
+            cardInfo.userId = carddic[@"userId"]?:@"";
+            account.cardInfo = cardInfo;
+            [HPUserTool saveAccount:account];
             [HPProgressHUD alertMessage:@"头像修改成功"];
-            [self.portraitView sd_setImageWithURL:[NSURL URLWithString:model.cardInfo.avatarUrl] forState:UIControlStateNormal];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.navigationController popToRootViewControllerAnimated:YES];
             });

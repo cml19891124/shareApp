@@ -13,6 +13,7 @@
 #import "HPAddPhotoView.h"
 #import "HPTimeString.h"
 #import "HPUploadImageHandle.h"
+#import "UIButton+WebCache.h"
 
 typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoPortrait = 0,
@@ -127,6 +128,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.left.and.width.and.bottom.equalTo(self.view);
         make.top.equalTo(navigationView.mas_bottom);
     }];
+    
+
     /*
     UILabel *personInfoLabel = [[UILabel alloc] init];
     [personInfoLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
@@ -213,9 +216,9 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 切换账号
 - (void)swithAccountOfOthers:(UIButton *)button
 {
-//    [self switchAccount];
-    [HPUserTool deleteAccount];
-    [self.navigationController popViewControllerAnimated:YES];
+    [self switchAccount];
+//    [HPUserTool deleteAccount];
+//    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)switchAccount
@@ -234,6 +237,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     }];
 }
 - (void)setupPersonInfoPanel:(UIView *)view {
+    
     UIView *portraitRow = [self addRowOfParentView:view withHeight:63.f * g_rateWidth margin:0.f isEnd:NO];
     
     UILabel *portraitLabel = [self setupTitleLabelWithTitle:@"头像"];
@@ -256,7 +260,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     UIImageView *portraitView = [[UIImageView alloc] init];
     [portraitView.layer setCornerRadius:23.f];
     [portraitView.layer setMasksToBounds:YES];
-    [portraitView setImage:[UIImage imageNamed:@"my_business_card_default_head_image"]];
+//    [portraitView setImage:[UIImage imageNamed:@"my_business_card_default_head_image"]];
     [portraitCtrl addSubview:portraitView];
     [portraitView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.top.and.bottom.equalTo(portraitCtrl);
@@ -294,7 +298,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     
     UIView *companyRow = [self addRowOfParentView:view withHeight:45.f * g_rateWidth margin:0.f isEnd:NO];
     
-    UILabel *companyLabel = [self setupTitleLabelWithTitle:@"公司名称"];
+    UILabel *companyLabel = [self setupTitleLabelWithTitle: @"公司名称"];
     [companyRow addSubview:companyLabel];
     [companyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(portraitLabel);
@@ -332,23 +336,11 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 }
 
 - (void)setupAccountInfoPanel:(UIView *)view {
-//    UIView *userNameRow = [self addRowOfParentView:view withHeight:45.f * g_rateWidth margin:10.f * g_rateWidth isEnd:NO];
-    
-//    UILabel *userNameLabel = [self setupTitleLabelWithTitle:@"用户名"];
-//    [userNameRow addSubview:userNameLabel];
-//    [userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(userNameRow).with.offset(17.f * g_rateWidth);
-//        make.centerY.equalTo(userNameRow);
-//    }];
-//
-//    HPRightImageButton *userNameGotoBtn = [self setupGotoBtnWithTitle:@"未设置"];
-//    [userNameGotoBtn setTag:HPConfigGotoUserName];
-//    [userNameRow addSubview:userNameGotoBtn];
-//    _userNameGotoBtn = userNameGotoBtn;
-//    [userNameGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.right.equalTo(userNameRow).with.offset(- 17.f * g_rateWidth);
-//        make.centerY.equalTo(userNameLabel);
-//    }];
+    HPLoginModel *model = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)model.userInfo;
+    NSString *username = dic[@"username"];
+    NSString *avatarUrl = dic[@"avatarUrl"];
+    NSString *contact = dic[@"mobile"];
     UIView *portraitRow = [self addRowOfParentView:view withHeight:63.f * g_rateWidth margin:0.f isEnd:NO];
     
     UILabel *portraitLabel = [self setupTitleLabelWithTitle:@"头像"];
@@ -359,22 +351,13 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.height.mas_equalTo(portraitLabel.font.pointSize);
     }];
     
-//    UIControl *portraitCtrl = [[UIControl alloc] init];
-//    [portraitCtrl setTag:HPConfigGotoPortrait];
-//    [portraitCtrl addTarget:self action:@selector(onClickGotoCtrl:) forControlEvents:UIControlEventTouchUpInside];
-//    [portraitRow addSubview:portraitCtrl];
-//    [portraitCtrl mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.right.equalTo(portraitRow).with.offset(-17.f * g_rateWidth);
-//        make.centerY.equalTo(portraitLabel);
-//    }];
-    
     UIButton *portraitView = [[UIButton alloc] init];
     [portraitView.layer setCornerRadius:23.f];
     [portraitView.layer setMasksToBounds:YES];
-    [portraitView setBackgroundImage:ImageNamed(@"my_business_card_default_head_image") forState:UIControlStateNormal];
-//     Image:[UIImage imageNamed:@"my_business_card_default_head_image"]];
+//    [portraitView setBackgroundImage:ImageNamed(@"my_business_card_default_head_image") forState:UIControlStateNormal];
     [portraitView addTarget:self action:@selector(onClickGotoCtrl:) forControlEvents:UIControlEventTouchUpInside];
     [portraitRow addSubview:portraitView];
+    [portraitView sd_setImageWithURL:[NSURL URLWithString:avatarUrl.length > 0 ?avatarUrl:@""] forState:UIControlStateNormal];
     [portraitView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(portraitRow).with.offset(-17.f * g_rateWidth);
         make.size.mas_equalTo(CGSizeMake(46.f, 46.f));
@@ -390,7 +373,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.centerY.equalTo(mailRow);
     }];
     
-    HPRightImageButton *mailGotoBtn = [self setupGotoBtnWithTitle:@"未填写"];
+    HPRightImageButton *mailGotoBtn = [self setupGotoBtnWithTitle:username.length > 0?username: @"未填写"];
     [mailGotoBtn setTag:HPConfigGotoMail];
     [mailRow addSubview:mailGotoBtn];
     _mailGotoBtn = mailGotoBtn;
@@ -408,7 +391,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.centerY.equalTo(phoneNumRow);
     }];
     
-    HPRightImageButton *phoneNumGotoBtn = [self setupGotoBtnWithTitle:@"未绑定"];
+    HPRightImageButton *phoneNumGotoBtn = [self setupGotoBtnWithTitle:contact.length >0 ?contact:@"未绑定"];
     [phoneNumGotoBtn setTag:HPConfigGotoPhoneNum];
     [phoneNumRow addSubview:phoneNumGotoBtn];
     _phoneNumGotoBtn = phoneNumGotoBtn;
@@ -727,13 +710,24 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"avatarUrl"] = avatarUrl;
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *userdic = (NSDictionary *)account.userInfo;
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/updateUser" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
-            model.userInfo = [HPUserInfo mj_objectWithKeyValues:responseObject[@"data"][@"userInfo"]];
-            model.cardInfo = [HPCardInfo mj_objectWithKeyValues:responseObject[@"data"][@"cardInfo"]];
-            
-            [HPUserTool saveAccount:model];
+            HPUserInfo *userInfo = [[HPUserInfo alloc] init];
+            userInfo.avatarUrl = responseObject[@"data"][@"avatarUrl"]?:@"";
+            userInfo.company = userdic[@"company"]?:@"";
+            userInfo.password = userdic[@"password"]?:@"";
+            userInfo.realName = userdic[@"realName"]?:@"";
+            userInfo.signatureContext = userdic[@"signatureContext"]?:@"";
+            userInfo.telephone = userdic[@"telephone"]?:@"";
+            userInfo.title = userdic[@"title"]?:@"";
+            userInfo.username = userdic[@"username"]?:@"";
+            userInfo.userId = userdic[@"userId"]?:@"";
+            userInfo.mobile = userdic[@"mobile"]?:@"";
+            account.userInfo = userInfo;
+            [HPUserTool saveAccount:account];
             [HPProgressHUD alertMessage:@"头像修改成功"];
             [self.portraitView sd_setImageWithURL:[NSURL URLWithString:model.cardInfo.avatarUrl] placeholderImage:ImageNamed(@"my_business_card_default_head_image")];
 

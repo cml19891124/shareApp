@@ -8,10 +8,11 @@
 
 #import "HPMyCardController.h"
 #import "HPShareListCell.h"
+#import "UIButton+WebCache.h"
 
 @interface HPMyCardController () <UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, weak) UIImageView *portraitView;
+@property (nonatomic, weak) UIButton *portraitView;
 
 @property (nonatomic, weak) UILabel *phoneNumLabel;
 
@@ -24,6 +25,7 @@
 @property (nonatomic, weak) UITableView *tableView;
 
 @property (nonatomic, strong) NSArray *dataArray;
+@property (nonatomic, copy) NSString *avatarUrl;
 
 @end
 
@@ -31,38 +33,24 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self getUserCardInfo];
-
-}
-
-#pragma mark - 获取用户信息
-- (void)getUserCardInfo
-{
     HPLoginModel *account = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)account.cardInfo;
     NSDictionary *userdic = (NSDictionary *)account.userInfo;
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"avatarUrl"] = userdic[@"avatarUrl"];
-    dic[@"cardcaseId"] = userdic[@"cardcaseId"];
-    dic[@"company"] = userdic[@"company"];
-    dic[@"createTime"] = userdic[@"createTime"];
-    dic[@"deleteTime"] = userdic[@"deleteTime"];
-    dic[@"realName"] = userdic[@"realName"];
-    dic[@"signature"] = userdic[@"signature"];
-    dic[@"telephone"] = userdic[@"telephone"];
-    dic[@"updateTime"] = userdic[@"updateTime"];
-    dic[@"title"] = userdic[@"title"];
-    dic[@"userId"] = userdic[@"userId"];
+
+    NSString *company = dic[@"company"];
+    NSString *title = dic[@"title"];
+    NSString *signature = dic[@"signature"];
+    NSString *realName = userdic[@"realName"];
+    NSString *mobile = userdic[@"mobile"];
     
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/cardInfo" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
-        if (CODE == 200) {
-            
-        }else{
-            [HPProgressHUD alertMessage:MSG];
-        }
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
-    }];
+    [_phoneNumLabel setText:mobile.length >0 ?mobile:@"未填写"];
+    [_companyLabel setText:company.length >0 ?company:@"未填写"];
+    [_signatureLabel setText:signature.length >0 ?signature:@"未填写"];
+    _descLabel.text = dic[@"signature"];
+    [_signatureLabel setText:title.length > 0?title:@"未填写"];
+
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -181,20 +169,27 @@
 }
 
 - (void)setupCardPanel:(UIView *)view {
-    UIImageView *portraitView = [[UIImageView alloc] init];
-    [portraitView.layer setCornerRadius:63.f * g_rateWidth * 0.5];
+    
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *userdic = (NSDictionary *)account.cardInfo;
+    NSString *avatarUrl = userdic[@"avatarUrl"];
+    UIButton *portraitView = [[UIButton alloc] init];
+    [portraitView.layer setCornerRadius:46.f * g_rateWidth * 0.5];
     [portraitView.layer setMasksToBounds:YES];
-    [portraitView setImage:[UIImage imageNamed:@"my_business_card_default_head_image"]];
+    [portraitView sd_setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal];
+
     [view addSubview:portraitView];
     _portraitView = portraitView;
     [portraitView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(17.f * g_rateWidth);
         make.top.equalTo(view).with.offset(20.f * g_rateWidth);
+        make.size.mas_equalTo(CGSizeMake(getWidth(46.f), getWidth(46.f)));
     }];
     
     UILabel *phoneNumLabel = [[UILabel alloc] init];
     [phoneNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [phoneNumLabel setTextColor:COLOR_BLACK_333333];
+    phoneNumLabel.text = userdic[@"telephone"];
     [view addSubview:phoneNumLabel];
     _phoneNumLabel = phoneNumLabel;
     [phoneNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -219,9 +214,8 @@
     [editBtn.layer setMasksToBounds:YES];
     [editBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:10.f]];
     [editBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    HPLoginModel *account = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)account.userInfo;
-    if ([self.param[@"userId"] intValue] == [dic[@"userId"] intValue]) {
+
+    if ([self.param[@"userId"] intValue] == [userdic[@"userId"] intValue]) {
         [editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
         [editBtn addTarget:self action:@selector(editPersonalInfo:) forControlEvents:UIControlEventTouchUpInside];
 
