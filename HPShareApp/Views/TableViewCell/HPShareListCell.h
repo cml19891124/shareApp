@@ -7,12 +7,16 @@
 //
 
 #import "HPBaseTableViewCell.h"
-#import "HPCollectListModel.h"
-#import "HPIndustryModel.h"
+#import "HPShareListModel.h"
 
 typedef NS_ENUM(NSInteger, HPShareListCellType) {
-    HPShareListCellTypeStartup = 0,
-    HPShareListCellTypeOwner
+    HPShareListCellTypeOwner = 1,
+    HPShareListCellTypeStartup = 2
+};
+
+typedef NS_ENUM(NSInteger, HPSharePriceUnitType) {
+    HPSharePriceUnitTypeHour = 1,
+    HPSharePriceUnitTypeDay = 2
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -20,8 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface HPShareListCell : HPBaseTableViewCell
 
 @property (nonatomic, assign) BOOL isChecked;
-@property (nonatomic, strong) HPCollectListModel *model;
-@property (nonatomic, strong)  HPIndustryModel *industryModel;
+
+@property (nonatomic, strong) HPShareListModel *model;
 
 - (void)setTitle:(NSString *)title;
 
@@ -34,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setPrice:(NSString *)price;
 
 - (void)setTagType:(HPShareListCellType)type;
+
+- (void)setUnitType:(HPSharePriceUnitType)type;
 
 - (void)setCheckEnabled:(BOOL)enabled;
 

@@ -48,6 +48,8 @@
 }
 
 - (void)setupUI {
+    [self setClipsToBounds:YES];
+    
     UIScrollView *scrollView = [[UIScrollView alloc] init];
     [scrollView setBounces:NO];
     [scrollView setClipsToBounds:NO];
@@ -67,7 +69,7 @@
         [scrollView addSubview:pageItemView];
         [_pageItemViews addObject:pageItemView];
         [pageItemView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.and.bottom.equalTo(scrollView);
+            make.top.and.bottom.equalTo(self);
             make.width.mas_equalTo(self.pageWidth);
             make.height.mas_equalTo(self.frame.size.height);
             

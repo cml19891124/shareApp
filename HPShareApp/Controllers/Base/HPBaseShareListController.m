@@ -7,6 +7,7 @@
 //
 
 #import "HPBaseShareListController.h"
+#import "HPHTTPSever.h"
 
 @interface HPBaseShareListController ()
 
@@ -18,6 +19,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    _dataArray = [[NSMutableArray alloc] init];
     _testDataArray = @[@{@"userId":@"27",@"spaceId":@"1",@"followedId":@"23",@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner"},
                        @{@"userId":@"10",@"spaceId":@"2",@"followedId":@"23",@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"startup"},
                        @{@"userId":@"11",@"spaceId":@"10",@"followedId":@"20",@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner"},
@@ -164,33 +166,47 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
     
-    NSDictionary *dict = _dataArray[indexPath.row];
-    
-    NSString *title = dict[@"title"];
-    NSString *trade = dict[@"trade"];
-    NSString *rentTime = dict[@"rentTime"];
-    NSString *area = dict[@"area"];
-    NSString *price = dict[@"price"];
-    NSString *type = dict[@"type"];
-    
-    [cell setTitle:title];
-    [cell setTrade:trade];
-    [cell setRentTime:rentTime];
-    [cell setArea:area];
-    [cell setPrice:price];
-    
-    if ([type isEqualToString:@"startup"]) {
-        [cell setTagType:HPShareListCellTypeStartup];
-    }
-    else if ([type isEqualToString:@"owner"]) {
-        [cell setTagType:HPShareListCellTypeOwner];
-    }
+    HPShareListModel *model = _dataArray[indexPath.row];
+    [cell setModel:model];
     
     return cell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return _dataArray.count;
+}
+
+#pragma mark - NetWork
+
+- (void)getShareListData {
+    NSString *areaId = nil;
+    NSString *districtId = nil; //街道筛选，属于区下面的
+    NSString *industryId = nil; //行业筛选，一级行业
+    NSString *subIndustryId = nil; //行业筛选，二级行业
+    NSString *page = @"0";
+    NSString *pageSize = @"20";
+    NSString *createTimeOrderType = @"0"; //发布时间排序，1升序，0降序
+    NSString *rentOrderType = @"0"; //租金排序排序，1升序，0降序
+    NSString *type = nil; //类型筛选，1业主， 2创客
+    
+    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+    param[@"areaId"] = areaId;
+    param[@"districtId"] = districtId;
+    param[@"industryId"] = industryId;
+    param[@"subIndustryId"] = subIndustryId;
+    param[@"page"] = page;
+    param[@"pageSize"] = pageSize;
+    param[@"createTimeOrderType"] = createTimeOrderType;
+    param[@"rentOrderType"] = rentOrderType;
+    param[@"type"] = type;
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:YES paraments:param complete:^(id  _Nonnull responseObject) {
+        NSArray<HPShareListModel *> *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:DATA[@"list"]];
+        [self.dataArray addObjectsFromArray:models];
+        [self.tableView reloadData];
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 @end

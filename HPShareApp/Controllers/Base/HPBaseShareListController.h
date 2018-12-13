@@ -8,6 +8,7 @@
 
 #import "HPBaseViewController.h"
 #import "HPShareListCell.h"
+#import "HPShareListModel.h"
 
 #define CELL_ID @"HPShareListCell"
 
@@ -19,7 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSMutableArray *dataArray;
 
+@property (nonatomic, weak) UITableView *tableView;
+
 - (UIView *)setupFilterBar;
+
+- (void)getShareListData;
 
 @end
 

@@ -99,6 +99,7 @@
 #define COLOR_GRAY_A5B9CE [UIColor colorWithHexString:@"#A5B9CE"]
 #define COLOR_GRAY_DAA6A6 [UIColor colorWithHexString:@"#DAA6A6"]
 #define COLOR_GRAY_BBBBBB [UIColor colorWithHexString:@"#BBBBBB"]
+#define COLOR_GRAY_B2B2B2 [UIColor colorWithHexString:@"#B2B2B2"]
 #define COLOR_GRAY_BCC1CF [UIColor colorWithHexString:@"#BCC1CF"]
 #define COLOR_GRAY_888888 [UIColor colorWithHexString:@"#888888"]
 #define COLOR_GRAY_878787 [UIColor colorWithHexString:@"#878787"]
@@ -115,8 +116,8 @@
 #define kFont_Medium(font)  [UIFont fontWithName:@"PingFangSC-Medium"size:font]
 /* 平方-粗体 */
 #define kFont_Bold(font)  [UIFont fontWithName:@"PingFangSC-Bold"size:font]
-#define kBaseUrl  @"https://app.hepaicn.com"
-//#define kBaseUrl  @"http://192.168.0.147:8083"
+//#define kBaseUrl  @"https://app.hepaicn.com"
+#define kBaseUrl  @"http://192.168.0.104:8083"
 
 #define BoundWithSize(str,width,font)   ([str boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:font]} context:nil])
 //APP版本号

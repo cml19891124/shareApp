@@ -14,8 +14,6 @@
 
 @interface HPShareShopListController () <HPBannerViewDelegate>
 
-@property (nonatomic, weak) UITableView *tableView;
-
 @property (nonatomic, weak) HPBannerView *bannerView;
 
 @property (nonatomic, weak) HPPageControl *pageControl;
@@ -27,9 +25,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.dataArray = [NSMutableArray arrayWithArray:self.testDataArray];
     
     [self setupUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self getShareListData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -56,7 +58,7 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"人力共享"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"店铺共享"];
     
     UITableView *tableView = [[UITableView alloc] init];
     [tableView setBackgroundColor:UIColor.clearColor];
@@ -65,7 +67,7 @@
     [tableView setDelegate:self];
     [tableView setDataSource:self];
     [self.view addSubview:tableView];
-    _tableView = tableView;
+    self.tableView = tableView;
     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.and.bottom.equalTo(self.view);
         make.top.equalTo(navigationView.mas_bottom);
@@ -81,7 +83,7 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (scrollView == _tableView)
+    if (scrollView == self.tableView)
     {
         if (scrollView.contentOffset.y < BANNER_SEPARATOR_HEIGHT && scrollView.contentOffset.y>=0) {
             scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
@@ -97,8 +99,8 @@
     UIView *view = [[UIView alloc] init];
     
     HPBannerView *bannerView = [[HPBannerView alloc] init];
-    [bannerView setImages:@[[UIImage imageNamed:@"banner_share_shop_red"],
-                            [UIImage imageNamed:@"banner_share_shop_purple"]]];
+    [bannerView setImages:@[[UIImage imageNamed:@"banner_shop1"],
+                            [UIImage imageNamed:@"banner_shop2"]]];
     [bannerView setBannerViewDelegate:self];
     [bannerView setImageContentMode:UIViewContentModeCenter];
     [view addSubview:bannerView];
