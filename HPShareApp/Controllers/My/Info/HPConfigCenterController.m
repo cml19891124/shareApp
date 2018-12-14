@@ -14,6 +14,7 @@
 #import "HPTimeString.h"
 #import "HPUploadImageHandle.h"
 #import "UIButton+WebCache.h"
+#import "HPClearCacheTool.h"
 
 typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoPortrait = 0,
@@ -67,25 +68,18 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [super viewWillAppear:animated];
     HPLoginModel *model = [HPUserTool account];
     NSDictionary *dic = (NSDictionary *)model.userInfo;
-//    NSString *realName = dic[@"realName"];
-//    NSString *company = dic[@"company"];
     NSString *username = dic[@"username"];
-//    NSString *signatureContext = dic[@"signatureContext"];
     NSString *mobile = dic[@"mobile"];
     NSString *fianlMobile = mobile.length > 0?[mobile stringByReplacingCharactersInRange:NSMakeRange(3,4) withString:@"****"]:@"未填写";
-//    NSString *telephone = dic[@"telephone"];
     NSString *password = dic[@"password"];
-
+    CGFloat cashSize = [HPClearCacheTool readCacheSize];
+    NSString *cacheStr = [NSString stringWithFormat:@"%.2fMB",cashSize];
     [self setPortrait:[UIImage imageNamed:@"my_business_card_default_head_image"]];
-//    [self setText:realName.length > 0?realName:@"未填写" ofBtnWithType:HPConfigGotoFullName];
-//    [self setText:company.length > 0?company:@"未填写" ofBtnWithType:HPConfigGotoCompany];
-//    [self setText:telephone.length > 0?telephone:@"未填写" ofBtnWithType:HPConfigGotoContact];
     [self setText:username.length > 0?username:@"未填写" ofBtnWithType:HPConfigGotoUserName];
-//    [self setText:signatureContext.length > 0?signatureContext:@"未填写" ofBtnWithType:HPConfigGotoMail];
     [self setText:fianlMobile > 0?fianlMobile:@"未填写" ofBtnWithType:HPConfigGotoPhoneNum];
     [self setText:password?@"修改":@"未设置" ofBtnWithType:HPConfigGotoPassword];
     [self setText:@"V1.1.0" ofBtnWithType:HPConfigGotoVersion];
-    [self setText:@"16.8MB" ofBtnWithType:HPConfigGotoCache];
+    [self setText:cacheStr.length>0 ?cacheStr:@"16.8MB" ofBtnWithType:HPConfigGotoCache];
 }
 
 - (void)viewDidLoad {
@@ -129,53 +123,16 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.top.equalTo(navigationView.mas_bottom);
     }];
     
-
-    /*
-    UILabel *personInfoLabel = [[UILabel alloc] init];
-    [personInfoLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [personInfoLabel setTextColor:COLOR_BLACK_333333];
-    [personInfoLabel setText:@"个人信息"];
-    [scrollView addSubview:personInfoLabel];
-    [personInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(scrollView).with.offset(19.f * g_rateWidth);
-        make.left.equalTo(scrollView).with.offset(15.f * g_rateWidth);
-        make.height.mas_equalTo(personInfoLabel.font.pointSize);
-    }];
-    
-    UIView *personInfoPanel = [[UIView alloc] init];
-    [self setupShadowOfPanel:personInfoPanel];
-    [scrollView addSubview:personInfoPanel];
-    [personInfoPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(scrollView);
-        make.top.equalTo(personInfoLabel.mas_bottom).with.offset(15.f * g_rateWidth);
-        make.width.mas_equalTo(345.f * g_rateWidth);
-    }];
-    [self setupPersonInfoPanel:personInfoPanel];*/
-    
     UILabel *accountInfoLabel = [[UILabel alloc] init];
     [accountInfoLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
     [accountInfoLabel setTextColor:COLOR_BLACK_333333];
     [accountInfoLabel setText:@"账户信息"];
     [scrollView addSubview:accountInfoLabel];
     [accountInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(scrollView.mas_bottom ).with.offset(19.f * g_rateWidth);
-//        make.left.equalTo(personInfoLabel);
-//        make.height.mas_equalTo(personInfoLabel.font.pointSize);
-        
         make.top.equalTo(scrollView).with.offset(19.f * g_rateWidth);
         make.left.equalTo(scrollView).with.offset(15.f * g_rateWidth);
         make.height.mas_equalTo(accountInfoLabel.font.pointSize);
     }];
-    
-//    UILabel *descLabel = [[UILabel alloc] init];
-//    [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
-//    [descLabel setTextColor:COLOR_GRAY_999999];
-//    [descLabel setText:@"（支持用户名/邮箱/手机多种登录方式）"];
-//    [scrollView addSubview:descLabel];
-//    [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(accountInfoLabel.mas_right).with.offset(11.f);
-//        make.centerY.equalTo(accountInfoLabel);
-//    }];
     
     UIView *accountInfoPanel = [[UIView alloc] init];
     [self setupShadowOfPanel:accountInfoPanel];
@@ -429,8 +386,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.centerY.equalTo(versionRow);
     }];
     
-    
-    HPRightImageButton *versionGotoBtn = [self setupGotoBtnWithTitle:kAppVersion?:@"V1.0.0"];
+    HPRightImageButton *versionGotoBtn = [self setupGotoBtnWithTitle:kAppVersion?[NSString stringWithFormat:@"V%@",kAppVersion]:@"V1.0.0"];
     [versionGotoBtn setTag:HPConfigGotoVersion];
     [versionRow addSubview:versionGotoBtn];
     _versionGotoBtn = versionGotoBtn;
@@ -586,13 +542,43 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
             
         case HPConfigGotoCache:
             NSLog(@"HPConfigGotoCache");
+            [self setUpAlertViewForWarning];
             break;
             
         default:
             break;
     }
 }
+#pragma mark - 确定清除缓存数据
+- (void)setUpAlertViewForWarning
+{
+    UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:@"" message:@"确定要清理缓存n吗？" preferredStyle:UIAlertControllerStyleActionSheet];
+    //默认只有标题 没有操作的按钮:添加操作的按钮 UIAlertAction
+    
+    UIAlertAction *cancelBtn = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"取消");
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    //添加确定
+    UIAlertAction *sureBtn = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull   action) {
+        NSLog(@"确定");
+        HPClearCacheTool *tool = [HPClearCacheTool new];
+        [tool clearFile];
+        CGFloat cashSize = [HPClearCacheTool readCacheSize];
+        NSString *cacheStr = [NSString stringWithFormat:@"%.2fMB",cashSize];
+        [self setText:cacheStr.length>0 ?cacheStr:@"16.8MB" ofBtnWithType:HPConfigGotoCache];
+        [self dismissViewControllerAnimated:YES completion:NULL];
 
+    }];
+    //设置`确定`按钮的颜色
+    [sureBtn setValue:[UIColor redColor] forKey:@"titleTextColor"];
+    //将action添加到控制器
+    [alertVc addAction:cancelBtn];
+    [alertVc addAction :sureBtn];
+    //展示
+    [self presentViewController:alertVc animated:YES completion:nil];
+    
+}
 #pragma mark - SetInfo
 
 - (void)setPortrait:(UIImage *)image {

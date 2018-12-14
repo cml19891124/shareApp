@@ -8,6 +8,7 @@
 
 #import "HPRegisterController.h"
 #import "HPValidatePhone.h"
+#import "HPLocalNotiTool.h"
 
 @interface HPRegisterController ()<UITextFieldDelegate>
 @property (nonatomic, strong) UITextField *codeTextField;
@@ -262,6 +263,7 @@
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/register" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"注册成功"];
+            [HPLocalNotiTool registerNotification:1 title:@"注册成功" body:@"欢迎加入合店站，合店站有你更精彩。"];
             [self.navigationController popViewControllerAnimated:YES];
         }else{
             [HPProgressHUD alertMessage:MSG];

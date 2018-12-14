@@ -11,6 +11,8 @@
 #import "HPLoginByPasswordController.h"
 #import "HPValidatePhone.h"
 #import "HPLoginModel.h"
+#import <UserNotifications/UserNotifications.h>
+#import "HPLocalNotiTool.h"
 
 @interface HPLoginController ()<UITextFieldDelegate>
 @property (nonatomic, strong) UIButton *probtn;
@@ -316,6 +318,7 @@
             model.cardInfo = cardInfo;
             [HPUserTool saveAccount:model];
             [HPProgressHUD alertMessage:@"登录成功"];
+            [HPLocalNotiTool registerNotification:1 title:@"登录成功" body:@"欢迎加入合店站，合店站有你更精彩。"];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.navigationController popViewControllerAnimated:YES];
             });

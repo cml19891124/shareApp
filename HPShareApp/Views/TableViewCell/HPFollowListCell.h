@@ -14,7 +14,11 @@
 
 @optional
 
-- (void)followListCell:(HPFollowListCell *)cell didClickFollowBtn:(UIButton *)btn;
+/**
+ 
+取消关注点击事件
+ */
+- (void)followListCell:(HPFollowListCell *)cell didClickWithFollowModel:(HPFansListModel *)model;
 
 @end
 

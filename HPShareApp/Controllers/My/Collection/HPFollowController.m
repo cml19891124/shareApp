@@ -10,10 +10,11 @@
 #import "HPFollowListCell.h"
 #import "HPTextDialogView.h"
 #import "HPFansListModel.h"
+#import "UIScrollView+Refresh.h"
 
 #define CELL_ID @"HPFollowListCell"
 
-@interface HPFollowController () <UITableViewDelegate, UITableViewDataSource, HPFollowListCellDelegate>
+@interface HPFollowController () <UITableViewDelegate, UITableViewDataSource, HPFollowListCellDelegate,YYLRefreshNoDataViewDelegate>
 
 @property (nonatomic, weak) UITableView *tableView;
 
@@ -29,7 +30,35 @@
 @end
 
 @implementation HPFollowController
+#pragma mark - 逛逛
+/**
+ 逛逛事件
+ */
+- (void)clickToCheckSTHForRequirments
+{
+    [self pushVCByClassName:@"HPShareShopListController"];
 
+}
+
+#pragma mark - 取消关注事件
+- (void)followListCell:(HPFollowListCell *)cell didClickWithFollowModel:(HPFansListModel *)model
+{
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *userdic = (NSDictionary *)account.userInfo;
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"userId"] = userdic[@"userId"];
+    dic[@"followedId"] = model.followed_id;
+
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/cancel" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.count = 1;
@@ -107,7 +136,11 @@
             weakSelf.dataArray = [HPFansListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
             if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
 //                [HPProgressHUD alertMessage:@"您还没有添加关注哦～"];
-                UIImage *image = ImageNamed(@"empty_list");
+                self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
+                self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list");
+                self.tableView.refreshNoDataView.tipLabel.text = @"关注列表空空如也，快去逛逛吧！";
+                self.tableView.refreshNoDataView.delegate = self;
+                /*UIImage *image = ImageNamed(@"empty_list");
                 UIImageView *waitingView = [[UIImageView alloc] init];
                 waitingView.image = image;
                 [self.tableView addSubview:waitingView];
@@ -146,13 +179,14 @@
                     make.size.mas_equalTo(CGSizeMake(getWidth(69.f), getWidth(19.f)));
                     make.top.mas_equalTo(waitingView.mas_bottom).offset(getWidth(2.f));
                     make.centerX.mas_equalTo(self.tableView);
-                }];
-            }else{
-                [self.waitingView removeFromSuperview];
-                [self.waitingLabel removeFromSuperview];
-                [self.forbtn removeFromSuperview];
-
+                }];*/
             }
+//            else{
+//                [self.waitingView removeFromSuperview];
+//                [self.waitingLabel removeFromSuperview];
+//                [self.forbtn removeFromSuperview];
+//
+//            }
             if ([weakSelf.dataArray count] < 10) {
                 
                 [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -163,6 +197,8 @@
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
+        [self.tableView.mj_header endRefreshing];
+        [self.tableView.mj_footer endRefreshing];
     }];
     
 }

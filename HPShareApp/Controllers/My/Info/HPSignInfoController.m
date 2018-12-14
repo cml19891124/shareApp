@@ -7,10 +7,21 @@
 //
 
 #import "HPSignInfoController.h"
+#import "HPlaceholdTextView.h"
 
 @interface HPSignInfoController ()<UITextFieldDelegate,UITextViewDelegate>
 @property (nonatomic, strong) UITextField *signField;
-@property (nonatomic, strong) UITextView *signTextView;
+@property (nonatomic, strong) HPlaceholdTextView *signTextView;
+@property (nonatomic, strong) UILabel *titleNumLabel;
+/**
+ 签名标题
+ */
+@property (nonatomic, copy) NSString *signString;
+
+/**
+ 签名信息
+ */
+@property (nonatomic, copy) NSString *signInfoString;
 @end
 
 @implementation HPSignInfoController
@@ -63,14 +74,16 @@
     signField.textColor = COLOR_BLACK_333333;
     signField.font = kFont_Medium(17);
     signField.delegate = self;
+    [signField addTarget:self action:@selector(changedTextField:) forControlEvents:UIControlEventEditingChanged];
     [signTitleView addSubview:signField];
-    
+    self.signField = signField;
     UILabel *titleNumLabel = [[UILabel alloc] init];
     [titleNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:12.f]];
     [titleNumLabel setTextColor:COLOR_GRAY_CCCCCC];
-    [titleNumLabel setText:[NSString stringWithFormat:@"%ld/12",signField.text.length]];
+    [titleNumLabel setText:[NSString stringWithFormat:@"%ld/12",self.signString.length]];
 //    CGFloat titlenumW = BoundWithSize(signField.text, kScreenWidth, 15.f).size.width + 20;
     [signTitleView addSubview:titleNumLabel];
+    self.titleNumLabel = titleNumLabel;
     [titleNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(signTitleView.mas_right).offset(getWidth(-2.f));
         make.size.mas_equalTo(CGSizeMake(getWidth(40), getWidth(14.f)));
@@ -120,30 +133,28 @@
         make.height.mas_equalTo(getWidth(110.f));
     }];
     
-    UITextView *signTextView = [[UITextView alloc] init];
+    HPlaceholdTextView *signTextView = [[HPlaceholdTextView alloc] init];
     signTextView.backgroundColor = COLOR_GRAY_F6F6F6;
-    signTextView.textColor = COLOR_GRAY_CCCCCC;
-    signTextView.font = kFont_Medium(12.f);
+    signTextView.textLength = 64;
+    signTextView.interception = YES;
+    signTextView.placehLab.text = @"0";
+//    signTextView.holdLabel.backgroundColor = COLOR_GRAY_F6F6F6;
+    signTextView.placehTextColor = COLOR_GRAY_CCCCCC;
+    signTextView.placehFont = kFont_Medium(12.f);
     signTextView.delegate = self;
-    signTextView.text = @"请输入您的公司介绍或者合作愿";
+    signTextView.placehText = @" 请输入您的公司介绍或者合作愿景。";
+    signTextView.promptTextColor = COLOR_GRAY_CCCCCC;
+    signTextView.promptFont = kFont_Medium(12.f);
+    signTextView.promptBackground = COLOR_GRAY_F6F6F6;
+    signTextView.promptFrameMaxY = getWidth(-11.f);
+    signTextView.tintColor = COLOR_RED_FF3C5E;
+    signTextView.EditChangedBlock = ^{
+        
+    };
     [signContentView addSubview:signTextView];
     self.signTextView = signTextView;
     [signTextView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(getWidth(305.f), getWidth(66.f)));
-        make.centerX.mas_equalTo(signContentView);
-        make.top.mas_equalTo(getWidth(10.f));
-    }];
-    
-    UILabel *signNumLabel = [[UILabel alloc] init];
-    [signNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:12.f]];
-    [signNumLabel setTextColor:COLOR_GRAY_CCCCCC];
-    [signNumLabel setText:[NSString stringWithFormat:@"%ld/64",signTextView.text.length]];
-    CGFloat numW = BoundWithSize(signNumLabel.text, kScreenWidth, 12.f).size.width + 15.f;
-    [signContentView addSubview:signNumLabel];
-    [signNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(signContentView.mas_right).offset(getWidth(-10.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(numW), getWidth(12.f)));
-        make.bottom.mas_equalTo(signContentView.mas_bottom).offset(getWidth(-11.f));
+        make.edges.mas_equalTo(UIEdgeInsetsMake(getWidth(10.f), getWidth(11.f), getWidth(11.f), getWidth(10.f)));
     }];
     
     UIButton *confirmBtn = [[UIButton alloc] init];
@@ -161,7 +172,12 @@
     }];
 }
 
-
+#pragma mark -给每个cell中的textfield添加事件，只要值改变就调用此函数
+-(void)changedTextField:(UITextField *)textField
+{
+    NSLog(@"值是---%@",textField.text);
+    [self.titleNumLabel setText:[NSString stringWithFormat:@"%ld/12",textField.text.length]];
+}
 - (void)onClickConfirmBtn:(UIButton *)button
 {
     [self.view endEditing:YES];
@@ -242,5 +258,17 @@
     if (textField.text.length <= 0) {
         [HPProgressHUD alertMessage:@"请输入签名标题"];
     }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (textField.text.length > 12) {
+        [HPProgressHUD alertMessage:@"签名信息不得超过12位"];
+        self.signField.text = [textField.text substringToIndex:12];
+        return NO;
+    }else{
+        return YES;
+    }
+    return YES;
 }
 @end

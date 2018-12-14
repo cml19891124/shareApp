@@ -115,8 +115,8 @@
 
 - (void)onClickFollowBtn:(UIButton *)btn {
     if (_delegate) {
-        if ([_delegate respondsToSelector:@selector(followListCell:didClickFollowBtn:)]) {
-            [_delegate followListCell:self didClickFollowBtn:btn];
+        if ([_delegate respondsToSelector:@selector(followListCell:didClickWithFollowModel:)]) {
+            [_delegate followListCell:self didClickWithFollowModel:_model];
         }
     }
 }

@@ -9,8 +9,10 @@
 #import "HPHistoryController.h"
 #import "HPShareListCell.h"
 #import "JTDateHelper.h"
-
-@interface HPHistoryController ()<UITableViewDelegate, UITableViewDataSource>
+#import "YYLRefreshNoDataView.h"
+#import "UIScrollView+Refresh.h"
+#import "HPCollectListModel.h"
+@interface HPHistoryController ()<UITableViewDelegate, UITableViewDataSource,YYLRefreshNoDataViewDelegate>
 
 @property (nonatomic, strong) JTDateHelper *dateHelper;
 
@@ -25,7 +27,14 @@
 @end
 
 @implementation HPHistoryController
+/**
+ 逛逛事件
+ */
+- (void)clickToCheckSTHForRequirments
+{
+    [self pushVCByClassName:@"HPShareShopListController"];
 
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -78,45 +87,25 @@
 #pragma mark - 获取浏览历史数据
 - (void)getBrowsListData
 {
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *userdic = (NSDictionary *)account.userInfo;
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"page"] = @(self.count);
     dic[@"pageSize"] = @(10);
+    dic[@"userId"] = userdic[@"userId"];
+
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/browseHistory/list" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/browseHistory/list" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [self.tableView.mj_header endRefreshing];
             [self.tableView.mj_footer endRefreshing];
             [self.dataArray removeAllObjects];
-//            weakSelf.dataArray = [HPCollectListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
-            if ([responseObject[@"data"][@"total"] integerValue] == 0) {
-                //                [HPProgressHUD alertMessage:@"您还没有添加关注哦～"];
-                UIImage *image = ImageNamed(@"waiting");
-                UIImageView *waitingView = [[UIImageView alloc] init];
-                waitingView.image = image;
-                [self.tableView addSubview:waitingView];
-                self.waitingView = waitingView;
-                [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
-                    
-                    make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
-                    make.center.mas_equalTo(self.tableView);
-                }];
-                
-                
-                UILabel *waitingLabel = [[UILabel alloc] init];
-                waitingLabel.text = @"您还没有浏览记录哦～";
-                waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
-                waitingLabel.textColor = COLOR_GRAY_BBBBBB;
-                waitingLabel.textAlignment = NSTextAlignmentCenter;
-                [self.tableView addSubview:waitingLabel];
-                self.waitingLabel = waitingLabel;
-                [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.centerX.mas_equalTo(self.tableView);
-                    make.top.mas_equalTo(waitingView.mas_bottom).offset(15.f * g_rateWidth);
-                    make.width.mas_equalTo(self.tableView);
-                }];
-            }else{
-                [self.waitingView removeFromSuperview];
-                [self.waitingLabel removeFromSuperview];
+            weakSelf.dataArray = [HPCollectListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
+            if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
+                self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
+                self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_history");
+                self.tableView.refreshNoDataView.tipLabel.text = @"历史足迹啥都没有，快去逛逛吧！";
+                self.tableView.refreshNoDataView.delegate = self;
             }
             if ([weakSelf.dataArray count] < 10) {
                 
@@ -128,6 +117,8 @@
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
+        [self.tableView.mj_header endRefreshing];
+        [self.tableView.mj_footer endRefreshing];
     }];
     
 }

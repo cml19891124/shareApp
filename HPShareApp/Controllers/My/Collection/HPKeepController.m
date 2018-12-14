@@ -12,8 +12,10 @@
 #import "HPTextDialogView.h"
 #import "HPCollectListModel.h"
 #import "HPIndustryModel.h"
+#import "YYLRefreshNoDataView.h"
+#import "UIScrollView+Refresh.h"
 
-@interface HPKeepController ()
+@interface HPKeepController ()<YYLRefreshNoDataViewDelegate>
 
 @property (nonatomic, weak) UIButton *editBtn;
 
@@ -37,7 +39,14 @@
 @end
 
 @implementation HPKeepController
-
+/**
+ 逛逛事件
+ */
+- (void)clickToCheckSTHForRequirments
+{
+    HPLog(@"forsth");
+    [self pushVCByClassName:@"HPShareShopListController"];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -123,35 +132,11 @@
             [self.tableView.mj_footer endRefreshing];
             [self.dataArray removeAllObjects];
             weakSelf.dataArray = [HPCollectListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
-            if ([responseObject[@"data"][@"total"] integerValue] == 0) {
-                //                [HPProgressHUD alertMessage:@"您还没有添加关注哦～"];
-                UIImage *image = ImageNamed(@"waiting");
-                UIImageView *waitingView = [[UIImageView alloc] init];
-                waitingView.image = image;
-                [self.tableView addSubview:waitingView];
-                self.waitingView = waitingView;
-                [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
-                    
-                    make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
-                    make.center.mas_equalTo(self.tableView);
-                }];
-                
-                
-                UILabel *waitingLabel = [[UILabel alloc] init];
-                waitingLabel.text = @"您还没有添加收藏哦～";
-                waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
-                waitingLabel.textColor = COLOR_GRAY_BBBBBB;
-                waitingLabel.textAlignment = NSTextAlignmentCenter;
-                [self.tableView addSubview:waitingLabel];
-                self.waitingLabel = waitingLabel;
-                [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.centerX.mas_equalTo(self.tableView);
-                    make.top.mas_equalTo(waitingView.mas_bottom).offset(15.f * g_rateWidth);
-                    make.width.mas_equalTo(self.tableView);
-                }];
-            }else{
-                [self.waitingView removeFromSuperview];
-                [self.waitingLabel removeFromSuperview];
+            if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
+                self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
+                self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_collect");
+                self.tableView.refreshNoDataView.tipLabel.text = @"收藏夹孤单很久了，快去逛逛吧！";
+                self.tableView.refreshNoDataView.delegate = self;
             }
             if ([weakSelf.dataArray count] < 10) {
                 
@@ -163,6 +148,8 @@
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
+        [self.tableView.mj_header endRefreshing];
+        [self.tableView.mj_footer endRefreshing];
     }];
     
 }

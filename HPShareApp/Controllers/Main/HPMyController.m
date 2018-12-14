@@ -59,8 +59,8 @@
 - (void)setUserInfo
 {
     HPLoginModel *model = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)model.cardInfo;
-    NSString *realName = dic[@"realName"];
+    NSDictionary *dic = (NSDictionary *)model.userInfo;
+    NSString *realName = dic[@"username"];
     NSString *avatarUrl = dic[@"avatarUrl"];
 
     if (model.token) {
