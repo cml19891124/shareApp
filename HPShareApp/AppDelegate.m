@@ -19,12 +19,68 @@
 @end
 
 @implementation AppDelegate
+#pragma mark - 检测版本更新信息
+- (void)updateAppVersionInfo
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // 耗时的操作
+        
+        //获取本地版本号
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+        NSString *build = [infoDictionary objectForKey:@"CFBundleVersion"];
+        NSString *newVersion = [NSString stringWithFormat:@"%@.%@", version, build];
+        NSArray *currentVersionArr = [newVersion componentsSeparatedByString:@"."];
+        NSString *currentVersion =@"";
+        for (int i = 0;i < currentVersionArr.count; i++) {
+            currentVersion = [currentVersion stringByAppendingString:currentVersionArr[i]];
+        }
+        //获取appStore网络版本号
+        /*NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@", kAppleId]];
+        NSString * file =  [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
+        
+        NSRange substr = [file rangeOfString:@"\"version\":\""];
+        NSRange range1 = NSMakeRange(substr.location+substr.length,10);
+        NSRange substr2 = [file rangeOfString:@"\"" options:NSCaseInsensitiveSearch  range:range1];
+        NSRange range2 = NSMakeRange(substr.location+substr.length, substr2.location-substr.location-substr.length);
+        NSString *appStoreVersion =[file substringWithRange:range2];*/
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 更新界面
+            //如果不一样去更新
+            if([currentVersion intValue] > 1)
+            {
+                [self showAlert];
+            }
+        });
+    });
 
+}
 
+/**
+ *  检查新版本更新弹框
+ */
+-(void)showAlert
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"有新的版本啦~~" delegate:self cancelButtonTitle:@"暂不更新" otherButtonTitles:@"前去更新",nil];
+    [alert show];
+    
+}
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex==1)
+    {
+        // 此处加入应用在app store的地址，方便用户去更新，一种实现方式如下：
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/us/app/id%@?ls=1&mt=8", kAppleId]];
+        [[UIApplication sharedApplication] openURL:url];
+    }
+}
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [AppDelegate setUpConfig];
     
+    [self updateAppVersionInfo];
     // 使用 UNUserNotificationCenter 来管理通知
     if (@available(iOS 10.0, *)) {
         UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];

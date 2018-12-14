@@ -52,6 +52,7 @@
 		E622A9C721C358DA007C35BC /* AppDelegate+Config.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9C621C358DA007C35BC /* AppDelegate+Config.m */; };
 		E622A9CA21C35E94007C35BC /* HPLocalNotiTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9C921C35E94007C35BC /* HPLocalNotiTool.m */; };
 		E622A9CD21C376E8007C35BC /* HPlaceholdTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9CC21C376E8007C35BC /* HPlaceholdTextView.m */; };
+		E622A9D021C3A6B3007C35BC /* HPCardDetailsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9CF21C3A6B3007C35BC /* HPCardDetailsModel.m */; };
 		E6292136219AA83000BEF16C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292135219AA83000BEF16C /* AppDelegate.m */; };
 		E629213C219AA83100BEF16C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E629213A219AA83100BEF16C /* Main.storyboard */; };
 		E629213E219AA83A00BEF16C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E629213D219AA83A00BEF16C /* Assets.xcassets */; };
@@ -275,6 +276,8 @@
 		E622A9C921C35E94007C35BC /* HPLocalNotiTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPLocalNotiTool.m; sourceTree = "<group>"; };
 		E622A9CB21C376E8007C35BC /* HPlaceholdTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPlaceholdTextView.h; sourceTree = "<group>"; };
 		E622A9CC21C376E8007C35BC /* HPlaceholdTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPlaceholdTextView.m; sourceTree = "<group>"; };
+		E622A9CE21C3A6B3007C35BC /* HPCardDetailsModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCardDetailsModel.h; sourceTree = "<group>"; };
+		E622A9CF21C3A6B3007C35BC /* HPCardDetailsModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCardDetailsModel.m; sourceTree = "<group>"; };
 		E6292131219AA83000BEF16C /* HPShareApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HPShareApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6292134219AA83000BEF16C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E6292135219AA83000BEF16C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -606,6 +609,8 @@
 				69165CF321C1FA8700593D25 /* HPShareListModel.m */,
 				69165CF821C24DE100593D25 /* HPShareDetailModel.h */,
 				69165CF921C24DE100593D25 /* HPShareDetailModel.m */,
+				E622A9CE21C3A6B3007C35BC /* HPCardDetailsModel.h */,
+				E622A9CF21C3A6B3007C35BC /* HPCardDetailsModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1681,6 +1686,7 @@
 				69165CF421C1FA8700593D25 /* HPShareListModel.m in Sources */,
 				E661B0A7219C0B9800C86CF5 /* HPBaseControl.m in Sources */,
 				E661B0B6219C2C0400C86CF5 /* HPCheckDialogView.m in Sources */,
+				E622A9D021C3A6B3007C35BC /* HPCardDetailsModel.m in Sources */,
 				E661B0A4219C0B5600C86CF5 /* HPBaseView.m in Sources */,
 				E6F551E121B911DF0086094F /* HPInterActiveModel.m in Sources */,
 				E6D75F8521B65AAD00B2067C /* HPFeedbackController.m in Sources */,

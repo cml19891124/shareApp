@@ -106,6 +106,8 @@
 #define COLOR_GRAY_888888 [UIColor colorWithHexString:@"#888888"]
 #define COLOR_GRAY_878787 [UIColor colorWithHexString:@"#878787"]
 
+#define kAppleId @"10812999054"
+
 /**
  字体宏定义
  */

@@ -10,6 +10,7 @@
 #import "HPShareListCell.h"
 #import "UIButton+WebCache.h"
 #import "HPShareListModel.h"
+#import "HPCardDetailsModel.h"
 
 @interface HPMyCardController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -27,37 +28,86 @@
 
 @property (nonatomic, strong) NSArray *dataArray;
 @property (nonatomic, copy) NSString *avatarUrl;
+@property (nonatomic, strong) UIButton *editBtn;
 
+/**
+ 当前model.userId
+ */
+@property (nonatomic, strong) HPShareListModel *model;
+
+/**
+ 关注/取消关注
+ */
+@property (nonatomic, copy) NSString *method;
+@property (nonatomic, strong) HPCardDetailsModel *cardDetailsModel;
 @end
 
 @implementation HPMyCardController
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    HPLoginModel *account = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)account.cardInfo;
-    NSDictionary *userdic = (NSDictionary *)account.userInfo;
-
-    NSString *company = dic[@"company"];
-    NSString *title = dic[@"title"];
-    NSString *signature = dic[@"signature"];
-    NSString *realName = userdic[@"realName"];
-    NSString *mobile = userdic[@"mobile"];
     
-    [_phoneNumLabel setText:mobile.length >0 ?mobile:@"未填写"];
-    [_companyLabel setText:company.length >0 ?company:@"未填写"];
-    [_signatureLabel setText:signature.length >0 ?signature:@"未填写"];
-    _descLabel.text = dic[@"signature"];
-    [_signatureLabel setText:title.length > 0?title:@"未填写"];
-
+    HPShareListModel *model = self.param[@"model"];
+    if (model) {//非自己
+        [self getCardInfoDetails:model];
+        
+    }else{//自己
+        HPLoginModel *account = [HPUserTool account];
+        NSDictionary *dic = (NSDictionary *)account.cardInfo;
+        NSDictionary *userdic = (NSDictionary *)account.userInfo;
+        
+        NSString *company = dic[@"company"];
+        NSString *title = dic[@"title"];
+        NSString *signature = dic[@"signature"];
+        NSString *mobile = userdic[@"mobile"];
+        
+        [_phoneNumLabel setText:mobile.length >0 ?mobile:@"未填写"];
+        [_companyLabel setText:company.length >0 ?company:@"未填写"];
+        [_signatureLabel setText:signature.length >0 ?signature:@"未填写"];
+        _descLabel.text = dic[@"signature"];
+        [_signatureLabel setText:title.length > 0?title:@"未填写"];
+    }
 }
 
+#pragma mark - 获取卡片详情
+- (void)getCardInfoDetails:(HPShareListModel *)model
+{
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *userdic = (NSDictionary *)account.userInfo;
+    NSMutableDictionary *detaildic = [NSMutableDictionary dictionary];
+    detaildic[@"followedId"] = model.userId;
+    detaildic[@"userId"] = userdic[@"userId"];
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/cardDetails" isNeedToken:YES paraments:detaildic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            self.cardDetailsModel = [HPCardDetailsModel mj_objectWithKeyValues:responseObject[@"data"][@"cardInfo"]];
+            [self.phoneNumLabel setText:self.cardDetailsModel.telephone.length >0 ?self.cardDetailsModel.telephone:@"未填写"];
+            [self.companyLabel setText:self.cardDetailsModel.company.length >0 ?self.cardDetailsModel.company:@"未填写"];
+            [self.descLabel setText:self.cardDetailsModel.signature.length >0 ?self.cardDetailsModel.signature:@"未填写"];
+            [self.signatureLabel setText:self.cardDetailsModel.title.length > 0?self.cardDetailsModel.title:@"未填写"];
+            [self.portraitView sd_setImageWithURL:[NSURL URLWithString:self.cardDetailsModel.avatarUrl.length >0?self.cardDetailsModel.avatarUrl:userdic[@"avatarUrl"]] forState:UIControlStateNormal];
+            if(!self.cardDetailsModel.fans){
+                [self.editBtn setTitle:@"关注" forState:UIControlStateNormal];
+                self.method = @"/v1/fans/add";
+                [self.editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
+                
+            }else if(self.cardDetailsModel.fans){
+                [self.editBtn setTitle:@"已关注" forState:UIControlStateNormal];
+                self.method = @"/v1/fans/cancel";
+                [self.editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
+            }
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet;
+    }];
+
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     [self setupUI];
-    
+    /*
     [_phoneNumLabel setText:@"18342804321"];
     [_companyLabel setText:@"深圳市宝创汽车服务有限公司"];
     [_signatureLabel setText:@"有朋自远方来，不亦乐乎。"];
@@ -73,6 +123,7 @@
                    @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner"},
                    @{@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner"}];
     [_tableView reloadData];
+     */
 }
 
 /*
@@ -175,7 +226,7 @@
     NSDictionary *userdic = (NSDictionary *)account.cardInfo;
     NSString *avatarUrl = userdic[@"avatarUrl"];
     UIButton *portraitView = [[UIButton alloc] init];
-    [portraitView.layer setCornerRadius:46.f * g_rateWidth * 0.5];
+    [portraitView.layer setCornerRadius:getWidth(63.f) * 0.5];
     [portraitView.layer setMasksToBounds:YES];
     [portraitView sd_setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal];
 
@@ -184,7 +235,7 @@
     [portraitView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(17.f * g_rateWidth);
         make.top.equalTo(view).with.offset(20.f * g_rateWidth);
-        make.size.mas_equalTo(CGSizeMake(getWidth(46.f), getWidth(46.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(63.f), getWidth(63.f)));
     }];
     
     UILabel *phoneNumLabel = [[UILabel alloc] init];
@@ -206,7 +257,7 @@
     _companyLabel = companyLabel;
     [companyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(phoneNumLabel);
-        make.top.equalTo(phoneNumLabel.mas_bottom).with.offset(13.f * g_rateWidth);
+        make.bottom.equalTo(portraitView.mas_bottom).with.offset(-11.f * g_rateWidth);
         make.height.mas_equalTo(phoneNumLabel.font.pointSize);
     }];
     
@@ -216,17 +267,27 @@
     [editBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:10.f]];
     [editBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     HPShareListModel *model = self.param[@"model"];
-    if ([model.spaceId intValue] == [userdic[@"userId"] intValue]) {
+    _model = model;
+
+    if ([model.userId intValue] == [userdic[@"userId"] intValue]) {
         [editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
         [editBtn addTarget:self action:@selector(editPersonalInfo:) forControlEvents:UIControlEventTouchUpInside];
-
     }else{
-        [editBtn setTitle:@"关注" forState:UIControlStateNormal];
-        [editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
-
+        if(!_cardDetailsModel.fans){
+            [editBtn setTitle:@"关注" forState:UIControlStateNormal];
+            self.method = @"/v1/fans/add";
+            [editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
+            
+        }else if(_cardDetailsModel.fans){
+            [editBtn setTitle:@"已关注" forState:UIControlStateNormal];
+            self.method = @"/v1/fans/cancel";
+            [editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
+            
+        }
     }
     [editBtn setBackgroundColor:COLOR_RED_FF3455];
     [view addSubview:editBtn];
+    self.editBtn = editBtn;
     [editBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(view).with.offset(8.f);
         make.centerY.equalTo(phoneNumLabel);
@@ -276,13 +337,15 @@
 #pragma mark - 关注某人
 - (void)focusSBToFansList:(UIButton *)button
 {
+    
     HPShareListModel *model = self.param[@"model"];
-
     HPLoginModel *account = [HPUserTool account];
     NSDictionary *dic = (NSDictionary *)account.userInfo;
-    [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/add" paraments:@{@"userId":dic[@"userId"],@"followedId":self.param[@"followedId"]} needToken:YES complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPPostServerWithMethod:_method paraments:@{@"userId":dic[@"userId"],@"followedId":model.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:MSG];
+            HPShareListModel *model = self.param[@"model"];
+            [self getCardInfoDetails:model];
         }else{
             [HPProgressHUD alertMessage:MSG];
         }

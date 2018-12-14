@@ -99,7 +99,7 @@ static char isFirstLoadingKey;
 }
 
 - (UIView *)refreshNoDataView {
-    UIView *rNoDataView = objc_getAssociatedObject(self, &refreshNoDataViewKey);
+    YYLRefreshNoDataView *rNoDataView = objc_getAssociatedObject(self, &refreshNoDataViewKey);
     if (!rNoDataView) {
         CGRect frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
         rNoDataView = [[YYLRefreshNoDataView alloc] initWithFrame:frame];

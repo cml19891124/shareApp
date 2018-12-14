@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
 
 @property (nonatomic, weak) HPBannerView *bannerView;
 
+
 @end
 
 @implementation HPShareController

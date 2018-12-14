@@ -9,10 +9,12 @@
 #import "HPHowToPlayShareSpaceController.h"
 #import "HPIdeaExampleItem.h"
 #import "HPPageView.h"
+#import "iCarousel.h"
 
-@interface HPHowToPlayShareSpaceController () <HPPageViewDelegate>
+@interface HPHowToPlayShareSpaceController () <HPPageViewDelegate,iCarouselDelegate>
 
 @property (nonatomic, strong) NSMutableArray *exampleData;
+@property(nonatomic,strong) iCarousel *carousel;
 
 @property (nonatomic, weak) HPPageView *pageView;
 

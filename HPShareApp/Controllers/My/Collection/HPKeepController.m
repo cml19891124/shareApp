@@ -137,6 +137,8 @@
                 self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_collect");
                 self.tableView.refreshNoDataView.tipLabel.text = @"收藏夹孤单很久了，快去逛逛吧！";
                 self.tableView.refreshNoDataView.delegate = self;
+//                [self.tableView reloadData];
+
             }
             if ([weakSelf.dataArray count] < 10) {
                 
