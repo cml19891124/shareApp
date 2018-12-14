@@ -62,7 +62,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    NSString *spaceId = self.param[@"spaceId"];
+    HPShareDetailModel *model = self.param[@"model"];
+    NSString *spaceId = model.spaceId;
     if (spaceId) {
         [self getShareDetailInfoById:spaceId];
     }
