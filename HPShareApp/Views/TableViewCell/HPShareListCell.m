@@ -8,6 +8,7 @@
 
 #import "HPShareListCell.h"
 #import "HPImageUtil.h"
+#import "HPCommonData.h"
 
 @interface HPShareListCell ()
 
@@ -88,98 +89,23 @@
         make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 115.f * g_rateWidth));
     }];
     
+    UIImageView *imageView = [[UIImageView alloc] init];
+    [bgView addSubview:imageView];
+    [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(bgView).with.offset(getWidth(11.f));
+        make.centerY.equalTo(bgView);
+        make.size.mas_equalTo(CGSizeMake(getWidth(93.f), getWidth(93.f)));
+    }];
+    
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:14.f]];
     [titleLabel setTextColor:COLOR_BLACK_333333];
+    [titleLabel setNumberOfLines:0];
     [bgView addSubview:titleLabel];
     _titleLabel = titleLabel;
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        self.leftConstraint = make.left.equalTo(bgView).with.offset(23.f * g_rateWidth);
-        make.top.equalTo(bgView).with.offset(22.f * g_rateWidth);
-        make.height.mas_equalTo(titleLabel.font.pointSize);
-    }];
-    
-    UILabel *tradeDescLabel = [[UILabel alloc] init];
-    [tradeDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:11.f]];
-    [tradeDescLabel setTextColor:COLOR_GRAY_999999];
-    [tradeDescLabel setText:@"经营行业"];
-    [bgView addSubview:tradeDescLabel];
-    _tradeDescLabel = tradeDescLabel;
-    [tradeDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(titleLabel);
-        make.top.equalTo(titleLabel.mas_bottom).with.offset(22.f * g_rateWidth);
-        make.height.mas_equalTo(tradeDescLabel.font.pointSize);
-    }];
-    
-    UILabel *tradeLabel = [[UILabel alloc] init];
-    [tradeLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
-    [tradeLabel setTextColor:COLOR_BLACK_333333];
-    [bgView addSubview:tradeLabel];
-    _tradeLabel = tradeLabel;
-    [tradeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(tradeDescLabel);
-        make.top.equalTo(tradeDescLabel.mas_bottom).with.offset(12.f * g_rateWidth);
-        make.height.mas_equalTo(tradeLabel.font.pointSize);
-    }];
-    
-    CGFloat space = ((345.f - 23.f - 23.f) * g_rateWidth - 44.f * 4)/3;
-    
-    UILabel *rentTimeDescLabel = [[UILabel alloc] init];
-    [rentTimeDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:11.f]];
-    [rentTimeDescLabel setTextColor:COLOR_GRAY_999999];
-    [rentTimeDescLabel setText:@"可租档期"];
-    [bgView addSubview:rentTimeDescLabel];
-    _rentTimeDescLabel = rentTimeDescLabel;
-    [rentTimeDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(tradeDescLabel.mas_right).with.offset(space);
-        make.centerY.equalTo(tradeDescLabel);
-        make.height.mas_equalTo(rentTimeDescLabel.font.pointSize);
-    }];
-    
-    UILabel *rentTimeLabel = [[UILabel alloc] init];
-    [rentTimeLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
-    [rentTimeLabel setTextColor:COLOR_BLACK_333333];
-    [rentTimeLabel setText:@"不限"];
-    [bgView addSubview:rentTimeLabel];
-    _rentTimeLabel = rentTimeLabel;
-    [rentTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(rentTimeDescLabel);
-        make.centerY.equalTo(tradeLabel);
-        make.height.mas_equalTo(rentTimeLabel.font.pointSize);
-    }];
-    
-    UILabel *areaDescLabel = [[UILabel alloc] init];
-    [areaDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:11.f]];
-    [areaDescLabel setTextColor:COLOR_GRAY_999999];
-    [areaDescLabel setText:@"期望面积"];
-    [bgView addSubview:areaDescLabel];
-    _areaDescLabel = areaDescLabel;
-    [areaDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(rentTimeDescLabel.mas_right).with.offset(space);
-        make.centerY.equalTo(tradeDescLabel);
-        make.height.mas_equalTo(areaDescLabel.font.pointSize);
-    }];
-    
-    UILabel *areaLabel = [[UILabel alloc] init];
-    [areaLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
-    [areaLabel setTextColor:COLOR_RED_FF3C5E];
-    [bgView addSubview:areaLabel];
-    _areaLabel = areaLabel;
-    [areaLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(areaDescLabel);
-        make.centerY.equalTo(tradeLabel);
-        make.height.mas_equalTo(areaLabel.font.pointSize);
-    }];
-    
-    UILabel *areaUnitLabel = [[UILabel alloc] init];
-    [areaUnitLabel setFont:[UIFont fontWithName:FONT_BOLD size:12.f]];
-    [areaUnitLabel setTextColor:COLOR_RED_FF4666];
-    [areaUnitLabel setText:@"㎡"];
-    [bgView addSubview:areaUnitLabel];
-    [areaUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(areaLabel.mas_right).with.offset(5.f);
-        make.bottom.equalTo(areaLabel);
-        make.height.mas_equalTo(areaUnitLabel.font.pointSize);
+        make.left.equalTo(imageView).with.offset(12.f * g_rateWidth);
+        make.top.equalTo(imageView);
     }];
     
     UILabel *priceDescLabel = [[UILabel alloc] init];
@@ -188,22 +114,22 @@
     [priceDescLabel setText:@"期望价格"];
     [bgView addSubview:priceDescLabel];
     _priceDescLabel = priceDescLabel;
-    [priceDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(areaDescLabel.mas_right).with.offset(space);
-        make.centerY.equalTo(tradeDescLabel);
-        make.height.mas_equalTo(priceDescLabel.font.pointSize);
-    }];
+//    [priceDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(areaDescLabel.mas_right).with.offset(space);
+//        make.centerY.equalTo(tradeDescLabel);
+//        make.height.mas_equalTo(priceDescLabel.font.pointSize);
+//    }];
     
     UILabel *priceLabel = [[UILabel alloc] init];
     [priceLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
     [priceLabel setTextColor:COLOR_RED_FF3C5E];
     [bgView addSubview:priceLabel];
     _priceLabel = priceLabel;
-    [priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(priceDescLabel);
-        make.centerY.equalTo(tradeLabel);
-        make.height.mas_equalTo(priceLabel.font.pointSize);
-    }];
+//    [priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(priceDescLabel);
+//        make.centerY.equalTo(tradeLabel);
+//        make.height.mas_equalTo(priceLabel.font.pointSize);
+//    }];
     
     UILabel *priceUnitLabel = [[UILabel alloc] init];
     [priceUnitLabel setFont:[UIFont fontWithName:FONT_BOLD size:9.f]];
@@ -296,8 +222,9 @@
 }
 
 - (void)setModel:(HPShareListModel *)model {
+    _model = model;
     NSString *title = model.title;
-    NSString *trade = model.industryId;
+    NSString *trade = [HPCommonData getIndustryNameById:model.industryId];
     
     NSString *shareDayStr = model.shareDays;
     NSArray *shareDays = [shareDayStr componentsSeparatedByString:@","];

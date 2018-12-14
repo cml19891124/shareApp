@@ -18,13 +18,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPBannerView : HPPageView
-
-@property (nonatomic, strong) NSArray *images;
+@interface HPBannerView : HPPageView <HPPageViewDelegate>
 
 @property (nonatomic, weak) id <HPBannerViewDelegate> bannerViewDelegate;
 
 @property (nonatomic, assign) UIViewContentMode imageContentMode;
+
+@property (nonatomic, strong) NSMutableArray *images;
+
+@property (nonatomic, assign) BOOL showImagePagerEnabled;
 
 - (void)startAutoScrollWithInterval:(NSTimeInterval)interval;
 
@@ -33,6 +35,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)pauseAutoScroll;
 
 - (void)continueAutoScroll;
+
+- (void)setImages:(NSArray * _Nonnull)images;
+
+- (void)setImageViews:(NSArray * _Nonnull)imageViews;
+
+- (void)onTapPageView:(UITapGestureRecognizer *)tapGest;
 
 @end
 

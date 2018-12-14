@@ -10,9 +10,48 @@
 #import "HPHTTPSever.h"
 #import "Macro.h"
 
+static NSArray<HPIndustryModel *> *industryModels;
 static NSArray<HPAreaModel *> *areaModels;
 
 @implementation HPCommonData
+
++ (NSArray<HPIndustryModel *> *)getIndustryData {
+    if (industryModels == nil) {
+        [HPCommonData requestIndustryData];
+    }
+    
+    return industryModels;
+}
+
++ (void)requestIndustryData {
+    NSLog(@"**********requestIndustryData************");
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/industry/listWithChildren" isNeedToken:NO paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            industryModels = [HPIndustryModel mj_objectArrayWithKeyValuesArray:DATA];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        
+    }];
+}
+
++(NSString *)getIndustryNameById:(NSString *)industryId {
+    [HPCommonData getIndustryData];
+    if (industryModels) {
+        for (HPIndustryModel *model in industryModels) {
+            if ([model.industryId isEqualToString:industryId]) {
+                return model.industryName;
+            }
+            
+            for (HPIndustryModel *subModel in model.children) {
+                if ([subModel.industryId isEqualToString:industryId]) {
+                    return subModel.industryName;
+                }
+            }
+        }
+    }
+    
+    return nil;
+}
 
 + (NSArray<HPAreaModel *> *)getAreaData {
     if (areaModels == nil) {
@@ -23,18 +62,17 @@ static NSArray<HPAreaModel *> *areaModels;
 }
 
 + (void)requestAreaData {
+    NSLog(@"**********requestAreaData************");
     [HPHTTPSever HPGETServerWithMethod:@"/v1/area/list" isNeedToken:NO paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             areaModels = [HPAreaModel mj_objectArrayWithKeyValuesArray:DATA];
-        }else{
-            [HPProgressHUD alertMessage:MSG];
         }
     } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
+        
     }];
 }
 
-+ (NSString *)getAreaNameWithId:(NSString *)areaId {
++ (NSString *)getAreaNameById:(NSString *)areaId {
     [HPCommonData getAreaData];
     if (areaModels) {
         for (HPAreaModel *model in areaModels) {
@@ -47,8 +85,22 @@ static NSArray<HPAreaModel *> *areaModels;
     return nil;
 }
 
-+ (NSString *)getDistrictNameWithId:(NSString *)districtId {
++ (NSString *)getDistrictNameByAreaId:(NSString *)areaId districtId:(NSString *)districtId {
     [HPCommonData getAreaData];
+    if (areaModels) {
+        for (HPAreaModel *model in areaModels) {
+            if ([areaId isEqualToString:model.areaId]) {
+                NSArray<HPDistrictModel *> *dModels = model.children;
+                for (HPDistrictModel *dModel in dModels) {
+                    if ([dModel.districtId isEqualToString:districtId]) {
+                        return dModel.name;
+                    }
+                }
+            }
+        }
+    }
+    
+    return nil;
 }
 
 @end

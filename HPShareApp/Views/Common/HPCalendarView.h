@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) CGFloat contentCornerRadius;
 
+- (void)setSelectedDateStrs:(NSArray * _Nonnull)selectedDateStrs;
+
 @end
 
 NS_ASSUME_NONNULL_END

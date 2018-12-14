@@ -152,9 +152,15 @@
 }
 
 #pragma mark - UITableViewDelegate
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *datadict = self.testDataArray[indexPath.row];
-    [self pushVCByClassName:@"HPShareDetailController" withParam:datadict];
+    HPShareListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (cell) {
+        if (cell.model) {
+            NSString *spaceId = cell.model.spaceId;
+            [self pushVCByClassName:@"HPShareDetailController" withParam:@{@"model":cell.model}];
+        }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -200,7 +206,7 @@
     param[@"rentOrderType"] = rentOrderType;
     param[@"type"] = type;
     
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:YES paraments:param complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:NO paraments:param complete:^(id  _Nonnull responseObject) {
         NSArray<HPShareListModel *> *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:DATA[@"list"]];
         [self.dataArray addObjectsFromArray:models];
         [self.tableView reloadData];

@@ -25,9 +25,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.dataArray = [NSMutableArray arrayWithArray:self.testDataArray];
     
     [self setupUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self getShareListData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

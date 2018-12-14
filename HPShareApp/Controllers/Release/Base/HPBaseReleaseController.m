@@ -31,6 +31,9 @@
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onScrollViewTap)];
     [tapGesture setDelegate:self];
     [scrollView addGestureRecognizer:tapGesture];
+    
+    self.areaModels = [HPCommonData getAreaData];
+    self.industryModels = [HPCommonData getIndustryData];
 }
 
 /*
