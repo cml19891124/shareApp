@@ -160,4 +160,13 @@ static NSString *interactiveCell = @"interactiveCell";
         [self pushVCByClassName:@"HPPartyCenterController"];
     }
 }
+
+#pragma mark - 取消下拉  允许上拉
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGPoint offset = self.tableView.contentOffset;
+    if (offset.y <= 0) {
+        offset.y = 0;
+    }
+    self.tableView.contentOffset = offset;
+}
 @end

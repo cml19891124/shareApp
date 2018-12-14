@@ -25,6 +25,7 @@
 @property (strong, nonatomic) HPFansListModel *model;
 
 @property (nonatomic, strong) HPFansListModel *selectedModel;
+@property (nonatomic, strong) UIButton *forbtn;
 @end
 
 @implementation HPFollowController
@@ -104,35 +105,53 @@
             [self.tableView.mj_footer endRefreshing];
             [self.dataArray removeAllObjects];
             weakSelf.dataArray = [HPFansListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
-            if ([responseObject[@"data"][@"total"] integerValue] == 0) {
+            if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
 //                [HPProgressHUD alertMessage:@"您还没有添加关注哦～"];
-                UIImage *image = ImageNamed(@"waiting");
+                UIImage *image = ImageNamed(@"empty_list");
                 UIImageView *waitingView = [[UIImageView alloc] init];
                 waitingView.image = image;
                 [self.tableView addSubview:waitingView];
                 self.waitingView = waitingView;
                 [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
                     
-                    make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
+                    make.size.mas_equalTo(CGSizeMake(153.f * g_rateWidth, 177.f * g_rateWidth));
                     make.center.mas_equalTo(self.tableView);
                 }];
                 
                 
                 UILabel *waitingLabel = [[UILabel alloc] init];
-                waitingLabel.text = @"您还没有添加关注哦～";
-                waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
-                waitingLabel.textColor = COLOR_GRAY_BBBBBB;
+                waitingLabel.text = @"关注列表空空如也，快去逛逛吧！";
+                waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:8];
+                waitingLabel.textColor = COLOR_GRAY_999999;
                 waitingLabel.textAlignment = NSTextAlignmentCenter;
                 [self.tableView addSubview:waitingLabel];
                 self.waitingLabel = waitingLabel;
                 [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.centerX.mas_equalTo(self.tableView);
-                    make.top.mas_equalTo(waitingView.mas_bottom).offset(15.f * g_rateWidth);
+                    make.top.mas_equalTo(waitingView.mas_top).offset(138.f * g_rateWidth);
                     make.width.mas_equalTo(self.tableView);
+                }];
+                
+                UIButton *forbtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                forbtn.backgroundColor = COLOR_RED_FF3C5E;
+                forbtn.layer.cornerRadius = 4.f;
+                forbtn.layer.masksToBounds = YES;
+                forbtn.titleLabel.font = kFont_Medium(9.f);
+                [forbtn setTitle:@"去逛逛" forState:UIControlStateNormal];
+                [forbtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+                forbtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+                [self.tableView addSubview:forbtn];
+                self.forbtn = forbtn;
+                [forbtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.size.mas_equalTo(CGSizeMake(getWidth(69.f), getWidth(19.f)));
+                    make.top.mas_equalTo(waitingView.mas_bottom).offset(getWidth(2.f));
+                    make.centerX.mas_equalTo(self.tableView);
                 }];
             }else{
                 [self.waitingView removeFromSuperview];
                 [self.waitingLabel removeFromSuperview];
+                [self.forbtn removeFromSuperview];
+
             }
             if ([weakSelf.dataArray count] < 10) {
                 

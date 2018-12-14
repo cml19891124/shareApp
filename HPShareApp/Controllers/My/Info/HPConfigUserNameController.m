@@ -9,7 +9,7 @@
 #import "HPConfigUserNameController.h"
 
 @interface HPConfigUserNameController ()
-
+@property (nonatomic, strong) UITextField *textField;
 @end
 
 @implementation HPConfigUserNameController
@@ -32,12 +32,24 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"设置用户名"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"设置您的用户名"];
     
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:23.f]];
     [titleLabel setTextColor:COLOR_BLACK_444444];
-    [titleLabel setText:@"设置您的用户名"];
+    if ([self.param[@"title"] isEqualToString:@"设置您的用户名"]) {
+        navigationView = [self setupNavigationBarWithTitle:@"设置您的用户名"];
+        [titleLabel setText:@"设置您的用户名"];
+    }else if ([self.param[@"title"] isEqualToString:@"编辑您的姓名"]) {
+        navigationView = [self setupNavigationBarWithTitle:@"编辑您的姓名"];
+        [titleLabel setText:@"编辑您的姓名"];
+    }else if ([self.param[@"title"] isEqualToString:@"编辑您的公司名"]) {
+        navigationView = [self setupNavigationBarWithTitle:@"编辑您的公司名"];
+        [titleLabel setText:@"编辑您的公司名"];
+    }else if ([self.param[@"title"] isEqualToString:@"编辑您的联系方式"]) {
+        navigationView = [self setupNavigationBarWithTitle:@"编辑您的联系方式"];
+        [titleLabel setText:@"编辑您的联系方式"];
+    }
     [self.view addSubview:titleLabel];
     [titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).with.offset(25.f * g_rateWidth);
@@ -49,13 +61,25 @@
     [textField setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];
     [textField setTextColor:COLOR_BLACK_333333];
     [textField setTintColor:COLOR_RED_FF3C5E];
-    NSMutableAttributedString *placeholder = [[NSMutableAttributedString alloc] initWithString:@"请输入您的用户名"];
+    textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    self.textField = textField;
+    NSString *inputstr;
+    if ([self.param[@"title"] isEqualToString:@"设置您的用户名"]) {
+        inputstr = @"设置您的用户名";
+    }else if ([self.param[@"title"] isEqualToString:@"编辑您的姓名"]) {
+        inputstr = @"设置您的姓名";
+    }else if ([self.param[@"title"] isEqualToString:@"编辑您的公司名"]) {
+        inputstr = @"设置您的公司名";
+    }else if ([self.param[@"title"] isEqualToString:@"编辑您的联系方式"]) {
+        inputstr = @"设置您的联系方式";
+    }
+    NSMutableAttributedString *placeholder = [[NSMutableAttributedString alloc] initWithString:inputstr];
     [placeholder addAttribute:NSForegroundColorAttributeName
                                 value:COLOR_GRAY_CCCCCC
-                                range:NSMakeRange(0, 5)];
+                                range:NSMakeRange(0, inputstr.length)];
     [placeholder addAttribute:NSFontAttributeName
                                 value:[UIFont fontWithName:FONT_MEDIUM size:16.f]
-                                range:NSMakeRange(0, 5)];
+                                range:NSMakeRange(0, inputstr.length)];
     [textField setAttributedPlaceholder:placeholder];
     [self.view addSubview:textField];
     [textField mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -80,7 +104,7 @@
     [confirmBtn.layer setCornerRadius:24.f * g_rateWidth];
     [confirmBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [confirmBtn setTitleColor:COLOR_PINK_FFEFF2 forState:UIControlStateNormal];
-    [confirmBtn setTitle:@"确定" forState:UIControlStateNormal];
+    [confirmBtn setTitle:@"确定修改" forState:UIControlStateNormal];
     [confirmBtn setBackgroundColor:COLOR_RED_FF3C5E];
     [confirmBtn addTarget:self action:@selector(onClickConfirmBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:confirmBtn];
@@ -92,7 +116,98 @@
 }
 
 - (void)onClickConfirmBtn:(UIButton *)btn {
-    
+    [self.view endEditing:YES];
+    if (self.textField.text.length) {
+        [self updateUserCardInfo];
+    }
 }
 
+- (void)updateUserCardInfo
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSString *method = @"/v1/user/cardInfo";
+    NSString *inputstr;
+    if ([self.param[@"title"] isEqualToString:@"设置您的用户名"]) {
+        inputstr = @"username";
+        method = @"/v1/user/updateUser";
+    }else if ([self.param[@"title"] isEqualToString:@"编辑您的姓名"]) {
+        inputstr = @"realName";
+    }else if ([self.param[@"title"] isEqualToString:@"编辑您的公司名"]) {
+        inputstr = @"company";
+    }else if ([self.param[@"title"] isEqualToString:@"编辑您的联系方式"]) {
+        inputstr = @"telephone";
+    }
+    dic[inputstr] = self.textField.text;
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *userdic = (NSDictionary *)account.userInfo;
+    NSDictionary *carddic = (NSDictionary *)account.cardInfo;
+
+    [HPHTTPSever HPGETServerWithMethod:method isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            
+            NSDictionary *result = responseObject[@"data"];
+            HPUserInfo *userInfo = [[HPUserInfo alloc] init];
+            HPCardInfo *cardInfo = [[HPCardInfo alloc] init];
+
+            NSString *inputstr;
+            if ([self.param[@"title"] isEqualToString:@"设置您的用户名"]) {
+                inputstr = @"username";
+                userInfo.username = result[@"username"]?:@"";
+            }else if ([self.param[@"title"] isEqualToString:@"编辑您的姓名"]) {
+                inputstr = @"realName";
+                cardInfo.realName = result[@"realName"]?:@"";
+
+            }else if ([self.param[@"title"] isEqualToString:@"编辑您的公司名"]) {
+                inputstr = @"company";
+                cardInfo.company = result[@"company"]?:@"";
+
+            }else if ([self.param[@"title"] isEqualToString:@"编辑您的联系方式"]) {
+                inputstr = @"telephone";
+                cardInfo.telephone = result[@"telephone"]?:@"";
+            }
+            userInfo.avatarUrl = userdic[@"avatarUrl"]?:@"";
+            userInfo.password = userdic[@"password"]?:@"";
+            userInfo.signatureContext = userdic[@"signatureContext"]?:@"";
+            userInfo.title = userdic[@"title"]?:@"";
+            userInfo.userId = userdic[@"userId"]?:@"";
+            userInfo.mobile = userdic[@"mobile"]?:@"";
+            account.userInfo = userInfo;
+            
+            cardInfo.avatarUrl = carddic[@"avatarUrl"]?:@"";
+            cardInfo.signature = carddic[@"signature"]?:@"";
+            cardInfo.title = carddic[@"title"]?:@"";
+            cardInfo.userId = carddic[@"userId"]?:@"";
+            account.cardInfo = cardInfo;
+            [HPUserTool saveAccount:account];
+            [HPProgressHUD alertMessage:@"修改成功"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            });
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+#pragma mark - UITextFieldDelegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (textField.text.length) {
+        [self updateUserCardInfo];
+    }
+    [self.view endEditing:YES];
+    return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField == self.textField) {
+        if (textField.text.length <= 0) {
+            [HPProgressHUD alertMessage:@"输入内容不能为空"];
+        }
+    }
+    
+}
 @end

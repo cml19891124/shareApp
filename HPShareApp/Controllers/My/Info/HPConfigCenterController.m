@@ -8,6 +8,12 @@
 
 #import "HPConfigCenterController.h"
 #import "HPRightImageButton.h"
+#import "HPAlertSheet.h"
+#import "TZImagePickerController.h"
+#import "HPAddPhotoView.h"
+#import "HPTimeString.h"
+#import "HPUploadImageHandle.h"
+#import "UIButton+WebCache.h"
 
 typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoPortrait = 0,
@@ -22,7 +28,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoCache
 };
 
-@interface HPConfigCenterController ()
+@interface HPConfigCenterController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate,TZImagePickerControllerDelegate>
 @property (nonatomic, strong) UIView *accountInfoPanel;
 @property (nonatomic, weak) UIImageView *portraitView;
 
@@ -44,6 +50,15 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 
 @property (nonatomic, weak) HPRightImageButton *cacheGotoBtn;
 
+@property (nonatomic, strong) UIImagePickerController *photoPicker;
+
+@property (nonatomic, weak) TZImagePickerController *imagePicker;
+@property (nonatomic, weak) HPAlertSheet *alertSheet;
+
+/**
+ 获取到的图片
+ */
+@property (nonatomic, strong) UIImage *photo;
 @end
 
 @implementation HPConfigCenterController
@@ -78,6 +93,18 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     // Do any additional setup after loading the view.
     [self setupUI];
     
+    
+    kWeakSelf(weakSelf);
+    HPAlertSheet *alertSheet = [[HPAlertSheet alloc] init];
+    HPAlertAction *photoAction = [[HPAlertAction alloc] initWithTitle:@"拍照" completion:^{
+        [weakSelf onClickAlbumOrPhotoSheetWithTag:0];
+    }];
+    [alertSheet addAction:photoAction];
+    HPAlertAction *albumAction = [[HPAlertAction alloc] initWithTitle:@"从手机相册选择" completion:^{
+        [weakSelf onClickAlbumOrPhotoSheetWithTag:1];
+    }];
+    [alertSheet addAction:albumAction];
+    self.alertSheet = alertSheet;
 }
 
 /*
@@ -101,6 +128,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.left.and.width.and.bottom.equalTo(self.view);
         make.top.equalTo(navigationView.mas_bottom);
     }];
+    
+
     /*
     UILabel *personInfoLabel = [[UILabel alloc] init];
     [personInfoLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
@@ -163,7 +192,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [self setupShadowOfPanel:versionPanel];
     [scrollView addSubview:versionPanel];
     [versionPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_accountInfoPanel.mas_bottom).with.offset(15.f * g_rateWidth);
+        make.top.equalTo(self.accountInfoPanel.mas_bottom).with.offset(15.f * g_rateWidth);
         make.centerX.equalTo(scrollView);
         make.width.mas_equalTo(345.f * g_rateWidth);
     }];
@@ -188,6 +217,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 - (void)swithAccountOfOthers:(UIButton *)button
 {
     [self switchAccount];
+//    [HPUserTool deleteAccount];
+//    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)switchAccount
@@ -206,6 +237,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     }];
 }
 - (void)setupPersonInfoPanel:(UIView *)view {
+    
     UIView *portraitRow = [self addRowOfParentView:view withHeight:63.f * g_rateWidth margin:0.f isEnd:NO];
     
     UILabel *portraitLabel = [self setupTitleLabelWithTitle:@"头像"];
@@ -228,7 +260,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     UIImageView *portraitView = [[UIImageView alloc] init];
     [portraitView.layer setCornerRadius:23.f];
     [portraitView.layer setMasksToBounds:YES];
-    [portraitView setImage:[UIImage imageNamed:@"my_business_card_default_head_image"]];
+//    [portraitView setImage:[UIImage imageNamed:@"my_business_card_default_head_image"]];
     [portraitCtrl addSubview:portraitView];
     [portraitView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.top.and.bottom.equalTo(portraitCtrl);
@@ -266,7 +298,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     
     UIView *companyRow = [self addRowOfParentView:view withHeight:45.f * g_rateWidth margin:0.f isEnd:NO];
     
-    UILabel *companyLabel = [self setupTitleLabelWithTitle:@"公司名称"];
+    UILabel *companyLabel = [self setupTitleLabelWithTitle: @"公司名称"];
     [companyRow addSubview:companyLabel];
     [companyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(portraitLabel);
@@ -304,23 +336,11 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 }
 
 - (void)setupAccountInfoPanel:(UIView *)view {
-//    UIView *userNameRow = [self addRowOfParentView:view withHeight:45.f * g_rateWidth margin:10.f * g_rateWidth isEnd:NO];
-    
-//    UILabel *userNameLabel = [self setupTitleLabelWithTitle:@"用户名"];
-//    [userNameRow addSubview:userNameLabel];
-//    [userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(userNameRow).with.offset(17.f * g_rateWidth);
-//        make.centerY.equalTo(userNameRow);
-//    }];
-//
-//    HPRightImageButton *userNameGotoBtn = [self setupGotoBtnWithTitle:@"未设置"];
-//    [userNameGotoBtn setTag:HPConfigGotoUserName];
-//    [userNameRow addSubview:userNameGotoBtn];
-//    _userNameGotoBtn = userNameGotoBtn;
-//    [userNameGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.right.equalTo(userNameRow).with.offset(- 17.f * g_rateWidth);
-//        make.centerY.equalTo(userNameLabel);
-//    }];
+    HPLoginModel *model = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)model.userInfo;
+    NSString *username = dic[@"username"];
+    NSString *avatarUrl = dic[@"avatarUrl"];
+    NSString *contact = dic[@"mobile"];
     UIView *portraitRow = [self addRowOfParentView:view withHeight:63.f * g_rateWidth margin:0.f isEnd:NO];
     
     UILabel *portraitLabel = [self setupTitleLabelWithTitle:@"头像"];
@@ -331,22 +351,13 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.height.mas_equalTo(portraitLabel.font.pointSize);
     }];
     
-//    UIControl *portraitCtrl = [[UIControl alloc] init];
-//    [portraitCtrl setTag:HPConfigGotoPortrait];
-//    [portraitCtrl addTarget:self action:@selector(onClickGotoCtrl:) forControlEvents:UIControlEventTouchUpInside];
-//    [portraitRow addSubview:portraitCtrl];
-//    [portraitCtrl mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.right.equalTo(portraitRow).with.offset(-17.f * g_rateWidth);
-//        make.centerY.equalTo(portraitLabel);
-//    }];
-    
     UIButton *portraitView = [[UIButton alloc] init];
     [portraitView.layer setCornerRadius:23.f];
     [portraitView.layer setMasksToBounds:YES];
-    [portraitView setBackgroundImage:ImageNamed(@"my_business_card_default_head_image") forState:UIControlStateNormal];
-//     Image:[UIImage imageNamed:@"my_business_card_default_head_image"]];
+//    [portraitView setBackgroundImage:ImageNamed(@"my_business_card_default_head_image") forState:UIControlStateNormal];
     [portraitView addTarget:self action:@selector(onClickGotoCtrl:) forControlEvents:UIControlEventTouchUpInside];
     [portraitRow addSubview:portraitView];
+    [portraitView sd_setImageWithURL:[NSURL URLWithString:avatarUrl.length > 0 ?avatarUrl:@""] forState:UIControlStateNormal];
     [portraitView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(portraitRow).with.offset(-17.f * g_rateWidth);
         make.size.mas_equalTo(CGSizeMake(46.f, 46.f));
@@ -362,7 +373,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.centerY.equalTo(mailRow);
     }];
     
-    HPRightImageButton *mailGotoBtn = [self setupGotoBtnWithTitle:@"未填写"];
+    HPRightImageButton *mailGotoBtn = [self setupGotoBtnWithTitle:username.length > 0?username: @"未填写"];
     [mailGotoBtn setTag:HPConfigGotoMail];
     [mailRow addSubview:mailGotoBtn];
     _mailGotoBtn = mailGotoBtn;
@@ -380,7 +391,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.centerY.equalTo(phoneNumRow);
     }];
     
-    HPRightImageButton *phoneNumGotoBtn = [self setupGotoBtnWithTitle:@"未绑定"];
+    HPRightImageButton *phoneNumGotoBtn = [self setupGotoBtnWithTitle:contact.length >0 ?contact:@"未绑定"];
     [phoneNumGotoBtn setTag:HPConfigGotoPhoneNum];
     [phoneNumRow addSubview:phoneNumGotoBtn];
     _phoneNumGotoBtn = phoneNumGotoBtn;
@@ -502,16 +513,44 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     return btn;
 }
 
+- (void)onClickAlbumOrPhotoSheetWithTag:(NSInteger)tag {
+    if (tag == 0) {
+        if (self.photoPicker == nil) {
+            UIImagePickerController *photoPicker = [[UIImagePickerController alloc] init];
+            [photoPicker setSourceType:UIImagePickerControllerSourceTypeCamera];
+            [photoPicker setDelegate:self];
+            self.photoPicker = photoPicker;
+        }
+        
+        [self presentViewController:self.photoPicker animated:YES completion:nil];
+    }
+    else if (tag == 1) {
+        if (self.imagePicker == nil) {
+            TZImagePickerController *imagePicker = [[TZImagePickerController alloc] initWithMaxImagesCount:4 delegate:self];
+            [imagePicker setNaviBgColor:COLOR_RED_FF3C5E];
+            [imagePicker setNaviTitleColor:UIColor.whiteColor];
+            [imagePicker setIconThemeColor:COLOR_RED_FF3C5E];
+            [imagePicker setOKButtonTitleColorNormal:COLOR_RED_FF3C5E];
+            [imagePicker setOKButtonTitleColorDisabled:COLOR_GRAY_999999];
+            [imagePicker.view setNeedsDisplay];
+            self.imagePicker = imagePicker;
+        }
+        
+        [self presentViewController:self.imagePicker animated:YES completion:nil];
+    }
+}
 #pragma mark - OnClick
 
 - (void)onClickGotoCtrl:(UIControl *)ctrl {
     switch (ctrl.tag) {
         case HPConfigGotoPortrait:
             NSLog(@"HPConfigGotoPortrait");
+            [self.alertSheet show:YES];
             break;
             
         case HPConfigGotoFullName:
             NSLog(@"HPConfigGotoFullName");
+
             break;
             
         case HPConfigGotoCompany:
@@ -523,11 +562,13 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
             break;
             
         case HPConfigGotoUserName:
-            [self pushVCByClassName:@"HPConfigUserNameController"];
+//            [self pushVCByClassName:@"HPConfigUserNameController"];
             break;
             
         case HPConfigGotoMail:
-            NSLog(@"HPConfigGotoMail");
+//            NSLog(@"HPConfigGotoMail");
+            [self pushVCByClassName:@"HPConfigUserNameController" withParam:@{@"title":@"设置您的用户名"}];
+
             break;
             
         case HPConfigGotoPhoneNum:
@@ -608,4 +649,95 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     }
 }
 
+#pragma mark - UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
+    UIImage *photo = info[UIImagePickerControllerOriginalImage];
+    _photo = photo;
+    [self dismissViewControllerAnimated:self.photoPicker completion:nil];
+    [self uploadLocalImageGetAvatarUrl];
+}
+
+#pragma mark - TZImagePickerControllerDelegate
+
+- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        for (int i=0; i<photos.count; i++) {
+//            NSArray *asset=assets[i];
+//
+//        }
+//    });
+
+    UIImage *photo = photos[0];
+    _photo = photo;
+    [self uploadLocalImageGetAvatarUrl];
+}
+
+#pragma  mark - 上传一张图片
+- (void)uploadLocalImageGetAvatarUrl
+{
+    NSString *url = [NSString stringWithFormat:@"%@/v1/file/uploadPicture",kBaseUrl];//放上传图片的网址
+    HPLoginModel *account = [HPUserTool account];
+//    NSDictionary *dic = (NSDictionary *)account.userInfo;
+    NSString *historyTime = [HPTimeString getNowTimeTimestamp];
+    [HPUploadImageHandle sendPOSTWithUrl:url withLocalImage:_photo isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
+
+//        HPUserInfo *userInfo = [[HPUserInfo alloc] init];
+//        userInfo.avatarUrl = [data[@"data"]firstObject][@"url"]?:@"";
+//        userInfo.company = dic[@"company"]?:@"";
+//        userInfo.password = dic[@"password"]?:@"";
+//        userInfo.realName = dic[@"realName"]?:@"";
+//        userInfo.signatureContext = dic[@"signatureContext"]?:@"";
+//        userInfo.telephone = dic[@"telephone"]?:@"";
+//        userInfo.title = dic[@"title"]?:@"";
+//        userInfo.username = dic[@"username"]?:@"";
+//        userInfo.userId = dic[@"userId"]?:@"";
+//        userInfo.mobile = dic[@"mobile"]?:@"";
+//        account.userInfo = userInfo;
+//        [HPUserTool saveAccount:account];
+        NSString *url = [data[@"data"]firstObject][@"url"]?:@"";
+        if (url) {
+            [self onClickChangeUpdateUser:url];
+        }
+    } fail:^(NSError *error) {
+        ErrorNet
+    }];
+    
+}
+
+#pragma mark - 完成修改密码操作
+- (void)onClickChangeUpdateUser:(NSString *)avatarUrl
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"avatarUrl"] = avatarUrl;
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *userdic = (NSDictionary *)account.userInfo;
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/updateUser" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
+            HPUserInfo *userInfo = [[HPUserInfo alloc] init];
+            userInfo.avatarUrl = responseObject[@"data"][@"avatarUrl"]?:@"";
+            userInfo.company = userdic[@"company"]?:@"";
+            userInfo.password = userdic[@"password"]?:@"";
+            userInfo.realName = userdic[@"realName"]?:@"";
+            userInfo.signatureContext = userdic[@"signatureContext"]?:@"";
+            userInfo.telephone = userdic[@"telephone"]?:@"";
+            userInfo.title = userdic[@"title"]?:@"";
+            userInfo.username = userdic[@"username"]?:@"";
+            userInfo.userId = userdic[@"userId"]?:@"";
+            userInfo.mobile = userdic[@"mobile"]?:@"";
+            account.userInfo = userInfo;
+            [HPUserTool saveAccount:account];
+            [HPProgressHUD alertMessage:@"头像修改成功"];
+            [self.portraitView sd_setImageWithURL:[NSURL URLWithString:model.cardInfo.avatarUrl] placeholderImage:ImageNamed(@"my_business_card_default_head_image")];
+
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            });
+            
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
 @end

@@ -15,6 +15,7 @@
 #import "HPTimeString.h"
 #import "HPUploadImageHandle.h"
 #import "HPPersonCenterModel.h"
+#import "UIButton+WebCache.h"
 
 @interface HPMyController ()
 
@@ -52,18 +53,19 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    
     [self getUserInfosListData];
 }
 
 - (void)setUserInfo
 {
     HPLoginModel *model = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)model.userInfo;
-    NSString *username = dic[@"username"];
+    NSDictionary *dic = (NSDictionary *)model.cardInfo;
+    NSString *realName = dic[@"realName"];
+    NSString *avatarUrl = dic[@"avatarUrl"];
+
     if (model.token) {
-        [_portraitBtn setImage:[UIImage imageNamed:@"personal_center_login_head"] forState:UIControlStateNormal];
-        [_loginBtn setTitle:username.length > 0? username:@"未填写" forState:UIControlStateDisabled];
+        [_portraitBtn sd_setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal];
+        [_loginBtn setTitle:realName.length > 0? realName:@"未填写" forState:UIControlStateDisabled];
         [_loginBtn setEnabled:NO];
         [_keepNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.collectionNum]?:@"--"];
         [_followNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.followingNum]?:@"--"];
@@ -88,8 +90,8 @@
         [_historyNumLabel setText:@"--"];
     }
     
-    NSString *avatarUrl = dic[@"avatarUrl"];
-    if (avatarUrl.length <= 0 && model.token) {
+    NSString *avatarUrlstr = dic[@"avatarUrl"];
+    if (avatarUrlstr.length <= 0 && model.token) {
         [self uploadLocalImageGetAvatarUrl];
     }
 }
@@ -100,7 +102,8 @@
     HPLoginModel *account = [HPUserTool account];
     NSDictionary *dic = (NSDictionary *)account.userInfo;
     NSString *historyTime = [HPTimeString getNowTimeTimestamp];
-    [HPUploadImageHandle sendPOSTWithUrl:url isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
+    UIImage *image = [UIImage imageNamed:@"personal_center_not_login_head"];
+    [HPUploadImageHandle sendPOSTWithUrl:url withLocalImage:image isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
         
          HPUserInfo *userInfo = [[HPUserInfo alloc] init];
          userInfo.avatarUrl = [data[@"data"]firstObject][@"url"]?:@"";
@@ -128,14 +131,11 @@
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/center" isNeedToken:YES paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             weakSelf.infoModel = [HPPersonCenterModel mj_objectWithKeyValues:responseObject[@"data"]];
-            [self setUserInfo];
+            if (weakSelf.infoModel) {
+                [self setUserInfo];
+            }
         }else{
-//            [HPProgressHUD alertMessage:MSG];
             [self setUserInfo];
-
-//            [weakSelf.keepNumLabel setText:[NSString stringWithFormat:@"%ld",weakSelf.infoModel.collectionNum]?:@"--"];
-//            [weakSelf.followNumLabel setText:[NSString stringWithFormat:@"%ld",weakSelf.infoModel.followingNum]?:@"--"];
-//            [weakSelf.historyNumLabel setText:[NSString stringWithFormat:@"%ld",weakSelf.infoModel.browseNum]?:@"--"];
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
@@ -177,6 +177,7 @@
     
     UIButton *portraitBtn = [[UIButton alloc] init];
     [portraitBtn.layer setCornerRadius:36.f * g_rateWidth];
+    portraitBtn.layer.masksToBounds = YES;
     [portraitBtn setImage:[UIImage imageNamed:@"personal_center_not_login_head"] forState:UIControlStateNormal];
     [portraitBtn addTarget:self action:@selector(onClickConfigBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:portraitBtn];
@@ -191,7 +192,7 @@
     [loginBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
     [loginBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [loginBtn setTitle:@"登录/注册" forState:UIControlStateNormal];
-    [loginBtn addTarget:self action:@selector(onClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [loginBtn addTarget:self action:@selector(onClickConfigBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:loginBtn];
     _loginBtn = loginBtn;
     [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -203,7 +204,7 @@
     [descLabel.titleLabel setFont:[UIFont fontWithName:FONT_REGULAR size:12.f]];
     [descLabel.titleLabel setTextColor:COLOR_PINK_FFC5C4];
     [descLabel setTitle:@"登录即可免费发布共享信息" forState:UIControlStateNormal];
-    [descLabel addTarget:self action:@selector(onClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [descLabel addTarget:self action:@selector(onClickConfigBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:descLabel];
     _descLabel = descLabel;
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -468,8 +469,10 @@
         make.left.equalTo(shareManagementItem.mas_right).with.offset(xSpace);
     }];
     
-    UIView *invitationPriceItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_courtesy"] title:@"邀请有礼" desc:@"限时免费"];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(inviteSBDistrbuteGifts:)];
+    UIView *invitationPriceItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_courtesy"] title:@"礼包卡券" desc:@"限时免费"];
     [centerView addSubview:invitationPriceItem];
+    [invitationPriceItem addGestureRecognizer:tap];
     [invitationPriceItem mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(centerView);
         make.left.equalTo(myCardItem.mas_right).with.offset(xSpace);
@@ -500,7 +503,11 @@
         make.bottom.equalTo(centerView);
     }];
 }
-
+#pragma mark - 邀请有礼
+- (void)inviteSBDistrbuteGifts:(UITapGestureRecognizer *)tap
+{
+    [self pushVCByClassName:@"HPInviteSBGiftsController"];
+}
 - (UIView *)setupFunctionItemWithIcon:(UIImage *)icon title:(NSString *)title desc:(NSString *)desc {
     UIView *view = [[UIView alloc] init];
     
