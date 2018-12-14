@@ -7,10 +7,15 @@
 //
 
 #import "HPBannerView.h"
+#import "HPImagePager.h"
 
-@interface HPBannerView () <HPPageViewDelegate>
+@interface HPBannerView ()
 
 @property (nonatomic, strong) NSTimer *timer;
+
+@property (nonatomic, strong) NSArray *imageViews;
+
+@property (nonatomic, weak) HPImagePager *imagePager;
 
 @end
 
@@ -29,12 +34,17 @@
     if (self) {
         [self setDelegate:self];
         [self setBackgroundColor:UIColor.clearColor];
+        _showImagePagerEnabled = NO;
     }
     return self;
 }
 
 - (void)dealloc {
     [self stopAutoScroll];
+    
+    for (UIImageView *imageView in _imageViews) {
+        [imageView removeObserver:self forKeyPath:@"image"];
+    }
 }
 
 - (void)layoutSubviews {
@@ -42,6 +52,11 @@
     
     for (UIGestureRecognizer *gestureRecognizer in self.scrollView.gestureRecognizers) {
         [gestureRecognizer setCancelsTouchesInView:NO];
+    }
+    
+    if (_showImagePagerEnabled) {
+        UITapGestureRecognizer *tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapPageView:)];
+        [self addGestureRecognizer:tapGest];
     }
 }
 
@@ -52,12 +67,29 @@
 }
 
 - (void)setImages:(NSArray *)images {
-    _images = images;
-    
-    [self layoutIfNeeded];
+    _images = [NSMutableArray arrayWithArray:images];
 }
 
-- (void)startAutoScrollWithInterval:(NSTimeInterval)interval {
+- (void)setImageViews:(NSArray *)imageViews {
+    _imageViews = imageViews;
+    
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    for (int i = 0; i < imageViews.count; i ++) {
+        UIImageView *imageView = imageViews[i];
+        [imageView setTag:i];
+        [imageView addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:nil];
+        if (imageView.image) {
+            [array addObject:imageView.image];
+        }
+        else
+            [array addObject:[UIImage new]];
+    }
+    _images = array;
+    
+    [self refreshPageItem];
+}
+
+- (void)startAutoScrollWithInterval:(NSTimeInterval)interval {    
     if (_timer == nil) {
         _timer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(onTimerTrigger) userInfo:nil repeats:YES];
     }
@@ -134,7 +166,38 @@
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+
     return self.scrollView;
+}
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    UIImageView *imageView = (UIImageView *)object;
+    NSInteger index = imageView.tag;
+    UIImage *newImage = [change objectForKey:NSKeyValueChangeNewKey];
+    [_images replaceObjectAtIndex:index withObject:newImage];
+    [self refreshPageItem];
+}
+
+#pragma mark - UITapGestureRecognizer
+
+- (void)onTapPageView:(UITapGestureRecognizer *)tapGest {
+    if (_imagePager == nil) {
+        HPImagePager *imagePager = [[HPImagePager alloc] init];
+        [imagePager setBackgroundColor:UIColor.blackColor];
+        [imagePager setImages:_images];
+        UIView *currentView = [UIViewController getCurrentVC].view;
+        [currentView addSubview:imagePager];
+        [imagePager mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(currentView);
+        }];
+        
+        _imagePager = imagePager;
+    }
+    
+    [_imagePager scrollToPageAtIndex:self.currentPage];
+    [_imagePager show:YES];
 }
 
 @end

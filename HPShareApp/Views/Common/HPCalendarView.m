@@ -67,6 +67,22 @@
     [_calendarManager reload];
 }
 
+- (void)setSelectedDateStrs:(NSArray *)selectedDateStrs {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setLocale:[NSLocale currentLocale]];
+    [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    for (NSString *str in selectedDateStrs) {
+        NSDate *date = [dateFormatter dateFromString:str];
+        [array addObject:date];
+    }
+    _selectedDates = array;
+    
+    [_calendarManager reload];
+}
+
 - (void)setCanTouch:(BOOL)canTouch {
     _canTouch = canTouch;
     [_calendarManager reload];

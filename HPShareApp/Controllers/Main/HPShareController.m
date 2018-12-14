@@ -7,12 +7,9 @@
 //
 
 #import "HPShareController.h"
-#import "HPShareRecommendCard.h"
-#import "HPImageUtil.h"
 #import "HPBannerView.h"
-#import "HPAlignCenterButton.h"
-#import "HPSharePersonCard.h"
 #import "HPPageControlFactory.h"
+#import "HPCommonData.h"
 
 typedef NS_ENUM(NSInteger, HPShareBtn) {
     HPShareBtnShop = 0,
@@ -33,6 +30,9 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [HPCommonData getAreaData];
+    [HPCommonData getIndustryData];
     
     [self setupUI];
 }

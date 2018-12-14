@@ -65,8 +65,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self getTradeList];
-    [self getAreaList];
     
     HPAddressModel *addressModel = self.param[@"address"];
     if (addressModel) {

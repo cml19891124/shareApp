@@ -19,8 +19,7 @@
 #import "TZImagePickerController.h"
 #import "HPAddPhotoView.h"
 #import "HPTimePicker.h"
-#import "HPAreaModel.h"
-#import "HPIndustryModel.h"
+#import "HPCommonData.h"
 
 #define PANEL_SPACE 10.f
 

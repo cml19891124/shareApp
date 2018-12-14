@@ -8,7 +8,7 @@
 
 #import "HPPageView.h"
 
-@interface HPPageView ()
+@interface HPPageView ();
 
 @property (nonatomic, assign) NSInteger pageItemNum;
 
@@ -20,7 +20,7 @@
 
 @property (nonatomic, assign) NSInteger pageNumber;
 
-@property (nonatomic, assign) NSInteger currentPage;
+@property (nonatomic, assign) BOOL isLayout;
 
 @end
 
@@ -43,6 +43,7 @@
         _pageNumber = 0;
         _currentPage = 0;
         _pageItemViews = [[NSMutableArray alloc] init];
+        _isLayout = NO;
     }
     return self;
 }
@@ -110,6 +111,12 @@
             _currentPage = _pageNumber + _currentPage;
         }
         
+        if (_pageNumber == 1) {
+            [_scrollView setScrollEnabled:NO];
+        }
+        else
+            [_scrollView setScrollEnabled:YES];
+        
         if ([_delegate respondsToSelector:@selector(pageView:viewAtPageIndex:)]) {
             UIView *centerView = _pageItemViews[_centerPageItemIndex];
             
@@ -173,6 +180,13 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    
+    if (_isLayout) {
+        return;
+    }
+    else {
+        _isLayout = YES;
+    }
     
     NSLog(@"+++layoutSubviews");
     

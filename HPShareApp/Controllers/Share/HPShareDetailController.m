@@ -11,13 +11,12 @@
 #import "HPCalendarView.h"
 #import "HPPageControlFactory.h"
 #import "HPTimeString.h"
+#import "HPCommonData.h"
+#import "HPShareDetailModel.h"
+#import "HPTagView.h"
 
 @interface HPShareDetailController () <HPBannerViewDelegate>
 
-/**
- 联系人view
- */
-@property (nonatomic, strong) UIView *contactRegion;
 @property (nonatomic, weak) HPBannerView *bannerView;
 
 @property (nonatomic, weak) HPPageControl *pageControl;
@@ -38,6 +37,8 @@
 
 @property (nonatomic, weak) UILabel *priceLabel;
 
+@property (nonatomic, weak) UILabel *priceUnitLabel;
+
 @property (nonatomic, weak) UILabel *remarkLabel;
 
 @property (nonatomic, weak) UIImageView *portrait;
@@ -56,118 +57,31 @@
     _tagItems = [[NSMutableArray alloc] init];
     
     [self setupUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
-    [_titleLabel setText:@"金嘉味黄金铺位共享"];
-    
-    NSArray *tags = @[@"品牌连锁", @"百年老店", @"街角旺铺"];
-    for (int i = 0; i < _tagItems.count; i++) {
-        UIView *tagItem = _tagItems[i];
-        if (i < tags.count) {
-            UILabel *tagLabel = tagItem.subviews[0];
-            [tagLabel setText:tags[i]];
-        }
-        else
-            [tagItem setHidden:NO];
+    NSString *spaceId = self.param[@"spaceId"];
+    if (spaceId) {
+        [self getShareDetailInfoById:spaceId];
     }
-    
-    [_releaseTimeLabel setText:@"2018.11.20"];
-    [_addressLabel setText:@"南山区科技园文化广场科兴路10号汇景豪苑群楼"];
-    [_tradeLabel setText:@"餐饮·中餐厅"];
-    [_shareTimeLabel setText:@"13:00-18:00"];
-    [_areaLabel setText:@"不限"];
-    [_priceLabel setText:@"650"];
-    [_remarkLabel setText:@"入驻本店需要事先准备相关质检材料，入店时需要确认，三无产品请绕道。根据实际情况（包括但不只仅限于品牌需求、公司经营状况、服务水平等因素）决定是否可以入驻。提供的材料必须真实有效，如果产品出现质量问题，后果自负。"];
-    [_portrait setImage:[UIImage imageNamed:@"shared_shop_details_head_portrait"]];
-    [_userNameLabel setText:@"高小薇"];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setLocale:[NSLocale currentLocale]];
-    [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    
-    NSDate *date_1 = [dateFormatter dateFromString:@"2018-8-10"];
-    NSDate *date_2 = [dateFormatter dateFromString:@"2018-11-15"];
-    NSDate *date_3 = [dateFormatter dateFromString:@"2018-11-23"];
-    NSDate *date_4 = [dateFormatter dateFromString:@"2018-12-25"];
-    NSDate *date_5 = [dateFormatter dateFromString:@"2019-02-02"];
-    
-    NSArray *selectedDates = @[date_1, date_2, date_3, date_4, date_5];
-    [_calendarView setSelectedDates:selectedDates];
 }
-#pragma mark - 获取店铺详情
-- (void)getStoresDetailInfos
-{
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"address"] = @"深圳市南山区 色河南郑州呢玩";
-    dic[@"area"] = @(10);
-    dic[@"areaId"] = @(23);
-    dic[@"contact"] = @"caominglei";
-    dic[@"contactMobile"] = @"158174749363";
-    dic[@"createTime"] = @"2018-12-12";
-    dic[@"createTimeOrderType"] = @"14";
-    dic[@"createTimePeriod"] = [HPTimeString getNowTimeTimestamp2];
-    dic[@"deleteTime"] = @"2018-12-12";
-    dic[@"deleteUserId"] = @(23);
-    dic[@"districtId"] = @(15);
-    dic[@"industryId"] = @(15);
-    dic[@"intention"] = @"胡歌好好过快快好个 很高";
-    dic[@"isApproved"] = @"0";
-    dic[@"latitude"] = @"0";
-    dic[@"longitude"] = @"0";
-    dic[@"page"] = @(1);
-    dic[@"pageSize"] = @(10);
-    dic[@"remark"] = @"gfgdf";
-    dic[@"rent"] = @(1);
-    dic[@"rentOrderType"] = @(1);
-    dic[@"rentType"] = @(1);
-    dic[@"shareDays"] = @(1);
-    dic[@"shareTime"] = [HPTimeString getNowTimeTimestamp2];
-    dic[@"spaceId"] = @"16";
-    dic[@"subIndustryId"] = @(19);
-    dic[@"tag"] = @(1);
-    dic[@"title"] = @(1);
-    dic[@"type"] = @"1";
-    dic[@"updateTime"] = @"2018-12-12";
-    dic[@"userId"] = @(27);
-    
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/detail" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
-        if (CODE == 200) {
-            
-        }else{
-            [HPProgressHUD alertMessage:MSG];
-        }
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
-    }];
-}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self getStoresDetailInfos];
-    [_bannerView startAutoScrollWithInterval:2.0];
-    UIView *contactRegion = [[UIView alloc] init];
-    [contactRegion setBackgroundColor:UIColor.whiteColor];
-    [contactRegion.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
-    [contactRegion.layer setShadowOffset:CGSizeMake(0.f, -2.f)];
-    [contactRegion.layer setShadowOpacity:0.19f];
     
-    [kAppdelegateWindow addSubview:contactRegion];
-    self.contactRegion = contactRegion;
-    [contactRegion mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(kAppdelegateWindow.mas_bottom).with.offset(-60.f * g_rateWidth);
-        make.left.and.width.equalTo(kAppdelegateWindow);
-        make.height.mas_equalTo(60.f * g_rateWidth);
-        
-        make.bottom.equalTo(kAppdelegateWindow);
-    }];
-    [self setupContactRegion:contactRegion];
-    
+//    [_bannerView startAutoScrollWithInterval:2.0];
+//    NSString *spaceId = self.param[@"spaceId"];
+//    if (spaceId) {
+//        [self getShareDetailInfoById:spaceId];
+//    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
     [_bannerView stopAutoScroll];
-    [_contactRegion removeFromSuperview];
 }
 
 /*
@@ -179,6 +93,8 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark - SetupUI
 
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_WHITE_FAF9FE];
@@ -192,7 +108,9 @@
     
     HPBannerView *bannerView = [[HPBannerView alloc] init];
     [bannerView setBannerViewDelegate:self];
-    [bannerView setImages:@[[UIImage imageNamed:@"shared_shop_details_background"], [UIImage imageNamed:@"shared_shop_details_background"], [UIImage imageNamed:@"shared_shop_details_background"]]];
+    [bannerView setImages:@[[UIImage imageNamed:@"shared_shop_details_background"]]];
+    [bannerView setImageContentMode:UIViewContentModeScaleAspectFill];
+    [bannerView setShowImagePagerEnabled:YES];
     [scrollView addSubview:bannerView];
     _bannerView = bannerView;
     [bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -220,8 +138,8 @@
     }];
     
     HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleCircle];
-    [pageControl setNumberOfPages:3];
-    [pageControl setCurrentPage:0];
+    [pageControl setNumberOfPages:0];
+//    [pageControl setCurrentPage:0];
     [scrollView addSubview:pageControl];
     _pageControl = pageControl;
     [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -266,11 +184,32 @@
         make.left.and.width.equalTo(scrollView);
         make.top.equalTo(shareDateRegion.mas_bottom).with.offset(15.f * g_rateWidth);
         make.height.mas_equalTo(180.f * g_rateWidth);
-        make.bottom.equalTo(scrollView);
+        make.bottom.equalTo(scrollView).with.offset(-getWidth(80.f));
     }];
     [self setupRemarkRegion:remarkRegion];
     
+    UIView *contactRegion = [[UIView alloc] init];
+    [contactRegion setBackgroundColor:UIColor.whiteColor];
+    [contactRegion.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
+    [contactRegion.layer setShadowOffset:CGSizeMake(0.f, -2.f)];
+    [contactRegion.layer setShadowOpacity:0.19f];
+    [self.view addSubview:contactRegion];
+    [contactRegion mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.width.equalTo(self.view);
+        make.height.mas_equalTo(60.f * g_rateWidth);
+        make.bottom.equalTo(self.view);
+    }];
+    [self setupContactRegion:contactRegion];
+}
 
+- (void)setTag:(NSArray *)tags {
+    for (int i = 0; i < _tagItems.count; i++) {
+        HPTagView *tagItem = _tagItems[i];
+        if (i < tags.count) {
+            [tagItem setHidden:NO];
+            [tagItem setText:tags[i]];
+        }
+    }
 }
 
 - (void)setupTitleRegion:(UIView *)view {
@@ -286,13 +225,9 @@
     }];
     
     for (int i = 0; i < 3; i ++) {
-        UIView *tagItem = [[UIView alloc] init];
-        [tagItem.layer setCornerRadius:4.f];
-        [tagItem setBackgroundColor:COLOR_GREEN_EFF3F6];
-        [view addSubview:tagItem];
-        [tagItem mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(54.f, 17.f));
-            
+        HPTagView *tagView = [[HPTagView alloc] init];
+        [view addSubview:tagView];
+        [tagView mas_makeConstraints:^(MASConstraintMaker *make) {
             if (i == 0) {
                 make.left.equalTo(titleLabel);
                 make.top.equalTo(titleLabel.mas_bottom).with.offset(10.f * g_rateWidth);
@@ -303,16 +238,9 @@
                 make.centerY.equalTo(lastTagItem);
             }
         }];
+        [tagView setHidden:YES];
         
-        UILabel *tagLabel = [[UILabel alloc] init];
-        [tagLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:11.f]];
-        [tagLabel setTextColor:COLOR_GREEN_7B929F];
-        [tagItem addSubview:tagLabel];
-        [tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.and.centerY.equalTo(tagItem);
-        }];
-        
-        [_tagItems addObject:tagItem];
+        [_tagItems addObject:tagView];
     }
     
     UILabel *releaseTimeDescLabel = [[UILabel alloc] init];
@@ -493,25 +421,33 @@
         make.height.mas_equalTo(priceDescLabel.font.pointSize);
     }];
     
+    UIView *centerView = [[UIView alloc] init];
+    [rightDownView addSubview:centerView];
+    [centerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(priceDescLabel.mas_bottom).with.offset(12.f);
+        make.centerX.equalTo(rightDownView);
+        make.height.mas_equalTo(17.f);
+    }];
+    
     UILabel *priceUnitLabel = [[UILabel alloc] init];
-    [priceUnitLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
+    [priceUnitLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
     [priceUnitLabel setTextColor:COLOR_RED_FF3C5E];
     [priceUnitLabel setText:@"/天"];
-    [rightDownView addSubview:priceUnitLabel];
+    [centerView addSubview:priceUnitLabel];
+    _priceUnitLabel = priceUnitLabel;
     [priceUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(priceDescLabel).with.offset(3.f);
-        make.top.equalTo(priceDescLabel.mas_bottom).with.offset(12.f);
-        make.height.mas_equalTo(priceUnitLabel.font.pointSize);
-        make.width.mas_equalTo(25.f);
+        make.right.equalTo(centerView);
+        make.centerY.equalTo(centerView);
     }];
     
     UILabel *priceLabel = [[UILabel alloc] init];
     [priceLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:17.f]];
     [priceLabel setTextColor:COLOR_RED_FF3C5E];
-    [rightDownView addSubview:priceLabel];
+    [centerView addSubview:priceLabel];
     _priceLabel = priceLabel;
     [priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(priceUnitLabel);
+        make.centerY.equalTo(centerView);
+        make.left.equalTo(centerView);
         make.right.equalTo(priceUnitLabel.mas_left);
     }];
 }
@@ -585,17 +521,6 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(MyCardVC:)];
     [portrait addGestureRecognizer:tap];
     
-    UILabel *userNameLabel = [[UILabel alloc] init];
-    [userNameLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [userNameLabel setTextColor:COLOR_BLACK_333333];
-    [view addSubview:userNameLabel];
-    _userNameLabel = userNameLabel;
-    [_userNameLabel setText:@"高小薇"];
-    [userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(portrait.mas_right).with.offset(14.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
-    
     UIButton *phoneBtn = [[UIButton alloc] init];
     [phoneBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:18.f]];
     [phoneBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
@@ -617,28 +542,26 @@
     [keepBtn setBackgroundColor:COLOR_RED_FE2A3B];
     [keepBtn setTitle:@"收藏" forState:UIControlStateNormal];
     [view addSubview:keepBtn];
-    [keepBtn addTarget:self action:@selector(getAddCollectionInfo:) forControlEvents:UIControlEventTouchUpInside];
+    [keepBtn addTarget:self action:@selector(addCollection) forControlEvents:UIControlEventTouchUpInside];
     [keepBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.and.bottom.equalTo(view);
         make.right.equalTo(phoneBtn.mas_left);
         make.width.mas_equalTo(110.f * g_rateWidth);
     }];
-}
-
-#pragma mark - 添加收藏
-- (void)getAddCollectionInfo:(UIButton *)button
-{
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/add" isNeedToken:YES paraments:@{@"spaceId":self.param[@"spaceId"]} complete:^(id  _Nonnull responseObject) {
-        if (CODE == 200) {
-            [HPProgressHUD alertMessage:MSG];
-        }else
-        {
-            [HPProgressHUD alertMessage:MSG];
-        }
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
+    
+    UILabel *userNameLabel = [[UILabel alloc] init];
+    [userNameLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
+    [userNameLabel setTextColor:COLOR_BLACK_333333];
+    [view addSubview:userNameLabel];
+    _userNameLabel = userNameLabel;
+    [_userNameLabel setText:@"高小薇"];
+    [userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(portrait.mas_right).with.offset(14.f * g_rateWidth);
+        make.right.equalTo(keepBtn.mas_left);
+        make.centerY.equalTo(view);
     }];
 }
+
 #pragma mark - HPbannerViewDelegate
 
 - (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
@@ -649,6 +572,135 @@
 
 - (void)onClickBackBtn {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - NetWork
+//获取详情数据
+- (void)getShareDetailInfoById:(NSString *)spaceId {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"spaceId"] = spaceId;
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/detail" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            NSLog(@"DATA: %@", DATA);
+            HPShareDetailModel *model = [HPShareDetailModel mj_objectWithKeyValues:DATA];
+            NSDictionary *userCardCase = DATA[@"userCardCase"];
+            if (![userCardCase isMemberOfClass:NSNull.class]) {
+                model.avatarUrl = userCardCase[@"avatarUrl"];
+            }
+            [self loadData:model];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+//添加收藏
+- (void)addCollection {
+    HPShareDetailModel *model = self.param[@"model"];
+    if (!model) {
+        return;
+    }
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/add" isNeedToken:YES paraments:@{@"spaceId":model.spaceId} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+        }else
+        {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+#pragma mark - LoadData
+
+- (void)loadData:(HPShareDetailModel *)model {
+    [_titleLabel setText:model.title];
+    
+    if (model.tag) {
+        NSArray *tags = [model.tag componentsSeparatedByString:@","];
+        [self setTag:tags];
+    }
+    
+    [_releaseTimeLabel setText:[model.createTime componentsSeparatedByString:@" "][0]];
+    
+    if (model.type == 1) {//业主
+        [_addressLabel setText:model.address];
+    }
+    else if (model.type == 2) { //创客
+        NSString *areaName = [HPCommonData getAreaNameById:model.areaId];
+        NSString *districeName = [HPCommonData getDistrictNameByAreaId:model.areaId districtId:model.districtId];
+        [_addressLabel setText:[NSString stringWithFormat:@"%@-%@", areaName, districeName]];
+    }
+    
+    NSString *industry = [HPCommonData getIndustryNameById:model.industryId];
+    NSString *subIndustry = [HPCommonData getIndustryNameById:model.subIndustryId];
+    [_tradeLabel setText:[NSString stringWithFormat:@"%@·%@", industry, subIndustry]];
+    
+    if (model.shareTime) {
+        [_shareTimeLabel setText:model.shareTime];
+    }
+    
+    if (model.area && ![model.area isEqualToString:@"0"]) {
+        [_areaLabel setText:[NSString stringWithFormat:@"%@ ㎡", model.area]];
+    }
+    else
+        [_areaLabel setText:@"面议"];
+    
+    if (model.rent && ![model.rent isEqualToString:@"0"]) {
+        [_priceLabel setText:model.rent];
+        [_priceUnitLabel setText:model.rentType == 1 ? @"元/小时":@"元/天"];
+    }
+    else {
+        [_priceLabel setText:@"面议"];
+        [_priceUnitLabel setHidden:YES];
+    }
+    
+    [_remarkLabel setText:model.remark];
+    
+    if (model.avatarUrl) {
+        [_portrait sd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholderImage:[UIImage imageNamed:@"shared_shop_details_head_portrait"]];
+    }
+    
+    [_userNameLabel setText:model.contact];
+    
+    if (model.shareDays) {
+        NSArray *shareDays = [model.shareDays componentsSeparatedByString:@","];
+        [_calendarView setSelectedDateStrs:shareDays];
+    }
+    
+    NSArray *testArray = @[@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545372618&di=fbb49adbf37d75ac8c940efd63eaa08e&imgtype=jpg&er=1&src=http%3A%2F%2Fimg0.ph.126.net%2FgIQutohTMU2i3AkVS-6tOg%3D%3D%2F6630732414655186356.jpg",
+                           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544759503783&di=09a39857f77718ec68b74e9995c4ebfa&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fpic%2Fe%2Fe7%2Fe1f1827994.jpg%3Fdown",
+                           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544777936230&di=dc7dcbb7fc819adbc886667b4dbb0f1d&imgtype=0&src=http%3A%2F%2Fimg.79tao.com%2Fdata%2Fattachment%2Fforum%2F201804%2F14%2F001701vaash2sgdl8qchnh.jpg",
+                           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544778024308&di=400579aeb71c396c1b84f9eea507bdbd&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D2527094628%2C3273654962%26fm%3D214%26gp%3D0.jpg"];
+    int j = 0;
+    
+    if (model.pictures && model.pictures.count > 0) {
+        if (model.pictures.count > 1) {
+            [_pageControl setNumberOfPages:model.pictures.count];
+            [_pageControl setCurrentPage:0];
+        }
+        
+        NSMutableArray *array = [[NSMutableArray alloc] init];
+        for (HPPictureModel *picModel in model.pictures) {
+            UIImageView *imageView = [[UIImageView alloc] init];
+            if ([kBaseUrl isEqualToString:@"http://192.168.0.104:8083"])
+                [imageView sd_setImageWithURL:[NSURL URLWithString:testArray[j]] placeholderImage:ImageNamed(@"shared_shop_details_background")];
+            else
+                [imageView sd_setImageWithURL:[NSURL URLWithString:picModel.url] placeholderImage:ImageNamed(@"shared_shop_details_background")];
+            [array addObject:imageView];
+            j ++;
+        }
+        
+        [_bannerView setImageViews:array];
+        if (model.pictures.count > 1) {
+            [_bannerView startAutoScrollWithInterval:2.0];
+        }
+    }
 }
 
 @end

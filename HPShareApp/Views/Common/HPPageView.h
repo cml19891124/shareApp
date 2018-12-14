@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) CGFloat pageSpace;
 
+@property (nonatomic, assign) NSInteger currentPage;
+
 @property (nonatomic, weak) id <HPPageViewDelegate> delegate;
 
 @property (nonatomic, weak, readonly) UIScrollView *scrollView;

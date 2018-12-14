@@ -14,8 +14,6 @@
 
 @interface HPShareGoodViewController () <HPBannerViewDelegate>
 
-@property (nonatomic, weak) UITableView *tableView;
-
 @property (nonatomic, weak) HPBannerView *bannerView;
 
 @property (nonatomic, weak) HPPageControl *pageControl;
@@ -27,9 +25,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.dataArray = [NSMutableArray arrayWithArray:self.testDataArray];
     
     [self setupUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self getShareListData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

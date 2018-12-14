@@ -8,12 +8,24 @@
 
 #import <Foundation/Foundation.h>
 #import "HPAreaModel.h"
+#import "HPIndustryModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ 获取全局的区域分类和行业分类等数据
+ */
 @interface HPCommonData : NSObject
 
++ (NSArray<HPIndustryModel *> *)getIndustryData;
+
++(NSString *)getIndustryNameById:(NSString *)industryId;
+
 + (NSArray<HPAreaModel *> *)getAreaData;
+
++ (NSString *)getAreaNameById:(NSString *)areaId;
+
++ (NSString *)getDistrictNameByAreaId:(NSString *)areaId districtId:(NSString *)districtId;
 
 @end
 
