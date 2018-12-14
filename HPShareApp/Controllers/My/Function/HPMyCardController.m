@@ -9,6 +9,7 @@
 #import "HPMyCardController.h"
 #import "HPShareListCell.h"
 #import "UIButton+WebCache.h"
+#import "HPShareListModel.h"
 
 @interface HPMyCardController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -214,8 +215,8 @@
     [editBtn.layer setMasksToBounds:YES];
     [editBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:10.f]];
     [editBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-
-    if ([self.param[@"userId"] intValue] == [userdic[@"userId"] intValue]) {
+    HPShareListModel *model = self.param[@"model"];
+    if ([model.spaceId intValue] == [userdic[@"userId"] intValue]) {
         [editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
         [editBtn addTarget:self action:@selector(editPersonalInfo:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -275,6 +276,8 @@
 #pragma mark - 关注某人
 - (void)focusSBToFansList:(UIButton *)button
 {
+    HPShareListModel *model = self.param[@"model"];
+
     HPLoginModel *account = [HPUserTool account];
     NSDictionary *dic = (NSDictionary *)account.userInfo;
     [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/add" paraments:@{@"userId":dic[@"userId"],@"followedId":self.param[@"followedId"]} needToken:YES complete:^(id  _Nonnull responseObject) {
