@@ -99,6 +99,10 @@ typedef enum {
 /** 是否无限循环,默认Yes */
 @property (nonatomic,assign) BOOL infiniteLoop;
 
+/**
+ 当前pageControl索引
+ */
+@property (assign, nonatomic) int currentPageIndex;
 /** 是否自动滚动,默认Yes */
 @property (nonatomic,assign) BOOL autoScroll;
 

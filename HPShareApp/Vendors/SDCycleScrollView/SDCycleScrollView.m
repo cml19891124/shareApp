@@ -90,8 +90,8 @@ NSString * const ID = @"cycleCell";
     _pageControlRightOffset = 0;
     _pageControlStyle = SDCycleScrollViewPageContolStyleClassic;
     _hidesForSinglePage = YES;
-    _currentPageDotColor = [UIColor whiteColor];
-    _pageDotColor = [UIColor lightGrayColor];
+    _currentPageDotColor = COLOR_RED_F91E54;
+    _pageDotColor = COLOR_GRAY_DDDDDD;
     _bannerImageViewContentMode = UIViewContentModeScaleToFill;
     
     self.backgroundColor = [UIColor lightGrayColor];
@@ -497,11 +497,10 @@ NSString * const ID = @"cycleCell";
         TAPageControl *pageControl = (TAPageControl *)_pageControl;
         [pageControl sizeToFit];
     }
-#warning TODO
-    CGRect pageControlFrame = CGRectMake(x, y + 88.f, size.width, size.height);
+
+    CGRect pageControlFrame = CGRectMake(x,y, size.width, size.height);
     pageControlFrame.origin.y -= self.pageControlBottomOffset;
     pageControlFrame.origin.x -= self.pageControlRightOffset;
-    self.pageControl.frame = pageControlFrame;
     self.pageControl.hidden = !_showPageControl;
     
     if (self.backgroundImageView) {
@@ -548,7 +547,11 @@ NSString * const ID = @"cycleCell";
     long itemIndex = [self pageControlIndexWithCurrentCellIndex:indexPath.item];
     
     NSString *imagePath = self.imagePathsGroup[itemIndex];
-    
+    cell.pageControl.pageIndicatorTintColor = COLOR_GRAY_DDDDDD;
+    cell.pageControl.currentPageIndicatorTintColor = COLOR_RED_F91E54;
+    cell.pageControl.numberOfPages = 3;
+    cell.pageControl.currentPage = itemIndex;
+
     if (!self.onlyDisplayText && [imagePath isKindOfClass:[NSString class]]) {
         if ([imagePath hasPrefix:@"http"]) {
             [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.placeholderImage];

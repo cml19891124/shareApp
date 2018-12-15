@@ -166,7 +166,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
     [storeInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.equalTo(shareShopBtn).with.offset(getWidth(15.f));
         make.height.mas_equalTo(storeInfoLabel.font.pointSize);
-        make.width.mas_equalTo(getWidth(65.f));
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
     }];
     
     UILabel *storeSBInfoLabel = [[UILabel alloc] init];
@@ -178,7 +178,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.left.equalTo(shareShopBtn).with.offset(getWidth(15.f));
         make.top.equalTo(storeInfoLabel.mas_bottom).with.offset(getWidth(10.f));
         make.height.mas_equalTo(storeSBInfoLabel.font.pointSize);
-        make.width.mas_equalTo(getWidth(85.f));
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
     }];
     
     UIButton *shareGoodsBtn = [[UIButton alloc] init];
@@ -201,7 +201,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
     [goodInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.equalTo(shareGoodsBtn).with.offset(getWidth(15.f));
         make.height.mas_equalTo(goodInfoLabel.font.pointSize);
-        make.width.mas_equalTo(getWidth(65.f));
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
     }];
     
     UILabel *goodSBInfoLabel = [[UILabel alloc] init];
@@ -213,7 +213,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.left.equalTo(shareGoodsBtn).with.offset(getWidth(15.f));
         make.top.equalTo(goodInfoLabel.mas_bottom).with.offset(getWidth(10.f));
         make.height.mas_equalTo(goodSBInfoLabel.font.pointSize);
-        make.width.mas_equalTo(getWidth(85.f));
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
     }];
     
     UIButton *shareHumanBtn = [[UIButton alloc] init];
@@ -235,7 +235,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
     [manInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.equalTo(shareHumanBtn).with.offset(getWidth(15.f));
         make.height.mas_equalTo(manInfoLabel.font.pointSize);
-        make.width.mas_equalTo(getWidth(65.f));
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
     }];
     
     UILabel *manSBInfoLabel = [[UILabel alloc] init];
@@ -247,7 +247,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.left.equalTo(shareHumanBtn).with.offset(getWidth(15.f));
         make.top.equalTo(manInfoLabel.mas_bottom).with.offset(getWidth(10.f));
         make.height.mas_equalTo(manSBInfoLabel.font.pointSize);
-        make.width.mas_equalTo(getWidth(85.f));
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
     }];
     
     UIButton *shareMapBtn = [[UIButton alloc] init];
@@ -271,7 +271,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.left.equalTo(shareMapBtn).with.offset(getWidth(42.f));
         make.top.equalTo(shareMapBtn).with.offset(getWidth(20.f));
         make.height.mas_equalTo(mapInfoLabel.font.pointSize);
-        make.width.mas_equalTo(getWidth(65.f));
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
     }];
     
     UILabel *mapSBInfoLabel = [[UILabel alloc] init];

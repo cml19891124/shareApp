@@ -28,7 +28,7 @@
  *********************************************************************************
  
  */
-
+#import "Masonry.h"
 #import "Macro.h"
 #import "HPGlobalVariable.h"
 #import "SDCollectionViewCell.h"
@@ -71,10 +71,13 @@
 - (void)setupImageView
 {
     UIImageView *imageView = [[UIImageView alloc] init];
-//        imageView.frame = CGRectMake((kScreenWidth - getWidth(258)/2), (kScreenWidth - getWidth(260)/2), getWidth(258), getWidth(260));
-
     _imageView = imageView;
     [self.contentView addSubview:imageView];
+    [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(getWidth(258.f), getWidth(260)));
+        make.centerX.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(getWidth(-298.f));
+    }];
 }
 
 - (void)setupTitleLabel
@@ -83,6 +86,9 @@
     _titleLabel = titleLabel;
     _titleLabel.hidden = YES;
     [self.contentView addSubview:titleLabel];
+    UIPageControl *pageControl = [[UIPageControl alloc] init];
+    [self.contentView addSubview:pageControl];
+    _pageControl = pageControl;
 }
 
 - (void)setTitle:(NSString *)title
@@ -114,6 +120,9 @@
         CGFloat titleLabelY = self.sd_height - titleLabelH;
         _titleLabel.frame = CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH);
     }
+    
+    _pageControl.frame = CGRectMake((self.contentView.frame.size.width - getWidth(100.f))/2,self.contentView.frame.size.height - getWidth(256.f), getWidth(100.f), getWidth(24.f));
+
 }
 
 @end
