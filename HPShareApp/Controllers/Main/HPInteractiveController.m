@@ -9,8 +9,9 @@
 #import "HPInteractiveController.h"
 #import "HPInteractiveCell.h"
 #import "HPInterActiveModel.h"
+#import <UserNotifications/UserNotifications.h>
 
-@interface HPInteractiveController ()<UITableViewDelegate,UITableViewDataSource>
+@interface HPInteractiveController ()<UITableViewDelegate,UITableViewDataSource,UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) NSArray *imageArray;
 @property (nonatomic, strong) UITableView *tableView;
@@ -22,7 +23,15 @@ static NSString *interactiveCell = @"interactiveCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-
+    if (@available(iOS 10.0, *)) {
+        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+        //监听回调事件
+        center.delegate = self;
+    } else {
+        // Fallback on earlier versions
+    }
+    
+    
     NSArray *interArray = @[@{@"photo":@"system notification",@"title":@"系统通知",@"subtitle":@"注册成功，欢迎进入“合店站”"},@{@"photo":@"activity center",@"title":@"活动中心",@"subtitle":@"锦鲤附身，您有1份新用户大礼包待领取"}];
     [self setupUI];
     _interArray = [HPInterActiveModel mj_objectArrayWithKeyValuesArray:interArray];
@@ -169,4 +178,9 @@ static NSString *interactiveCell = @"interactiveCell";
     }
     self.tableView.contentOffset = offset;
 }
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler API_AVAILABLE(ios(10.0)){
+    
+}
+
 @end

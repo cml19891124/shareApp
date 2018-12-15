@@ -41,7 +41,6 @@ static NSString *systemNotiCell = @"systemNotiCell";
     [tableView setSeparatorColor:COLOR_GRAY_F7F7F7];
     [tableView setDelegate:self];
     [tableView setDataSource:self];
-    tableView.scrollEnabled = NO;
     tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, CGFLOAT_MIN)];
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, CGFLOAT_MIN)];
     

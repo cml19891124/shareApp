@@ -11,7 +11,7 @@
 #import "HPPageView.h"
 #import "iCarousel.h"
 
-@interface HPHowToPlayShareSpaceController () <HPPageViewDelegate,iCarouselDelegate>
+@interface HPHowToPlayShareSpaceController () <HPPageViewDelegate,iCarouselDelegate,iCarouselDataSource>
 
 @property (nonatomic, strong) NSMutableArray *exampleData;
 @property(nonatomic,strong) iCarousel *carousel;
@@ -108,26 +108,27 @@
         make.height.mas_equalTo(exampleTitleLabel.font.pointSize);
     }];
     
-    HPPageView *pageView = [[HPPageView alloc] init];
-    [pageView setPageMarginLeft:20.f * g_rateWidth];
-    [pageView setPageWidth:297.f * g_rateWidth];
-    [pageView setPageSpace:20.f * g_rateWidth];
-    [pageView setDelegate:self];
-    [self.view addSubview:pageView];
-    _pageView = pageView;
-    [pageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    iCarousel * carousel = [[iCarousel alloc] init];
+    carousel.dataSource = self;
+    carousel.bounces = NO;
+    carousel.pagingEnabled = YES;
+    carousel.delegate = self;
+    carousel.type  = iCarouselTypeLinear;
+    [self.view addSubview:carousel];
+    self.carousel = carousel;
+    [carousel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(exampleTitleLabel.mas_bottom).with.offset(20.f * g_rateWidth);
-        make.left.equalTo(self.view);
+        make.left.equalTo(self.view).with.offset(20.f * g_rateWidth);
+        make.width.mas_equalTo(297.f * g_rateWidth);
         make.height.mas_equalTo(296.f * g_rateWidth);
-        make.right.equalTo(self.view);
     }];
     
     UIImageView *footerView = [[UIImageView alloc] init];
     [footerView setImage:[UIImage imageNamed:@"shenmeshi_hepai"]];
     [self.view addSubview:footerView];
     [footerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(pageView.mas_bottom).with.offset(25.f * g_rateWidth);
-        make.centerX.equalTo(pageView);
+        make.top.equalTo(carousel.mas_bottom).with.offset(24.f * g_rateWidth);
+        make.centerX.equalTo(carousel);
     }];
 }
 
@@ -169,7 +170,7 @@
 
 - (void)loadExampleItemWithData:(NSArray *)data {
     _exampleData = [[NSMutableArray alloc] initWithArray:data];
-    [_pageView refreshPageItem];
+    [_carousel reloadData];
 }
 
 #pragma mark - HPPageViewDelegate
@@ -204,4 +205,51 @@
     [self pushVCByClassName:@"HPHowToPlayDetailController"];
 }
 
+#pragma mark - iCarouselDataSource
+- (NSInteger)numberOfItemsInCarousel:(iCarousel *)carousel
+{
+    return _exampleData.count;
+}
+
+- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
+{
+    if (view == nil)
+    {
+        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0,297.f * g_rateWidth, 296.f * g_rateWidth)];
+        NSDictionary *dict = _exampleData[index];
+        NSString *title = dict[@"title"];
+        NSString *type = dict[@"type"];
+        NSString *desc = dict[@"desc"];
+        NSArray *photos = dict[@"photos"];
+        
+        HPIdeaExampleItem *item = [[HPIdeaExampleItem alloc] init];
+        [item setTitle:title];
+        [item setType:type];
+        [item setDesc:desc];
+        [item loadPhotoWithImages:photos];
+        [item.detailBtn addTarget:self action:@selector(onClickDetailBtn:) forControlEvents:UIControlEventTouchUpInside];
+        [view addSubview:item];
+        [item mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.top.mas_equalTo(view);
+            make.width.mas_equalTo(297.f * g_rateWidth);
+            make.height.mas_equalTo(296.f * g_rateWidth);
+        }];
+    }
+    return view;
+    
+}
+
+- (CGFloat)carousel:(iCarousel *)carousel valueForOption:(iCarouselOption)option withDefault:(CGFloat)value
+{
+    if (option == iCarouselOptionSpacing)
+    {
+        return value * 1.03;
+    }
+    return value;
+}
+
+- (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
+{
+    [self pushVCByClassName:@"HPMyCardController"];
+}
 @end

@@ -13,8 +13,11 @@
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import "AppDelegate+Config.h"
 #import <UserNotifications/UserNotifications.h>
+#import "HPTextDialogView.h"
+#import "HPGuideViewController.h"
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate>
+@property (nonatomic, weak) HPTextDialogView *textDialogView;
 
 @end
 
@@ -62,25 +65,29 @@
  */
 -(void)showAlert
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"有新的版本啦~~" delegate:self cancelButtonTitle:@"暂不更新" otherButtonTitles:@"前去更新",nil];
-    [alert show];
-    
-}
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if(buttonIndex==1)
-    {
+    if (_textDialogView == nil) {
+        HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
+        [textDialogView setText:@"有新的版本啦"];
+        [textDialogView setModalTop:279.f * g_rateHeight];
+        [textDialogView setCanecelBtnTitle:@"暂不更新"];
+        [textDialogView setConfirmBtnTitle:@"前往更新"];
+        _textDialogView = textDialogView;
+    }
+    //    kWeakSelf(weakSlef);
+    [_textDialogView setConfirmCallback:^{
         // 此处加入应用在app store的地址，方便用户去更新，一种实现方式如下：
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/us/app/id%@?ls=1&mt=8", kAppleId]];
         [[UIApplication sharedApplication] openURL:url];
-    }
+    }];
+    
+    [_textDialogView show:YES];
 }
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [AppDelegate setUpConfig];
     
-    [self updateAppVersionInfo];
+//    [self updateAppVersionInfo];
     // 使用 UNUserNotificationCenter 来管理通知
     if (@available(iOS 10.0, *)) {
         UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
@@ -104,29 +111,58 @@
     [HPGlobalVariable initVariable];
     
     [self configureAMapKey];
-    
+    HPGuideViewController *guidevc = [[HPGuideViewController alloc] init];
     HPMainTabBarController *mainTabBarController = [[HPMainTabBarController alloc] init];
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainTabBarController];
     navigationController.navigationBarHidden = YES;
     [navigationController.interactivePopGestureRecognizer setDelegate:mainTabBarController];
     
-     self.window.rootViewController = navigationController;
+     self.window.rootViewController = guidevc;
     
     return YES;
 }
 
 #pragma mark - UNUserNotificationCenterDelegate
-//在展示通知前进行处理，即有机会在展示通知前再修改通知内容。
+//iOS10新增：处理前台收到通知的代理方法
+
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler API_AVAILABLE(ios(10.0)){
-    //1. 处理通知
     
-    //2. 处理完成后条用 completionHandler ，用于指示在前台显示通知的形式
-    if (@available(iOS 10.0, *)) {
-        completionHandler(UNNotificationPresentationOptionAlert);
-    } else {
-        // Fallback on earlier versions
+    NSDictionary * userInfo = notification.request.content.userInfo;
+    
+    if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {//应用处于前台时的远程推送接受
+        
+    } else {//应用处于前台时的本地推送接受
+            
+        completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge);//
+            
     }
+    
+}
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler API_AVAILABLE(ios(10.0)){
+    
+    if (@available(iOS 10.0, *)) {
+        
+        UNNotificationContent *content = response.notification.request.content;
+        
+        // 如果在上面的通知方法中设置了一些，可以在这里打印额外信息的内容，就做到监听，也就可以根据额外信息，做出相应的判断
+        
+        NSData *data = [content.userInfo objectForKey:@"userInfo"];
+        
+        NSString *type = [content.userInfo objectForKey:@"type"];
+        
+        NSUInteger c = [type integerValue];
+        
+        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        
+//        [app processNotificationData:c data:data];
+        
+        } else {
+            
+            // Fallback on earlier versions
+            
+        }
+    
 }
 
 - (void)configureAMapKey {

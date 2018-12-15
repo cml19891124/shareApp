@@ -8,7 +8,7 @@
 
 #import "YYLRefreshNoDataView.h"
 #import "Macro.h"
-
+#import "HPGlobalVariable.h"
 @implementation YYLRefreshNoDataView
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -25,10 +25,10 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.tipImageView.frame = CGRectMake((self.bounds.size.width - 153)/2, 46.f, 153.f, 177.f);
-    self.tipLabel.frame = CGRectMake(0, self.tipImageView.frame.origin.y + 138, self.frame.size.width, 8.f);
+    self.tipImageView.frame = CGRectMake((self.bounds.size.width - getWidth(229.f))/2, getWidth(162.f),getWidth(229.f), getWidth(266.f));
+    self.tipLabel.frame = CGRectMake(0, self.tipImageView.frame.origin.y + getWidth(208.f), self.frame.size.width, getWidth(12.f));
 
-    self.tipBtn.frame = CGRectMake((self.bounds.size.width - 69)/2, self.tipImageView.frame.origin.y + self.tipImageView.frame.size.height + 2, 69.f, 19.f);
+    self.tipBtn.frame = CGRectMake((self.bounds.size.width - getWidth(103.f))/2, self.tipImageView.frame.origin.y + getWidth(268.f), getWidth(103.f), getWidth(29.f));
 }
 
 - (UIImageView *)tipImageView {
@@ -43,7 +43,7 @@
     if (!_tipLabel) {
         _tipLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _tipLabel.text = @"暂无数据";
-        _tipLabel.font = kFont_Medium(8.f);
+        _tipLabel.font = kFont_Medium(12.f);
         _tipLabel.textColor = COLOR_GRAY_999999;
         _tipLabel.textAlignment = NSTextAlignmentCenter;
         _tipLabel.backgroundColor = [UIColor clearColor];
@@ -55,11 +55,11 @@
     if (!_tipBtn) {
         _tipBtn = [[UIButton alloc] initWithFrame:CGRectZero];
         [_tipBtn setTitle:@"去逛逛" forState:UIControlStateNormal];
-        _tipBtn.titleLabel.font = kFont_Medium(9.f);
+        _tipBtn.titleLabel.font = kFont_Medium(14.f);
         [_tipBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
         _tipBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         _tipBtn.backgroundColor = COLOR_RED_FF3C5E;
-        _tipBtn.layer.cornerRadius = 4.f;
+        _tipBtn.layer.cornerRadius = 6.f;
         _tipBtn.layer.masksToBounds = YES;
         [_tipBtn addTarget:self action:@selector(checkForRequirements:) forControlEvents:UIControlEventTouchUpInside];
     }

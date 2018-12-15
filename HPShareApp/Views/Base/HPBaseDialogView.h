@@ -63,6 +63,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setConfirmBtnTitleColor:(UIColor *)color;
 
+
+/**
+ 设置取消按钮文字。
+ */
+- (void)setCanecelBtnTitle:(NSString *)cancelTitle;
+
+/**
+ 设置确认按钮文字
+ */
+- (void)setConfirmBtnTitle:(NSString *)sureTitle;
 @end
 
 NS_ASSUME_NONNULL_END

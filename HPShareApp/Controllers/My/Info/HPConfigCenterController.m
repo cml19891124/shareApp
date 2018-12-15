@@ -649,7 +649,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - TZImagePickerControllerDelegate
 
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-
+    picker.allowCrop = YES;
     UIImage *photo = photos[0];
     _photo = photo;
     [self uploadLocalImageGetAvatarUrl];

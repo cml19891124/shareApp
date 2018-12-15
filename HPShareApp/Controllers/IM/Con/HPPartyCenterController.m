@@ -38,7 +38,6 @@ static NSString *partyCenterCell = @"partyCenterCell";
     [tableView setSeparatorColor:COLOR_GRAY_F7F7F7];
     [tableView setDelegate:self];
     [tableView setDataSource:self];
-    tableView.scrollEnabled = NO;
     tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, CGFLOAT_MIN)];
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, CGFLOAT_MIN)];
     
@@ -47,7 +46,7 @@ static NSString *partyCenterCell = @"partyCenterCell";
     self.tableView = tableView;
     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(self.view);
-        make.top.mas_equalTo(g_navigationBarHeight);
+        make.top.mas_equalTo(g_statusBarHeight + 44.f);
         make.bottom.equalTo(self.view);
     }];
 }

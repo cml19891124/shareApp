@@ -14,6 +14,8 @@
 #import "HPCommonData.h"
 #import "HPShareDetailModel.h"
 #import "HPTagView.h"
+#import "HPCustomerServiceModalView.h"
+
 
 @interface HPShareDetailController () <HPBannerViewDelegate>
 
@@ -46,6 +48,16 @@
 @property (nonatomic, weak) UILabel *userNameLabel;
 
 @property (nonatomic, weak) HPCalendarView *calendarView;
+
+/**
+ 共享租金
+ */
+@property (nonatomic, strong) UILabel *priceDescLabel;
+/**
+ 共享面积
+ */
+@property (nonatomic, strong) UILabel *areaDescLabel;
+@property (nonatomic, weak) HPCustomerServiceModalView *customerServiceModalView;
 
 @end
 
@@ -99,12 +111,18 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_WHITE_FAF9FE];
-    
+    UIView *navView = [self setupNavigationBarWithTitle:@"店铺共享"];
     UIScrollView *scrollView = [[UIScrollView alloc] init];
+   
     [scrollView setBackgroundColor:COLOR_WHITE_FAF9FE];
+    scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:scrollView];
     [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 60.f * g_rateWidth, 0));
+//        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 60.f * g_rateWidth, 0));
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(navView.mas_bottom);
+        make.bottom.mas_equalTo(self.view.mas_bottom);
+
     }];
     
     HPBannerView *bannerView = [[HPBannerView alloc] init];
@@ -115,21 +133,21 @@
     [scrollView addSubview:bannerView];
     _bannerView = bannerView;
     [bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(scrollView).with.offset(-g_statusBarHeight);
+        make.top.equalTo(scrollView);
         make.left.and.width.equalTo(scrollView);
         make.height.mas_equalTo(230.f * g_rateWidth);
     }];
     
-    UIImageView *backIcon = [[UIImageView alloc] init];
-    [backIcon setImage:[UIImage imageNamed:@"icon_back"]];
-    [scrollView addSubview:backIcon];
-    [backIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(scrollView).with.offset(25.f * g_rateWidth);
-        make.top.equalTo(scrollView).with.offset(13.f);
-    }];
+//    UIImageView *backIcon = [[UIImageView alloc] init];
+//    [backIcon setImage:[UIImage imageNamed:@"icon_back"]];
+//    [scrollView addSubview:backIcon];
+//    [backIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(scrollView).with.offset(25.f * g_rateWidth);
+//        make.top.equalTo(scrollView).with.offset(13.f);
+//    }];
     
     UIButton *backBtn = [[UIButton alloc] init];
-    [backBtn addTarget:self action:@selector(onClickBackBtn) forControlEvents:UIControlEventTouchUpInside];
+//    [backBtn addTarget:self action:@selector(onClickBackBtn) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:backBtn];
     [backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(scrollView);
@@ -394,6 +412,7 @@
     [areaDescLabel setTextColor:COLOR_GRAY_999999];
     [areaDescLabel setText:@"共享面积"];
     [rightUpView addSubview:areaDescLabel];
+    _areaDescLabel = areaDescLabel;
     [areaDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(rightUpView);
         make.top.equalTo(rightUpView).with.offset(27.f * g_rateWidth);
@@ -416,6 +435,7 @@
     [priceDescLabel setTextColor:COLOR_GRAY_999999];
     [priceDescLabel setText:@"共享租金"];
     [rightDownView addSubview:priceDescLabel];
+    _priceDescLabel = priceDescLabel;
     [priceDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(rightDownView).with.offset(27.f * g_rateWidth);
         make.centerX.equalTo(rightDownView);
@@ -529,6 +549,7 @@
     [phoneBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 6.f, 0.f, -6.f)];
     [phoneBtn setBackgroundColor:COLOR_ORANGE_F59C40];
     [phoneBtn setTitle:@"电话" forState:UIControlStateNormal];
+    [phoneBtn addTarget:self action:@selector(makePhoneCall:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:phoneBtn];
     [phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.and.top.and.bottom.equalTo(view);
@@ -562,7 +583,20 @@
         make.centerY.equalTo(view);
     }];
 }
+#pragma mark - 拨打电话
+- (void)makePhoneCall:(UIButton *)button{
+    HPShareDetailModel *model = self.param[@"model"];
 
+        if (_customerServiceModalView == nil) {
+            HPCustomerServiceModalView *customerServiceModalView = [[HPCustomerServiceModalView alloc] initWithParent:self.parentViewController.view];
+            customerServiceModalView.phone = model.contactMobile;
+            [customerServiceModalView setPhoneString:model.contactMobile];
+            _customerServiceModalView = customerServiceModalView;
+        }
+        
+        [_customerServiceModalView show:YES];
+        [self.parentViewController.view bringSubviewToFront:_customerServiceModalView];
+}
 #pragma mark - HPbannerViewDelegate
 
 - (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
@@ -630,12 +664,18 @@
     [_releaseTimeLabel setText:[model.createTime componentsSeparatedByString:@" "][0]];
     
     if (model.type == 1) {//业主
-        [_addressLabel setText:model.address];
+        [_addressLabel setText:[NSString stringWithFormat:@"店铺地址:%@",model.address]];
+        [_priceDescLabel setText:@"共享租金"];
+        [_areaDescLabel setText:@"共享面积"];
+
     }
     else if (model.type == 2) { //创客
         NSString *areaName = [HPCommonData getAreaNameById:model.areaId];
         NSString *districeName = [HPCommonData getDistrictNameByAreaId:model.areaId districtId:model.districtId];
-        [_addressLabel setText:[NSString stringWithFormat:@"%@-%@", areaName, districeName]];
+        [_addressLabel setText:[NSString stringWithFormat:@"期望区域:%@-%@", areaName, districeName]];
+        [_priceDescLabel setText:@"期望租金"];
+        [_areaDescLabel setText:@"期望面积"];
+
     }
     
     NSString *industry = [HPCommonData getIndustryNameById:model.industryId];

@@ -16,7 +16,6 @@
 #import "HPUploadImageHandle.h"
 #import "HPPersonCenterModel.h"
 #import "UIButton+WebCache.h"
-
 @interface HPMyController ()
 
 @property (nonatomic, weak) UIButton *portraitBtn;
@@ -39,6 +38,11 @@
 @property (nonatomic, strong) NSMutableArray *userInfoArray;
 
 @property (nonatomic, strong) HPPersonCenterModel *infoModel;
+
+/**
+ 共享管理条数
+ */
+@property (nonatomic, strong) UILabel *spacenum;
 @end
 
 @implementation HPMyController
@@ -70,6 +74,8 @@
         [_keepNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.collectionNum]?:@"--"];
         [_followNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.followingNum]?:@"--"];
         [_historyNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.browseNum]?:@"--"];
+//        [_spacenum setText:[NSString stringWithFormat:@"%ld",_infoModel.spaceNum]?:@"--"];
+
         [_descLabel setHidden:YES];
         
         if (g_isCertified) {
@@ -455,8 +461,8 @@
     
     CGFloat xSpace = 61.f * g_rateWidth;
     CGFloat ySpace = 36.f * g_rateWidth;
-    
-    UIView *shareManagementItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_sharing_management"] title:@"共享管理" desc:@"0条"];
+    NSString *spaceNum = [NSString stringWithFormat:@"%ld条",_infoModel.spaceNum];
+    UIView *shareManagementItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_sharing_management"] title:@"共享管理" desc:spaceNum];
     [centerView addSubview:shareManagementItem];
     [shareManagementItem mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.top.equalTo(centerView);
@@ -527,6 +533,7 @@
     [descLabel setTextColor:COLOR_GRAY_BBBBBB];
     [descLabel setText:desc];
     [view addSubview:descLabel];
+//    _spacenum = descLabel;
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(view);
         make.top.equalTo(btn.mas_bottom).with.offset(6.f * g_rateWidth);
@@ -599,6 +606,8 @@
     else if ([btn.text isEqualToString:@"在线客服"]) {
         if (_customerServiceModalView == nil) {
             HPCustomerServiceModalView *customerServiceModalView = [[HPCustomerServiceModalView alloc] initWithParent:self.parentViewController.view];
+            customerServiceModalView.phone = @"0755-86713128";
+            [customerServiceModalView setPhoneString:@"0755-86713128"];
             _customerServiceModalView = customerServiceModalView;
         }
         

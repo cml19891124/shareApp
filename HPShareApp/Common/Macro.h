@@ -105,6 +105,7 @@
 #define COLOR_GRAY_BCC1CF [UIColor colorWithHexString:@"#BCC1CF"]
 #define COLOR_GRAY_888888 [UIColor colorWithHexString:@"#888888"]
 #define COLOR_GRAY_878787 [UIColor colorWithHexString:@"#878787"]
+#define COLOR_RED_F91E54 [UIColor colorWithHexString:@"#F91E54"]
 
 #define kAppleId @"10812999054"
 
@@ -121,6 +122,7 @@
 /* 平方-粗体 */
 #define kFont_Bold(font)  [UIFont fontWithName:@"PingFangSC-Bold"size:font]
 #define kFont_Regular(font)  [UIFont fontWithName:@"PingFangSC-Regular"size:font]
+#define kFont_Heavy(font)  [UIFont fontWithName:@"PingFangSC-Heavy"size:font]
 
 //#define kBaseUrl  @"https://inner.hepaicn.com"
 //#define kBaseUrl  @"https://app.hepaicn.com"

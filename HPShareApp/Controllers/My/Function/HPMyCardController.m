@@ -11,7 +11,11 @@
 #import "UIButton+WebCache.h"
 #import "HPShareListModel.h"
 #import "HPCardDetailsModel.h"
-
+typedef NS_ENUM(NSInteger, HPMyCardType) {
+    HPMyCardTypeEdit = 20,
+    HPMyCardTypeFocus,
+    HPMyCardTypeCancelFocus,
+};
 @interface HPMyCardController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, weak) UIButton *portraitView;
@@ -46,9 +50,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
     HPShareListModel *model = self.param[@"model"];
-    if (model) {//非自己
+    if ([model.userId intValue]) {//非自己
         [self getCardInfoDetails:model];
         
     }else{//自己
@@ -66,6 +70,8 @@
         [_signatureLabel setText:signature.length >0 ?signature:@"未填写"];
         _descLabel.text = dic[@"signature"];
         [_signatureLabel setText:title.length > 0?title:@"未填写"];
+        [self.editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
+        [self.editBtn setTag:HPMyCardTypeEdit];
     }
 }
 
@@ -106,7 +112,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setupUI];
     /*
     [_phoneNumLabel setText:@"18342804321"];
     [_companyLabel setText:@"深圳市宝创汽车服务有限公司"];
@@ -124,6 +129,8 @@
                    @{@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner"}];
     [_tableView reloadData];
      */
+    [self setupUI];
+
 }
 
 /*
@@ -271,15 +278,18 @@
 
     if ([model.userId intValue] == [userdic[@"userId"] intValue]) {
         [editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
-        [editBtn addTarget:self action:@selector(editPersonalInfo:) forControlEvents:UIControlEventTouchUpInside];
+        [editBtn setTag:HPMyCardTypeEdit];
+        [editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
     }else{
         if(!_cardDetailsModel.fans){
             [editBtn setTitle:@"关注" forState:UIControlStateNormal];
+            [editBtn setTag:HPMyCardTypeFocus];
             self.method = @"/v1/fans/add";
             [editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
             
         }else if(_cardDetailsModel.fans){
             [editBtn setTitle:@"已关注" forState:UIControlStateNormal];
+            [editBtn setTag:HPMyCardTypeCancelFocus];
             self.method = @"/v1/fans/cancel";
             [editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
             
@@ -337,21 +347,29 @@
 #pragma mark - 关注某人
 - (void)focusSBToFansList:(UIButton *)button
 {
-    
-    HPShareListModel *model = self.param[@"model"];
-    HPLoginModel *account = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)account.userInfo;
-    [HPHTTPSever HPPostServerWithMethod:_method paraments:@{@"userId":dic[@"userId"],@"followedId":model.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
-        if (CODE == 200) {
-            [HPProgressHUD alertMessage:MSG];
-            HPShareListModel *model = self.param[@"model"];
-            [self getCardInfoDetails:model];
-        }else{
-            [HPProgressHUD alertMessage:MSG];
+    if (button.tag == HPMyCardTypeEdit) {
+        [self pushVCByClassName:@"HPEditPersonOInfoController"];
+    }else {
+        HPShareListModel *model = self.param[@"model"];
+        HPLoginModel *account = [HPUserTool account];
+        NSDictionary *dic = (NSDictionary *)account.userInfo;
+        
+        if (model) {//只有是非自己的信息界面传入的model不为空，才会调用关注接口
+            [HPHTTPSever HPPostServerWithMethod:_method paraments:@{@"userId":dic[@"userId"],@"followedId":model.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
+                if (CODE == 200) {
+                    [HPProgressHUD alertMessage:MSG];
+                    HPShareListModel *model = self.param[@"model"];
+                    [self getCardInfoDetails:model];
+                }else{
+                    [HPProgressHUD alertMessage:MSG];
+                }
+            } Failure:^(NSError * _Nonnull error) {
+                ErrorNet
+            }];
         }
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
-    }];
+    }
+    
+    
 }
 #pragma mark - 编辑个人信息界面
 - (void)editPersonalInfo:(UIButton *)button
