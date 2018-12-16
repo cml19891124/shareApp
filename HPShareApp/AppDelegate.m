@@ -119,7 +119,7 @@
     [navigationController.interactivePopGestureRecognizer setDelegate:mainTabBarController];
     NSString *isFirst = [kUserDefaults objectForKey:@"isFirst"];
     if ([isFirst isEqualToString:@"isFirst"]) {
-        self.window.rootViewController = mainTabBarController;
+        self.window.rootViewController = navigationController;
     }else{
         self.window.rootViewController = guidevc;
     }

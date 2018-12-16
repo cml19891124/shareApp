@@ -384,6 +384,7 @@
     UILabel *keepNumLabel = [[UILabel alloc] init];
     [keepNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:20.f]];
     [keepNumLabel setTextColor:COLOR_BLACK_333333];
+    keepNumLabel.text = @"--";
     [leftView addSubview:keepNumLabel];
     _keepNumLabel = keepNumLabel;
     [keepNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -407,6 +408,7 @@
     UILabel *followNumLabel = [[UILabel alloc] init];
     [followNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:20.f]];
     [followNumLabel setTextColor:COLOR_BLACK_333333];
+    followNumLabel.text = @"--";
     [centerView addSubview:followNumLabel];
     _followNumLabel = followNumLabel;
     [followNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -430,6 +432,7 @@
     UILabel *historyNumLabel = [[UILabel alloc] init];
     [historyNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:20.f]];
     [historyNumLabel setTextColor:COLOR_BLACK_333333];
+    historyNumLabel.text = @"--";
     [rightView addSubview:historyNumLabel];
     _historyNumLabel = historyNumLabel;
     [historyNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -553,9 +556,10 @@
         [self pushVCByClassName:@"HPLoginController"];
 
         return;
-    }
+    }else{
     
     [self pushVCByClassName:@"HPConfigCenterController"];
+    }
 }
 
 - (void)onClickLoginBtn:(UIButton *)btn {
@@ -588,14 +592,17 @@
     HPLoginModel *model = [HPUserTool account];
     if (!model.token) {
         [HPProgressHUD alertMessage:@"用户未登录"];
-        return;
+//        return;
     }
     
     NSLog(@"function btn: %@", btn.text);
     if ([btn.text isEqualToString:@"我的名片"]) {
         HPLoginModel *account = [HPUserTool account];
         NSDictionary *dic = (NSDictionary *)account.userInfo;
-        [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":dic[@"userId"]}];
+        NSString *userId = dic[@"userId"];
+        NSMutableDictionary *userdic = [NSMutableDictionary dictionary];
+        userdic[@"userId"] = userId;
+        [self pushVCByClassName:@"HPMyCardController" withParam:userdic];
     }
     else if ([btn.text isEqualToString:@"共享管理"]) {
         [self pushVCByClassName:@"HPShareManageController"];
