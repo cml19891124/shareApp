@@ -33,7 +33,7 @@
 #import "HPGlobalVariable.h"
 #import "SDCollectionViewCell.h"
 #import "UIView+SDExtension.h"
-
+#import "HPMainTabBarController.h"
 @implementation SDCollectionViewCell
 {
     __weak UILabel *_titleLabel;
@@ -45,11 +45,62 @@
     if (self = [super initWithFrame:frame]) {
         [self setupImageView];
         [self setupTitleLabel];
+        
+        UIButton *enterBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [enterBtn setTitle:@"立即体验" forState:UIControlStateNormal];
+//        enterBtn.hidden = YES;
+        enterBtn.titleLabel.font = kFont_Medium(18.f);
+        enterBtn.layer.cornerRadius = getWidth(35.f)/2;
+        enterBtn.layer.masksToBounds = YES;
+        [enterBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+        enterBtn.backgroundColor = COLOR_RED_F91E54;
+        enterBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        [enterBtn addTarget:self action:@selector(enterApp:) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:enterBtn];
+        self.enterBtn = enterBtn;
+        [enterBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(getWidth(140.f), getWidth(35.f)));
+            make.centerX.mas_equalTo(self.contentView);
+            make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(getWidth(-78.f));
+        }];
+        
+        UILabel *themeSBLabel = [[UILabel alloc] init];
+        [self.contentView addSubview:themeSBLabel];
+        _themeSBLabel = themeSBLabel;
+        [_themeSBLabel setFont:kFont_Bold(16.f)];
+        [_themeSBLabel setTextColor:COLOR_GRAY_CCCCCC];
+        _themeSBLabel.textAlignment = NSTextAlignmentCenter;
+//        [_themeSBLabel setText:@"让店铺每平米空间都能增值"];
+        [themeSBLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(enterBtn.mas_top).with.offset(getWidth(-39.f));
+            make.height.mas_equalTo(themeSBLabel.font.pointSize);
+            make.width.mas_equalTo(kScreenWidth);
+            make.centerX.mas_equalTo(self.contentView);
+        }];
+        
+        
+        UILabel *themeLabel = [[UILabel alloc] init];
+        [self.contentView addSubview:themeLabel];
+        _themeLabel = themeLabel;
+        [_themeLabel setFont:kFont_Medium(24.f)];
+        [_themeLabel setTextColor:COLOR_BLACK_333333];
+        _themeLabel.textAlignment = NSTextAlignmentCenter;
+//        [_themeLabel setText:@"共享店铺"];
+        [themeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.themeSBLabel.mas_top).with.offset(getWidth(-22.f));
+            make.size.mas_equalTo(CGSizeMake(kScreenWidth/2, getWidth(23.f)));
+            make.centerX.mas_equalTo(self.contentView);
+        }];
+        
     }
     
     return self;
 }
 
+- (void)enterApp:(UIButton *)button
+{
+    kAppdelegateWindow.rootViewController = [HPMainTabBarController new];
+}
 - (void)setTitleLabelBackgroundColor:(UIColor *)titleLabelBackgroundColor
 {
     _titleLabelBackgroundColor = titleLabelBackgroundColor;

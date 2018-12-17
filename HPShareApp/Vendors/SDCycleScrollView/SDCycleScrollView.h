@@ -103,6 +103,14 @@ typedef enum {
  当前pageControl索引
  */
 @property (assign, nonatomic) int currentPageIndex;
+/**
+ 主标题数组
+ */
+@property (strong, nonatomic) NSArray *themeTitleArray;
+/**
+ 子标题数组
+ */
+@property (strong, nonatomic) NSArray *themeSBTitleArray;
 /** 是否自动滚动,默认Yes */
 @property (nonatomic,assign) BOOL autoScroll;
 

@@ -45,6 +45,22 @@
 @property (strong, nonatomic) UIPageControl *pageControl;
 @property (nonatomic, assign) BOOL hasConfigured;
 
+
+/**
+ 主标题数组
+ */
+@property (strong, nonatomic) NSArray *themeTitleArray;
+/**
+ 子标题数组
+ */
+@property (strong, nonatomic) NSArray *themeSBTitleArray;
+/**
+ 新加属性控件
+ */
+@property (nonatomic, strong) UIButton *enterBtn;
+@property (nonatomic, strong) UILabel *themeLabel;
+@property (nonatomic, strong) UILabel *themeSBLabel;
+
 /** 只展示文字轮播 */
 @property (nonatomic, assign) BOOL onlyDisplayText;
 

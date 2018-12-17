@@ -50,52 +50,6 @@
     for (int i = 0; i < imageArray.count; i++) {
         [self cycleScrollView:cycleScrollView didScrollToIndex:i];
     }
-    
-    UIButton *enterBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [enterBtn setTitle:@"立即体验" forState:UIControlStateNormal];
-    enterBtn.hidden = YES;
-    enterBtn.titleLabel.font = kFont_Medium(18.f);
-    enterBtn.layer.cornerRadius = getWidth(35.f)/2;
-    enterBtn.layer.masksToBounds = YES;
-    [enterBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
-    enterBtn.backgroundColor = COLOR_RED_F91E54;
-    enterBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [enterBtn addTarget:self action:@selector(enterApp:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:enterBtn];
-    self.enterBtn = enterBtn;
-    [enterBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(getWidth(140.f), getWidth(35.f)));
-        make.centerX.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view.mas_bottom).offset(getWidth(-78.f));
-    }];
-    
-    UILabel *themeSBLabel = [[UILabel alloc] init];
-    [_bannerView addSubview:themeSBLabel];
-    _themeSBLabel = themeSBLabel;
-    [_themeSBLabel setFont:kFont_Medium(16.f)];
-    [_themeSBLabel setTextColor:COLOR_GRAY_CCCCCC];
-    _themeSBLabel.textAlignment = NSTextAlignmentCenter;
-    [_themeSBLabel setText:@"让店铺每平米空间都能增值"];
-    [themeSBLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(enterBtn.mas_top).with.offset(getWidth(-39.f));
-        make.height.mas_equalTo(themeSBLabel.font.pointSize);
-        make.width.mas_equalTo(kScreenWidth);
-        make.centerX.mas_equalTo(self.bannerView);
-    }];
-    
-    
-    UILabel *themeLabel = [[UILabel alloc] init];
-    [_bannerView addSubview:themeLabel];
-    _themeLabel = themeLabel;
-    [_themeLabel setFont:kFont_Bold(24.f)];
-    [_themeLabel setTextColor:COLOR_BLACK_333333];
-    _themeLabel.textAlignment = NSTextAlignmentCenter;
-    [_themeLabel setText:@"共享店铺"];
-    [themeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.themeSBLabel.mas_top).with.offset(getWidth(-22.f));
-        make.size.mas_equalTo(CGSizeMake(kScreenWidth/2, getWidth(23.f)));
-        make.centerX.mas_equalTo(self.bannerView);
-    }];
 }
 
 - (void)enterApp:(UIButton *)button
@@ -116,16 +70,10 @@
 }
 
 - (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didScrollToIndex:(NSInteger)index{
-    if (index == 2) {
-        _enterBtn.hidden = NO;
-    }else{
-        _enterBtn.hidden = YES;
-
-    }
     _bannerView.currentPageIndex = (int)index;
-    NSArray *themeTitle = @[@"共享店铺",@"共享货品",@"共享人力"];
-    NSArray *themeSBTitle = @[@"让店铺每平米空间都能增值",@"厂家直供，没有中间商",@"人手不够，短工随时找"];
-    [_themeLabel setText:themeTitle[index]];
-    [_themeSBLabel setText:themeSBTitle[index]];
+    NSArray *themeTitleArray = @[@"共享店铺",@"共享货品",@"共享人力"];
+    NSArray *themeSBTitleArray = @[@"让店铺每平米空间都能增值",@"厂家直供，没有中间商",@"人手不够，短工随时找"];
+    _bannerView.themeTitleArray = themeTitleArray;
+    _bannerView.themeSBTitleArray = themeSBTitleArray;
 }
 @end
