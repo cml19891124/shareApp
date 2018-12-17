@@ -10,7 +10,6 @@
 #import "HPShareListCell.h"
 #import "HPImageUtil.h"
 #import "HPTextDialogView.h"
-#import "HPCollectListModel.h"
 #import "HPIndustryModel.h"
 #import "YYLRefreshNoDataView.h"
 #import "UIScrollView+Refresh.h"
@@ -33,9 +32,9 @@
 @property (nonatomic, strong) UILabel *waitingLabel;
 
 @property (nonatomic, strong) NSMutableArray *industryModels;
-@property (strong, nonatomic) HPCollectListModel *model;
+@property (strong, nonatomic) HPShareListModel *model;
 
-@property (nonatomic, strong) HPCollectListModel *selectedModel;
+@property (nonatomic, strong) HPShareListModel *selectedModel;
 @end
 
 @implementation HPKeepController
@@ -60,7 +59,6 @@
         [_checkArray addObject:[NSNumber numberWithBool:NO]];
     }
     
-    [self setupUI];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -68,28 +66,15 @@
     [super viewWillAppear:animated];
     _industryModels = [NSMutableArray array];
     self.count = 1;
+    [self setupUI];
+
     [self loadtableViewFreshUi];
-    [self getTradeList];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [_bottomDeleteView removeFromSuperview];
-}
-
-- (void)getTradeList {
-    kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/industry/listWithChildren" isNeedToken:NO paraments:@{} complete:^(id  _Nonnull responseObject) {
-        if (CODE == 200) {
-            weakSelf.industryModels = [HPIndustryModel mj_objectArrayWithKeyValuesArray:DATA];
-            [self.tableView reloadData];
-        }else{
-            [HPProgressHUD alertMessage:MSG];
-        }
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
-    }];
 }
 #pragma mark - 上下啦刷新控件
 - (void)loadtableViewFreshUi
@@ -131,7 +116,7 @@
             [self.tableView.mj_header endRefreshing];
             [self.tableView.mj_footer endRefreshing];
             [self.dataArray removeAllObjects];
-            weakSelf.dataArray = [HPCollectListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
+            weakSelf.dataArray = [HPShareListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
             if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
                 self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
                 self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_collect");
@@ -207,7 +192,7 @@
 //    [_allCheckBtn setSelected:YES];
     _selectedModel = self.dataArray[indexPath.row];
     
-    HPCollectListModel *model = self.dataArray[indexPath.row];
+    HPShareListModel *model = self.dataArray[indexPath.row];
     
 //    model.selected = !model.selected;//默认选一种，不可不选
 //    self.selectedModel.selected = NO;
@@ -253,12 +238,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
-    HPCollectListModel *model = self.dataArray[indexPath.row];
-    for (int i = 0; i < self.industryModels.count; i++) {
-        HPIndustryModel *industryModel = self.industryModels[i];
-//        cell.industryModel = industryModel;
-    }
+    HPShareListModel *model = self.dataArray[indexPath.row];
     cell.model = model;
+    
 //    NSString *title = dict[@"title"];
 //    NSString *trade = dict[@"trade"];
 //    NSString *rentTime = dict[@"rentTime"];
@@ -272,7 +254,7 @@
 //    [cell setArea:area];
 //    [cell setPrice:price];
     
-    [cell setCheckEnabled:_isEdited];
+//    [cell setCheckEnabled:_isEdited];
     
 //    BOOL isChecked = ((NSNumber *)_checkArray[indexPath.row]).boolValue;
 //    [cell setChecked:isChecked];
@@ -368,7 +350,7 @@
     [self setAllCellChecked:!btn.isSelected];
     [btn setSelected:!btn.isSelected];
     if (btn.selected) {
-        for (HPCollectListModel *model in self.dataArray) {
+        for (HPShareListModel *model in self.dataArray) {
             model.selected = YES;
         }
     }
@@ -399,7 +381,7 @@
 //            HPCollectListModel *model = self.dataArray[indexPath.row];
             NSMutableArray *spaceIds = [NSMutableArray array];
 
-                for (HPCollectListModel *model in self.dataArray) {
+                for (HPShareListModel *model in self.dataArray) {
                     if (model.selected) {
                         [spaceIds addObject:model.spaceId];
                     }

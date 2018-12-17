@@ -210,5 +210,23 @@
 - (void)onTapModalOutSide {
     [self onClickCancelBtn];
 }
+/**
+ 设置取消按钮文字。
+ */
+- (void)setCanecelBtnTitle:(NSString *)cancelTitle
+{
+    [_cancelBtn setTitle:cancelTitle forState:UIControlStateNormal];
+    [_cancelBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
+    _cancelBtn.titleLabel.font = kFont_Bold(18.f);
+}
 
+/**
+ 设置确认按钮文字
+ */
+- (void)setConfirmBtnTitle:(NSString *)sureTitle
+{
+    [_confirmBtn setTitle:sureTitle forState:UIControlStateNormal];
+    [_confirmBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    _confirmBtn.titleLabel.font = kFont_Medium(18.f);
+}
 @end

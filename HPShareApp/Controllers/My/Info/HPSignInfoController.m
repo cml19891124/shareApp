@@ -262,8 +262,8 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    if (textField.text.length > 12) {
-        [HPProgressHUD alertMessage:@"签名信息不得超过12位"];
+    if (textField.text.length >= 12) {
+        [HPProgressHUD alertMessage:@"签名标题不得超过12位"];
         self.signField.text = [textField.text substringToIndex:12];
         return NO;
     }else{

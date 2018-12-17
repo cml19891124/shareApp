@@ -11,7 +11,7 @@
 #import "HPImageUtil.h"
 #import "HPPageControlFactory.h"
 
-@interface HPHowToPlayDetailController () <HPBannerViewDelegate>
+@interface HPHowToPlayDetailController () <HPBannerViewDelegate,UIScrollViewDelegate>
 
 @property (nonatomic, weak) HPBannerView *bannerView;
 
@@ -88,6 +88,7 @@
     [self.view setBackgroundColor:COLOR_GRAY_F6F6F6];
     
     UIScrollView *scrollView = [[UIScrollView alloc] init];
+    scrollView.delegate = self;
     [self.view addSubview:scrollView];
     [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
@@ -389,4 +390,13 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+#pragma mark - UIScrollViewDelegate
+#pragma mark - 取消下拉  允许上拉
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGPoint offset = scrollView.contentOffset;
+    if (offset.y <= 0) {
+        offset.y = -g_statusBarHeight;
+    }
+    scrollView.contentOffset = offset;
+}
 @end

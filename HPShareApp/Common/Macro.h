@@ -12,7 +12,7 @@
 /**
  全局宏定义。
  */
-
+#define IPHONE_WIDTH [[UIScreen mainScreen] bounds].size.width
 #define IPHONE_HAS_NOTCH [[UIScreen mainScreen] bounds].size.height >= 812
 //获取屏幕宽度与高度
 #define kScreenWidth \
@@ -107,6 +107,9 @@
 #define COLOR_GRAY_888888 [UIColor colorWithHexString:@"#888888"]
 #define COLOR_GRAY_878787 [UIColor colorWithHexString:@"#878787"]
 #define COLOR_GRAY_808080 [UIColor colorWithHexString:@"#808080"]
+#define COLOR_RED_F91E54 [UIColor colorWithHexString:@"#F91E54"]
+
+#define kAppleId @"10812999054"
 
 /**
  字体宏定义
@@ -121,10 +124,11 @@
 /* 平方-粗体 */
 #define kFont_Bold(font)  [UIFont fontWithName:@"PingFangSC-Bold"size:font]
 #define kFont_Regular(font)  [UIFont fontWithName:@"PingFangSC-Regular"size:font]
+#define kFont_Heavy(font)  [UIFont fontWithName:@"PingFangSC-Heavy"size:font]
 
 //#define kBaseUrl  @"https://inner.hepaicn.com"
-#define kBaseUrl  @"https://app.hepaicn.com"
-//#define kBaseUrl  @"http://192.168.0.104:8083"//测试
+//#define kBaseUrl  @"https://app.hepaicn.com"
+#define kBaseUrl  @"http://192.168.0.104:8083"//测试
 //#define kBaseUrl  @"http://192.168.0.147:8083"//胜光
 
 #define BoundWithSize(str,width,font)   ([str boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:font]} context:nil])

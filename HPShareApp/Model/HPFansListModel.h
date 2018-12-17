@@ -11,19 +11,18 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPFansListModel : NSObject
-@property (nonatomic, copy) NSString *followed_id;
-@property (nonatomic, copy) NSString *user_id;
-@property (nonatomic, copy) NSString *updateTime;
-@property (nonatomic, copy) NSString *deleteTime;
-@property (nonatomic, copy) NSString *username;
-@property (nonatomic, copy) NSString *company;
-@property (nonatomic, copy) NSString *mobile;
-@property (nonatomic, copy) NSString *telephone;
-@property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *avatarUrl;
-@property (nonatomic, copy) NSString *signature;
+@property (nonatomic, copy) NSString *cardcaseId;
+@property (nonatomic, copy) NSString *company;
+@property (nonatomic, copy) NSString *createTime;
+@property (nonatomic, copy) NSString *deleteTime;
 @property (nonatomic, copy) NSString *realName;
-@property (nonatomic, copy) NSString *email;
+@property (nonatomic, copy) NSString *signature;
+@property (nonatomic, copy) NSString *telephone;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *updateTime;
+@property (nonatomic, copy) NSString *userId;
+
 
 /**
  选中是否取消关注

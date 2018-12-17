@@ -33,11 +33,20 @@
     [view addSubview:callView];
     [callView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.top.and.width.equalTo(view);
-        make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 90.f));
+        if ([self.phone isEqualToString:TEL]) {
+            make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 90.f));
+        }else{
+            make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 45.f));
+        }
     }];
     
     UIView *line = [[UIView alloc] init];
     [line setBackgroundColor:COLOR_GRAY_CCCCCC];
+    if ([self.phone isEqualToString:TEL]) {
+        line.hidden = NO;
+    }else{
+        line.hidden = YES;
+    }
     [callView addSubview:line];
     [line mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(callView);
@@ -56,6 +65,11 @@
     [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:14.f]];
     [descLabel setTextColor:COLOR_GRAY_CCCCCC];
     [descLabel setText:@"周一至周日 9:00-20:00"];
+    if ([_phone isEqualToString:TEL]) {
+        descLabel.hidden = NO;
+    }else{
+        descLabel.hidden = YES;
+    }
     [descView addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.and.centerY.equalTo(descView);
@@ -67,9 +81,14 @@
     [callBtn setTitle:[NSString stringWithFormat:@"呼叫 %@", TEL] forState:UIControlStateNormal];
     [callBtn addTarget:self action:@selector(onClickCallBtn:) forControlEvents:UIControlEventTouchUpInside];
     [callView addSubview:callBtn];
+    _callBtn = callBtn;
     [callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.and.bottom.equalTo(callView);
-        make.top.equalTo(line);
+        if ([self.phone isEqualToString:TEL]) {
+            make.top.equalTo(line);
+        }else{
+            make.top.equalTo(callView);
+        }
     }];
     
     UIButton *cancelBtn = [[UIButton alloc] init];
@@ -88,7 +107,7 @@
 }
 
 - (void)onClickCallBtn:(UIButton *)btn {
-    NSString *telNumber = [NSString stringWithFormat:@"tel:%@", TEL];
+    NSString *telNumber = [NSString stringWithFormat:@"tel:%@", self.phone];
     
     NSURL *aURL = [NSURL URLWithString: telNumber];
     
@@ -102,4 +121,8 @@
     [self show:NO];
 }
 
+- (void)setPhoneString:(NSString *)phone
+{
+    [_callBtn setTitle:phone forState:UIControlStateNormal];
+}
 @end

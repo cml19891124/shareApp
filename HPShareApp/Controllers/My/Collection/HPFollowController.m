@@ -40,25 +40,28 @@
 
 }
 
-#pragma mark - 取消关注事件
-- (void)followListCell:(HPFollowListCell *)cell didClickWithFollowModel:(HPFansListModel *)model
-{
-    HPLoginModel *account = [HPUserTool account];
-    NSDictionary *userdic = (NSDictionary *)account.userInfo;
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"userId"] = userdic[@"userId"];
-    dic[@"followedId"] = model.followed_id;
-
-    [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/cancel" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
-        if (CODE == 200) {
-            [HPProgressHUD alertMessage:MSG];
-        }else{
-            [HPProgressHUD alertMessage:MSG];
-        }
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
-    }];
-}
+//#pragma mark - 取消关注事件
+//- (void)followListCell:(HPFollowListCell *)cell didClickWithFollowModel:(HPFansListModel *)model
+//{
+//    HPLoginModel *account = [HPUserTool account];
+//    NSDictionary *userdic = (NSDictionary *)account.userInfo;
+//    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+//    dic[@"userId"] = userdic[@"userId"];
+//    dic[@"followedId"] = model.followed_id;
+//
+//    [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/cancel" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+//        if (CODE == 200) {
+//            [HPProgressHUD alertMessage:MSG];
+//            //刷新列表
+//            [self loadtableViewFreshUi];
+//
+//        }else{
+//            [HPProgressHUD alertMessage:MSG];
+//        }
+//    } Failure:^(NSError * _Nonnull error) {
+//        ErrorNet
+//    }];
+//}
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.count = 1;
@@ -135,58 +138,11 @@
             [self.dataArray removeAllObjects];
             weakSelf.dataArray = [HPFansListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
             if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
-//                [HPProgressHUD alertMessage:@"您还没有添加关注哦～"];
                 self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
                 self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list");
                 self.tableView.refreshNoDataView.tipLabel.text = @"关注列表空空如也，快去逛逛吧！";
                 self.tableView.refreshNoDataView.delegate = self;
-                /*UIImage *image = ImageNamed(@"empty_list");
-                UIImageView *waitingView = [[UIImageView alloc] init];
-                waitingView.image = image;
-                [self.tableView addSubview:waitingView];
-                self.waitingView = waitingView;
-                [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
-                    
-                    make.size.mas_equalTo(CGSizeMake(153.f * g_rateWidth, 177.f * g_rateWidth));
-                    make.center.mas_equalTo(self.tableView);
-                }];
-                
-                
-                UILabel *waitingLabel = [[UILabel alloc] init];
-                waitingLabel.text = @"关注列表空空如也，快去逛逛吧！";
-                waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:8];
-                waitingLabel.textColor = COLOR_GRAY_999999;
-                waitingLabel.textAlignment = NSTextAlignmentCenter;
-                [self.tableView addSubview:waitingLabel];
-                self.waitingLabel = waitingLabel;
-                [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.centerX.mas_equalTo(self.tableView);
-                    make.top.mas_equalTo(waitingView.mas_top).offset(138.f * g_rateWidth);
-                    make.width.mas_equalTo(self.tableView);
-                }];
-                
-                UIButton *forbtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                forbtn.backgroundColor = COLOR_RED_FF3C5E;
-                forbtn.layer.cornerRadius = 4.f;
-                forbtn.layer.masksToBounds = YES;
-                forbtn.titleLabel.font = kFont_Medium(9.f);
-                [forbtn setTitle:@"去逛逛" forState:UIControlStateNormal];
-                [forbtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
-                forbtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-                [self.tableView addSubview:forbtn];
-                self.forbtn = forbtn;
-                [forbtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.size.mas_equalTo(CGSizeMake(getWidth(69.f), getWidth(19.f)));
-                    make.top.mas_equalTo(waitingView.mas_bottom).offset(getWidth(2.f));
-                    make.centerX.mas_equalTo(self.tableView);
-                }];*/
             }
-//            else{
-//                [self.waitingView removeFromSuperview];
-//                [self.waitingLabel removeFromSuperview];
-//                [self.forbtn removeFromSuperview];
-//
-//            }
             if ([weakSelf.dataArray count] < 10) {
                 
                 [self.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -233,13 +189,6 @@
     HPFollowListCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
     
     HPFansListModel *model = _dataArray[indexPath.row];
-//    NSString *userName = dict[@"userName"];
-//    NSString *company = dict[@"company"];
-//    UIImage *portrait = dict[@"portrait"];
-//
-//    [cell setUserName:userName];
-//    [cell setCompany:company];
-//    [cell setPortrait:portrait];
     cell.model = model;
     [cell setDelegate:self];
     
@@ -252,23 +201,25 @@
 
 #pragma mark - HPFollowListCellDelegate
 
-- (void)followListCell:(HPFollowListCell *)cell didClickFollowBtn:(UIButton *)btn {
+- (void)followListCell:(HPFollowListCell *)cell didClickWithFollowModel:(HPFansListModel *)model {
     if (_textDialogView == nil) {
         HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
         [textDialogView setText:@"确定取消关注此人？"];
         [textDialogView setModalTop:279.f * g_rateHeight];
         _textDialogView = textDialogView;
     }
-    kWeakSelf(weakSlef);
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *dic = (NSDictionary *)account.userInfo;
+//    kWeakSelf(weakSlef);
     [_textDialogView setConfirmCallback:^{
 //        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
 //        NSLog(@"indexPath: %ld", (long)indexPath.row);
 //        [self.dataArray removeObjectAtIndex:indexPath.row];
-//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/cancel" paraments:@{@"shareFans":weakSlef.selectedModel.followed_id} needToken:YES complete:^(id  _Nonnull responseObject) {
+//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];model.user_id
+        [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/cancel" paraments:@{@"userId":dic[@"userId"],@"followedId":model.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
             if (CODE == 200) {
                 [HPProgressHUD alertMessage:MSG];
-                [self getFansListData];
+                [self loadtableViewFreshUi];
             }else{
                 [HPProgressHUD alertMessage:MSG];
             }
@@ -291,29 +242,29 @@
     //    model.selected = YES;
     //    self.selectedModel = model;
     
-    if(self.selectedModel.followed_id != model.followed_id){//默认选一种，可不选
-        //点击不同的spaceId，当原来的spaceId选中时，设置原来的不选中
-        if(self.selectedModel.selected){
-            self.selectedModel.selected = !self.selectedModel.selected;
-        }
-        model.selected = !model.selected;
-        self.selectedModel = model;
-    }else{
-        model.selected = !model.selected;
-        self.selectedModel = model;
-    }
-    
-    _model = model;
-    HPFollowListCell *cell = (HPFollowListCell *)[tableView cellForRowAtIndexPath:indexPath];
-    
-    cell.model = model;
-    //没有动画闪烁问题
-    [UIView performWithoutAnimation:^{
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
-    }];
-    
-    [UIView performWithoutAnimation:^{
-        [self.tableView reloadData];
-    }];
+//    if(self.selectedModel.user != model.followed_id){//默认选一种，可不选
+//        //点击不同的spaceId，当原来的spaceId选中时，设置原来的不选中
+//        if(self.selectedModel.selected){
+//            self.selectedModel.selected = !self.selectedModel.selected;
+//        }
+//        model.selected = !model.selected;
+//        self.selectedModel = model;
+//    }else{
+//        model.selected = !model.selected;
+//        self.selectedModel = model;
+//    }
+//
+//    _model = model;
+//    HPFollowListCell *cell = (HPFollowListCell *)[tableView cellForRowAtIndexPath:indexPath];
+//
+//    cell.model = model;
+//    //没有动画闪烁问题
+//    [UIView performWithoutAnimation:^{
+//        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+//    }];
+//
+//    [UIView performWithoutAnimation:^{
+//        [self.tableView reloadData];
+//    }];
 }
 @end

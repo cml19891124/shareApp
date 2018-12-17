@@ -475,6 +475,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
             UIImagePickerController *photoPicker = [[UIImagePickerController alloc] init];
             [photoPicker setSourceType:UIImagePickerControllerSourceTypeCamera];
             [photoPicker setDelegate:self];
+            photoPicker.allowsEditing = YES;
             self.photoPicker = photoPicker;
         }
         
@@ -489,6 +490,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
             [imagePicker setOKButtonTitleColorNormal:COLOR_RED_FF3C5E];
             [imagePicker setOKButtonTitleColorDisabled:COLOR_GRAY_999999];
             [imagePicker.view setNeedsDisplay];
+            imagePicker.maxImagesCount = 1;
             self.imagePicker = imagePicker;
         }
         
@@ -647,13 +649,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - TZImagePickerControllerDelegate
 
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        for (int i=0; i<photos.count; i++) {
-//            NSArray *asset=assets[i];
-//
-//        }
-//    });
-
+    picker.allowCrop = YES;
     UIImage *photo = photos[0];
     _photo = photo;
     [self uploadLocalImageGetAvatarUrl];
@@ -663,24 +659,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 - (void)uploadLocalImageGetAvatarUrl
 {
     NSString *url = [NSString stringWithFormat:@"%@/v1/file/uploadPicture",kBaseUrl];//放上传图片的网址
-    HPLoginModel *account = [HPUserTool account];
-//    NSDictionary *dic = (NSDictionary *)account.userInfo;
     NSString *historyTime = [HPTimeString getNowTimeTimestamp];
     [HPUploadImageHandle sendPOSTWithUrl:url withLocalImage:_photo isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
-
-//        HPUserInfo *userInfo = [[HPUserInfo alloc] init];
-//        userInfo.avatarUrl = [data[@"data"]firstObject][@"url"]?:@"";
-//        userInfo.company = dic[@"company"]?:@"";
-//        userInfo.password = dic[@"password"]?:@"";
-//        userInfo.realName = dic[@"realName"]?:@"";
-//        userInfo.signatureContext = dic[@"signatureContext"]?:@"";
-//        userInfo.telephone = dic[@"telephone"]?:@"";
-//        userInfo.title = dic[@"title"]?:@"";
-//        userInfo.username = dic[@"username"]?:@"";
-//        userInfo.userId = dic[@"userId"]?:@"";
-//        userInfo.mobile = dic[@"mobile"]?:@"";
-//        account.userInfo = userInfo;
-//        [HPUserTool saveAccount:account];
         NSString *url = [data[@"data"]firstObject][@"url"]?:@"";
         if (url) {
             [self onClickChangeUpdateUser:url];

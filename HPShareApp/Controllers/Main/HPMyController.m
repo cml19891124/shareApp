@@ -39,6 +39,11 @@
 @property (nonatomic, strong) NSMutableArray *userInfoArray;
 
 @property (nonatomic, strong) HPPersonCenterModel *infoModel;
+
+/**
+ 共享管理条数
+ */
+@property (nonatomic, strong) UILabel *spacenum;
 @end
 
 @implementation HPMyController
@@ -70,6 +75,8 @@
         [_keepNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.collectionNum]?:@"--"];
         [_followNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.followingNum]?:@"--"];
         [_historyNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.browseNum]?:@"--"];
+//        [_spacenum setText:[NSString stringWithFormat:@"%ld",_infoModel.spaceNum]?:@"--"];
+
         [_descLabel setHidden:YES];
         
         if (g_isCertified) {
@@ -378,6 +385,7 @@
     UILabel *keepNumLabel = [[UILabel alloc] init];
     [keepNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:20.f]];
     [keepNumLabel setTextColor:COLOR_BLACK_333333];
+    keepNumLabel.text = @"--";
     [leftView addSubview:keepNumLabel];
     _keepNumLabel = keepNumLabel;
     [keepNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -401,6 +409,7 @@
     UILabel *followNumLabel = [[UILabel alloc] init];
     [followNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:20.f]];
     [followNumLabel setTextColor:COLOR_BLACK_333333];
+    followNumLabel.text = @"--";
     [centerView addSubview:followNumLabel];
     _followNumLabel = followNumLabel;
     [followNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -424,6 +433,7 @@
     UILabel *historyNumLabel = [[UILabel alloc] init];
     [historyNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:20.f]];
     [historyNumLabel setTextColor:COLOR_BLACK_333333];
+    historyNumLabel.text = @"--";
     [rightView addSubview:historyNumLabel];
     _historyNumLabel = historyNumLabel;
     [historyNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -455,8 +465,8 @@
     
     CGFloat xSpace = 61.f * g_rateWidth;
     CGFloat ySpace = 36.f * g_rateWidth;
-    
-    UIView *shareManagementItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_sharing_management"] title:@"共享管理" desc:@"0条"];
+    NSString *spaceNum = [NSString stringWithFormat:@"%ld条",_infoModel.spaceNum];
+    UIView *shareManagementItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_sharing_management"] title:@"共享管理" desc:spaceNum];
     [centerView addSubview:shareManagementItem];
     [shareManagementItem mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.top.equalTo(centerView);
@@ -527,6 +537,7 @@
     [descLabel setTextColor:COLOR_GRAY_BBBBBB];
     [descLabel setText:desc];
     [view addSubview:descLabel];
+//    _spacenum = descLabel;
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(view);
         make.top.equalTo(btn.mas_bottom).with.offset(6.f * g_rateWidth);
@@ -546,9 +557,10 @@
         [self pushVCByClassName:@"HPLoginController"];
 
         return;
-    }
+    }else{
     
     [self pushVCByClassName:@"HPConfigCenterController"];
+    }
 }
 
 - (void)onClickLoginBtn:(UIButton *)btn {
@@ -581,14 +593,17 @@
     HPLoginModel *model = [HPUserTool account];
     if (!model.token) {
         [HPProgressHUD alertMessage:@"用户未登录"];
-        return;
+//        return;
     }
     
     NSLog(@"function btn: %@", btn.text);
     if ([btn.text isEqualToString:@"我的名片"]) {
         HPLoginModel *account = [HPUserTool account];
         NSDictionary *dic = (NSDictionary *)account.userInfo;
-        [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":dic[@"userId"]}];
+        NSString *userId = dic[@"userId"];
+        NSMutableDictionary *userdic = [NSMutableDictionary dictionary];
+        userdic[@"userId"] = userId;
+        [self pushVCByClassName:@"HPMyCardController" withParam:userdic];
     }
     else if ([btn.text isEqualToString:@"共享管理"]) {
         [self pushVCByClassName:@"HPShareManageController"];
@@ -599,6 +614,8 @@
     else if ([btn.text isEqualToString:@"在线客服"]) {
         if (_customerServiceModalView == nil) {
             HPCustomerServiceModalView *customerServiceModalView = [[HPCustomerServiceModalView alloc] initWithParent:self.parentViewController.view];
+            customerServiceModalView.phone = @"0755-86713128";
+            [customerServiceModalView setPhoneString:@"0755-86713128"];
             _customerServiceModalView = customerServiceModalView;
         }
         

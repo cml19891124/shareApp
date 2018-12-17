@@ -11,7 +11,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPCustomerServiceModalView : HPBaseModalView
+@property (nonatomic, strong) UIButton *callBtn;
+@property (nonatomic, copy) NSString *phone;
+/**
+ 设置电话号码
 
+ @param phone <#phone description#>
+ */
+- (void)setPhoneString:(NSString *)phone;
 @end
 
 NS_ASSUME_NONNULL_END

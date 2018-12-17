@@ -5,13 +5,19 @@
 //  Created by HP on 2018/11/22.
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
-
+#import "HPCardHeaderView.h"
 #import "HPMyCardController.h"
 #import "HPShareListCell.h"
 #import "UIButton+WebCache.h"
-
-@interface HPMyCardController () <UITableViewDelegate, UITableViewDataSource>
-
+#import "HPShareListModel.h"
+#import "HPCardDetailsModel.h"
+typedef NS_ENUM(NSInteger, HPMyCardType) {
+    HPMyCardTypeEdit = 20,
+    HPMyCardTypeFocus,
+    HPMyCardTypeCancelFocus,
+};
+@interface HPMyCardController () <UITableViewDelegate, UITableViewDataSource,UIScrollViewDelegate>
+@property (strong, nonatomic) UIView *cardPanel;
 @property (nonatomic, weak) UIButton *portraitView;
 
 @property (nonatomic, weak) UILabel *phoneNumLabel;
@@ -26,42 +32,96 @@
 
 @property (nonatomic, strong) NSArray *dataArray;
 @property (nonatomic, copy) NSString *avatarUrl;
+@property (nonatomic, strong) UIButton *editBtn;
 
+/**
+ 当前model.userId
+ */
+@property (nonatomic, strong) HPShareListModel *model;
+
+/**
+ 关注/取消关注
+ */
+@property (nonatomic, copy) NSString *method;
+@property (nonatomic, strong) HPCardDetailsModel *cardDetailsModel;
+@property (strong, nonatomic) HPCardHeaderView *headerView;
+@property (strong, nonatomic) UIView *releaseRegion;
 @end
 
 @implementation HPMyCardController
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    HPLoginModel *account = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)account.cardInfo;
-    NSDictionary *userdic = (NSDictionary *)account.userInfo;
 
-    NSString *company = dic[@"company"];
-    NSString *title = dic[@"title"];
-    NSString *signature = dic[@"signature"];
-    NSString *realName = userdic[@"realName"];
-    NSString *mobile = userdic[@"mobile"];
-    
-    [_phoneNumLabel setText:mobile.length >0 ?mobile:@"未填写"];
-    [_companyLabel setText:company.length >0 ?company:@"未填写"];
-    [_signatureLabel setText:signature.length >0 ?signature:@"未填写"];
-    _descLabel.text = dic[@"signature"];
-    [_signatureLabel setText:title.length > 0?title:@"未填写"];
-
+    HPShareListModel *model = self.param[@"model"];
+    if ([model.userId intValue]) {//非自己
+        [self getCardInfoDetails:model];
+        
+    }else{//自己
+        HPLoginModel *account = [HPUserTool account];
+        NSDictionary *dic = (NSDictionary *)account.cardInfo;
+        NSDictionary *userdic = (NSDictionary *)account.userInfo;
+        
+        NSString *company = dic[@"company"];
+        NSString *title = dic[@"title"];
+        NSString *signature = dic[@"signature"];
+        NSString *mobile = userdic[@"mobile"];
+        
+        [_phoneNumLabel setText:mobile.length >0 ?mobile:@"未填写"];
+        [_companyLabel setText:company.length >0 ?company:@"未填写"];
+        [_signatureLabel setText:signature.length >0 ?signature:@"未填写"];
+        _descLabel.text = dic[@"signature"];
+        [_signatureLabel setText:title.length > 0?title:@"未填写"];
+        [self.editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
+        [self.editBtn setTag:HPMyCardTypeEdit];
+    }
 }
 
+#pragma mark - 获取卡片详情
+- (void)getCardInfoDetails:(HPShareListModel *)model
+{
+    HPLoginModel *account = [HPUserTool account];
+    NSDictionary *userdic = (NSDictionary *)account.userInfo;
+    NSMutableDictionary *detaildic = [NSMutableDictionary dictionary];
+    detaildic[@"followedId"] = model.userId;
+    detaildic[@"userId"] = userdic[@"userId"];
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/cardDetails" isNeedToken:YES paraments:detaildic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            self.cardDetailsModel = [HPCardDetailsModel mj_objectWithKeyValues:responseObject[@"data"][@"cardInfo"]];
+            [self.phoneNumLabel setText:self.cardDetailsModel.telephone.length >0 ?self.cardDetailsModel.telephone:@"未填写"];
+            [self.companyLabel setText:self.cardDetailsModel.company.length >0 ?self.cardDetailsModel.company:@"未填写"];
+            [self.descLabel setText:self.cardDetailsModel.signature.length >0 ?self.cardDetailsModel.signature:@"未填写"];
+            [self.signatureLabel setText:self.cardDetailsModel.title.length > 0?self.cardDetailsModel.title:@"未填写"];
+            [self.portraitView sd_setImageWithURL:[NSURL URLWithString:self.cardDetailsModel.avatarUrl.length >0?self.cardDetailsModel.avatarUrl:userdic[@"avatarUrl"]] forState:UIControlStateNormal];
+            if(!self.cardDetailsModel.fans){
+                [self.editBtn setTitle:@"关注" forState:UIControlStateNormal];
+                self.method = @"/v1/fans/add";
+                [self.editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
+                
+            }else if(self.cardDetailsModel.fans){
+                [self.editBtn setTitle:@"已关注" forState:UIControlStateNormal];
+                self.method = @"/v1/fans/cancel";
+                [self.editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
+            }
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet;
+    }];
+
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    [self setupUI];
-    
+    /*
     [_phoneNumLabel setText:@"18342804321"];
     [_companyLabel setText:@"深圳市宝创汽车服务有限公司"];
     [_signatureLabel setText:@"有朋自远方来，不亦乐乎。"];
     [_descLabel setText:@"我们4S汽车店专注于服务与品质，我们欢迎一切专注于服务客户的品牌商、创业者加入我们。我们共享的不只是空间，也是资源、信息与服务的共享。"];
-    
+    */
+    [self setupUI];
+
     _dataArray = @[@{@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner"},
                    @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner"},
                    @{@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner"},
@@ -74,46 +134,38 @@
     [_tableView reloadData];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_GRAY_F6F6F6];
-    
-    UIScrollView *scrollView = [[UIScrollView alloc] init];
-    [self.view addSubview:scrollView];
-    [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+    HPCardHeaderView *headerView = [[HPCardHeaderView alloc] init];
+    [self.view addSubview:headerView];
+    self.headerView = headerView;
+    [headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.mas_equalTo(self.view);
+        make.height.mas_equalTo(getWidth(488.f));
     }];
-    
+    [self setupReleaseRegion];
+
     UIImageView *bgView = [[UIImageView alloc] init];
     [bgView setImage:[UIImage imageNamed:@"my_business_card_background_map"]];
-    [scrollView addSubview:bgView];
+    [headerView addSubview:bgView];
     [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.equalTo(scrollView);
-        make.top.equalTo(scrollView).with.offset(-g_statusBarHeight);
+        make.left.and.width.equalTo(headerView);
+        make.top.equalTo(headerView).with.offset(-g_statusBarHeight);
     }];
     
     UIImageView *backIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_back"]];
-    [scrollView addSubview:backIcon];
+    [headerView addSubview:backIcon];
     [backIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(scrollView).with.offset(25.f * g_rateWidth);
-        make.top.equalTo(scrollView).with.offset(15.f);
+        make.left.equalTo(headerView).with.offset(25.f * g_rateWidth);
+        make.top.equalTo(headerView).with.offset(g_statusBarHeight);
     }];
     
     UIButton *backBtn = [[UIButton alloc] init];
     [backBtn addTarget:self action:@selector(onClickBackBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:backBtn];
+    [headerView addSubview:backBtn];
     [backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(scrollView);
-        make.top.equalTo(scrollView);
+        make.left.equalTo(headerView);
+        make.top.mas_equalTo(headerView).offset(g_statusBarHeight);
         make.size.mas_equalTo(CGSizeMake(44.f, 44.f));
     }];
     
@@ -121,9 +173,9 @@
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [titleLabel setTextColor:UIColor.whiteColor];
     [titleLabel setText:@"我的名片"];
-    [scrollView addSubview:titleLabel];
+    [headerView addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(scrollView);
+        make.centerX.equalTo(headerView);
         make.centerY.equalTo(backIcon);
     }];
     
@@ -134,10 +186,11 @@
     [cardPanel.layer setShadowOpacity:0.07f];
     [cardPanel.layer setShadowRadius:16.f];
     [cardPanel setBackgroundColor:UIColor.whiteColor];
-    [scrollView addSubview:cardPanel];
+    [headerView addSubview:cardPanel];
+    _cardPanel = cardPanel;
     [cardPanel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(backIcon.mas_bottom).with.offset(33.f * g_rateWidth);
-        make.centerX.equalTo(scrollView);
+        make.centerX.equalTo(headerView);
         make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 215.f * g_rateWidth));
     }];
     [self setupCardPanel:cardPanel];
@@ -148,24 +201,20 @@
     [infoRegion.layer setShadowOpacity:0.07f];
     [infoRegion.layer setShadowRadius:16.f];
     [infoRegion setBackgroundColor:UIColor.whiteColor];
-    [scrollView addSubview:infoRegion];
+    [headerView addSubview:infoRegion];
     [infoRegion mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.equalTo(scrollView);
+        make.left.and.width.equalTo(headerView);
         make.top.equalTo(cardPanel.mas_bottom).with.offset(15.f * g_rateWidth);
         make.height.mas_equalTo(225.f * g_rateWidth);
     }];
     [self setupInfoRegion:infoRegion];
     
-    UIView *releaseRegion = [[UIView alloc] init];
-    [releaseRegion setBackgroundColor:UIColor.whiteColor];
-    [scrollView addSubview:releaseRegion];
-    [releaseRegion mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(infoRegion.mas_bottom).with.offset(15.f * g_rateWidth);
-        make.left.and.width.equalTo(scrollView);
-        make.height.mas_equalTo(476.f * g_rateWidth);
-        make.bottom.equalTo(scrollView);
+    
+    [headerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(infoRegion.mas_bottom);
+        make.left.top.right.mas_equalTo(self.view);
     }];
-    [self setupReleaseRegion:releaseRegion];
+
 }
 
 - (void)setupCardPanel:(UIView *)view {
@@ -174,16 +223,19 @@
     NSDictionary *userdic = (NSDictionary *)account.cardInfo;
     NSString *avatarUrl = userdic[@"avatarUrl"];
     UIButton *portraitView = [[UIButton alloc] init];
-    [portraitView.layer setCornerRadius:46.f * g_rateWidth * 0.5];
+    [portraitView.layer setCornerRadius:getWidth(63.f) * 0.5];
     [portraitView.layer setMasksToBounds:YES];
-    [portraitView sd_setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal];
-
+    if (avatarUrl.length == 0) {
+        [portraitView setBackgroundImage:ImageNamed(@"personal_center_not_login_head") forState:UIControlStateNormal];
+    }else{
+        [portraitView sd_setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal];
+    }
     [view addSubview:portraitView];
     _portraitView = portraitView;
     [portraitView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(17.f * g_rateWidth);
         make.top.equalTo(view).with.offset(20.f * g_rateWidth);
-        make.size.mas_equalTo(CGSizeMake(getWidth(46.f), getWidth(46.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(63.f), getWidth(63.f)));
     }];
     
     UILabel *phoneNumLabel = [[UILabel alloc] init];
@@ -205,7 +257,7 @@
     _companyLabel = companyLabel;
     [companyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(phoneNumLabel);
-        make.top.equalTo(phoneNumLabel.mas_bottom).with.offset(13.f * g_rateWidth);
+        make.bottom.equalTo(portraitView.mas_bottom).with.offset(-11.f * g_rateWidth);
         make.height.mas_equalTo(phoneNumLabel.font.pointSize);
     }];
     
@@ -214,18 +266,31 @@
     [editBtn.layer setMasksToBounds:YES];
     [editBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:10.f]];
     [editBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    HPShareListModel *model = self.param[@"model"];
+    _model = model;
 
-    if ([self.param[@"userId"] intValue] == [userdic[@"userId"] intValue]) {
+    if ([model.userId intValue] == [userdic[@"userId"] intValue]) {
         [editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
-        [editBtn addTarget:self action:@selector(editPersonalInfo:) forControlEvents:UIControlEventTouchUpInside];
-
-    }else{
-        [editBtn setTitle:@"关注" forState:UIControlStateNormal];
+        [editBtn setTag:HPMyCardTypeEdit];
         [editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
-
+    }else{
+        if(!_cardDetailsModel.fans){
+            [editBtn setTitle:@"关注" forState:UIControlStateNormal];
+            [editBtn setTag:HPMyCardTypeFocus];
+            self.method = @"/v1/fans/add";
+            [editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
+            
+        }else if(_cardDetailsModel.fans){
+            [editBtn setTitle:@"已关注" forState:UIControlStateNormal];
+            [editBtn setTag:HPMyCardTypeCancelFocus];
+            self.method = @"/v1/fans/cancel";
+            [editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
+            
+        }
     }
     [editBtn setBackgroundColor:COLOR_RED_FF3455];
     [view addSubview:editBtn];
+    self.editBtn = editBtn;
     [editBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(view).with.offset(8.f);
         make.centerY.equalTo(phoneNumLabel);
@@ -275,17 +340,29 @@
 #pragma mark - 关注某人
 - (void)focusSBToFansList:(UIButton *)button
 {
-    HPLoginModel *account = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)account.userInfo;
-    [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/add" paraments:@{@"userId":dic[@"userId"],@"followedId":self.param[@"followedId"]} needToken:YES complete:^(id  _Nonnull responseObject) {
-        if (CODE == 200) {
-            [HPProgressHUD alertMessage:MSG];
-        }else{
-            [HPProgressHUD alertMessage:MSG];
+    if (button.tag == HPMyCardTypeEdit) {
+        [self pushVCByClassName:@"HPEditPersonOInfoController"];
+    }else {
+        HPShareListModel *model = self.param[@"model"];
+        HPLoginModel *account = [HPUserTool account];
+        NSDictionary *dic = (NSDictionary *)account.userInfo;
+        
+        if (model) {//只有是非自己的信息界面传入的model不为空，才会调用关注接口
+            [HPHTTPSever HPPostServerWithMethod:_method paraments:@{@"userId":dic[@"userId"],@"followedId":model.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
+                if (CODE == 200) {
+                    [HPProgressHUD alertMessage:MSG];
+                    HPShareListModel *model = self.param[@"model"];
+                    [self getCardInfoDetails:model];
+                }else{
+                    [HPProgressHUD alertMessage:MSG];
+                }
+            } Failure:^(NSError * _Nonnull error) {
+                ErrorNet
+            }];
         }
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
-    }];
+    }
+    
+    
 }
 #pragma mark - 编辑个人信息界面
 - (void)editPersonalInfo:(UIButton *)button
@@ -429,29 +506,47 @@
     }];
 }
 
-- (void)setupReleaseRegion:(UIView *)view {
-    UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
-    [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:@"共享发布"];
-    [view addSubview:titleLabel];
-    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(21.f * g_rateWidth);
-        make.top.equalTo(view).with.offset(20.f * g_rateWidth);
-        make.height.mas_equalTo(titleLabel.font.pointSize);
+- (void)setupReleaseRegion{
+    UIView *releaseRegion = [[UIView alloc] init];
+    [releaseRegion setBackgroundColor:UIColor.whiteColor];
+    [self.view addSubview:releaseRegion];
+    [releaseRegion mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(15.f * g_rateWidth);
+        make.bottom.mas_equalTo(self.view);
+    }];
+    _releaseRegion = releaseRegion;
+    UIView *titleRegion = [[UIView alloc] init];
+    [titleRegion setBackgroundColor:UIColor.whiteColor];
+    [releaseRegion addSubview:titleRegion];
+    [titleRegion mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.headerView.mas_bottom).with.offset(15.f * g_rateWidth);
+        make.left.and.width.equalTo(self.headerView);
+        make.height.mas_equalTo(52.f * g_rateWidth);
     }];
     
-    UITableView *tableView = [[UITableView alloc] init];
-    [tableView setBackgroundColor:UIColor.clearColor];
+    UILabel *shareLabel = [[UILabel alloc] init];
+    [shareLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
+    [shareLabel setTextColor:COLOR_BLACK_333333];
+    [shareLabel setText:@"共享发布"];
+    [titleRegion addSubview:shareLabel];
+    [shareLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(releaseRegion).with.offset(21.f * g_rateWidth);
+        make.centerY.mas_equalTo(titleRegion);
+        make.height.mas_equalTo(shareLabel.font.pointSize);
+    }];
+    
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    [tableView setBackgroundColor:COLOR_GRAY_F6F6F6];
     [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [tableView setDelegate:self];
     [tableView setDataSource:self];
-    [view addSubview:tableView];
+    [releaseRegion addSubview:tableView];
     _tableView = tableView;
     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.equalTo(view);
-        make.top.equalTo(titleLabel.mas_bottom).with.offset(9.f * g_rateWidth);
-        make.bottom.equalTo(view).with.offset(-19.f * g_rateWidth);
+        make.left.and.width.equalTo(releaseRegion);
+        make.top.equalTo(titleRegion.mas_bottom);
+        make.bottom.equalTo(releaseRegion.mas_bottom).with.offset(-19.f * g_rateWidth);
     }];
 }
 
@@ -490,6 +585,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return _dataArray.count;
+//    return 10;
+
 }
 
 
@@ -497,6 +594,29 @@
 
 - (void)onClickBackBtn:(UIButton *)btn {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+//去掉 UItableview headerview 黏性(sticky)
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    HPLog(@"scrollView:%f",scrollView.contentOffset.y);
+        if (scrollView.contentOffset.y<=0) {
+            [UIView animateWithDuration:0.5 animations:^{
+                [self.releaseRegion mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.right.mas_equalTo(self.view);
+                    make.top.mas_equalTo(self.headerView.mas_bottom).offset(15.f * g_rateWidth);
+                    make.bottom.mas_equalTo(self.view);
+                }];
+            }];
+            
+        } else if (scrollView.contentOffset.y>0) {
+            [UIView animateWithDuration:0.5 animations:^{
+                [self.releaseRegion mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.right.bottom.mas_equalTo(self.view);
+                    make.top.mas_equalTo(self.cardPanel.mas_top);
+                }];
+            }];
+            
+        }
 }
 
 @end

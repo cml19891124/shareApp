@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
 
 @property (nonatomic, weak) HPBannerView *bannerView;
 
+
 @end
 
 @implementation HPShareController
@@ -157,6 +158,29 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.size.mas_equalTo(CGSizeMake(getWidth(160.f), getWidth(165.f)));
     }];
     
+    UILabel *storeInfoLabel = [[UILabel alloc] init];
+    [storeInfoLabel setFont:kFont_Heavy(15.f)];
+    [storeInfoLabel setTextColor:COLOR_GRAY_FFFFFF];
+    [storeInfoLabel setText:@"店铺共享"];
+    [shareShopBtn addSubview:storeInfoLabel];
+    [storeInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(shareShopBtn).with.offset(getWidth(15.f));
+        make.height.mas_equalTo(storeInfoLabel.font.pointSize);
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
+    }];
+    
+    UILabel *storeSBInfoLabel = [[UILabel alloc] init];
+    [storeSBInfoLabel setFont:kFont_Medium(10.f)];
+    [storeSBInfoLabel setTextColor:COLOR_GRAY_FFFFFF];
+    [storeSBInfoLabel setText:@"让每平米空间增值"];
+    [shareShopBtn addSubview:storeSBInfoLabel];
+    [storeSBInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(shareShopBtn).with.offset(getWidth(15.f));
+        make.top.equalTo(storeInfoLabel.mas_bottom).with.offset(getWidth(10.f));
+        make.height.mas_equalTo(storeSBInfoLabel.font.pointSize);
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
+    }];
+    
     UIButton *shareGoodsBtn = [[UIButton alloc] init];
     [shareGoodsBtn setTag:HPShareBtnGoods];
     [shareGoodsBtn setImage:[UIImage imageNamed:@"goods_share"] forState:UIControlStateNormal];
@@ -167,6 +191,29 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.top.equalTo(centerView);
         make.right.equalTo(centerView);
         make.size.mas_equalTo(CGSizeMake(getWidth(161.f), getWidth(80.f)));
+    }];
+    
+    UILabel *goodInfoLabel = [[UILabel alloc] init];
+    [goodInfoLabel setFont:kFont_Heavy(15.f)];
+    [goodInfoLabel setTextColor:COLOR_GRAY_FFFFFF];
+    [goodInfoLabel setText:@"货品共享"];
+    [shareGoodsBtn addSubview:goodInfoLabel];
+    [goodInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(shareGoodsBtn).with.offset(getWidth(15.f));
+        make.height.mas_equalTo(goodInfoLabel.font.pointSize);
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
+    }];
+    
+    UILabel *goodSBInfoLabel = [[UILabel alloc] init];
+    [goodSBInfoLabel setFont:kFont_Medium(10.f)];
+    [goodSBInfoLabel setTextColor:COLOR_GRAY_FFFFFF];
+    [goodSBInfoLabel setText:@"去掉中间商的货品"];
+    [shareGoodsBtn addSubview:goodSBInfoLabel];
+    [goodSBInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(shareGoodsBtn).with.offset(getWidth(15.f));
+        make.top.equalTo(goodInfoLabel.mas_bottom).with.offset(getWidth(10.f));
+        make.height.mas_equalTo(goodSBInfoLabel.font.pointSize);
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
     }];
     
     UIButton *shareHumanBtn = [[UIButton alloc] init];
@@ -180,6 +227,29 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.size.mas_equalTo(CGSizeMake(getWidth(161.f), getWidth(80.f)));
     }];
     
+    UILabel *manInfoLabel = [[UILabel alloc] init];
+    [manInfoLabel setFont:kFont_Heavy(15.f)];
+    [manInfoLabel setTextColor:COLOR_GRAY_FFFFFF];
+    [manInfoLabel setText:@"人力共享"];
+    [shareHumanBtn addSubview:manInfoLabel];
+    [manInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(shareHumanBtn).with.offset(getWidth(15.f));
+        make.height.mas_equalTo(manInfoLabel.font.pointSize);
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
+    }];
+    
+    UILabel *manSBInfoLabel = [[UILabel alloc] init];
+    [manSBInfoLabel setFont:kFont_Medium(10.f)];
+    [manSBInfoLabel setTextColor:COLOR_GRAY_FFFFFF];
+    [manSBInfoLabel setText:@"人手不足随时找"];
+    [shareHumanBtn addSubview:manSBInfoLabel];
+    [manSBInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(shareHumanBtn).with.offset(getWidth(15.f));
+        make.top.equalTo(manInfoLabel.mas_bottom).with.offset(getWidth(10.f));
+        make.height.mas_equalTo(manSBInfoLabel.font.pointSize);
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
+    }];
+    
     UIButton *shareMapBtn = [[UIButton alloc] init];
     [shareMapBtn setTag:HPShareBtnMap];
     [shareMapBtn setImage:[UIImage imageNamed:@"share_map"] forState:UIControlStateNormal];
@@ -190,6 +260,30 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.left.and.width.equalTo(centerView);
         make.bottom.equalTo(centerView);
         make.size.mas_equalTo(CGSizeMake(getWidth(327.f), getWidth(79.f)));
+    }];
+    
+    UILabel *mapInfoLabel = [[UILabel alloc] init];
+    [mapInfoLabel setFont:kFont_Heavy(14.f)];
+    [mapInfoLabel setTextColor:COLOR_GRAY_FFFFFF];
+    [mapInfoLabel setText:@"共享地图"];
+    [shareMapBtn addSubview:mapInfoLabel];
+    [mapInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(shareMapBtn).with.offset(getWidth(42.f));
+        make.top.equalTo(shareMapBtn).with.offset(getWidth(20.f));
+        make.height.mas_equalTo(mapInfoLabel.font.pointSize);
+        make.width.mas_equalTo(getWidth(kScreenWidth/2));
+    }];
+    
+    UILabel *mapSBInfoLabel = [[UILabel alloc] init];
+    [mapSBInfoLabel setFont:kFont_Medium(10.f)];
+    [mapSBInfoLabel setTextColor:COLOR_GRAY_FFFFFF];
+    [mapSBInfoLabel setText:@"查询附近共享信息，更方便、更精准。"];
+    [shareMapBtn addSubview:mapSBInfoLabel];
+    [mapSBInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(shareMapBtn).with.offset(getWidth(24.f));
+        make.top.equalTo(mapInfoLabel.mas_bottom).with.offset(getWidth(15.f));
+        make.height.mas_equalTo(mapSBInfoLabel.font.pointSize);
+        make.width.mas_equalTo(kScreenWidth);
     }];
 }
 
