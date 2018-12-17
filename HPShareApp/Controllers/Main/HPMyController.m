@@ -592,7 +592,7 @@
     HPLoginModel *model = [HPUserTool account];
     if (!model.token) {
         [HPProgressHUD alertMessage:@"用户未登录"];
-//        return;
+        return;
     }
     
     NSLog(@"function btn: %@", btn.text);

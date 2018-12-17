@@ -551,7 +551,13 @@ NSString * const ID = @"cycleCell";
     cell.pageControl.currentPageIndicatorTintColor = COLOR_RED_F91E54;
     cell.pageControl.numberOfPages = 3;
     cell.pageControl.currentPage = itemIndex;
-
+    cell.themeLabel.text = _themeTitleArray[itemIndex];
+    cell.themeSBLabel.text = _themeSBTitleArray[itemIndex];
+    if (itemIndex == 2) {
+        cell.enterBtn.hidden = NO;
+    }else{
+        cell.enterBtn.hidden = YES;
+    }
     if (!self.onlyDisplayText && [imagePath isKindOfClass:[NSString class]]) {
         if ([imagePath hasPrefix:@"http"]) {
             [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.placeholderImage];
