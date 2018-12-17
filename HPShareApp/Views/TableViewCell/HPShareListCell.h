@@ -29,17 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTitle:(NSString *)title;
 
-- (void)setTrade:(NSString *)trade;
-
-- (void)setRentTime:(NSString *)rentTime;
-
-- (void)setArea:(NSString *)area;
-
 - (void)setPrice:(NSString *)price;
 
-- (void)setTagType:(HPShareListCellType)type;
+- (void)setType:(HPShareListCellType)type;
 
 - (void)setUnitType:(HPSharePriceUnitType)type;
+
+- (void)setTags:(NSArray *)tags;
+
+- (void)setPhotoUrl:(NSString *)url;
 
 - (void)setCheckEnabled:(BOOL)enabled;
 

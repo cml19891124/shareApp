@@ -166,8 +166,12 @@
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-
-    return self.scrollView;
+    
+    if ([self pointInside:point withEvent:event]) {
+        return self.scrollView;
+    }
+    else
+        return nil;
 }
 
 #pragma mark - KVO

@@ -14,6 +14,8 @@
 
 @interface HPShareShopListController () <HPBannerViewDelegate>
 
+@property (nonatomic, weak) UIView *navigationView;
+
 @property (nonatomic, weak) HPBannerView *bannerView;
 
 @property (nonatomic, weak) HPPageControl *pageControl;
@@ -31,19 +33,18 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self getShareListData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [_bannerView startAutoScrollWithInterval:2.0];
+//    [_bannerView startAutoScrollWithInterval:2.0];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    [_bannerView stopAutoScroll];
+//    [_bannerView stopAutoScroll];
 }
 
 /*
@@ -59,6 +60,47 @@
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
     UIView *navigationView = [self setupNavigationBarWithTitle:@"店铺共享"];
+    _navigationView = navigationView;
+    
+//    HPBannerView *bannerView = [[HPBannerView alloc] init];
+//    [bannerView setImages:@[[UIImage imageNamed:@"banner_shop1"],
+//                            [UIImage imageNamed:@"banner_shop2"]]];
+//    [bannerView setBannerViewDelegate:self];
+//    [bannerView setImageContentMode:UIViewContentModeCenter];
+//    [headerScrollView addSubview:bannerView];
+//    _bannerView = bannerView;
+//    [bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.and.width.equalTo(headerScrollView);
+//        make.top.equalTo(headerScrollView).with.offset(0.f);
+//        make.height.mas_equalTo(150.f * g_rateWidth);
+//    }];
+//
+//    HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleRoundedRect];
+//    [pageControl setNumberOfPages:2];
+//    [pageControl setCurrentPage:0];
+//    [headerScrollView addSubview:pageControl];
+//    _pageControl = pageControl;
+//    [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerX.equalTo(headerScrollView);
+//        make.bottom.equalTo(bannerView).with.offset(-22.f * g_rateWidth);
+//    }];
+//
+//    UIView *separator = [[UIView alloc] init];
+//    [separator setBackgroundColor:COLOR_GRAY_F1F1F1];
+//    [headerScrollView addSubview:separator];
+//    [separator mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(bannerView.mas_bottom);
+//        make.left.and.width.equalTo(self.view);
+//        make.height.mas_equalTo(10.f);
+//    }];
+    
+    UIView *filterBar = [self setupFilterBar];
+    [self.view addSubview:filterBar];
+    [filterBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.width.equalTo(self.view);
+        make.top.equalTo(navigationView.mas_bottom);
+        make.height.mas_equalTo(44.f * g_rateWidth);
+    }];
     
     UITableView *tableView = [[UITableView alloc] init];
     [tableView setBackgroundColor:UIColor.clearColor];
@@ -66,11 +108,12 @@
     [tableView registerClass:HPShareListCell.class forCellReuseIdentifier:CELL_ID];
     [tableView setDelegate:self];
     [tableView setDataSource:self];
-    [self.view addSubview:tableView];
+    [self.view insertSubview:tableView belowSubview:filterBar];
     self.tableView = tableView;
     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.and.bottom.equalTo(self.view);
-        make.top.equalTo(navigationView.mas_bottom);
+        make.left.and.width.equalTo(self.view);
+        make.top.equalTo(filterBar.mas_bottom);
+        make.bottom.equalTo(self.mas_bottomLayoutGuideTop);
     }];
 }
 
@@ -80,68 +123,16 @@
     [_pageControl setCurrentPage:index];
 }
 
-#pragma mark - UIScrollViewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (scrollView == self.tableView)
-    {
-        if (scrollView.contentOffset.y < BANNER_SEPARATOR_HEIGHT && scrollView.contentOffset.y>=0) {
-            scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
-        } else if (scrollView.contentOffset.y >= BANNER_SEPARATOR_HEIGHT) {
-            scrollView.contentInset = UIEdgeInsetsMake(-(BANNER_SEPARATOR_HEIGHT), 0, 0, 0);
-        }
-    }
-}
-
 #pragma mark - UITableViewDelegate
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *view = [[UIView alloc] init];
     
-    HPBannerView *bannerView = [[HPBannerView alloc] init];
-    [bannerView setImages:@[[UIImage imageNamed:@"banner_shop1"],
-                            [UIImage imageNamed:@"banner_shop2"]]];
-    [bannerView setBannerViewDelegate:self];
-    [bannerView setImageContentMode:UIViewContentModeCenter];
-    [view addSubview:bannerView];
-    _bannerView = bannerView;
-    [bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.and.top.equalTo(view);
-        make.height.mas_equalTo(150.f * g_rateWidth);
-    }];
-    
-    HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleRoundedRect];
-    [pageControl setNumberOfPages:2];
-    [pageControl setCurrentPage:0];
-    [view addSubview:pageControl];
-    _pageControl = pageControl;
-    [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(view);
-        make.bottom.equalTo(bannerView).with.offset(-22.f * g_rateWidth);
-    }];
-    
-    UIView *separator = [[UIView alloc] init];
-    [separator setBackgroundColor:COLOR_GRAY_F1F1F1];
-    [view addSubview:separator];
-    [separator mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(bannerView.mas_bottom);
-        make.left.and.width.equalTo(view);
-        make.height.mas_equalTo(10.f);
-    }];
-    
-    UIView *filterBar = [self setupFilterBar];
-    [view addSubview:filterBar];
-    [filterBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.equalTo(view);
-        make.top.equalTo(separator.mas_bottom);
-        make.height.mas_equalTo(44.f * g_rateWidth);
-    }];
-    
-    return view;
+    return [UIView new];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return BANNER_SEPARATOR_HEIGHT + (44.f + 14.5f) * g_rateWidth;
+    
+    return getWidth(7.5f);
 }
 
 @end

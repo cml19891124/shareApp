@@ -8,7 +8,7 @@
 
 #import "HPShareListCell.h"
 #import "HPImageUtil.h"
-#import "HPCommonData.h"
+#import "HPTagView.h"
 
 @interface HPShareListCell ()
 
@@ -16,25 +16,17 @@
 
 @property (nonatomic, weak) UILabel *titleLabel;
 
-@property (nonatomic, weak) UILabel *tradeDescLabel;
-
-@property (nonatomic, weak) UILabel *rentTimeDescLabel;
-
-@property (nonatomic, weak) UILabel *areaDescLabel;
-
 @property (nonatomic, weak) UILabel *priceDescLabel;
-
-@property (nonatomic, weak) UILabel *tradeLabel;
-
-@property (nonatomic, weak) UILabel *rentTimeLabel;
-
-@property (nonatomic, weak) UILabel *areaLabel;
 
 @property (nonatomic, weak) UILabel *priceLabel;
 
 @property (nonatomic, weak) UILabel *priceUnitLabel;
 
-@property (nonatomic, weak) UIImageView *tagIcon;
+@property (nonatomic, weak) UIImageView *typeIcon;
+
+@property (nonatomic, strong) NSMutableArray *tagItems;
+
+@property (nonatomic, weak) UIImageView *photoView;
 
 @property (nonatomic, weak) UIButton *checkBtn;
 
@@ -58,6 +50,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        _tagItems = [[NSMutableArray alloc] init];
         [self setupUI];
     }
     return self;
@@ -66,6 +59,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        _tagItems = [[NSMutableArray alloc] init];
         [self setupUI];
     }
     return self;
@@ -89,9 +83,10 @@
         make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 115.f * g_rateWidth));
     }];
     
-    UIImageView *imageView = [[UIImageView alloc] init];
-    [bgView addSubview:imageView];
-    [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    UIImageView *photoView = [[UIImageView alloc] init];
+    [photoView setBackgroundColor:COLOR_GRAY_F6F6F6];
+    [bgView addSubview:photoView];
+    [photoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(bgView).with.offset(getWidth(11.f));
         make.centerY.equalTo(bgView);
         make.size.mas_equalTo(CGSizeMake(getWidth(93.f), getWidth(93.f)));
@@ -104,56 +99,75 @@
     [bgView addSubview:titleLabel];
     _titleLabel = titleLabel;
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(imageView).with.offset(12.f * g_rateWidth);
-        make.top.equalTo(imageView);
+        make.left.equalTo(photoView.mas_right).with.offset(12.f * g_rateWidth);
+        make.top.equalTo(photoView);
     }];
+    
+    for (int i = 0; i < 3; i ++) {
+        HPTagView *tagView = [[HPTagView alloc] init];
+        [bgView addSubview:tagView];
+        [tagView mas_makeConstraints:^(MASConstraintMaker *make) {
+            if (i == 0) {
+                make.left.equalTo(titleLabel);
+                make.top.equalTo(titleLabel.mas_bottom).with.offset(9.f * g_rateWidth);
+            }
+            else {
+                UIView *lastTagItem = self.tagItems[i - 1];
+                make.left.equalTo(lastTagItem.mas_right).with.offset(5.f);
+                make.centerY.equalTo(lastTagItem);
+            }
+        }];
+        [tagView setHidden:YES];
+        
+        [_tagItems addObject:tagView];
+    }
     
     UILabel *priceDescLabel = [[UILabel alloc] init];
     [priceDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:11.f]];
     [priceDescLabel setTextColor:COLOR_GRAY_999999];
-    [priceDescLabel setText:@"期望价格"];
+    [priceDescLabel setText:@"共享价格"];
     [bgView addSubview:priceDescLabel];
     _priceDescLabel = priceDescLabel;
-//    [priceDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(areaDescLabel.mas_right).with.offset(space);
-//        make.centerY.equalTo(tradeDescLabel);
-//        make.height.mas_equalTo(priceDescLabel.font.pointSize);
-//    }];
+    [priceDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(titleLabel);
+        make.bottom.equalTo(photoView).with.offset(-getWidth(4.f));
+        make.height.mas_equalTo(priceDescLabel.font.pointSize);
+    }];
     
     UILabel *priceLabel = [[UILabel alloc] init];
-    [priceLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
+    [priceLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
     [priceLabel setTextColor:COLOR_RED_FF3C5E];
     [bgView addSubview:priceLabel];
     _priceLabel = priceLabel;
-//    [priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(priceDescLabel);
-//        make.centerY.equalTo(tradeLabel);
-//        make.height.mas_equalTo(priceLabel.font.pointSize);
-//    }];
+    [priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(priceDescLabel.mas_right).with.offset(getWidth(10.f));
+        make.bottom.equalTo(priceDescLabel);
+        make.height.mas_equalTo(priceLabel.font.pointSize);
+    }];
     
     UILabel *priceUnitLabel = [[UILabel alloc] init];
     [priceUnitLabel setFont:[UIFont fontWithName:FONT_BOLD size:9.f]];
     [priceUnitLabel setTextColor:COLOR_RED_FF3C5E];
-    [priceUnitLabel setText:@"元/天"];
+    [priceUnitLabel setText:@"/天"];
     [bgView addSubview:priceUnitLabel];
     _priceUnitLabel = priceUnitLabel;
     [priceUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(priceLabel.mas_right).with.offset(3.f);
+        make.left.equalTo(priceLabel.mas_right).with.offset(5.f);
         make.bottom.equalTo(priceLabel);
         make.height.mas_equalTo(priceUnitLabel.font.pointSize);
     }];
     
-    UIImageView *tagIcon = [[UIImageView alloc] init];
-    [bgView addSubview:tagIcon];
-    _tagIcon = tagIcon;
-    [tagIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+    UIImageView *typeIcon = [[UIImageView alloc] init];
+    [bgView addSubview:typeIcon];
+    _typeIcon = typeIcon;
+    [typeIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(bgView).with.offset(-7.f);
-        make.right.equalTo(bgView).with.offset(-18.f);
+        make.left.equalTo(bgView.mas_right).with.offset(-55.f);
         make.size.mas_equalTo(CGSizeMake(37.f, 50.f));
     }];
     
     [titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(tagIcon.mas_left).with.offset(-5.f * g_rateWidth);
+        make.right.equalTo(typeIcon.mas_left).with.offset(-22.f * g_rateWidth);
     }];
     
     UIImage *normalImage = [HPImageUtil getRectangleByStrokeColor:COLOR_GRAY_BCC1CF fillColor:UIColor.whiteColor borderWidth:1.f cornerRadius:10.f inRect:CGRectMake(0.f, 0.f, 19.f, 19.f)];
@@ -175,30 +189,18 @@
     [_titleLabel setText:title];
 }
 
-- (void)setTrade:(NSString *)trade {
-    [_tradeLabel setText:trade];
-}
-
-- (void)setRentTime:(NSString *)rentTime {
-    [_rentTimeLabel setText:rentTime];
-}
-
-- (void)setArea:(NSString *)area {
-    [_areaLabel setText:area];
-}
-
 - (void)setPrice:(NSString *)price {
     [_priceLabel setText:price];
 }
 
-- (void)setTagType:(HPShareListCellType)type {
+- (void)setType:(HPShareListCellType)type {
     switch (type) {
         case HPShareListCellTypeOwner:
-            [_tagIcon setImage:ImageNamed(@"share_owner")];
+            [_typeIcon setImage:ImageNamed(@"share_owner")];
             break;
             
         case HPShareListCellTypeStartup:
-            [_tagIcon setImage:ImageNamed(@"share_startup")];
+            [_typeIcon setImage:ImageNamed(@"share_startup")];
             break;
             
         default:
@@ -209,11 +211,11 @@
 - (void)setUnitType:(HPSharePriceUnitType)type {
     switch (type) {
         case HPSharePriceUnitTypeHour:
-            [_priceUnitLabel setText:@"元/小时"];
+            [_priceUnitLabel setText:@"/小时"];
             break;
             
         case HPSharePriceUnitTypeDay:
-            [_priceUnitLabel setText:@"元/天"];
+            [_priceUnitLabel setText:@"/天"];
             break;
             
         default:
@@ -221,33 +223,53 @@
     }
 }
 
+- (void)setTags:(NSArray *)tags {
+    for (int i = 0; i < _tagItems.count; i++) {
+        HPTagView *tagItem = _tagItems[i];
+        if (i < tags.count) {
+            [tagItem setHidden:NO];
+            [tagItem setText:tags[i]];
+        }
+    }
+}
+
+- (void)setPhotoUrl:(NSString *)url {
+    if (!url) {
+        return;
+    }
+    
+    [_photoView sd_setImageWithURL:[NSURL URLWithString:url]];
+}
+
 - (void)setModel:(HPShareListModel *)model {
     _model = model;
     NSString *title = model.title;
-    NSString *trade = [HPCommonData getIndustryNameById:model.industryId];
-    
-    NSString *shareDayStr = model.shareDays;
-    NSArray *shareDays = [shareDayStr componentsSeparatedByString:@","];
-    NSString *rentTime = [NSString stringWithFormat:@"%lu", (unsigned long)shareDays.count];
-    if ([rentTime isEqualToString:@"0"]) {
-        rentTime = @"面议";
+    NSString *price = model.rent;
+    NSInteger type = model.type;
+    NSInteger unitType = model.rentType;
+    NSString *tagStr = model.tag;
+    NSArray *tags;
+    if (tagStr) {
+        tags = [tagStr componentsSeparatedByString:@","];
+    }
+    NSString *photoUrl;
+    if (model.picture) {
+        photoUrl = model.picture.url;
     }
     else {
-        rentTime = [rentTime stringByAppendingString:@" 天"];
+//        HPLog(@"+++++++++ NO Picture");
     }
     
-    NSString *area = model.area;
-    NSString *price = model.rent;
-    NSInteger tagType = model.type;
-    NSInteger unitType = model.rentType;
-    
     [self setTitle:title];
-    [self setTrade:trade];
-    [self setRentTime:rentTime];
-    [self setArea:area];
     [self setPrice:price];
-    [self setTagType:tagType];
+    [self setType:type];
     [self setUnitType:unitType];
+    if (tags) {
+        [self setTags:tags];
+    }
+    if (photoUrl) {
+        [self setPhotoUrl:photoUrl];
+    }
 }
 
 - (void)setCheckEnabled:(BOOL)enabled {
@@ -260,18 +282,6 @@
         }];
         
         CGFloat space = ((345.f - 44.f - 17.f) * g_rateWidth - 44.f * 4)/3;
-        
-        [_rentTimeDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.tradeDescLabel.mas_right).with.offset(space);
-        }];
-        
-        [_areaDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.rentTimeDescLabel.mas_right).with.offset(space);
-        }];
-        
-        [_priceDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.areaDescLabel.mas_right).with.offset(space);
-        }];
     }
     else {
         [_checkBtn setHidden:YES];
@@ -282,18 +292,6 @@
         }];
         
         CGFloat space = ((345.f - 23.f - 23.f) * g_rateWidth - 44.f * 4)/3;
-        
-        [_rentTimeDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.tradeDescLabel.mas_right).with.offset(space);
-        }];
-        
-        [_areaDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.rentTimeDescLabel.mas_right).with.offset(space);
-        }];
-        
-        [_priceDescLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.areaDescLabel.mas_right).with.offset(space);
-        }];
     }
 }
 

@@ -38,6 +38,7 @@
     if (self) {
         _isCheck = NO;
         [self setIsSingle:NO];
+        [self setSelectionStyle:UITableViewCellSelectionStyleNone];
         [self setBackgroundColor:UIColor.clearColor];
         UILabel *titleLabel = [[UILabel alloc] init];
         [titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];

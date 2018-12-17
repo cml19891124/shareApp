@@ -21,24 +21,44 @@
 
 #pragma mark - UIGestureRecognizerDelegate
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    UIView *parentView = touch.view;
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+
+//    if (self.tag == 999) {
+//        CGPoint pLocation = [touch previousLocationInView:self];
+//        CGPoint location = [touch locationInView:self];
+//        if (pLocation.y - location.y < 0) {
+//            return NO;
+//        }
+//    }
     
-    while (parentView != nil) {
-        if ([parentView isMemberOfClass:UIScrollView.class] || [parentView isMemberOfClass:UITableView.class]) {
-            if (parentView == self) {
-                return YES;
-            }
-            else {
-                return NO;
-            }
-        }
-        
-        parentView = parentView.superview;
-    }
+//    UIView *parentView = touch.view;
     
-    return YES;
-}
+//    while (parentView != nil) {
+//        if ([parentView isMemberOfClass:UIScrollView.class] || [parentView isMemberOfClass:UITableView.class]) {
+//
+//            if (parentView == self) {
+//                return YES;
+//            }
+//            else {
+//                return NO;
+//            }
+//
+//        }
+//
+//        parentView = parentView.superview;
+//    }
+//
+//    return YES;
+//}
+
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+//    return YES;
+//}
+//
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+//    
+//    return YES;
+//}
 
 #pragma mark - UIResponder
 

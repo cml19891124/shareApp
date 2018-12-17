@@ -101,6 +101,7 @@
     [self.view setBackgroundColor:COLOR_WHITE_FAF9FE];
     
     UIScrollView *scrollView = [[UIScrollView alloc] init];
+    scrollView.tag = 111;
     [scrollView setBackgroundColor:COLOR_WHITE_FAF9FE];
     [self.view addSubview:scrollView];
     [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {

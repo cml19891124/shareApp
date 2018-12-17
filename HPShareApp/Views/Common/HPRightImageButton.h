@@ -8,6 +8,11 @@
 
 #import "HPBaseControl.h"
 
+typedef NS_ENUM(NSInteger, HPRightImageBtnAlignMode) {
+    HPRightImageBtnAlignModeLeftOrRight = 0,
+    HPRightImageBtnAlignModeCenter
+};
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPRightImageButton : HPBaseControl
@@ -24,7 +29,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) CGFloat space;
 
-- (void)setImage:(UIImage *)image;
+@property (nonatomic, strong) UIImage *image;
+
+@property (nonatomic, strong) UIImage *selectedImage;
+
+@property (nonatomic, assign) HPRightImageBtnAlignMode alignMode;
 
 @end
 

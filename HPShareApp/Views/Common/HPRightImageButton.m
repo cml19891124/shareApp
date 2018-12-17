@@ -10,6 +10,8 @@
 
 @interface HPRightImageButton ()
 
+@property (nonatomic, weak) UIView *centerView;
+
 @property (nonatomic, weak) UILabel *titleLabel;
 
 @property (nonatomic, weak) UIImageView *imageView;
@@ -32,27 +34,35 @@
         _space = 10.f;
         _font = [UIFont systemFontOfSize:15.f];
         _color = UIColor.blackColor;
-        
+        _alignMode = HPRightImageBtnAlignModeLeftOrRight;
         [self setupUI];
     }
     return self;
 }
 
 - (void)setupUI {
+    UIView *centerView = [[UIView alloc] init];
+    [self addSubview:centerView];
+    _centerView = centerView;
+    [centerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.equalTo(self);
+        make.top.and.bottom.equalTo(self);
+    }];
+    
     UILabel *titleLabel = [[UILabel alloc] init];
-    [self addSubview:titleLabel];
+    [centerView addSubview:titleLabel];
     _titleLabel = titleLabel;
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self);
-        make.top.and.bottom.equalTo(self);
+        make.left.equalTo(centerView);
+        make.top.and.bottom.equalTo(centerView);
         make.centerY.equalTo(self);
     }];
     
     UIImageView *imageView = [[UIImageView alloc] init];
-    [self addSubview:imageView];
+    [centerView addSubview:imageView];
     _imageView = imageView;
     [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self);
+        make.right.equalTo(centerView);
         make.left.equalTo(titleLabel.mas_right).with.offset(self.space);
         make.centerY.equalTo(titleLabel);
     }];
@@ -67,7 +77,11 @@
         }
         
         if (_selectedText) {
-            [_titleLabel setText:_selectedText];
+            [_titleLabel setText:_selectedText ? _selectedText : _text];
+        }
+        
+        if (_selectedImage) {
+            [self setSelectedImage:_selectedImage];
         }
     }
     else {
@@ -77,6 +91,10 @@
         
         if (_text) {
             [_titleLabel setText:_text];
+        }
+        
+        if (_image) {
+            [self setImage:_image];
         }
     }
 }
@@ -122,10 +140,46 @@
 }
 
 - (void)setImage:(UIImage *)image {
-    [_imageView setImage:image];
-    [_imageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(image.size);
-    }];
+    _image = image;
+    if (!self.isSelected) {
+        [_imageView setImage:image];
+        [_imageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(image.size);
+        }];
+    }
+}
+
+- (void)setSelectedImage:(UIImage *)image {
+    _selectedImage = image;
+    if (self.isSelected) {
+        [_imageView setImage:image];
+        [_imageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(image.size);
+        }];
+    }
+}
+
+- (void)setAlignMode:(HPRightImageBtnAlignMode)alignMode {
+    if (alignMode == HPRightImageBtnAlignModeLeftOrRight) {
+        [_centerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.and.right.equalTo(self);
+            make.top.and.bottom.equalTo(self);
+        }];
+    }
+    else if (alignMode == HPRightImageBtnAlignModeCenter) {
+        [_centerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self);
+            make.top.and.bottom.equalTo(self);
+        }];
+    }
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    if ([self pointInside:point withEvent:event]) {
+        return self;
+    }
+    
+    return nil;
 }
 
 @end

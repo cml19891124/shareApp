@@ -471,18 +471,18 @@
         NSDictionary *dict = _dataArray[indexPath.row];
         
         cell = [[HPShareListCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        [cell setTitle:dict[@"title"]];
-        [cell setTrade:dict[@"trade"]];
-        [cell setRentTime:dict[@"rentTime"]];
-        [cell setArea:dict[@"area"]];
-        [cell setPrice:dict[@"price"]];
-        
-        if ([dict[@"type"] isEqualToString:@"startup"]) {
-            [cell setTagType:HPShareListCellTypeStartup];
-        }
-        else if ([dict[@"type"] isEqualToString:@"owner"]) {
-            [cell setTagType:HPShareListCellTypeOwner];
-        }
+//        [cell setTitle:dict[@"title"]];
+//        [cell setTrade:dict[@"trade"]];
+//        [cell setRentTime:dict[@"rentTime"]];
+//        [cell setArea:dict[@"area"]];
+//        [cell setPrice:dict[@"price"]];
+//        
+//        if ([dict[@"type"] isEqualToString:@"startup"]) {
+//            [cell setTagType:HPShareListCellTypeStartup];
+//        }
+//        else if ([dict[@"type"] isEqualToString:@"owner"]) {
+//            [cell setTagType:HPShareListCellTypeOwner];
+//        }
     }
     
     return cell;

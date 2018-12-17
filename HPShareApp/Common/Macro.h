@@ -32,7 +32,7 @@
 #define COLOR_RED_FF3C5E [UIColor colorWithHexString:@"#ff3c5e"]
 #define COLOR_RED_FF3455 [UIColor colorWithHexString:@"#FF3455"]
 #define COLOR_RED_FF9B5E [UIColor colorWithHexString:@"#FF9B5E"]
-
+#define COLOR_RED_FF3559 [UIColor colorWithHexString:@"#FF3559"]
 #define COLOR_RED_FC4865 [UIColor colorWithHexString:@"#fc4865"]
 #define COLOR_RED_F93362 [UIColor colorWithHexString:@"#F93362"]
 #define COLOR_RED_FC4865 [UIColor colorWithHexString:@"#fc4865"]
@@ -70,6 +70,7 @@
 #define COLOR_BLACK_TRANS_1111119b [UIColor colorWithHexString:@"#1111119b"]
 
 #define COLOR_GRAY_DBDBDB [UIColor colorWithHexString:@"#dbdbdb"]
+#define COLOR_GRAY_E0E0E0 [UIColor colorWithHexString:@"#E0E0E0"]
 #define COLOR_GRAY_E6E5E5 [UIColor colorWithHexString:@"#E6E5E5"]
 #define COLOR_GRAY_E5E5E5 [UIColor colorWithHexString:@"#E5E5E5"]
 #define COLOR_GRAY_E6E6E6 [UIColor colorWithHexString:@"#E6E6E6"]
@@ -105,6 +106,7 @@
 #define COLOR_GRAY_BCC1CF [UIColor colorWithHexString:@"#BCC1CF"]
 #define COLOR_GRAY_888888 [UIColor colorWithHexString:@"#888888"]
 #define COLOR_GRAY_878787 [UIColor colorWithHexString:@"#878787"]
+#define COLOR_GRAY_808080 [UIColor colorWithHexString:@"#808080"]
 
 /**
  字体宏定义
@@ -121,8 +123,8 @@
 #define kFont_Regular(font)  [UIFont fontWithName:@"PingFangSC-Regular"size:font]
 
 //#define kBaseUrl  @"https://inner.hepaicn.com"
-//#define kBaseUrl  @"https://app.hepaicn.com"
-#define kBaseUrl  @"http://192.168.0.104:8083"//测试
+#define kBaseUrl  @"https://app.hepaicn.com"
+//#define kBaseUrl  @"http://192.168.0.104:8083"//测试
 //#define kBaseUrl  @"http://192.168.0.147:8083"//胜光
 
 #define BoundWithSize(str,width,font)   ([str boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:font]} context:nil])

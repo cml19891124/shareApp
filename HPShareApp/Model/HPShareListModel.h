@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "HPPictureModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *longitude;
 @property (nonatomic, copy) NSString *latitude;
 @property (nonatomic, copy) NSString *deleteUserId;
+@property (nonatomic, strong) HPPictureModel *picture;
 
 @end
 

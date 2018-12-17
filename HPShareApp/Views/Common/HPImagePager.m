@@ -76,6 +76,11 @@
 
 - (void)scrollToPageAtIndex:(NSInteger)index {
     self.currentPage = index;
+    
+    if (!_pageControl.isHidden) {
+        [_pageControl setCurrentPage:index];
+    }
+    
     [self refreshPageItem];
 }
 
