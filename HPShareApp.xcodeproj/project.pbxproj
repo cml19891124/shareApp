@@ -134,7 +134,6 @@
 		E661B14321A679E200C86CF5 /* UIScrollView+GestureConflict.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B14221A679E200C86CF5 /* UIScrollView+GestureConflict.m */; };
 		E661B14621A68BE300C86CF5 /* HPRoundedRectPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B14521A68BE300C86CF5 /* HPRoundedRectPageControl.m */; };
 		E661B14A21A6986B00C86CF5 /* StyledPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B14921A6986B00C86CF5 /* StyledPageControl.m */; };
-		E66E1D2621C7DDD5000C1274 /* HPShareApp.mobileprovision in Resources */ = {isa = PBXBuildFile; fileRef = E66E1D2521C7DDD5000C1274 /* HPShareApp.mobileprovision */; };
 		E6B4CECB21C51A4400429C11 /* HPGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CECA21C51A4400429C11 /* HPGuideViewController.m */; };
 		E6B4CEDC21C5286F00429C11 /* SDCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED021C5286E00429C11 /* SDCycleScrollView.m */; };
 		E6B4CEDD21C5286F00429C11 /* UIView+SDExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED121C5286F00429C11 /* UIView+SDExtension.m */; };
@@ -468,7 +467,6 @@
 		E661B14521A68BE300C86CF5 /* HPRoundedRectPageControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRoundedRectPageControl.m; sourceTree = "<group>"; };
 		E661B14821A6986B00C86CF5 /* StyledPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyledPageControl.h; sourceTree = "<group>"; };
 		E661B14921A6986B00C86CF5 /* StyledPageControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyledPageControl.m; sourceTree = "<group>"; };
-		E66E1D2521C7DDD5000C1274 /* HPShareApp.mobileprovision */ = {isa = PBXFileReference; lastKnownFileType = file; path = HPShareApp.mobileprovision; sourceTree = "<group>"; };
 		E6B4CEC521C4DD5200429C11 /* HPShareApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HPShareApp.entitlements; sourceTree = "<group>"; };
 		E6B4CEC921C51A4400429C11 /* HPGuideViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPGuideViewController.h; sourceTree = "<group>"; };
 		E6B4CECA21C51A4400429C11 /* HPGuideViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPGuideViewController.m; sourceTree = "<group>"; };
@@ -869,7 +867,6 @@
 		E6292128219AA83000BEF16C = {
 			isa = PBXGroup;
 			children = (
-				E66E1D2521C7DDD5000C1274 /* HPShareApp.mobileprovision */,
 				E6292133219AA83000BEF16C /* HPShareApp */,
 				E629214C219AA83B00BEF16C /* HPShareAppTests */,
 				E6292157219AA83B00BEF16C /* HPShareAppUITests */,
@@ -1589,7 +1586,6 @@
 				E629213C219AA83100BEF16C /* Main.storyboard in Resources */,
 				E661B12321A28E8500C86CF5 /* LICENSE in Resources */,
 				E622A9C121C33989007C35BC /* .gitkeep in Resources */,
-				E66E1D2621C7DDD5000C1274 /* HPShareApp.mobileprovision in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

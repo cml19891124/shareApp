@@ -69,7 +69,7 @@
     NSString *avatarUrl = dic[@"avatarUrl"];
 
     if (model.token) {
-        [_portraitBtn sd_setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal];
+        [_portraitBtn sd_setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal placeholderImage:ImageNamed(@"personal_center_not_login_head")];
         [_loginBtn setTitle:realName.length > 0? realName:@"未填写" forState:UIControlStateDisabled];
         [_loginBtn setEnabled:NO];
         [_keepNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.collectionNum]?:@"--"];
@@ -185,6 +185,7 @@
     UIButton *portraitBtn = [[UIButton alloc] init];
     [portraitBtn.layer setCornerRadius:36.f * g_rateWidth];
     portraitBtn.layer.masksToBounds = YES;
+    [portraitBtn.imageView setContentMode:UIViewContentModeScaleAspectFill];
     [portraitBtn setImage:[UIImage imageNamed:@"personal_center_not_login_head"] forState:UIControlStateNormal];
     [portraitBtn addTarget:self action:@selector(onClickConfigBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:portraitBtn];

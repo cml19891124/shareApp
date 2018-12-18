@@ -77,7 +77,7 @@
                                 value:[UIFont fontWithName:FONT_MEDIUM size:16.f]
                                 range:NSMakeRange(0, 5)];
     [phoneNumTextField setAttributedPlaceholder:phoneNumPlaceholder];
-    phoneNumTextField.text = @"15817479363";
+//    phoneNumTextField.text = @"15817479363";
     [self.view addSubview:phoneNumTextField];
     [phoneNumTextField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(titleLabel);
@@ -105,7 +105,7 @@
     [passwordTextField setKeyboardType:UIKeyboardTypeAlphabet];
     [passwordTextField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     passwordTextField.delegate = self;
-    passwordTextField.text = @"aaa123";
+//    passwordTextField.text = @"aaa123";
     self.passwordTextField = passwordTextField;
     NSMutableAttributedString *passwordPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"请输入密码"];
     [passwordPlaceholder addAttribute:NSForegroundColorAttributeName

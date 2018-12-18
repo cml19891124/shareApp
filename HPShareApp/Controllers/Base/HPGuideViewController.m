@@ -52,16 +52,6 @@
     }
 }
 
-- (void)enterApp:(UIButton *)button
-{
-    HPMainTabBarController *mainTabBarController = [[HPMainTabBarController alloc] init];
-    
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainTabBarController];
-    navigationController.navigationBarHidden = YES;
-    [navigationController.interactivePopGestureRecognizer setDelegate:mainTabBarController];
-    [UIApplication sharedApplication].delegate.window.rootViewController = navigationController;
-}
-
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [_bannerView removeFromSuperview];
