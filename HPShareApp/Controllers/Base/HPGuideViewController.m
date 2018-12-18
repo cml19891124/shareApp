@@ -59,7 +59,7 @@
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainTabBarController];
     navigationController.navigationBarHidden = YES;
     [navigationController.interactivePopGestureRecognizer setDelegate:mainTabBarController];
-    kAppdelegateWindow.rootViewController = navigationController;
+    [UIApplication sharedApplication].delegate.window.rootViewController = navigationController;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
