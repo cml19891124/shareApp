@@ -43,6 +43,18 @@
 		E617887C21BE6E4F0092BFA3 /* HPUploadImageHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = E617887B21BE6E4F0092BFA3 /* HPUploadImageHandle.m */; };
 		E61CB23D21C772460076540E /* HPMyCardController.m in Sources */ = {isa = PBXBuildFile; fileRef = E61CB23C21C772460076540E /* HPMyCardController.m */; };
 		E61CB24021C779A90076540E /* YYGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = E61CB23F21C779A90076540E /* YYGestureRecognizer.m */; };
+		E61E278D21C8C36100CD5288 /* HPAboutUsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E61E278C21C8C36100CD5288 /* HPAboutUsViewController.m */; };
+		E61E27A321C8D68000CD5288 /* EBBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E61E279521C8D68000CD5288 /* EBBannerView.m */; };
+		E61E27A421C8D68000CD5288 /* EBBannerViewMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = E61E279621C8D68000CD5288 /* EBBannerViewMaker.m */; };
+		E61E27A521C8D68000CD5288 /* EBEmptyWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = E61E279721C8D68000CD5288 /* EBEmptyWindow.m */; };
+		E61E27A621C8D68000CD5288 /* EBBannerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E61E279821C8D68000CD5288 /* EBBannerView.xib */; };
+		E61E27A721C8D68000CD5288 /* EBBannerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E61E279921C8D68000CD5288 /* EBBannerViewController.xib */; };
+		E61E27A821C8D68000CD5288 /* EBBannerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = E61E279A21C8D68000CD5288 /* EBBannerWindow.m */; };
+		E61E27A921C8D68000CD5288 /* EBCustomBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E61E279B21C8D68000CD5288 /* EBCustomBannerView.m */; };
+		E61E27AA21C8D68000CD5288 /* EBMuteDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = E61E279C21C8D68000CD5288 /* EBMuteDetector.m */; };
+		E61E27AB21C8D68000CD5288 /* EBBannerView+Categories.m in Sources */ = {isa = PBXBuildFile; fileRef = E61E279D21C8D68000CD5288 /* EBBannerView+Categories.m */; };
+		E61E27AC21C8D68000CD5288 /* EBMuteDetector.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E61E279F21C8D68000CD5288 /* EBMuteDetector.mp3 */; };
+		E61E27AD21C8D68000CD5288 /* EBBannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E61E27A021C8D68000CD5288 /* EBBannerViewController.m */; };
 		E61F710421C12F1C00932708 /* HPSystemNotiController.m in Sources */ = {isa = PBXBuildFile; fileRef = E61F710321C12F1C00932708 /* HPSystemNotiController.m */; };
 		E61F710A21C1307000932708 /* HPSystemNotiCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E61F710921C1307000932708 /* HPSystemNotiCell.m */; };
 		E61F710D21C1328400932708 /* HPSystemNotiModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E61F710C21C1328400932708 /* HPSystemNotiModel.m */; };
@@ -61,7 +73,6 @@
 		E622A9C121C33989007C35BC /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = E622A9BB21C33989007C35BC /* .gitkeep */; };
 		E622A9C421C34E1C007C35BC /* HPClearCacheTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9C321C34E1C007C35BC /* HPClearCacheTool.m */; };
 		E622A9C721C358DA007C35BC /* AppDelegate+Config.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9C621C358DA007C35BC /* AppDelegate+Config.m */; };
-		E622A9CA21C35E94007C35BC /* HPLocalNotiTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9C921C35E94007C35BC /* HPLocalNotiTool.m */; };
 		E622A9CD21C376E8007C35BC /* HPlaceholdTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9CC21C376E8007C35BC /* HPlaceholdTextView.m */; };
 		E622A9D021C3A6B3007C35BC /* HPCardDetailsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9CF21C3A6B3007C35BC /* HPCardDetailsModel.m */; };
 		E6292136219AA83000BEF16C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292135219AA83000BEF16C /* AppDelegate.m */; };
@@ -278,6 +289,26 @@
 		E61CB23C21C772460076540E /* HPMyCardController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPMyCardController.m; sourceTree = "<group>"; };
 		E61CB23E21C779A90076540E /* YYGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYGestureRecognizer.h; sourceTree = "<group>"; };
 		E61CB23F21C779A90076540E /* YYGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYGestureRecognizer.m; sourceTree = "<group>"; };
+		E61E278B21C8C36100CD5288 /* HPAboutUsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAboutUsViewController.h; sourceTree = "<group>"; };
+		E61E278C21C8C36100CD5288 /* HPAboutUsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAboutUsViewController.m; sourceTree = "<group>"; };
+		E61E279021C8D68000CD5288 /* EBCustomBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBCustomBannerView.h; sourceTree = "<group>"; };
+		E61E279221C8D68000CD5288 /* EBMuteDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBMuteDetector.h; sourceTree = "<group>"; };
+		E61E279321C8D68000CD5288 /* EBBannerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBBannerWindow.h; sourceTree = "<group>"; };
+		E61E279421C8D68000CD5288 /* EBBannerView+Categories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EBBannerView+Categories.h"; sourceTree = "<group>"; };
+		E61E279521C8D68000CD5288 /* EBBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EBBannerView.m; sourceTree = "<group>"; };
+		E61E279621C8D68000CD5288 /* EBBannerViewMaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EBBannerViewMaker.m; sourceTree = "<group>"; };
+		E61E279721C8D68000CD5288 /* EBEmptyWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EBEmptyWindow.m; sourceTree = "<group>"; };
+		E61E279821C8D68000CD5288 /* EBBannerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EBBannerView.xib; sourceTree = "<group>"; };
+		E61E279921C8D68000CD5288 /* EBBannerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EBBannerViewController.xib; sourceTree = "<group>"; };
+		E61E279A21C8D68000CD5288 /* EBBannerWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EBBannerWindow.m; sourceTree = "<group>"; };
+		E61E279B21C8D68000CD5288 /* EBCustomBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EBCustomBannerView.m; sourceTree = "<group>"; };
+		E61E279C21C8D68000CD5288 /* EBMuteDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EBMuteDetector.m; sourceTree = "<group>"; };
+		E61E279D21C8D68000CD5288 /* EBBannerView+Categories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EBBannerView+Categories.m"; sourceTree = "<group>"; };
+		E61E279E21C8D68000CD5288 /* EBEmptyWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBEmptyWindow.h; sourceTree = "<group>"; };
+		E61E279F21C8D68000CD5288 /* EBMuteDetector.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = EBMuteDetector.mp3; sourceTree = "<group>"; };
+		E61E27A021C8D68000CD5288 /* EBBannerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EBBannerViewController.m; sourceTree = "<group>"; };
+		E61E27A121C8D68000CD5288 /* EBBannerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBBannerViewController.h; sourceTree = "<group>"; };
+		E61E27A221C8D68000CD5288 /* EBBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBBannerView.h; sourceTree = "<group>"; };
 		E61F710221C12F1C00932708 /* HPSystemNotiController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSystemNotiController.h; sourceTree = "<group>"; };
 		E61F710321C12F1C00932708 /* HPSystemNotiController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSystemNotiController.m; sourceTree = "<group>"; };
 		E61F710821C1307000932708 /* HPSystemNotiCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSystemNotiCell.h; sourceTree = "<group>"; };
@@ -312,8 +343,6 @@
 		E622A9C321C34E1C007C35BC /* HPClearCacheTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPClearCacheTool.m; sourceTree = "<group>"; };
 		E622A9C521C358DA007C35BC /* AppDelegate+Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+Config.h"; sourceTree = "<group>"; };
 		E622A9C621C358DA007C35BC /* AppDelegate+Config.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+Config.m"; sourceTree = "<group>"; };
-		E622A9C821C35E94007C35BC /* HPLocalNotiTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPLocalNotiTool.h; sourceTree = "<group>"; };
-		E622A9C921C35E94007C35BC /* HPLocalNotiTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPLocalNotiTool.m; sourceTree = "<group>"; };
 		E622A9CB21C376E8007C35BC /* HPlaceholdTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPlaceholdTextView.h; sourceTree = "<group>"; };
 		E622A9CC21C376E8007C35BC /* HPlaceholdTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPlaceholdTextView.m; sourceTree = "<group>"; };
 		E622A9CE21C3A6B3007C35BC /* HPCardDetailsModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCardDetailsModel.h; sourceTree = "<group>"; };
@@ -755,6 +784,47 @@
 			path = MyCardvc;
 			sourceTree = "<group>";
 		};
+		E61E278E21C8D65500CD5288 /* HPLocalNoti */ = {
+			isa = PBXGroup;
+			children = (
+				E61E278F21C8D68000CD5288 /* EBBannerView */,
+			);
+			path = HPLocalNoti;
+			sourceTree = "<group>";
+		};
+		E61E278F21C8D68000CD5288 /* EBBannerView */ = {
+			isa = PBXGroup;
+			children = (
+				E61E279021C8D68000CD5288 /* EBCustomBannerView.h */,
+				E61E279121C8D68000CD5288 /* Classes */,
+				E61E27A121C8D68000CD5288 /* EBBannerViewController.h */,
+				E61E27A221C8D68000CD5288 /* EBBannerView.h */,
+			);
+			path = EBBannerView;
+			sourceTree = "<group>";
+		};
+		E61E279121C8D68000CD5288 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				E61E279221C8D68000CD5288 /* EBMuteDetector.h */,
+				E61E279321C8D68000CD5288 /* EBBannerWindow.h */,
+				E61E279421C8D68000CD5288 /* EBBannerView+Categories.h */,
+				E61E279521C8D68000CD5288 /* EBBannerView.m */,
+				E61E279621C8D68000CD5288 /* EBBannerViewMaker.m */,
+				E61E279721C8D68000CD5288 /* EBEmptyWindow.m */,
+				E61E279821C8D68000CD5288 /* EBBannerView.xib */,
+				E61E279921C8D68000CD5288 /* EBBannerViewController.xib */,
+				E61E279A21C8D68000CD5288 /* EBBannerWindow.m */,
+				E61E279B21C8D68000CD5288 /* EBCustomBannerView.m */,
+				E61E279C21C8D68000CD5288 /* EBMuteDetector.m */,
+				E61E279D21C8D68000CD5288 /* EBBannerView+Categories.m */,
+				E61E279E21C8D68000CD5288 /* EBEmptyWindow.h */,
+				E61E279F21C8D68000CD5288 /* EBMuteDetector.mp3 */,
+				E61E27A021C8D68000CD5288 /* EBBannerViewController.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		E61F710121C12EDB00932708 /* IM */ = {
 			isa = PBXGroup;
 			children = (
@@ -989,6 +1059,7 @@
 		E629216D219AB17500BEF16C /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				E61E278E21C8D65500CD5288 /* HPLocalNoti */,
 				69165CEB21C0EBA600593D25 /* Store */,
 				E6292173219AB32000BEF16C /* HPScreenAdapter.h */,
 				E6292174219AB32000BEF16C /* HPScreenAdapter.m */,
@@ -1008,8 +1079,6 @@
 				69165CF621C221C000593D25 /* HPCommonData.m */,
 				E622A9C221C34E1C007C35BC /* HPClearCacheTool.h */,
 				E622A9C321C34E1C007C35BC /* HPClearCacheTool.m */,
-				E622A9C821C35E94007C35BC /* HPLocalNotiTool.h */,
-				E622A9C921C35E94007C35BC /* HPLocalNotiTool.m */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -1421,6 +1490,8 @@
 				E6D75F8421B65AAD00B2067C /* HPFeedbackController.m */,
 				E62C84D221C28F1D00D7DFB3 /* HPInviteSBGiftsController.h */,
 				E62C84D321C28F1D00D7DFB3 /* HPInviteSBGiftsController.m */,
+				E61E278B21C8C36100CD5288 /* HPAboutUsViewController.h */,
+				E61E278C21C8C36100CD5288 /* HPAboutUsViewController.m */,
 			);
 			path = Function;
 			sourceTree = "<group>";
@@ -1579,13 +1650,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				E661B13021A28E8500C86CF5 /* README.md in Resources */,
+				E61E27A721C8D68000CD5288 /* EBBannerViewController.xib in Resources */,
 				E6292141219AA83A00BEF16C /* LaunchScreen.storyboard in Resources */,
+				E61E27A621C8D68000CD5288 /* EBBannerView.xib in Resources */,
 				E629216B219AAAB900BEF16C /* Default-568h@2x.png in Resources */,
 				E622A9C021C33989007C35BC /* RefreshTableView.bundle in Resources */,
 				E629213E219AA83A00BEF16C /* Assets.xcassets in Resources */,
 				E629213C219AA83100BEF16C /* Main.storyboard in Resources */,
 				E661B12321A28E8500C86CF5 /* LICENSE in Resources */,
 				E622A9C121C33989007C35BC /* .gitkeep in Resources */,
+				E61E27AC21C8D68000CD5288 /* EBMuteDetector.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1717,8 +1791,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E61E27A821C8D68000CD5288 /* EBBannerWindow.m in Sources */,
 				6993AD3321C79B100019506C /* HPShareAnnotation.m in Sources */,
 				E654C7DF21BFE6160066C506 /* HPCollectListModel.m in Sources */,
+				E61E27A921C8D68000CD5288 /* EBCustomBannerView.m in Sources */,
 				E62C84D421C28F1D00D7DFB3 /* HPInviteSBGiftsController.m in Sources */,
 				E654C7DE21BFE58E0066C506 /* HPFansListModel.m in Sources */,
 				E622A9BD21C33989007C35BC /* YYLRefreshNoDataView.m in Sources */,
@@ -1749,6 +1825,7 @@
 				E661B0D6219D436900C86CF5 /* HPAlertSheet.m in Sources */,
 				69165CCB21BE098100593D25 /* HPAddPhotoView.m in Sources */,
 				E661B12B21A28E8500C86CF5 /* JTHorizontalCalendarView.m in Sources */,
+				E61E27A521C8D68000CD5288 /* EBEmptyWindow.m in Sources */,
 				E661B0E2219D7BA100C86CF5 /* HPOwnerCardDefineController.m in Sources */,
 				E6D75F2121ABF96600B2067C /* HPHowToPlayDetailController.m in Sources */,
 				E6D75F4121AFEAD600B2067C /* HPConfigUserNameController.m in Sources */,
@@ -1763,6 +1840,7 @@
 				E6B4CEE221C5286F00429C11 /* TAAbstractDotView.m in Sources */,
 				E6D75F8B21B69D0D00B2067C /* HPShareMapController.m in Sources */,
 				E61CB24021C779A90076540E /* YYGestureRecognizer.m in Sources */,
+				E61E278D21C8C36100CD5288 /* HPAboutUsViewController.m in Sources */,
 				E6D75F5C21B119BC00B2067C /* HPBaseShareListController.m in Sources */,
 				E6D75F3621AE250300B2067C /* HPKeepController.m in Sources */,
 				7A54485A21C16A48001301F3 /* HPPartyCenterModel.m in Sources */,
@@ -1774,6 +1852,7 @@
 				E6D75F4A21AFF37B00B2067C /* HPUnbindPhoneController.m in Sources */,
 				69165D0321C3B86800593D25 /* HPShareListParam.m in Sources */,
 				E622A9CD21C376E8007C35BC /* HPlaceholdTextView.m in Sources */,
+				E61E27AB21C8D68000CD5288 /* EBBannerView+Categories.m in Sources */,
 				E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */,
 				E6D75F2821AD463000B2067C /* HPLoginByPasswordController.m in Sources */,
 				E6D75F6421B2301600B2067C /* HPCirclePageControl.m in Sources */,
@@ -1844,12 +1923,13 @@
 				E6D75F6A21B253D000B2067C /* HPPageView.m in Sources */,
 				E661B14321A679E200C86CF5 /* UIScrollView+GestureConflict.m in Sources */,
 				E661B0F4219FC13E00C86CF5 /* HPShareListCell.m in Sources */,
+				E61E27AA21C8D68000CD5288 /* EBMuteDetector.m in Sources */,
 				E6D75F2B21AD4DD400B2067C /* HPRegisterController.m in Sources */,
 				E661B0F7219FEBDC00C86CF5 /* HPShareDetailController.m in Sources */,
 				69165CF721C221C000593D25 /* HPCommonData.m in Sources */,
-				E622A9CA21C35E94007C35BC /* HPLocalNotiTool.m in Sources */,
 				7A54489E21C6304C001301F3 /* HPCardHeaderView.m in Sources */,
 				E622A9C721C358DA007C35BC /* AppDelegate+Config.m in Sources */,
+				E61E27A321C8D68000CD5288 /* EBBannerView.m in Sources */,
 				E6D75F8821B68A4D00B2067C /* HPCustomerServiceModalView.m in Sources */,
 				E661B0C0219CFDEA00C86CF5 /* HPBaseTableViewCell.m in Sources */,
 				E661B0AD219C1CE100C86CF5 /* HPBaseDialogView.m in Sources */,
@@ -1859,7 +1939,9 @@
 				E622A9D021C3A6B3007C35BC /* HPCardDetailsModel.m in Sources */,
 				E661B0A4219C0B5600C86CF5 /* HPBaseView.m in Sources */,
 				E6F551E121B911DF0086094F /* HPInterActiveModel.m in Sources */,
+				E61E27A421C8D68000CD5288 /* EBBannerViewMaker.m in Sources */,
 				E6D75F8521B65AAD00B2067C /* HPFeedbackController.m in Sources */,
+				E61E27AD21C8D68000CD5288 /* EBBannerViewController.m in Sources */,
 				6993AD2721C685470019506C /* HPHeaderScrollView.m in Sources */,
 				E6D75F6721B230FC00B2067C /* HPPageControlFactory.m in Sources */,
 				E6D75F7621B4B6EE00B2067C /* HPBannerView.m in Sources */,

@@ -89,7 +89,7 @@
     
 //    [self updateAppVersionInfo];
     // 使用 UNUserNotificationCenter 来管理通知
-    if (@available(iOS 10.0, *)) {
+    /*if (@available(iOS 10.0, *)) {
         UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
         //监听回调事件
         center.delegate = self;
@@ -107,7 +107,7 @@
         
     } else {
         // Fallback on earlier versions
-    }
+    }*/
     [HPGlobalVariable initVariable];
     
     [self configureAMapKey];
@@ -125,7 +125,7 @@
     }
     return YES;
 }
-
+/*
 #pragma mark - UNUserNotificationCenterDelegate
 //iOS10新增：处理前台收到通知的代理方法
 
@@ -166,7 +166,7 @@
 //            
 //        }
 //    
-//}
+//}*/
 
 - (void)configureAMapKey {
     if ([AMAP_KEY length] == 0)
