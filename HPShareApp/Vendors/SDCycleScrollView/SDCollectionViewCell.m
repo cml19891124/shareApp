@@ -99,8 +99,14 @@
 
 - (void)enterApp:(UIButton *)button
 {
-    kAppdelegateWindow.rootViewController = [HPMainTabBarController new];
+    HPMainTabBarController *mainTabBarController = [[HPMainTabBarController alloc] init];
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainTabBarController];
+    navigationController.navigationBarHidden = YES;
+    [navigationController.interactivePopGestureRecognizer setDelegate:mainTabBarController];
+    [UIApplication sharedApplication].keyWindow.rootViewController = navigationController;
 }
+
 - (void)setTitleLabelBackgroundColor:(UIColor *)titleLabelBackgroundColor
 {
     _titleLabelBackgroundColor = titleLabelBackgroundColor;

@@ -85,7 +85,10 @@
     
     UIImageView *photoView = [[UIImageView alloc] init];
     [photoView setBackgroundColor:COLOR_GRAY_F6F6F6];
+    [photoView setContentMode:UIViewContentModeScaleAspectFill];
+    [photoView.layer setMasksToBounds:YES];
     [bgView addSubview:photoView];
+    _photoView = photoView;
     [photoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(bgView).with.offset(getWidth(11.f));
         make.centerY.equalTo(bgView);
@@ -257,7 +260,7 @@
         photoUrl = model.picture.url;
     }
     else {
-//        HPLog(@"+++++++++ NO Picture");
+        HPLog(@"+++++++++ NO Picture");
     }
     
     [self setTitle:title];
