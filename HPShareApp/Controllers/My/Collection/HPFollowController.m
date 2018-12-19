@@ -83,7 +83,9 @@
 {
     [super viewWillAppear:animated];
     
-    [self loadTableViewFreshUI];
+    if (!self.isPop) {
+        [self loadTableViewFreshUI];
+    }
 }
 #pragma mark - 上下啦刷新控件
 - (void)loadTableViewFreshUI

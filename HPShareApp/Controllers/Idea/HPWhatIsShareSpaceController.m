@@ -8,7 +8,7 @@
 
 #import "HPWhatIsShareSpaceController.h"
 
-@interface HPWhatIsShareSpaceController ()<UIScrollViewDelegate>
+@interface HPWhatIsShareSpaceController () <UIScrollViewDelegate>
 
 @end
 
@@ -450,11 +450,13 @@
 }
 
 #pragma mark - 取消下拉  允许上拉
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGPoint offset = scrollView.contentOffset;
-    if (offset.y <= 0) {
+    
+    if (offset.y < -g_statusBarHeight) {
         offset.y = -g_statusBarHeight;
+        scrollView.contentOffset = offset;
     }
-    scrollView.contentOffset = offset;
 }
 @end

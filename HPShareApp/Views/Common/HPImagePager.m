@@ -53,10 +53,6 @@
     }
 }
 
-- (void)onTapPageView:(UITapGestureRecognizer *)tapGest {
-    [self show:NO];
-}
-
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     if (self.alpha == 0.f) {
         return nil;
@@ -90,16 +86,20 @@
     [_pageControl setCurrentPage:index];
 }
 
-//- (UIView *)pageView:(HPPageView *)pageView viewAtPageIndex:(NSInteger)index {
-//    UIImageView *imageView = [[UIImageView alloc] init];
-//    [imageView setContentMode:self.imageContentMode];
-//    UIImage *image = self.images[index];
-//
-//    if (image && [image isKindOfClass:UIImage.class]) {
-//        [imageView setImage:self.images[index]];
-//    }
-//
-//    return imageView;
-//}
+- (UIView *)pageView:(HPPageView *)pageView viewAtPageIndex:(NSInteger)index {
+    UIImageView *imageView = [[UIImageView alloc] init];
+    [imageView setContentMode:self.imageContentMode];
+    UIImage *image = self.images[index];
+
+    if (image && [image isKindOfClass:UIImage.class]) {
+        [imageView setImage:self.images[index]];
+    }
+
+    return imageView;
+}
+
+- (void)pageView:(HPPageView *)pageView didClickPageItem:(UIView *)item atIndex:(NSInteger)index {
+    [self show:NO];
+}
 
 @end

@@ -57,7 +57,9 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self loadTableViewFreshUI];
+    if (!self.isPop) {
+        [self loadTableViewFreshUI];
+    }
 }
 
 /*

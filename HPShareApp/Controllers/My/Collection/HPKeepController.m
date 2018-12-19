@@ -165,6 +165,11 @@
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (!_isEdited) {
+        [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+        return;
+    }
+    
     HPShareListModel *model = self.dataArray[indexPath.row];
     model.selected = !model.selected;//默认选一种，不可不选
     HPShareListCell *cell = (HPShareListCell *)[tableView cellForRowAtIndexPath:indexPath];

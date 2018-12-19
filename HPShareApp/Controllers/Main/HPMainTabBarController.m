@@ -110,8 +110,22 @@
     else if ([viewController isKindOfClass:HPBaseViewController.class]) {
         HPBaseViewController *baseViewController = (HPBaseViewController *)viewController;
         
-        if (baseViewController.isPopGestureRecognize)
+        if (baseViewController.isPopGestureRecognize) {
+            NSInteger count = self.navigationController.viewControllers.count;
+            
+            if (count < 2) {
+                return NO;
+            }
+            
+            UIViewController *lastVC = self.navigationController.viewControllers[count - 2];
+            
+            if ([lastVC isKindOfClass:HPBaseViewController.class]) {
+                HPBaseViewController *lastBaseVC = (HPBaseViewController *)lastVC;
+                lastBaseVC.isPop = YES;
+            }
+            
             return YES;
+        }
         else
             return NO;
     }

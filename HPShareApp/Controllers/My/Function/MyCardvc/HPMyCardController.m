@@ -6,7 +6,6 @@
 #import "HPMyCardController.h"
 #import "YYGestureRecognizer.h"
 #import "HPShareListCell.h"
-#import "HPShareListModel.h"
 #import "HPCardHeaderView.h"
 #import "HPCardDetailsModel.h"
 #import "UIButton+WebCache.h"
@@ -380,7 +379,7 @@ static NSString *shareListCell = @"shareListCell";
 #pragma mark - OnClick
 
 - (void)onClickBackBtn:(UIButton *)btn {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self pop];
 }
 
 - (void)setupUI {
@@ -593,12 +592,12 @@ static NSString *shareListCell = @"shareListCell";
     if (button.tag == HPMyCardTypeEdit) {
         [self pushVCByClassName:@"HPEditPersonOInfoController"];
     }else {
-        HPShareListModel *model = self.param[@"model"];
+        NSString *userId = self.param[@"userId"];
         HPLoginModel *account = [HPUserTool account];
         NSDictionary *dic = (NSDictionary *)account.userInfo;
         
-        if (model) {//只有是非自己的信息界面传入的model不为空，才会调用关注接口
-            [HPHTTPSever HPPostServerWithMethod:_method paraments:@{@"userId":dic[@"userId"],@"followedId":model.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (userId) {//只有是非自己的信息界面传入的model不为空，才会调用关注接口
+            [HPHTTPSever HPPostServerWithMethod:_method paraments:@{@"userId":dic[@"userId"],@"followedId":userId} needToken:YES complete:^(id  _Nonnull responseObject) {
                 if (CODE == 200) {
                     [HPProgressHUD alertMessage:MSG];
                     NSString *userId = self.param[@"userId"];

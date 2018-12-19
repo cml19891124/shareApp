@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setImageViews:(NSArray * _Nonnull)imageViews;
 
-- (void)onTapPageView:(UITapGestureRecognizer *)tapGest;
+//- (void)onTapPageView:(UITapGestureRecognizer *)tapGest;
 
 @end
 

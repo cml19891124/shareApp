@@ -53,11 +53,6 @@
     for (UIGestureRecognizer *gestureRecognizer in self.scrollView.gestureRecognizers) {
         [gestureRecognizer setCancelsTouchesInView:NO];
     }
-    
-    if (_showImagePagerEnabled) {
-        UITapGestureRecognizer *tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapPageView:)];
-        [self addGestureRecognizer:tapGest];
-    }
 }
 
 - (void)setDelegate:(id<HPPageViewDelegate>)delegate {
@@ -153,6 +148,28 @@
     }
 }
 
+- (void)pageView:(HPPageView *)pageView didClickPageItem:(UIView *)item atIndex:(NSInteger)index {
+    if (!_showImagePagerEnabled) {
+        return;
+    }
+    
+    if (_imagePager == nil) {
+        HPImagePager *imagePager = [[HPImagePager alloc] init];
+        [imagePager setBackgroundColor:UIColor.blackColor];
+        [imagePager setImages:_images];
+        UIView *currentView = [UIViewController getCurrentVC].view;
+        [currentView addSubview:imagePager];
+        [imagePager mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(currentView);
+        }];
+        
+        _imagePager = imagePager;
+    }
+    
+    [_imagePager scrollToPageAtIndex:self.currentPage];
+    [_imagePager show:YES];
+}
+
 #pragma mark - UIResponder
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -182,26 +199,6 @@
     UIImage *newImage = [change objectForKey:NSKeyValueChangeNewKey];
     [_images replaceObjectAtIndex:index withObject:newImage];
     [self refreshPageItem];
-}
-
-#pragma mark - UITapGestureRecognizer
-
-- (void)onTapPageView:(UITapGestureRecognizer *)tapGest {
-    if (_imagePager == nil) {
-        HPImagePager *imagePager = [[HPImagePager alloc] init];
-        [imagePager setBackgroundColor:UIColor.blackColor];
-        [imagePager setImages:_images];
-        UIView *currentView = [UIViewController getCurrentVC].view;
-        [currentView addSubview:imagePager];
-        [imagePager mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(currentView);
-        }];
-        
-        _imagePager = imagePager;
-    }
-    
-    [_imagePager scrollToPageAtIndex:self.currentPage];
-    [_imagePager show:YES];
 }
 
 @end
