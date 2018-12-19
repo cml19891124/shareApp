@@ -11,7 +11,7 @@
 #import "HPImageUtil.h"
 #import "HPPageControlFactory.h"
 
-@interface HPHowToPlayDetailController () <HPBannerViewDelegate,UIScrollViewDelegate>
+@interface HPHowToPlayDetailController () <HPBannerViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, weak) HPBannerView *bannerView;
 
@@ -22,6 +22,8 @@
 @property (nonatomic, weak) UILabel *typeLabel;
 
 @property (nonatomic, weak) UILabel *descLabel;
+
+@property (nonatomic, weak) UILabel *theoryLabel;
 
 @property (nonatomic, weak) UILabel *beforeFirstPlaceLabel;
 
@@ -52,6 +54,7 @@
     [_titleLabel setText:@"健身房与轻食店"];
     [_typeLabel setText:@"铺位共享"];
     [_descLabel setText:@"健身房优化设备布局，能将闲置空间进行共享。通过系统匹配、推荐，选择最符合双方需求的轻食店进行合作，将闲置空间租给轻食店。"];
+    [_theoryLabel setText:@"健身房在选择共享合作店铺的时候，采用了产品或服务匹配的原理。将轻食店的简餐、减脂套餐作为健身运动的互补产品进行合作，通过运动与饮食相结合的方式，完善了自身健身服务，增加用户的粘性与忠诚度。\n\n\n轻食店在选择共享时，采用了人群、客流匹配的原理。轻食店的产品主要以素食、减肥餐、健身餐等食品为主。客户群体也多为健身或者是减肥等对饮食摄入要求较高的用户。这类客户群体与健身房的用户群体完全吻合。轻食店可以共享健身房的客群流量，来给店铺增加稳定的客流。"];
     [_beforeFirstPlaceLabel setText:@"健身房"];
     [_beforeFirstDescLabel setText:@"健身房的经营面积一般都较大，需要放置很多的健身设备，这就导致了会有许多的空间是闲置的，没有有效的利用起来。健身房的客户群体多以高收入人群为主，他们追求健康生活方式。注重运动，饮食。大量的运动过后，需要健康的饮食和营养品来进行补充。"];
     [_beforeSecondPlaceLabel setText:@"轻食店"];
@@ -88,7 +91,8 @@
     [self.view setBackgroundColor:COLOR_GRAY_F6F6F6];
     
     UIScrollView *scrollView = [[UIScrollView alloc] init];
-    scrollView.delegate = self;
+    [scrollView setDelegate:self];
+    
     [self.view addSubview:scrollView];
     [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
@@ -153,11 +157,20 @@
     }];
     [self setupTopicView:topicView];
     
+    UIView *theoryView = [[UIView alloc] init];
+    [theoryView setBackgroundColor:UIColor.whiteColor];
+    [scrollView addSubview:theoryView];
+    [theoryView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(topicView.mas_bottom).with.offset(10.f * g_rateWidth);
+        make.left.and.width.equalTo(scrollView);
+    }];
+    [self setupTheoryView:theoryView];
+    
     UIView *compareView = [[UIView alloc] init];
     [compareView setBackgroundColor:UIColor.whiteColor];
     [scrollView addSubview:compareView];
     [compareView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(topicView.mas_bottom).with.offset(10.f * g_rateWidth);
+        make.top.equalTo(theoryView.mas_bottom);
         make.left.and.width.equalTo(scrollView);
         make.bottom.equalTo(scrollView);
     }];
@@ -198,6 +211,24 @@
         make.width.mas_equalTo(336.f * g_rateWidth);
         make.centerX.equalTo(view);
         make.bottom.equalTo(view).with.offset(-19.f * g_rateWidth);
+    }];
+}
+
+- (void)setupTheoryView:(UIView *)view {
+    UIView *titleView = [self setupFirstTitleViewWithTitle:@"共享原理"];
+    [view addSubview:titleView];
+    [titleView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(view).with.offset(15.f * g_rateWidth);
+        make.left.equalTo(view).with.offset(15.f * g_rateWidth);
+    }];
+    
+    UIView *descView = [self setupDescViewWithText:@""];
+    [view addSubview:descView];
+    _theoryLabel = descView.subviews[0];
+    [descView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(titleView);
+        make.top.equalTo(titleView.mas_bottom).with.offset(10.f * g_rateWidth);
+        make.bottom.equalTo(view).with.offset(- getWidth(10.f));
     }];
 }
 
@@ -387,16 +418,18 @@
 #pragma mark - onClick
 
 - (void)onClickBackBtn:(UIButton *)btn {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self pop];
 }
 
-#pragma mark - UIScrollViewDelegate
 #pragma mark - 取消下拉  允许上拉
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGPoint offset = scrollView.contentOffset;
-    if (offset.y <= 0) {
+    
+    if (offset.y < -g_statusBarHeight) {
         offset.y = -g_statusBarHeight;
+        scrollView.contentOffset = offset;
     }
-    scrollView.contentOffset = offset;
 }
+
 @end

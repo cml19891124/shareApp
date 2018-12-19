@@ -19,6 +19,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     _isPopGestureRecognize = YES;
+    _isPop = NO;
 }
 
 /*
@@ -124,7 +125,7 @@
     }
 }
 - (void)onClickBackBtn {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self pop];
 }
 
 - (void)pushVCByClassName:(NSString *)name {
@@ -153,13 +154,24 @@
 
 - (void)popWithParam:(NSDictionary *)param {
     NSInteger count = self.navigationController.viewControllers.count;
+    
+    if (count < 2) {
+        return;
+    }
+    
     UIViewController *lastVC = self.navigationController.viewControllers[count - 2];
     
     if ([lastVC isKindOfClass:HPBaseViewController.class]) {
         HPBaseViewController *lastBaseVC = (HPBaseViewController *)lastVC;
+        lastBaseVC.isPop = YES;
         lastBaseVC.param = param;
-        [self.navigationController popViewControllerAnimated:YES];
     }
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)pop {
+    [self popWithParam:nil];
 }
 
 @end

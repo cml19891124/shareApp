@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSDictionary *param;
 
+@property (nonatomic, assign) BOOL isPop;
+
 @property (nonatomic, assign) BOOL isPopGestureRecognize;
 
 @property (nonatomic, weak) id<HPBaseViewControllerDelegate> delegate;
@@ -30,7 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)pushVCByClassName:(NSString *)name withParam:(NSDictionary * _Nullable)param;
 
-- (void)popWithParam:(NSDictionary *)param;
+- (void)popWithParam:(NSDictionary * _Nullable)param;
+
+- (void)pop;
 
 @end
 

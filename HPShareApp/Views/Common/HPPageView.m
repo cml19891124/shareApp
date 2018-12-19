@@ -43,7 +43,11 @@
         _pageNumber = 0;
         _currentPage = 0;
         _pageItemViews = [[NSMutableArray alloc] init];
+        _pageItemSize = CGSizeZero;
         _isLayout = NO;
+        
+        UITapGestureRecognizer *tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapPageView:)];
+        [self addGestureRecognizer:tapGest];
     }
     return self;
 }
@@ -128,7 +132,8 @@
             if (centerPageItem) {
                 [centerView addSubview:centerPageItem];
                 [centerPageItem mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.edges.equalTo(centerView);
+                    make.centerX.and.centerY.equalTo(centerView);
+                    make.size.mas_equalTo(self.pageItemSize);
                 }];
             }
             
@@ -147,7 +152,8 @@
                     if (leftPageItem) {
                         [leftView addSubview:leftPageItem];
                         [leftPageItem mas_makeConstraints:^(MASConstraintMaker *make) {
-                            make.edges.equalTo(leftView);
+                            make.centerX.and.centerY.equalTo(leftView);
+                            make.size.mas_equalTo(self.pageItemSize);
                         }];
                     }
                 }
@@ -164,7 +170,8 @@
                     if (rightPageItem) {
                         [rightView addSubview:rightPageItem];
                         [rightPageItem mas_makeConstraints:^(MASConstraintMaker *make) {
-                            make.edges.equalTo(rightView);
+                            make.centerX.and.centerY.equalTo(rightView);
+                            make.size.mas_equalTo(self.pageItemSize);
                         }];
                     }
                 }
@@ -201,6 +208,10 @@
         _pageItemNum = 5;
     }
     
+    if (CGSizeEqualToSize(_pageItemSize, CGSizeZero)) {
+        _pageItemSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
+    }
+    
     _centerPageItemIndex = _pageItemNum/2;
     _centerOffsetX = _centerPageItemIndex*(self.pageWidth + self.pageSpace);
     
@@ -232,6 +243,17 @@
     
     if (_delegate && [_delegate respondsToSelector:@selector(pageView:didScrollAtIndex:)]) {
         [_delegate pageView:self didScrollAtIndex:_currentPage];
+    }
+}
+
+#pragma mark - UITapGestureRecognizer
+
+- (void)onTapPageView:(UITapGestureRecognizer *)tapGest {
+    if (_delegate && [_delegate respondsToSelector:@selector(pageView:didClickPageItem:atIndex:)]) {
+        UIView *item = [_delegate pageView:self viewAtPageIndex:_currentPage];
+        if (item) {
+            [_delegate pageView:self didClickPageItem:item atIndex:_currentPage];
+        }
     }
 }
 

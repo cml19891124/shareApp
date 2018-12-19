@@ -19,6 +19,8 @@
 @optional
 - (void)pageView:(HPPageView *)pageView didScrollAtIndex:(NSInteger)index;
 
+- (void)pageView:(HPPageView *)pageView didClickPageItem:(UIView *)item atIndex:(NSInteger)index;
+
 @end
 
 NS_ASSUME_NONNULL_BEGIN
@@ -30,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat pageWidth;
 
 @property (nonatomic, assign) CGFloat pageSpace;
+
+@property (nonatomic, assign) CGSize pageItemSize;
 
 @property (nonatomic, assign) NSInteger currentPage;
 
