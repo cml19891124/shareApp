@@ -8,7 +8,7 @@
 
 #import "HPRegisterController.h"
 #import "HPValidatePhone.h"
-#import "HPLocalNotiTool.h"
+#import "EBBannerView.h"
 
 @interface HPRegisterController ()<UITextFieldDelegate>
 @property (nonatomic, strong) UITextField *codeTextField;
@@ -263,7 +263,16 @@
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/register" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"注册成功"];
-            [HPLocalNotiTool registerNotification:1 title:@"注册成功" body:@"欢迎加入合店站，合店站有你更精彩。"];
+            //⭐️5.iOS 11 style (iOS 11 样式)
+            EBBannerView *banner = [EBBannerView bannerWithBlock:^(EBBannerViewMaker *make) {
+                make.style = 11;
+                make.icon = [UIImage imageNamed:@"icon"];
+                make.title = @"注册成功";
+                make.content = @"欢迎加入合店站，合店站有你更精彩。";
+//                make.date = @"2017 10 19";
+            }];
+            [banner show];
+            [kNotificationCenter postNotificationName:@"regiest" object:nil userInfo:@{@"title":@"登录成功",@"content":@"欢迎加入合店站，合店站有你更精彩。"}];
             [self.navigationController popViewControllerAnimated:YES];
         }else{
             [HPProgressHUD alertMessage:MSG];

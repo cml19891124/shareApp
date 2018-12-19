@@ -622,6 +622,8 @@
         
         [_customerServiceModalView show:YES];
         [self.parentViewController.view bringSubviewToFront:_customerServiceModalView]; 
+    }else if ([btn.text isEqualToString:@"关于我们"]){
+        [self pushVCByClassName:@"HPAboutUsViewController"];
     }
 }
 

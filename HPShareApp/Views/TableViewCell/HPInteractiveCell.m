@@ -88,7 +88,9 @@
 //        [badgeValue setTitleColor:COLOR_GREEN_EFF3F6 forState:UIControlStateNormal];
         badgeValue.backgroundColor = COLOR_RED_FF3C5E;
         badgeValue.layer.cornerRadius = 5.f *g_rateWidth;
+        badgeValue.hidden = YES;
         [self.contentView addSubview:badgeValue];
+        _badgeValue = badgeValue;
         [badgeValue mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(56.f * g_rateWidth);
             make.top.mas_equalTo(self).offset(18.f * g_rateWidth);

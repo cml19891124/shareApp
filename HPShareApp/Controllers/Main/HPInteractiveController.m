@@ -9,45 +9,88 @@
 #import "HPInteractiveController.h"
 #import "HPInteractiveCell.h"
 #import "HPInterActiveModel.h"
-#import <UserNotifications/UserNotifications.h>
 
-@interface HPInteractiveController ()<UITableViewDelegate,UITableViewDataSource,UNUserNotificationCenterDelegate>
+@interface HPInteractiveController ()<UITableViewDelegate,UITableViewDataSource,HPBaseViewControllerDelegate>
 
 @property (nonatomic, strong) NSArray *imageArray;
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray *interArray;
+@property (nonatomic, strong) NSMutableArray *interArray;
+@property (nonatomic, strong) NSDictionary *userInfo;
+
+/**
+ 是否有新的通知消息
+ */
+@property (nonatomic, assign) BOOL hasNoti;
 @end
 
 @implementation HPInteractiveController
+
+#pragma mark - 设置源数据为已读数据
+- (void)clickRightButtonToHandle
+{
+    [self getDataResources];
+}
 static NSString *interactiveCell = @"interactiveCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setUpNotiConfig];
     // Do any additional setup after loading the view.
-    if (@available(iOS 10.0, *)) {
-        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-        //监听回调事件
-        center.delegate = self;
-    } else {
-        // Fallback on earlier versions
-    }
+    self.delegate = self;
+    [self getDataResources];
     
-    
-    NSArray *interArray = @[@{@"photo":@"system notification",@"title":@"系统通知",@"subtitle":@"注册成功，欢迎进入“合店站”"},@{@"photo":@"activity center",@"title":@"活动中心",@"subtitle":@"锦鲤附身，您有1份新用户大礼包待领取"}];
     [self setupUI];
-    _interArray = [HPInterActiveModel mj_objectArrayWithKeyValuesArray:interArray];
-    [_tableView reloadData];
     [self setupNavigationBarWithTitle:@"互动"];
+    [self setupRightBarbuttonBtn:@"一键已读"];
     [self.view setBackgroundColor:COLOR_GRAY_F7F7F7];
 
 }
+#pragma mark - 获取出事原始数据-也是设置消息是否已读的源数据
+- (void)getDataResources
+{
+    _hasNoti = NO;
+    [self.interArray removeAllObjects];
+    NSArray *interArray = @[@{@"photo":@"system notification",@"title":@"系统通知",@"subtitle":@"暂无数据"//@"注册成功，欢迎进入“合店站”"
+                              },@{@"photo":@"activity center",@"title":@"活动中心",@"subtitle":@"暂无数据"//@"锦鲤附身，您有1份新用户大礼包待领取"
+                                  
+                                  }];
+    _interArray = [HPInterActiveModel mj_objectArrayWithKeyValuesArray:interArray];
+    [_tableView reloadData];
+}
 
+#pragma mark - 添加通知监听注册/登录信息
+- (void)setUpNotiConfig
+{
+    [kNotificationCenter addObserver:self selector:@selector(getNotiInfo:) name:@"regiest" object:nil];
+    [kNotificationCenter addObserver:self selector:@selector(getNotiInfo:) name:@"login" object:nil];
+
+}
+
+#pragma mark - 拿到监听消息
+- (void)getNotiInfo:(NSNotification *)noti
+{
+    _hasNoti = YES;
+    [self.interArray removeAllObjects];
+    HPLog(@"noti:%@",noti.userInfo);
+    self.userInfo = noti.userInfo;
+    NSString *title = self.userInfo[@"title"];
+    NSString *subtitle = self.userInfo[@"content"];
+    NSArray *interArray = @[@{@"photo":@"system notification",@"title":title.length >0 ?title: @"暂无数据",@"subtitle":subtitle.length >0 ?subtitle: @"暂无数据"}];
+    self.interArray = [HPInterActiveModel mj_objectArrayWithKeyValuesArray:interArray];
+    [self.tableView reloadData];
+}
+
+- (void)dealloc
+{
+    [kNotificationCenter removeObserver:self];
+    [kNotificationCenter removeObserver:self];
+
+}
 - (void)setupUI {
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     [tableView setBackgroundColor:COLOR_GRAY_F7F7F7];
     [tableView setSeparatorColor:COLOR_GRAY_F7F7F7];
     [tableView setDelegate:self];
     [tableView setDataSource:self];
-    tableView.scrollEnabled = NO;
     tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, CGFLOAT_MIN)];
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, CGFLOAT_MIN)];
 
@@ -83,6 +126,11 @@ static NSString *interactiveCell = @"interactiveCell";
     if (indexPath.section == 0) {
         
         cell.model = model;
+        if (_hasNoti) {
+            cell.badgeValue.hidden = NO;
+        }else{
+            cell.badgeValue.hidden = YES;
+        }
         cell.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
@@ -163,11 +211,13 @@ static NSString *interactiveCell = @"interactiveCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 0 && indexPath.row == 0) {
-        [self pushVCByClassName:@"HPSystemNotiController"];
-    }else if (indexPath.section == 0 && indexPath.row == 1){
-        [self pushVCByClassName:@"HPPartyCenterController"];
-    }
+    _hasNoti = NO;
+    [self.tableView reloadData];
+//    if (indexPath.section == 0 && indexPath.row == 0) {
+//        [self pushVCByClassName:@"HPSystemNotiController"];
+//    }else if (indexPath.section == 0 && indexPath.row == 1){
+//        [self pushVCByClassName:@"HPPartyCenterController"];
+//    }
 }
 
 #pragma mark - 取消下拉  允许上拉
@@ -177,10 +227,6 @@ static NSString *interactiveCell = @"interactiveCell";
         offset.y = 0;
     }
     self.tableView.contentOffset = offset;
-}
-
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler API_AVAILABLE(ios(10.0)){
-    
 }
 
 @end

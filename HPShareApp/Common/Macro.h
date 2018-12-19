@@ -79,6 +79,8 @@
 #define COLOR_GRAY_F1F1F1 [UIColor colorWithHexString:@"#F1F1F1"]
 #define COLOR_GRAY_F2F2F2 [UIColor colorWithHexString:@"#F2F2F2"]
 #define COLOR_GRAY_F4F4F4 [UIColor colorWithHexString:@"#F4F4F4"]
+#define COLOR_GRAY_F44230 [UIColor colorWithHexString:@"#F44230"]
+
 #define COLOR_GRAY_F6F6F6 [UIColor colorWithHexString:@"#F6F6F6"]
 #define COLOR_GRAY_F7F7F7 [UIColor colorWithHexString:@"#F7F7F7"]
 #define COLOR_GRAY_F8F8F8 [UIColor colorWithHexString:@"#F8F8F8"]
@@ -108,6 +110,8 @@
 #define COLOR_GRAY_878787 [UIColor colorWithHexString:@"#878787"]
 #define COLOR_GRAY_808080 [UIColor colorWithHexString:@"#808080"]
 #define COLOR_RED_F91E54 [UIColor colorWithHexString:@"#F91E54"]
+#define COLOR_GRAY_F9F9F9 [UIColor colorWithHexString:@"#F9F9F9"]
+
 
 #define kAppleId @"10812999054"
 
