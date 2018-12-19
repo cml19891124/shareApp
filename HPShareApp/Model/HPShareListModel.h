@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  是否选中
  */
 @property (nonatomic, assign) BOOL selected;
+
 @end
 
 NS_ASSUME_NONNULL_END

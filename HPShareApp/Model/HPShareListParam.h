@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPShareListParam : NSObject
 
+@property (nonatomic, copy) NSString *userId;
+
 @property (nonatomic, copy) NSString *areaId;
 
 @property (nonatomic, copy) NSString *districtId; //街道筛选，属于区下面的

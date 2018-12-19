@@ -11,6 +11,8 @@
 #import "HPTextDialogView.h"
 #import "HPFansListModel.h"
 #import "UIScrollView+Refresh.h"
+#import "HPShareListParam.h"
+#import "HPCollectListModel.h"
 
 #define CELL_ID @"HPFollowListCell"
 
@@ -20,25 +22,23 @@
 
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
 
-@property (nonatomic, assign) int                        count;
 @property (nonatomic, strong) UIImageView *waitingView;
+
 @property (nonatomic, strong) UILabel *waitingLabel;
+
 @property (strong, nonatomic) HPFansListModel *model;
 
 @property (nonatomic, strong) HPFansListModel *selectedModel;
+
 @property (nonatomic, strong) UIButton *forbtn;
+
+@property (nonatomic, strong) HPShareListParam *shareListParam;
+
+@property (nonatomic, strong) NSMutableArray *dataArray;
+
 @end
 
 @implementation HPFollowController
-#pragma mark - 逛逛
-/**
- 逛逛事件
- */
-- (void)clickToCheckSTHForRequirments
-{
-    [self pushVCByClassName:@"HPShareShopListController"];
-
-}
 
 //#pragma mark - 取消关注事件
 //- (void)followListCell:(HPFollowListCell *)cell didClickWithFollowModel:(HPFansListModel *)model
@@ -64,50 +64,40 @@
 //}
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.count = 1;
 
     // Do any additional setup after loading the view.
-    NSArray *dataArray = @[@{@"userName":@"刘晓玉", @"company":@"深圳市斯蒂格环保设备有限公司", @"portrait":[UIImage imageNamed:@"shared_shop_details_head_portrait"]},
-                           @{@"userName":@"董晓丽", @"company":@"深圳市瑞鹏宠物医疗集团股份有限公司xxxxxxxxxxx", @"portrait":[UIImage imageNamed:@"personal_center_login_head"]},
-                           @{@"userName":@"周XX", @"company":@"深圳市前海合派科技有限公司", @"portrait":[UIImage imageNamed:@"customizing_business_cards_entrepreneur's_head_portrait"]},
-                           @{@"userName":@"王彤彤", @"company":@"广州区势时代品牌咨询管理有限...", @"portrait":[UIImage imageNamed:@"customizing_business_cards_owner's_head_portrait"]},
-                           @{@"userName":@"刘晓玉", @"company":@"深圳市斯蒂格环保设备有限公司", @"portrait":[UIImage imageNamed:@"shared_shop_details_head_portrait"]},
-                           @{@"userName":@"董晓丽", @"company":@"深圳市瑞鹏宠物医疗集团股份有...", @"portrait":[UIImage imageNamed:@"personal_center_login_head"]},
-                           @{@"userName":@"周XX", @"company":@"深圳市前海合派科技有限公司", @"portrait":[UIImage imageNamed:@"customizing_business_cards_entrepreneur's_head_portrait"]},
-                           @{@"userName":@"王彤彤", @"company":@"广州区势时代品牌咨询管理有限...", @"portrait":[UIImage imageNamed:@"customizing_business_cards_owner's_head_portrait"]},
-                           @{@"userName":@"刘晓玉", @"company":@"深圳市斯蒂格环保设备有限公司", @"portrait":[UIImage imageNamed:@"shared_shop_details_head_portrait"]},
-                           @{@"userName":@"董晓丽", @"company":@"深圳市瑞鹏宠物医疗集团股份有...", @"portrait":[UIImage imageNamed:@"personal_center_login_head"]},
-                           @{@"userName":@"周XX", @"company":@"深圳市前海合派科技有限公司", @"portrait":[UIImage imageNamed:@"customizing_business_cards_entrepreneur's_head_portrait"]},
-                           @{@"userName":@"王彤彤", @"company":@"广州区势时代品牌咨询管理有限...", @"portrait":[UIImage imageNamed:@"customizing_business_cards_owner's_head_portrait"]}];
     
-//    _dataArray = [NSMutableArray arrayWithArray:dataArray];
+    _shareListParam = [HPShareListParam new];
+    [_shareListParam setPageSize:10];
+    HPLoginModel *model = [HPUserTool account];
+    NSDictionary *userdic = (NSDictionary *)model.userInfo;
+    NSString *userId = userdic[@"userId"];
+    [_shareListParam setUserId:userId];
+    
+    _dataArray = [NSMutableArray array];
+    
     [self setupUI];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.count = 1;
-    [self loadtableViewFreshUi];
+    
+    [self loadTableViewFreshUI];
 }
 #pragma mark - 上下啦刷新控件
-- (void)loadtableViewFreshUi
+- (void)loadTableViewFreshUI
 {
-    [self getFansListData];
-    
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         
-        self.count = 1;
-        [self getFansListData];
+        self.shareListParam.page = 1;
+        [self getFansListDataReload:YES];
     }];
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         
-        self.count++;
-        [self getFansListData];
+        self.shareListParam.page ++;
+        [self getFansListDataReload:NO];
     }];
-    
-    // 马上进入刷新状态
-    [self.tableView.mj_header beginRefreshing];
     
     if (@available(iOS 11.0, *)) {
         
@@ -119,34 +109,39 @@
         _tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
         
     }
+    
+    // 马上进入刷新状态
+    [self.tableView.mj_header beginRefreshing];
 }
 #pragma mark - 获取关注数据
-- (void)getFansListData
+- (void)getFansListDataReload:(BOOL)isReload
 {
-    HPLoginModel *model = [HPUserTool account];
-    NSDictionary *userdic = (NSDictionary *)model.userInfo;
-    NSString *userId = userdic[@"userId"];
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"page"] = [NSString stringWithFormat:@"%d",self.count];
-    dic[@"pageSize"] = @"10";
-    dic[@"userId"] = userId;
+    NSDictionary *dict = self.shareListParam.mj_keyValues;
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/fans/list" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/fans/list" isNeedToken:YES paraments:dict complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [self.tableView.mj_header endRefreshing];
             [self.tableView.mj_footer endRefreshing];
-            [self.dataArray removeAllObjects];
-            weakSelf.dataArray = [HPFansListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
-            if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
+            
+            HPCollectListModel *collectionListModel = [HPCollectListModel mj_objectWithKeyValues:DATA];
+            if (isReload) {
+                [weakSelf.dataArray removeAllObjects];
+            }
+            NSArray<HPFansListModel *> *models = [HPFansListModel mj_objectArrayWithKeyValuesArray:collectionListModel.list];
+            [weakSelf.dataArray addObjectsFromArray:models];
+            
+            if (collectionListModel.total == 0 || weakSelf.dataArray.count == 0) {
                 self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
                 self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list");
                 self.tableView.refreshNoDataView.tipLabel.text = @"关注列表空空如也，快去逛逛吧！";
                 self.tableView.refreshNoDataView.delegate = self;
             }
+            
             if ([weakSelf.dataArray count] < 10) {
                 
                 [self.tableView.mj_footer endRefreshingWithNoMoreData];
             }
+            
             [self.tableView reloadData];
         }else{
             [HPProgressHUD alertMessage:MSG];
@@ -208,18 +203,19 @@
         [textDialogView setModalTop:279.f * g_rateHeight];
         _textDialogView = textDialogView;
     }
+    
     HPLoginModel *account = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)account.userInfo;
-//    kWeakSelf(weakSlef);
+    NSDictionary *dict = (NSDictionary *)account.userInfo;
+    NSString *userId = dict[@"userId"];
+    kWeakSelf(weakSelf);
     [_textDialogView setConfirmCallback:^{
-//        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-//        NSLog(@"indexPath: %ld", (long)indexPath.row);
-//        [self.dataArray removeObjectAtIndex:indexPath.row];
-//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];model.user_id
-        [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/cancel" paraments:@{@"userId":dic[@"userId"],@"followedId":model.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        
+        [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/cancel" paraments:@{@"userId":userId,@"followedId":model.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
             if (CODE == 200) {
+                [weakSelf.dataArray removeObjectAtIndex:indexPath.row];
+                [weakSelf.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
                 [HPProgressHUD alertMessage:MSG];
-                [self loadtableViewFreshUi];
             }else{
                 [HPProgressHUD alertMessage:MSG];
             }
@@ -233,38 +229,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    _selectedModel = self.dataArray[indexPath.row];
-    
     HPFansListModel *model = self.dataArray[indexPath.row];
-    
-    //    model.selected = !model.selected;//默认选一种，不可不选
-    //    self.selectedModel.selected = NO;
-    //    model.selected = YES;
-    //    self.selectedModel = model;
-    
-//    if(self.selectedModel.user != model.followed_id){//默认选一种，可不选
-//        //点击不同的spaceId，当原来的spaceId选中时，设置原来的不选中
-//        if(self.selectedModel.selected){
-//            self.selectedModel.selected = !self.selectedModel.selected;
-//        }
-//        model.selected = !model.selected;
-//        self.selectedModel = model;
-//    }else{
-//        model.selected = !model.selected;
-//        self.selectedModel = model;
-//    }
-//
-//    _model = model;
-//    HPFollowListCell *cell = (HPFollowListCell *)[tableView cellForRowAtIndexPath:indexPath];
-//
-//    cell.model = model;
-//    //没有动画闪烁问题
-//    [UIView performWithoutAnimation:^{
-//        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
-//    }];
-//
-//    [UIView performWithoutAnimation:^{
-//        [self.tableView reloadData];
-//    }];
+    [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":model.userId}];
 }
+
+#pragma mark - 逛逛
+/**
+ 逛逛事件
+ */
+- (void)clickToCheckSTHForRequirments
+{
+    [self pushVCByClassName:@"HPShareShopListController"];
+    
+}
+
 @end

@@ -19,7 +19,6 @@
 //虚假的悬浮效果
 static CGFloat floatViewHeight = 62.f;
 
-static CGFloat navHeitht = 64;
 // 这个系数根据自己喜好设置大小，=屏幕视图滑动距离/手指滑动距离
 #define  moveScale 2
 
@@ -78,9 +77,9 @@ static NSString *shareListCell = @"shareListCell";
     [super viewWillAppear:animated];
     //获取 共享发布数据
     [self getShareListData];
-    HPShareListModel *model = self.param[@"model"];
-    if ([model.userId intValue]) {//非自己
-        [self getCardInfoDetails:model];
+    NSString *userId = self.param[@"userId"];
+    if (userId) {//非自己
+        [self getCardInfoDetailByUserId:userId];
         
     }else{//自己
         HPLoginModel *account = [HPUserTool account];
@@ -115,8 +114,6 @@ static NSString *shareListCell = @"shareListCell";
     NSString *createTimeOrderType = @"0"; //发布时间排序，1升序，0降序
     NSString *rentOrderType = @"0"; //租金排序排序，1升序，0降序
     NSString *type = nil; //类型筛选，1业主， 2创客
-    HPLoginModel *account = [HPUserTool account];
-    NSDictionary *userdic =(NSDictionary *)account.userInfo;
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     param[@"areaId"] = areaId;
     param[@"districtId"] = districtId;
@@ -604,8 +601,8 @@ static NSString *shareListCell = @"shareListCell";
             [HPHTTPSever HPPostServerWithMethod:_method paraments:@{@"userId":dic[@"userId"],@"followedId":model.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
                 if (CODE == 200) {
                     [HPProgressHUD alertMessage:MSG];
-                    HPShareListModel *model = self.param[@"model"];
-                    [self getCardInfoDetails:model];
+                    NSString *userId = self.param[@"userId"];
+                    [self getCardInfoDetailByUserId:userId];
                 }else{
                     [HPProgressHUD alertMessage:MSG];
                 }
@@ -619,12 +616,12 @@ static NSString *shareListCell = @"shareListCell";
 }
 
 #pragma mark - 获取卡片详情
-- (void)getCardInfoDetails:(HPShareListModel *)model
+- (void)getCardInfoDetailByUserId:(NSString *)userId
 {
     HPLoginModel *account = [HPUserTool account];
     NSDictionary *userdic = (NSDictionary *)account.userInfo;
     NSMutableDictionary *detaildic = [NSMutableDictionary dictionary];
-    detaildic[@"followedId"] = model.userId;
+    detaildic[@"followedId"] = userId;
     detaildic[@"userId"] = userdic[@"userId"];
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/cardDetails" isNeedToken:YES paraments:detaildic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {

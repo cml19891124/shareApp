@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPShareDetailModel : NSObject
 
+@property (nonatomic, copy) NSString *userId;
+
 @property (nonatomic, copy) NSString *title;
 
 @property (nonatomic, copy) NSString *tag;

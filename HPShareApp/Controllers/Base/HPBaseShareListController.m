@@ -57,7 +57,7 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self loadTableViewFreshUi];
+    [self loadTableViewFreshUI];
 }
 
 /*
@@ -70,7 +70,7 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
 }
 */
 
-- (void)loadTableViewFreshUi {
+- (void)loadTableViewFreshUI {
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         
         self.shareListParam.page = 1;

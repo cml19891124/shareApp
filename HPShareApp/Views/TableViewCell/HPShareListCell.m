@@ -90,7 +90,7 @@
     [bgView addSubview:photoView];
     _photoView = photoView;
     [photoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(bgView).with.offset(getWidth(11.f));
+        self.leftConstraint = make.left.equalTo(bgView).with.offset(getWidth(11.f));
         make.centerY.equalTo(bgView);
         make.size.mas_equalTo(CGSizeMake(getWidth(93.f), getWidth(93.f)));
     }];
@@ -279,22 +279,19 @@
     if (enabled) {
         [_checkBtn setHidden:NO];
         
-        [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        [_photoView mas_updateConstraints:^(MASConstraintMaker *make) {
             [self.leftConstraint uninstall];
             self.leftConstraint = make.left.equalTo(self.checkBtn.mas_right).with.offset(10.f * g_rateWidth);
         }];
-        
-        CGFloat space = ((345.f - 44.f - 17.f) * g_rateWidth - 44.f * 4)/3;
     }
     else {
         [_checkBtn setHidden:YES];
         
-        [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        [_photoView mas_updateConstraints:^(MASConstraintMaker *make) {
             [self.leftConstraint uninstall];
-            self.leftConstraint = make.left.equalTo(self.bgView).with.offset(23.f * g_rateWidth);
+            self.leftConstraint = make.left.equalTo(self.bgView).with.offset(getWidth(11.f));
         }];
         
-        CGFloat space = ((345.f - 23.f - 23.f) * g_rateWidth - 44.f * 4)/3;
     }
 }
 

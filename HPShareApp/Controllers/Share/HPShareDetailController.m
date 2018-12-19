@@ -69,16 +69,19 @@
     _tagItems = [[NSMutableArray alloc] init];
     
     [self setupUI];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
     
     HPShareDetailModel *model = self.param[@"model"];
     NSString *spaceId = model.spaceId;
     if (spaceId) {
         [self getShareDetailInfoById:spaceId];
+        [self addHistory:spaceId];
     }
+
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -522,8 +525,8 @@
 }
 - (void)MyCardVC:(UITapGestureRecognizer *)tap
 {
-    
-    [self pushVCByClassName:@"HPMyCardController" withParam:self.param];
+    HPShareDetailModel *model = self.param[@"model"];
+    [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":model.userId}];
 }
 - (void)setupContactRegion:(UIView *)view {
     UIImageView *portrait = [[UIImageView alloc] init];
@@ -625,6 +628,21 @@
             [self loadData:model];
         }else{
             [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+//添加浏览历史
+- (void)addHistory:(NSString *)spaceId {
+    if (!spaceId) {
+        return;
+    }
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/browseHistory/add" isNeedToken:YES paraments:@{@"spaceId":spaceId} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            HPLog(@"添加浏览历史成功");
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet

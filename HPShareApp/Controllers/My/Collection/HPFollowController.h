@@ -11,7 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPFollowController : HPBaseViewController
-@property (nonatomic, strong) NSMutableArray *dataArray;
 
 @end
 

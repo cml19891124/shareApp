@@ -12,18 +12,21 @@
 #import "YYLRefreshNoDataView.h"
 #import "UIScrollView+Refresh.h"
 #import "HPCollectListModel.h"
-@interface HPHistoryController ()<UITableViewDelegate, UITableViewDataSource,YYLRefreshNoDataViewDelegate>
+#import "HPShareListParam.h"
+#import "HPHistoryListData.h"
+
+@interface HPHistoryController () <YYLRefreshNoDataViewDelegate>
 
 @property (nonatomic, strong) JTDateHelper *dateHelper;
 
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 
-@property (nonatomic, strong) NSMutableArray *sectionDataArray;
-@property (nonatomic, assign) int count;
-
 @property (nonatomic, strong) UIImageView *waitingView;
+
 @property (nonatomic, strong) UILabel *waitingLabel;
-@property (nonatomic, strong) NSMutableArray *industryModels;
+
+@property (nonatomic, strong) NSMutableArray<HPHistoryListData *> *histroyDataList;
+
 @end
 
 @implementation HPHistoryController
@@ -43,35 +46,30 @@
     _dateFormatter = [_dateHelper createDateFormatter];
     [_dateFormatter setDateFormat:@"yyyy-MM-dd"];
     
+    HPLoginModel *account = [HPUserTool account];
+    [self.shareListParam setPageSize:10];
+    NSDictionary *dict = (NSDictionary *)account.userInfo;
+    [self.shareListParam setUserId:dict[@"userId"]];
+    [self.shareListParam setPage:1];
+    
+    _histroyDataList = [[NSMutableArray alloc] init];
+    
     [self setupUI];
-    [self reloadData];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    _industryModels = [NSMutableArray array];
-    self.count = 1;
-    [self loadtableViewFreshUi];
-}
 #pragma mark - 上下啦刷新控件
-- (void)loadtableViewFreshUi
+- (void)loadTableViewFreshUI
 {
-    [self getBrowsListData];
-    
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         
-        self.count = 1;
-        [self getBrowsListData];
+        self.shareListParam.page = 1;
+        [self getBrowseListDataReload:YES];
     }];
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         
-        self.count++;
-        [self getBrowsListData];
+        self.shareListParam.page ++;
+        [self getBrowseListDataReload:NO];
     }];
-    
-    // 马上进入刷新状态
-    [self.tableView.mj_header beginRefreshing];
     
     if (@available(iOS 11.0, *)) {
         
@@ -83,36 +81,43 @@
         self.tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
         
     }
+    
+    [self.tableView.mj_header beginRefreshing];
 }
 #pragma mark - 获取浏览历史数据
-- (void)getBrowsListData
+- (void)getBrowseListDataReload:(BOOL)isReload
 {
-    HPLoginModel *account = [HPUserTool account];
-    NSDictionary *userdic = (NSDictionary *)account.userInfo;
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"page"] = @(self.count);
-    dic[@"pageSize"] = @(10);
-    dic[@"userId"] = userdic[@"userId"];
+    NSDictionary *dict = self.shareListParam.mj_keyValues;
 
-    kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/browseHistory/list" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/browseHistory/list" isNeedToken:YES paraments:dict complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [self.tableView.mj_header endRefreshing];
             [self.tableView.mj_footer endRefreshing];
-            [self.dataArray removeAllObjects];
-            weakSelf.dataArray = [HPCollectListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
-            if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
+            
+            HPCollectListModel *collectListModel = [HPCollectListModel mj_objectWithKeyValues:DATA];
+            if (collectListModel.total == 0) {
                 self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
                 self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_history");
                 self.tableView.refreshNoDataView.tipLabel.text = @"历史足迹啥都没有，快去逛逛吧！";
                 self.tableView.refreshNoDataView.delegate = self;
             }
-            if ([weakSelf.dataArray count] < 10) {
+            else {
+                if (collectListModel.list.count < 10) {
+                    [self.tableView.mj_footer endRefreshingWithNoMoreData];
+                }
                 
-                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+                if (isReload) {
+                    [self.histroyDataList removeAllObjects];
+                }
+                
+                NSArray<HPBrowseModel *> *models = [HPBrowseModel mj_objectArrayWithKeyValuesArray:collectListModel.list];
+                NSMutableArray<HPHistoryListData *> *historyDataList = [HPHistoryListData getHistroyListDataFromModels:models];
+                [self.histroyDataList addObjectsFromArray:historyDataList];
             }
+            
             [self.tableView reloadData];
-        }else{
+        }
+        else {
             [HPProgressHUD alertMessage:MSG];
         }
     } Failure:^(NSError * _Nonnull error) {
@@ -150,52 +155,6 @@
     }];
 }
 
-- (void)reloadData {
-    NSArray *dataArray = @[@{@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner", @"date":@"2018-11-30"},
-                           @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"startup", @"date":@"2018-11-30"},
-                           @{@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner", @"date":@"2018-11-29"},
-                           @{@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner", @"date":@"2018-11-29"},
-                           @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"startup", @"date":@"2018-11-29"},
-                           @{@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner", @"date":@"2018-11-28"},
-                           @{@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner", @"date":@"2018-11-27"},
-                           @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"startup", @"date":@"2018-11-26"},
-                           @{@"title":@ "常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner", @"date":@"2018-11-26"}];
-//    self.dataArray = [NSMutableArray arrayWithArray:dataArray];
-    _sectionDataArray = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < self.dataArray.count; i ++) {
-        NSDictionary *dict = self.dataArray[i];
-        NSString *dateStr = dict[@"date"];
-        
-        BOOL isExistDateStr = NO;
-        
-        for (NSMutableDictionary *sectionData in _sectionDataArray) {
-            NSString *sectionDateStr = sectionData[@"date"];
-            if ([sectionDateStr isEqualToString:dateStr]) {
-                NSInteger count = ((NSNumber *)sectionData[@"count"]).integerValue;
-                count ++;
-                [sectionData setObject:[NSNumber numberWithInteger:count] forKey:@"count"];
-                NSMutableArray *dataIndexArray = sectionData[@"dataIndex"];
-                [dataIndexArray addObject:[NSNumber numberWithInteger:i]];
-                isExistDateStr = YES;
-                break;
-            }
-        }
-        
-        if (!isExistDateStr) {
-            NSMutableDictionary *sectionData = [[NSMutableDictionary alloc] init];
-            [sectionData setObject:dateStr forKey:@"date"];
-            [sectionData setObject:[NSNumber numberWithInteger:1] forKey:@"count"];
-            NSMutableArray *dataIndexArray = [[NSMutableArray alloc] init];
-            [dataIndexArray addObject:[NSNumber numberWithInteger:i]];
-            [sectionData setObject:dataIndexArray forKey:@"dataIndex"];
-            [_sectionDataArray addObject:sectionData];
-        }
-    }
-    
-    [self.tableView reloadData];
-}
-
 #pragma mark - UITableViewDelegate
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -227,9 +186,9 @@
     }];
     [tagLabel setHidden:YES];
     
-    if (section < _sectionDataArray.count) {
-        NSDictionary *sectionData = _sectionDataArray[section];
-        NSString *dateStr = sectionData[@"date"];
+    if (section < _histroyDataList.count) {
+        HPHistoryListData *historyListData = _histroyDataList[section];
+        NSString *dateStr = historyListData.dateStr;
         [dateLabel setText:dateStr];
         
         NSDate *date = [_dateFormatter dateFromString:dateStr];
@@ -272,48 +231,22 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
-//    HPCollectListModel *model = self.dataArray[indexPath.row];
-//    HPIndustryModel *industryModel = self.industryModels[indexPath.row];
-//    cell.model = model;
-//    cell.industryModel = industryModel;
-//    NSDictionary *sectionData = _sectionDataArray[indexPath.section];
-//    NSArray *sectionDataIndex = sectionData[@"dataIndex"];
-//    NSInteger index = ((NSNumber *)sectionDataIndex[indexPath.row]).integerValue;
-//
-//    NSDictionary *dict = self.dataArray[index];
-//
-//    NSString *title = dict[@"title"];
-//    NSString *trade = dict[@"trade"];
-//    NSString *rentTime = dict[@"rentTime"];
-//    NSString *area = dict[@"area"];
-//    NSString *price = dict[@"price"];
-//    NSString *type = dict[@"type"];
-//
-//    [cell setTitle:title];
-//    [cell setTrade:trade];
-//    [cell setRentTime:rentTime];
-//    [cell setArea:area];
-//    [cell setPrice:price];
     
-//    if ([model.type isEqualToString:@"startup"]) {
-//        [cell setTagType:HPShareListCellTypeStartup];
-//    }
-//    else if ([model.type isEqualToString:@"owner"]) {
-//        [cell setTagType:HPShareListCellTypeOwner];
-//    }
+    HPHistoryListData *data = _histroyDataList[indexPath.section];
+    HPShareListModel *model = data.items[indexPath.row];
+    [cell setModel:model];
     
     return cell;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return _sectionDataArray.count;
+    return _histroyDataList.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section < _sectionDataArray.count) {
-        NSDictionary *sectionData = _sectionDataArray[section];
-        NSNumber *number = sectionData[@"count"];
-        return number.integerValue;
+    if (section < _histroyDataList.count) {
+        HPHistoryListData *data = _histroyDataList[section];
+        return data.count;
     }
     else
         return 0;

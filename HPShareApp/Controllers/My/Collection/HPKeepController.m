@@ -7,14 +7,14 @@
 //
 
 #import "HPKeepController.h"
-#import "HPShareListCell.h"
 #import "HPImageUtil.h"
 #import "HPTextDialogView.h"
 #import "HPIndustryModel.h"
 #import "YYLRefreshNoDataView.h"
 #import "UIScrollView+Refresh.h"
+#import "HPCollectListModel.h"
 
-@interface HPKeepController ()<YYLRefreshNoDataViewDelegate>
+@interface HPKeepController () <YYLRefreshNoDataViewDelegate>
 
 @property (nonatomic, weak) UIButton *editBtn;
 
@@ -24,51 +24,31 @@
 
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
 
-@property (nonatomic, strong) NSMutableArray *checkArray;
-
 @property (nonatomic, assign) BOOL isEdited;
-@property (nonatomic, assign) int                        count;
+
 @property (nonatomic, strong) UIImageView *waitingView;
+
 @property (nonatomic, strong) UILabel *waitingLabel;
 
-@property (nonatomic, strong) NSMutableArray *industryModels;
-@property (strong, nonatomic) HPShareListModel *model;
-
-@property (nonatomic, strong) HPShareListModel *selectedModel;
 @end
 
 @implementation HPKeepController
-/**
- 逛逛事件
- */
-- (void)clickToCheckSTHForRequirments
-{
-    HPLog(@"forsth");
-    [self pushVCByClassName:@"HPShareShopListController"];
-}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
     _isEdited = NO;
     
-//    self.dataArray = [NSMutableArray arrayWithArray:self.testDataArray];
+    [self.shareListParam setPageSize:10];
     
-    _checkArray = [[NSMutableArray alloc] init];
-    for (int i = 0; i < self.dataArray.count; i ++) {
-        [_checkArray addObject:[NSNumber numberWithBool:NO]];
-    }
+    [self setupUI];
     
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    _industryModels = [NSMutableArray array];
-    self.count = 1;
-    [self setupUI];
-
-    [self loadtableViewFreshUi];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -76,22 +56,20 @@
     [super viewWillDisappear:animated];
     [_bottomDeleteView removeFromSuperview];
 }
+
 #pragma mark - 上下啦刷新控件
-- (void)loadtableViewFreshUi
+- (void)loadTableViewFreshUI
 {
-    [self getCollectionsListData];
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         
-        self.count = 1;
-        [self getCollectionsListData];
+        self.shareListParam.page = 1;
+        [self getCollectionsListDataReload:YES];
     }];
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         
-        self.count++;
-        [self getCollectionsListData];
+        self.shareListParam.page ++;
+        [self getCollectionsListDataReload:NO];
     }];
-    // 马上进入刷新状态
-    [self.tableView.mj_header beginRefreshing];
     
     if (@available(iOS 11.0, *)) {
         
@@ -103,30 +81,40 @@
         self.tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
         
         }
+    
+    // 马上进入刷新状态
+    [self.tableView.mj_header beginRefreshing];
 }
 #pragma mark - 获取收藏数据
-- (void)getCollectionsListData
+- (void)getCollectionsListDataReload:(BOOL)isReload
 {
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"page"] = [NSString stringWithFormat:@"%d",self.count];
-    dic[@"pageSize"] = @"10";
-    kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/list" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
+    NSDictionary *dict = self.shareListParam.mj_keyValues;
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/list" isNeedToken:NO paraments:dict complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [self.tableView.mj_header endRefreshing];
             [self.tableView.mj_footer endRefreshing];
-            [self.dataArray removeAllObjects];
-            weakSelf.dataArray = [HPShareListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
-            if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
+            
+            HPCollectListModel *collectListModel = [HPCollectListModel mj_objectWithKeyValues:DATA];
+            
+            if (collectListModel.total == 0) {
                 self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
                 self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_collect");
                 self.tableView.refreshNoDataView.tipLabel.text = @"收藏夹孤单很久了，快去逛逛吧！";
                 self.tableView.refreshNoDataView.delegate = self;
             }
-            if ([weakSelf.dataArray count] < 10) {
+            else {
+                if ([self.dataArray count] < 10) {
+                    [self.tableView.mj_footer endRefreshingWithNoMoreData];
+                }
                 
-                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+                if (isReload) {
+                    [self.dataArray removeAllObjects];
+                }
+                
+                NSArray<HPShareListModel *> *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:collectListModel.list];
+                [self.dataArray addObjectsFromArray:models];
             }
+            
             [self.tableView reloadData];
         }else{
             [HPProgressHUD alertMessage:MSG];
@@ -177,52 +165,19 @@
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    BOOL isChecked = ((NSNumber *)_checkArray[indexPath.row]).boolValue;
-//    HPShareListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-//    [cell setChecked:!isChecked];
-//    [_checkArray replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:!isChecked]];
-//
-//    for (NSNumber *boolNum in _checkArray) {
-//        if (boolNum.boolValue == NO) {
-//            [_allCheckBtn setSelected:NO];
-//            return;
-//        }
-//    }
-//
-//    [_allCheckBtn setSelected:YES];
-    _selectedModel = self.dataArray[indexPath.row];
-    
     HPShareListModel *model = self.dataArray[indexPath.row];
-    
-//    model.selected = !model.selected;//默认选一种，不可不选
-//    self.selectedModel.selected = NO;
-//    model.selected = YES;
-//    self.selectedModel = model;
-    
-        if(self.selectedModel.spaceId != model.spaceId){//默认选一种，可不选
-            //点击不同的spaceId，当原来的spaceId选中时，设置原来的不选中
-            if(self.selectedModel.selected){
-                self.selectedModel.selected = !self.selectedModel.selected;
-            }
-            model.selected = !model.selected;
-            self.selectedModel = model;
-        }else{
-            model.selected = !model.selected;
-            self.selectedModel = model;
-        }
-    
-    _model = model;
+    model.selected = !model.selected;//默认选一种，不可不选
     HPShareListCell *cell = (HPShareListCell *)[tableView cellForRowAtIndexPath:indexPath];
+    [cell setChecked:model.selected];
     
-    cell.model = model;
-    //没有动画闪烁问题
-    [UIView performWithoutAnimation:^{
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
-    }];
+    for (HPShareListModel *model in self.dataArray) {
+        if (!model.selected) {
+            [_allCheckBtn setSelected:NO];
+            return;
+        }
+    }
     
-    [UIView performWithoutAnimation:^{
-        [self.tableView reloadData];
-    }];
+    [_allCheckBtn setSelected:YES];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -241,23 +196,8 @@
     HPShareListModel *model = self.dataArray[indexPath.row];
     cell.model = model;
     
-//    NSString *title = dict[@"title"];
-//    NSString *trade = dict[@"trade"];
-//    NSString *rentTime = dict[@"rentTime"];
-//    NSString *area = dict[@"area"];
-//    NSString *price = dict[@"price"];
-//    NSString *type = dict[@"type"];
-//
-//    [cell setTitle:title];
-//    [cell setTrade:trade];
-//    [cell setRentTime:rentTime];
-//    [cell setArea:area];
-//    [cell setPrice:price];
-    
-//    [cell setCheckEnabled:_isEdited];
-    
-//    BOOL isChecked = ((NSNumber *)_checkArray[indexPath.row]).boolValue;
-//    [cell setChecked:isChecked];
+    [cell setCheckEnabled:_isEdited];
+    [cell setChecked:model.selected];
     
     return cell;
 }
@@ -269,8 +209,9 @@
         [cell setChecked:isChecked];
     }
     
-    for (int i = 0; i < _checkArray.count; i ++) {
-        [_checkArray replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:isChecked]];
+    for (int i = 0; i < self.dataArray.count; i ++) {
+        HPShareListModel *model = self.dataArray[i];
+        [model setSelected:isChecked];
     }
 }
 
@@ -349,11 +290,6 @@
 - (void)onClickAllCheckBtn:(UIButton *)btn {
     [self setAllCellChecked:!btn.isSelected];
     [btn setSelected:!btn.isSelected];
-    if (btn.selected) {
-        for (HPShareListModel *model in self.dataArray) {
-            model.selected = YES;
-        }
-    }
 }
 
 - (void)onClickDeleteBtn:(UIButton *)btn {
@@ -364,48 +300,50 @@
         kWeakSelf(weakSelf);
 
         [textDialogView setConfirmCallback:^{
-//            NSMutableArray *deleteRowIndexPaths = [[NSMutableArray alloc] init];
-//            NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-            
-//            for (int i = 0; i < weakSelf.checkArray.count; i ++) {
-//                BOOL isChecked = ((NSNumber *)weakSelf.checkArray[i]).boolValue;
-//                if (isChecked) {
-//                    [deleteRowIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-//                    [indexSet addIndex:i];
-//                }
-//            }
-//
-//            [weakSelf.checkArray removeObjectsAtIndexes:indexSet];
-//            [weakSelf.dataArray removeObjectsAtIndexes:indexSet];
-//            [weakSelf.tableView deleteRowsAtIndexPaths:deleteRowIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-//            HPCollectListModel *model = self.dataArray[indexPath.row];
             NSMutableArray *spaceIds = [NSMutableArray array];
-
-                for (HPShareListModel *model in self.dataArray) {
-                    if (model.selected) {
-                        [spaceIds addObject:model.spaceId];
-                    }
+            NSMutableArray *deleteRowIndexPaths = [[NSMutableArray alloc] init];
+            NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+            
+            for (int i = 0; i < weakSelf.dataArray.count; i ++) {
+                HPShareListModel *model = weakSelf.dataArray[i];
+                if (model.selected) {
+                    [deleteRowIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+                    [indexSet addIndex:i];
+                    [spaceIds addObject:model.spaceId];
                 }
+            }
+            
             [HPHTTPSever HPPostServerWithMethod:@"/v1/collection/cancelCollections" paraments:@{@"spaceIds":spaceIds} needToken:YES complete:^(id  _Nonnull responseObject) {
                 if (CODE == 200) {
                     [HPProgressHUD alertMessage:MSG];
-                    [self getCollectionsListData];
+                    
+                    [weakSelf.dataArray removeObjectsAtIndexes:indexSet];
+                    [weakSelf.tableView deleteRowsAtIndexPaths:deleteRowIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+                    
+                    if (weakSelf.dataArray.count == 0) {
+                        [weakSelf.allCheckBtn setSelected:NO];
+                    }
                 }else{
                     [HPProgressHUD alertMessage:MSG];
                 }
             } Failure:^(NSError * _Nonnull error) {
                 ErrorNet
             }];
-            
-            if (weakSelf.dataArray.count == 0) {
-                [weakSelf.allCheckBtn setSelected:NO];
-            }
         }];
         
         _textDialogView = textDialogView;
     }
     
     [_textDialogView show:YES];
+}
+
+/**
+ 逛逛事件
+ */
+- (void)clickToCheckSTHForRequirments
+{
+    HPLog(@"forsth");
+    [self pushVCByClassName:@"HPShareShopListController"];
 }
 
 @end

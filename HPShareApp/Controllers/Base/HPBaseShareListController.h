@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)getShareListData:(HPShareListParam *)param reload:(BOOL)isReload;
 
+- (void)loadTableViewFreshUI;
+
 @end
 
 NS_ASSUME_NONNULL_END
