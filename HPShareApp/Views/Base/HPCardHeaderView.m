@@ -378,11 +378,12 @@
 
 - (void)focusSBToFansList:(UIButton *)button
 {
-    [self getCardInfoDetailByUserId:_userId];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if ([self.delegate respondsToSelector:@selector(clickButtonInCardHeaderView:focusSBToFansList:andCardType:)]) {
-            [self.delegate clickButtonInCardHeaderView:self focusSBToFansList:self.model andCardType:button.tag];
-        }
-    });
+   
+    if ([self.delegate respondsToSelector:@selector(clickButtonInCardHeaderView:focusSBToFansList:andCardType:)]) {
+        [self.delegate clickButtonInCardHeaderView:self focusSBToFansList:self.model andCardType:button.tag];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self getCardInfoDetailByUserId:self.userId];
+        });
+    }
 }
 @end

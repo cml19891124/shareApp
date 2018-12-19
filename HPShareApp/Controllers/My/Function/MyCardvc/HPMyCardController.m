@@ -72,31 +72,6 @@ static NSString *shareListCell = @"shareListCell";
     
     //获取 共享发布数据
     [self getShareListData];
-    HPLoginModel *account = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)account.cardInfo;
-    NSDictionary *userdic = (NSDictionary *)account.userInfo;
-    
-    NSString *company = dic[@"company"];
-    NSString *title = dic[@"title"];
-    NSString *signature = dic[@"signature"];
-    NSString *mobile = userdic[@"mobile"];
-    NSString *myUserId = userdic[@"userId"];
-
-    NSString *userId = self.param[@"userId"];
-    if (userId && [userId intValue] != [myUserId intValue]) {//非自己
-        [self getCardInfoDetailByUserId:userId];
-        
-    }else{//自己
-        
-        [_phoneNumLabel setText:mobile.length >0 ?mobile:@"未填写"];
-        [_companyLabel setText:company.length >0 ?company:@"未填写"];
-        [_signatureLabel setText:signature.length >0 ?signature:@"未填写"];
-        _descLabel.text = dic[@"signature"];
-        [_signatureLabel setText:title.length > 0?title:@"未填写"];
-        [self.editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
-        [self.editBtn setTag:HPMyCardTypeEdit];
-    }
-
 }
 
 #pragma mark - 共享发布数据
@@ -135,8 +110,6 @@ static NSString *shareListCell = @"shareListCell";
             self.insetTableView.hidden = YES;
         }
         if ([weakSelf.dataArray count] < 10) {
-//            [self.insetTableView reloadData];
-
             [self.insetTableView.mj_footer endRefreshingWithNoMoreData];
         }
         [self.insetTableView reloadData];
@@ -272,14 +245,14 @@ static NSString *shareListCell = @"shareListCell";
             self.scrollY = 0;
         }
         
-        NSLog(@"scroll  %lf",self.scrollY);
+        HPLog(@"scroll  %lf",self.scrollY);
         [self.scroll setContentOffset:CGPointMake(0, self.scrollY) animated:YES];
         
         //停止滑动tablewview
         self.tableY = 0;
         
     }
-    NSLog(@"table  %lf",self.tableY);
+    HPLog(@"table  %lf",self.tableY);
     
     [self.insetTableView setContentOffset:CGPointMake(0, self.tableY) animated:YES];
 }
@@ -309,7 +282,7 @@ static NSString *shareListCell = @"shareListCell";
     if (self.scrollY<0){
         self.scrollY = 0;
     }
-    NSLog(@"scroll  %lf",self.scrollY);
+    HPLog(@"scroll  %lf",self.scrollY);
     
     
     [self.scroll setContentOffset:CGPointMake(0, self.scrollY) animated:YES];
@@ -367,8 +340,6 @@ static NSString *shareListCell = @"shareListCell";
             [HPHTTPSever HPPostServerWithMethod:_headerView.method paraments:@{@"userId":myUserId,@"followedId":userId} needToken:YES complete:^(id  _Nonnull responseObject) {
                 if (CODE == 200) {
                     [HPProgressHUD alertMessage:MSG];
-                    NSString *userId = self.param[@"userId"];
-                    [self getCardInfoDetailByUserId:userId];
                 }else{
                     [HPProgressHUD alertMessage:MSG];
                 }
@@ -381,36 +352,6 @@ static NSString *shareListCell = @"shareListCell";
     
 }
 
-#pragma mark - 获取卡片详情
-- (void)getCardInfoDetailByUserId:(NSString *)userId
-{
-    HPLoginModel *account = [HPUserTool account];
-    NSDictionary *userdic = (NSDictionary *)account.userInfo;
-    NSMutableDictionary *detaildic = [NSMutableDictionary dictionary];
-    detaildic[@"followedId"] = userId;
-    detaildic[@"userId"] = userdic[@"userId"];
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/cardDetails" isNeedToken:YES paraments:detaildic complete:^(id  _Nonnull responseObject) {
-        if (CODE == 200) {
-            self.cardDetailsModel = [HPCardDetailsModel mj_objectWithKeyValues:responseObject[@"data"][@"cardInfo"]];
-            [self.headerView.phoneNumLabel setText:self.cardDetailsModel.telephone.length >0 ?self.cardDetailsModel.telephone:@"未填写"];
-            [self.headerView.companyLabel setText:self.cardDetailsModel.company.length >0 ?self.cardDetailsModel.company:@"未填写"];
-            [self.headerView.descLabel setText:self.cardDetailsModel.signature.length >0 ?self.cardDetailsModel.signature:@"未填写"];
-            [self.headerView.signatureLabel setText:self.cardDetailsModel.title.length > 0?self.cardDetailsModel.title:@"未填写"];
-            [self.headerView.portraitView sd_setImageWithURL:[NSURL URLWithString:self.cardDetailsModel.avatarUrl.length >0?self.cardDetailsModel.avatarUrl:userdic[@"avatarUrl"]] forState:UIControlStateNormal];
-            
-            if([self.cardDetailsModel.fans isEqualToString:@"0"]){
-                [self.headerView.editBtn setTitle:@"关注" forState:UIControlStateNormal];
-            }else if(self.cardDetailsModel.fans){
-                [self.headerView.editBtn setTitle:@"已关注" forState:UIControlStateNormal];
-            }
-        }else{
-            [HPProgressHUD alertMessage:MSG];
-        }
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet;
-    }];
-    
-}
 #pragma mark - 编辑个人信息界面
 - (void)editPersonalInfo:(UIButton *)button
 {
