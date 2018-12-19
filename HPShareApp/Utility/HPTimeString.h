@@ -25,7 +25,19 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  今天/昨天的时间字符串
  */
+/**
+ 获取时间戳转换为date的数据流 今天/昨天/过去的具体z日期加时间点
+ */
 + (NSString *)getPassTimeSometimeWith:(NSDate *)date;
++ (NSDate *)getLocateTime:(unsigned int)timeStamp ;
+//获取当前系统时间的时间戳
+
+#pragma mark - 获取当前时间的 时间戳
+
++(NSInteger)getNowTimestamp;
+
+//时间格式的字符串转date
++ (NSDate *)getDateWithString:(NSString *)dateString;
 @end
 
 NS_ASSUME_NONNULL_END

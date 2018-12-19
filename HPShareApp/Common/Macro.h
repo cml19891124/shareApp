@@ -113,7 +113,7 @@
 #define COLOR_GRAY_F9F9F9 [UIColor colorWithHexString:@"#F9F9F9"]
 
 
-#define kAppleId @"10812999054"
+#define kAppleId @"1447187764"
 
 /**
  字体宏定义
@@ -172,6 +172,9 @@
 #import "HPUserTool.h"
 #import "MJRefresh.h"
 #import "UIImageView+WebCache.h"
+#import "YYLRefreshNoDataView.h"
+#import "UIScrollView+Refresh.h"
+#import "HPTimeString.h"
 //自定义打印语句
 #ifdef DEBUG
 # define HPLog(fmt, ...) NSLog((@"[文件名:%s]\n" "[函数名:%s]\n" "[行号:%d] \n" fmt), __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);

@@ -272,7 +272,7 @@
 //                make.date = @"2017 10 19";
             }];
             [banner show];
-            [kNotificationCenter postNotificationName:@"regiest" object:nil userInfo:@{@"title":@"登录成功",@"content":@"欢迎加入合店站，合店站有你更精彩。"}];
+            [kNotificationCenter postNotificationName:@"regiest" object:nil userInfo:@{@"date":[HPTimeString getNowTimeTimestamp],@"title":@"登录成功",@"content":@"欢迎加入合店站，合店站有你更精彩。"}];
             [self.navigationController popViewControllerAnimated:YES];
         }else{
             [HPProgressHUD alertMessage:MSG];

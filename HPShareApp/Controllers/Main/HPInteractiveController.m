@@ -70,11 +70,13 @@ static NSString *interactiveCell = @"interactiveCell";
 {
     _hasNoti = YES;
     [self.interArray removeAllObjects];
-    HPLog(@"noti:%@",noti.userInfo);
+//    HPLog(@"noti:%@",noti.userInfo);
     self.userInfo = noti.userInfo;
+    NSString *date = self.userInfo[@"date"];
+
     NSString *title = self.userInfo[@"title"];
     NSString *subtitle = self.userInfo[@"content"];
-    NSArray *interArray = @[@{@"photo":@"system notification",@"title":title.length >0 ?title: @"暂无数据",@"subtitle":subtitle.length >0 ?subtitle: @"暂无数据"}];
+    NSArray *interArray = @[@{@"date":date,@"photo":@"system notification",@"title":title.length >0 ?title: @"暂无数据",@"subtitle":subtitle.length >0 ?subtitle: @"暂无数据"}];
     self.interArray = [HPInterActiveModel mj_objectArrayWithKeyValuesArray:interArray];
     [self.tableView reloadData];
 }
@@ -213,11 +215,21 @@ static NSString *interactiveCell = @"interactiveCell";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     _hasNoti = NO;
     [self.tableView reloadData];
-//    if (indexPath.section == 0 && indexPath.row == 0) {
-//        [self pushVCByClassName:@"HPSystemNotiController"];
-//    }else if (indexPath.section == 0 && indexPath.row == 1){
-//        [self pushVCByClassName:@"HPPartyCenterController"];
-//    }
+    HPInterActiveModel *model = self.interArray[indexPath.row];
+
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        if ([model.subtitle isEqualToString:@"暂无数据"]) {
+            return;
+        }else{
+            [self pushVCByClassName:@"HPSystemNotiController" withParam:@{@"data":self.interArray}];
+        }
+    }else if (indexPath.section == 0 && indexPath.row == 1){
+        if ([model.subtitle isEqualToString:@"暂无数据"]) {
+            return;
+        }else{
+            [self pushVCByClassName:@"HPPartyCenterController" withParam:@{@"data":self.interArray}];
+        }
+    }
 }
 
 #pragma mark - 取消下拉  允许上拉

@@ -88,7 +88,7 @@
         make.left.mas_equalTo(view).offset(getWidth(16.f));
     }];
     self.titleLabel = titleLabel;
-    
+    /*
     UIButton *moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     moreBtn.backgroundColor = UIColor.clearColor;
     [moreBtn setTitle:@"查看更多" forState:UIControlStateNormal];
@@ -96,13 +96,13 @@
     moreBtn.titleLabel.font = kFont_Regular(12);
     moreBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     [moreBtn addTarget:self action:@selector(checkMoreInfo:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:moreBtn];
+//    [view addSubview:moreBtn];
     _moreBtn = moreBtn;
     [moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(view).offset(getWidth(-16.f));
         make.top.mas_equalTo(view).offset(getWidth(16.f));
         make.size.mas_equalTo(CGSizeMake(getWidth(50.f), getWidth(12.f)));
-    }];
+    }];*/
     
     UIView *notiLine = [[UIView alloc] init];
     notiLine.backgroundColor = COLOR_GRAY_F2F2F2;
@@ -130,23 +130,13 @@
     self.contentLabel = contentLabel;
 }
 
-- (NSDate *)getLocateTime:(unsigned int)timeStamp {
-    
-    double dTimeStamp = (double)timeStamp;
-    
-    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:dTimeStamp];
-    
-    return confromTimesp;
-    
-}
 
-- (void)setModel:(HPSystemNotiModel *)model
+- (void)setModel:(HPInterActiveModel *)model
 {
     _model = model;
-    NSDate *tme = [self getLocateTime:[model.createTime intValue]];
-    _timeLabel.text = [HPTimeString getPassTimeSometimeWith:tme];
+    _timeLabel.text = [HPTimeString getPassTimeSometimeWith:[HPTimeString getDateWithString:model.date]] ;
     _titleLabel.text = model.title;
-    _contentLabel.text = model.message;
+    _contentLabel.text = model.subtitle;
 }
 
 - (void)checkMoreInfo:(UIButton *)button

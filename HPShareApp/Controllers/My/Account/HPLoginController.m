@@ -327,7 +327,7 @@
 //                make.date = @"2017 10 19";
             }];
             [banner show];
-            [kNotificationCenter postNotificationName:@"login" object:nil userInfo:@{@"title":@"登录成功",@"content":@"欢迎加入合店站，合店站有你更精彩。"}];
+            [kNotificationCenter postNotificationName:@"login" object:nil userInfo:@{@"date":[HPTimeString getNowTimeTimestamp],@"title":@"登录成功",@"content":@"欢迎加入合店站，合店站有你更精彩。"}];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.navigationController popViewControllerAnimated:YES];
             });

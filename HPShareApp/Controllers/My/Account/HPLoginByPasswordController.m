@@ -261,7 +261,6 @@
             HPLoginModel *model = [HPLoginModel AccountStatusWithDict:responseObject[@"data"]];
             [HPUserTool saveAccount:model];
             [HPProgressHUD alertMessage:@"登录成功"];
-//            [HPLocalNotiTool registerNotification:1 title:@"登录成功" body:@"欢迎加入合店站，合店站有你更精彩。"];
             //⭐️5.iOS 11 style (iOS 11 样式)
             EBBannerView *banner = [EBBannerView bannerWithBlock:^(EBBannerViewMaker *make) {
                 make.style = 11;
@@ -272,7 +271,7 @@
             }];
             [banner show];
             
-            [kNotificationCenter postNotificationName:@"login" object:nil userInfo:@{@"title":@"登录成功",@"content":@"欢迎加入合店站，合店站有你更精彩。"}];
+            [kNotificationCenter postNotificationName:@"login" object:nil userInfo:@{@"date":[HPTimeString getNowTimeTimestamp],@"title":@"登录成功",@"content":@"欢迎加入合店站，合店站有你更精彩。"}];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self dismissViewControllerAnimated:NO completion:NULL];
             });

@@ -112,7 +112,9 @@
     [format setDateFormat:@"YYYY年MM月dd日"];
     NSDateFormatter *fo = [[NSDateFormatter alloc] init];
     [fo setDateFormat:@"HH:mm"];
-    
+    [format setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0*3600]];
+    [fo setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0*3600]];
+
     //获取传过来的时间的时分
     NSString *hoursandSec = [fo stringFromDate:date];
     
@@ -140,5 +142,76 @@
         return [NSString stringWithFormat:@"%@ %@",createDate,hoursandSec];
     }
 
+}
+
+
++ (NSDate *)getLocateTime:(unsigned int)timeStamp {
+    
+    double dTimeStamp = (double)timeStamp;
+    
+    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:dTimeStamp];
+    
+    return confromTimesp;
+    
+}
+
+//获取当前系统时间的时间戳
+
+#pragma mark - 获取当前时间的 时间戳
+
++(NSInteger)getNowTimestamp{
+    
+    
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+    
+    //设置时区,这个对于时间的处理有时很重要
+    
+    NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Beijing"];
+    
+    [formatter setTimeZone:timeZone];
+    
+    NSDate *datenow = [NSDate date];//现在时间
+    
+    
+    
+    NSLog(@"设备当前的时间:%@",[formatter stringFromDate:datenow]);
+    
+    //时间转时间戳的方法:
+    
+    
+    
+    NSInteger timeSp = [[NSNumber numberWithDouble:[datenow timeIntervalSince1970]] integerValue];
+    
+    
+    
+    NSLog(@"设备当前的时间戳:%ld",(long)timeSp); //时间戳的值
+    
+    
+    
+    return timeSp;
+    
+}
+
+//时间格式的字符串转date
++ (NSDate *)getDateWithString:(NSString *)dateString
+{
+    NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:dateString.doubleValue];
+    
+    NSTimeZone *zone = [NSTimeZone systemTimeZone];
+    
+    NSInteger interval = [zone secondsFromGMTForDate:date];
+    
+    NSDate *localDate = [date dateByAddingTimeInterval:interval];
+    
+    NSLog(@"localDate = %@",localDate);
+
+    return localDate;
 }
 @end

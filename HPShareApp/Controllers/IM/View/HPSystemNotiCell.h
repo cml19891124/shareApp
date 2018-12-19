@@ -7,16 +7,16 @@
 //
 
 #import "HPBaseTableViewCell.h"
-#import "HPSystemNotiModel.h"
+#import "HPInterActiveModel.h"
 @protocol HPSystemNotiCellDelegate <NSObject>
 
-- (void)clickToCheckMoreNoti:(HPSystemNotiModel *)model;
+- (void)clickToCheckMoreNoti:(HPInterActiveModel *)model;
 
 @end
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPSystemNotiCell : HPBaseTableViewCell
-@property (nonatomic, strong) HPSystemNotiModel *model;
+@property (nonatomic, strong) HPInterActiveModel *model;
 
 @property (nonatomic, strong) UILabel *timeLabel;
 @property (nonatomic, strong) UIButton *notiBtn;
