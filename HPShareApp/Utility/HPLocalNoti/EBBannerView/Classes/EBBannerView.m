@@ -95,8 +95,7 @@ static EBBannerWindow *sharedWindow;
         }
     }];
     HPLoginModel *account = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)account.userInfo;
-    NSString *avatarUrl = dic[@"avatarUrl"];
+    NSString *avatarUrl = account.userInfo.avatarUrl;
     [self.imageView sd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];//.image = _maker.icon;
     self.titleLabel.text = _maker.title;
     self.dateLabel.text = [HPTimeString getCurrentTimes];//_maker.date;

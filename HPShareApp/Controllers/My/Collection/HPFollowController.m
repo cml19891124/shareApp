@@ -40,28 +40,6 @@
 
 @implementation HPFollowController
 
-//#pragma mark - 取消关注事件
-//- (void)followListCell:(HPFollowListCell *)cell didClickWithFollowModel:(HPFansListModel *)model
-//{
-//    HPLoginModel *account = [HPUserTool account];
-//    NSDictionary *userdic = (NSDictionary *)account.userInfo;
-//    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-//    dic[@"userId"] = userdic[@"userId"];
-//    dic[@"followedId"] = model.followed_id;
-//
-//    [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/cancel" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
-//        if (CODE == 200) {
-//            [HPProgressHUD alertMessage:MSG];
-//            //刷新列表
-//            [self loadtableViewFreshUi];
-//
-//        }else{
-//            [HPProgressHUD alertMessage:MSG];
-//        }
-//    } Failure:^(NSError * _Nonnull error) {
-//        ErrorNet
-//    }];
-//}
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -70,9 +48,7 @@
     _shareListParam = [HPShareListParam new];
     [_shareListParam setPageSize:10];
     HPLoginModel *model = [HPUserTool account];
-    NSDictionary *userdic = (NSDictionary *)model.userInfo;
-    NSString *userId = userdic[@"userId"];
-    [_shareListParam setUserId:userId];
+    [_shareListParam setUserId:model.userInfo.userId];
     
     _dataArray = [NSMutableArray array];
     
@@ -207,13 +183,11 @@
     }
     
     HPLoginModel *account = [HPUserTool account];
-    NSDictionary *dict = (NSDictionary *)account.userInfo;
-    NSString *userId = dict[@"userId"];
     kWeakSelf(weakSelf);
     [_textDialogView setConfirmCallback:^{
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         
-        [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/cancel" paraments:@{@"userId":userId,@"followedId":model.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
+        [HPHTTPSever HPPostServerWithMethod:@"/v1/fans/cancel" paraments:@{@"userId":account.userInfo.userId,@"followedId":model.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
             if (CODE == 200) {
                 [weakSelf.dataArray removeObjectAtIndex:indexPath.row];
                 [weakSelf.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];

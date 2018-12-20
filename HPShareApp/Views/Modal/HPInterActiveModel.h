@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPInterActiveModel : NSObject
 @property (nonatomic, copy) NSString *date;
+@property (nonatomic, assign) BOOL hasnoti;
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *subtitle;

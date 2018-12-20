@@ -73,6 +73,7 @@
     [signField setValue:[UIFont boldSystemFontOfSize:17] forKeyPath:@"_placeholderLabel.font"];
     signField.textColor = COLOR_BLACK_333333;
     signField.font = kFont_Medium(17);
+    signField.tintColor = COLOR_RED_FF3C5E;
     signField.delegate = self;
     [signField addTarget:self action:@selector(changedTextField:) forControlEvents:UIControlEventEditingChanged];
     [signTitleView addSubview:signField];
@@ -81,7 +82,6 @@
     [titleNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:12.f]];
     [titleNumLabel setTextColor:COLOR_GRAY_CCCCCC];
     [titleNumLabel setText:[NSString stringWithFormat:@"%ld/12",self.signString.length]];
-//    CGFloat titlenumW = BoundWithSize(signField.text, kScreenWidth, 15.f).size.width + 20;
     [signTitleView addSubview:titleNumLabel];
     self.titleNumLabel = titleNumLabel;
     [titleNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -175,7 +175,7 @@
 #pragma mark -给每个cell中的textfield添加事件，只要值改变就调用此函数
 -(void)changedTextField:(UITextField *)textField
 {
-    NSLog(@"值是---%@",textField.text);
+    HPLog(@"值是---%@",textField.text);
     [self.titleNumLabel setText:[NSString stringWithFormat:@"%ld/12",textField.text.length]];
 }
 - (void)onClickConfirmBtn:(UIButton *)button
@@ -198,19 +198,16 @@
     dic[@"signature"] = self.signTextView.text;
 
     HPLoginModel *account = [HPUserTool account];
-    NSDictionary *userdic = (NSDictionary *)account.cardInfo;
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/cardInfo" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             NSDictionary *result = responseObject[@"data"];
-            HPCardInfo *cardInfo = [[HPCardInfo alloc] init];
-            cardInfo.realName = userdic[@"realName"]?:@"";
-            cardInfo.company = userdic[@"company"]?:@"";
-            cardInfo.telephone = userdic[@"telephone"]?:@"";
-            cardInfo.avatarUrl = userdic[@"avatarUrl"]?:@"";
-            cardInfo.signature = result[@"signature"]?:@"";
-            cardInfo.title = result[@"title"]?:@"";
-            cardInfo.userId = userdic[@"userId"]?:@"";
-            account.cardInfo = cardInfo;
+            account.cardInfo.realName = account.cardInfo.realName?:@"";
+            account.cardInfo.company = account.cardInfo.company?:@"";
+            account.cardInfo.telephone = account.cardInfo.telephone?:@"";
+            account.cardInfo.avatarUrl = account.cardInfo.avatarUrl?:@"";
+            account.cardInfo.signature = result[@"signature"]?:@"";
+            account.cardInfo.title = result[@"title"]?:@"";
+            account.cardInfo.userId = account.cardInfo.userId?:@"";
             [HPUserTool saveAccount:account];
             [HPProgressHUD alertMessage:@"修改成功"];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

@@ -19,7 +19,7 @@
 static CGFloat floatViewHeight = 62.f;
 
 // 这个系数根据自己喜好设置大小，=屏幕视图滑动距离/手指滑动距离
-#define  moveScale 3
+#define  moveScale 2
 
 @interface HPMyCardController ()<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,YYLRefreshNoDataViewDelegate,HPCardHeaderViewDelegate>
 @property (nonatomic,weak)UIScrollView *scroll;
@@ -69,7 +69,8 @@ static NSString *shareListCell = @"shareListCell";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [kNotificationCenter postNotificationName:@"updateInfo" object:nil];
+
     //获取 共享发布数据
     [self getShareListData];
 }
@@ -87,6 +88,7 @@ static NSString *shareListCell = @"shareListCell";
     NSString *rentOrderType = @"0"; //租金排序排序，1升序，0降序
     NSString *type = nil; //类型筛选，1业主， 2创客
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+    HPLoginModel *account = [HPUserTool account];
     param[@"areaId"] = areaId;
     param[@"districtId"] = districtId;
     param[@"industryId"] = industryId;
@@ -96,18 +98,33 @@ static NSString *shareListCell = @"shareListCell";
     param[@"createTimeOrderType"] = createTimeOrderType;
     param[@"rentOrderType"] = rentOrderType;
     param[@"type"] = type;
-    param[@"userId"] = @"6";//userdic[@"21"];
+    param[@"userId"] = account.userInfo.userId;
     kWeakSelf(weakSelf);
     [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:YES paraments:param complete:^(id  _Nonnull responseObject) {
         [self.dataArray removeAllObjects];
         weakSelf.dataArray = [HPShareListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
         if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
-            self.insetTableView.loadErrorType = YYLLoadErrorTypeNoData;
-            self.insetTableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_collect");
-            self.insetTableView.refreshNoDataView.tipLabel.text = @"共享发布孤单很久了，快去逛逛吧！";
-            self.insetTableView.refreshNoDataView.delegate = self;
-            self.insetTableView.scrollsToTop = YES;
-            self.insetTableView.hidden = YES;
+            UIImage *image = ImageNamed(@"waiting");
+            UIImageView *waitingView = [[UIImageView alloc] init];
+            waitingView.image = image;
+            [self.insetTableView addSubview:waitingView];
+            [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(72.f * g_rateWidth);
+                make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
+                make.centerX.mas_equalTo(self.insetTableView);
+            }];
+            
+            UILabel *waitingLabel = [[UILabel alloc] init];
+            waitingLabel.text = @"共享发布孤单很久了，快去逛逛吧！";
+            waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
+            waitingLabel.textColor = COLOR_GRAY_BBBBBB;
+            waitingLabel.textAlignment = NSTextAlignmentCenter;
+            [self.insetTableView addSubview:waitingLabel];
+            [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.mas_equalTo(self.insetTableView);
+                make.top.mas_equalTo(waitingView.mas_top).offset(158.f * g_rateWidth);
+                make.width.mas_equalTo(kScreenWidth);
+            }];
         }
         if ([weakSelf.dataArray count] < 10) {
             [self.insetTableView.mj_footer endRefreshingWithNoMoreData];
@@ -155,7 +172,7 @@ static NSString *shareListCell = @"shareListCell";
     [shareLabel setTextColor:COLOR_BLACK_333333];
     [topView addSubview:shareLabel];
     
-    UITableView *insetTable = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(shareLabel.frame) + getWidth(20.f), kScreenWidth, getWidth(476.f))];
+    UITableView *insetTable = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(shareLabel.frame) + getWidth(20.f), kScreenWidth, getWidth(476.f + 40))];
     insetTable.dataSource = self;
     insetTable.delegate = self;
     [insetTable setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -171,7 +188,7 @@ static NSString *shareListCell = @"shareListCell";
     yyges.action = ^(YYGestureRecognizer *gesture, YYGestureRecognizerState state){
         if (state != YYGestureRecognizerStateMoved) return ;
         
-        if (CGRectContainsPoint(topView.frame, gesture.startPoint)) {
+        if (CGRectContainsPoint(self.topView.frame, gesture.startPoint)) {
             //滑动tableview
             [self tableScrollWithGesture:gesture];
         }else{
@@ -208,18 +225,18 @@ static NSString *shareListCell = @"shareListCell";
     }
     self.tableStartY = gesture.startPoint.y;
     
-    self.tableY += scrolly*moveScale;
-    
+    self.tableY += scrolly*moveScale/2;
+    CGFloat tableH = self.insetTableView.contentSize.height-self.insetTableView.bounds.size.height;
     //为了显示底部超出屏幕的tableview那部分 滑动scrollview 此时tablewview已经滑动到了底部
-    if (self.tableY> self.insetTableView.contentSize.height-self.insetTableView.bounds.size.height){
-        self.scrollY += self.tableY-(self.insetTableView.contentSize.height-self.insetTableView.bounds.size.height);
+    if (self.tableY> tableH){
+        self.scrollY += self.tableY-tableH;
         
         //tablewview滑动到底部就不要滑了
-        self.tableY = self.insetTableView.contentSize.height-self.insetTableView.bounds.size.height;
-        
+        self.tableY = tableH;
+        CGFloat scrollH = self.scroll.contentSize.height-self.insetTableView.bounds.size.height-floatViewHeight;
         //scrollview 滑动到了底部就不要滑动了
-        if (self.scrollY> self.scroll.contentSize.height-self.insetTableView.bounds.size.height-floatViewHeight){
-            self.scrollY = self.scroll.contentSize.height-self.insetTableView.bounds.size.height-floatViewHeight;
+        if (self.scrollY> scrollH){
+            self.scrollY = scrollH;
             //如果scrollview意外的contentsize 小于自己的大小，scrollview就不要滑了
             if (self.scrollY<0) {
                 self.scrollY = 0;
@@ -233,12 +250,32 @@ static NSString *shareListCell = @"shareListCell";
             self.tableY = 0;
         }
         
+    }else{
+//        self.scrollY += scrolly>0?scrolly*moveScale:0;
+        self.tableY += scrolly*moveScale/2;
+
+        //如果滑到了tableview的最上部，停止滑动tablewview,  如果此时scrollview 没有在最上部就滑动scrollview到最上部,此时scrollY偏移可能是负值，自由+= self.tableY，但是self.tableY一旦为负值，说明self.tableY已经到了顶部，就要滑动scrollview，直到顶部为止
+        if (self.tableY<0){
+            self.scrollY += self.tableY;
+            
+            //scroll已经在最上部了，scroll就不滑了
+            if (self.scrollY<0) {
+                self.scrollY += fabs(self.tableY);
+            }
+            
+            HPLog(@"scroll  %lf",self.scrollY);
+            [self.scroll setContentOffset:CGPointMake(0, self.scrollY) animated:YES];
+            
+            //停止滑动tablewview
+            self.tableY = 0;
+            
+        }
     }
     
-    
+/*
     //如果滑到了tableview的最上部，停止滑动tablewview,  如果此时scrollview 没有在最上部就滑动scrollview到最上部
     if (self.tableY<0){
-        self.scrollY += self.tableY;
+//        self.scrollY += self.tableY;
         
         //scroll已经在最上部了，scroll就不滑了
         if (self.scrollY<0) {
@@ -251,7 +288,7 @@ static NSString *shareListCell = @"shareListCell";
         //停止滑动tablewview
         self.tableY = 0;
         
-    }
+    }*/
     HPLog(@"table  %lf",self.tableY);
     
     [self.insetTableView setContentOffset:CGPointMake(0, self.tableY) animated:YES];
@@ -262,7 +299,7 @@ static NSString *shareListCell = @"shareListCell";
     if (self.scrollStartY != gesture.startPoint.y) {
         scrolly = -(gesture.currentPoint.y-gesture.startPoint.y) ;
     }else{
-        scrolly =  -(gesture.currentPoint.y-gesture.startPoint.y) ;
+        scrolly =  -(gesture.currentPoint.y-gesture.lastPoint.y) ;
     }
     self.scrollStartY = gesture.startPoint.y;
     
@@ -334,10 +371,8 @@ static NSString *shareListCell = @"shareListCell";
     }else {
         NSString *userId = self.param[@"userId"];
         HPLoginModel *account = [HPUserTool account];
-        NSDictionary *dic = (NSDictionary *)account.userInfo;
-        NSString *myUserId = dic[@"userId"];
-        if ([userId intValue] != [myUserId intValue]) {//只有是非自己的信息界面传入的model不为空，才会调用关注接口
-            [HPHTTPSever HPPostServerWithMethod:_headerView.method paraments:@{@"userId":myUserId,@"followedId":userId} needToken:YES complete:^(id  _Nonnull responseObject) {
+        if ([userId intValue] != [account.userInfo.userId intValue]) {//只有是非自己的信息界面传入的model不为空，才会调用关注接口
+            [HPHTTPSever HPPostServerWithMethod:_headerView.method paraments:@{@"userId":account.userInfo.userId,@"followedId":userId} needToken:YES complete:^(id  _Nonnull responseObject) {
                 if (CODE == 200) {
                     [HPProgressHUD alertMessage:MSG];
                 }else{
@@ -540,7 +575,7 @@ static NSString *shareListCell = @"shareListCell";
 
 //去掉 UItableview headerview 黏性(sticky)
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    HPLog(@"scrollView:%f",scrollView.contentOffset.y);
+//    HPLog(@"scrollView:%f",scrollView.contentOffset.y);
         if (scrollView.contentOffset.y<=0) {
             [UIView animateWithDuration:0.5 animations:^{
                 [self.releaseRegion mas_remakeConstraints:^(MASConstraintMaker *make) {

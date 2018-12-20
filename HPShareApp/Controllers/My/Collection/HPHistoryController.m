@@ -48,8 +48,7 @@
     
     HPLoginModel *account = [HPUserTool account];
     [self.shareListParam setPageSize:10];
-    NSDictionary *dict = (NSDictionary *)account.userInfo;
-    [self.shareListParam setUserId:dict[@"userId"]];
+    [self.shareListParam setUserId:account.userInfo.userId];
     [self.shareListParam setPage:1];
     
     _histroyDataList = [[NSMutableArray alloc] init];

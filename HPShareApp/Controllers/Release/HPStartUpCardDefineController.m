@@ -505,9 +505,7 @@
         [HPProgressHUD alertMessage:@"用户未登录"];
         return;
     }
-    
-    NSString *userId = ((NSDictionary *)loginModel.userInfo)[@"userId"];
-    
+        
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setObject:title forKey:@"title"];
     [param setObject:area forKey:@"area"];
@@ -525,7 +523,7 @@
     [param setObject:remark forKey:@"remark"];
     [param setObject:tag forKey:@"tag"];
     [param setObject:type forKey:@"type"];
-    [param setObject:userId forKey:@"userId"];
+    [param setObject:loginModel.userInfo.userId forKey:@"userId"];
     [param setObject:@"0" forKey:@"isApproved"];
     
     NSMutableArray *pictureIdArr = [[NSMutableArray alloc] init];

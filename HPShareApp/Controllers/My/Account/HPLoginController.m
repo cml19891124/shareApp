@@ -312,10 +312,6 @@
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/login" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
-            HPUserInfo *userInfo = [HPUserInfo mj_objectWithKeyValues:responseObject[@"data"][@"userInfo"]];
-            HPCardInfo *cardInfo = [HPCardInfo mj_objectWithKeyValues:responseObject[@"data"][@"cardInfo"]];
-            model.userInfo = userInfo;
-            model.cardInfo = cardInfo;
             [HPUserTool saveAccount:model];
             [HPProgressHUD alertMessage:@"登录成功"];
             //⭐️5.iOS 11 style (iOS 11 样式)

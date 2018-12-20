@@ -57,20 +57,19 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     [self getUserInfosListData];
 }
-
+- (void)dealloc
+{
+    [kNotificationCenter removeObserver:self];
+}
 - (void)setUserInfo
 {
     HPLoginModel *model = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)model.userInfo;
-    NSString *realName = dic[@"username"];
-    NSString *avatarUrl = dic[@"avatarUrl"];
 
     if (model.token) {
-        [_portraitBtn sd_setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal placeholderImage:ImageNamed(@"personal_center_not_login_head")];
-        [_loginBtn setTitle:realName.length > 0? realName:@"未填写" forState:UIControlStateDisabled];
+        [_portraitBtn sd_setImageWithURL:[NSURL URLWithString:model.userInfo.avatarUrl] forState:UIControlStateNormal placeholderImage:ImageNamed(@"personal_center_not_login_head")];
+        [_loginBtn setTitle:model.userInfo.username.length > 0? model.userInfo.username:@"未填写" forState:UIControlStateDisabled];
         [_loginBtn setEnabled:NO];
         [_keepNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.collectionNum]?:@"--"];
         [_followNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.followingNum]?:@"--"];
@@ -97,8 +96,7 @@
         [_historyNumLabel setText:@"--"];
     }
     
-    NSString *avatarUrlstr = dic[@"avatarUrl"];
-    if (avatarUrlstr.length <= 0 && model.token) {
+    if (model.userInfo.avatarUrl.length <= 0 && model.token) {
         [self uploadLocalImageGetAvatarUrl];
     }
 }
@@ -107,22 +105,16 @@
 {
     NSString *url = [NSString stringWithFormat:@"%@/v1/file/uploadPicture",kBaseUrl];//放上传图片的网址
     HPLoginModel *account = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)account.userInfo;
     NSString *historyTime = [HPTimeString getNowTimeTimestamp];
     UIImage *image = [UIImage imageNamed:@"personal_center_not_login_head"];
     [HPUploadImageHandle sendPOSTWithUrl:url withLocalImage:image isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
         
          HPUserInfo *userInfo = [[HPUserInfo alloc] init];
          userInfo.avatarUrl = [data[@"data"]firstObject][@"url"]?:@"";
-         userInfo.company = dic[@"company"]?:@"";
-         userInfo.password = dic[@"password"]?:@"";
-         userInfo.realName = dic[@"realName"]?:@"";
-         userInfo.signatureContext = dic[@"signatureContext"]?:@"";
-         userInfo.telephone = dic[@"telephone"]?:@"";
-         userInfo.title = dic[@"title"]?:@"";
-         userInfo.username = dic[@"username"]?:@"";
-         userInfo.userId = dic[@"userId"]?:@"";
-         userInfo.mobile = dic[@"mobile"]?:@"";
+         userInfo.password = account.userInfo.password?:@"";
+         userInfo.username = account.userInfo.username?:@"";
+         userInfo.userId = account.userInfo.userId?:@"";
+         userInfo.mobile = account.userInfo.mobile?:@"";
          account.userInfo = userInfo;
          [HPUserTool saveAccount:account];
     } fail:^(NSError *error) {
@@ -591,20 +583,15 @@
 }
 
 - (void)onClickFunctionBtn:(HPAlignCenterButton *)btn {
-    HPLoginModel *model = [HPUserTool account];
-    if (!model.token) {
+    HPLoginModel *account = [HPUserTool account];
+    if (!account.token) {
         [HPProgressHUD alertMessage:@"用户未登录"];
         return;
     }
     
     NSLog(@"function btn: %@", btn.text);
     if ([btn.text isEqualToString:@"我的名片"]) {
-        HPLoginModel *account = [HPUserTool account];
-        NSDictionary *dic = (NSDictionary *)account.userInfo;
-        NSString *userId = dic[@"userId"];
-        NSMutableDictionary *userdic = [NSMutableDictionary dictionary];
-        userdic[@"userId"] = userId;
-        [self pushVCByClassName:@"HPMyCardController" withParam:userdic];
+        [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":account.userInfo.userId}];
     }
     else if ([btn.text isEqualToString:@"共享管理"]) {
         [self pushVCByClassName:@"HPShareManageController"];

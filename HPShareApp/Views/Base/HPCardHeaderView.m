@@ -10,19 +10,36 @@
 {
     if (self = [super initWithFrame:frame]) {
         _userId = userId;
+        [kNotificationCenter addObserver:self selector:@selector(updateCardInfo:) name:@"updateInfo" object:nil];
         [self getCardInfoDetailByUserId:userId];
         [self setUpSubviews];
+        
     }
     return self;
+}
+
+- (void)updateCardInfo:(NSNotification *)noti
+{
+    HPLoginModel *account = [HPUserTool account];
+    NSString *avatarUrl = account.cardInfo.avatarUrl;
+    if (avatarUrl.length == 0) {
+        [_portraitView setBackgroundImage:ImageNamed(@"personal_center_not_login_head") forState:UIControlStateNormal];
+    }else{
+        [_portraitView sd_setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal];
+    }
+    _phoneNumLabel.text = account.cardInfo.telephone;
+    _companyLabel.text = account.cardInfo.company;
+    _signatureLabel.text = account.cardInfo.title;
+    _descLabel.text = account.cardInfo.signature;
+
 }
 #pragma mark - 获取卡片详情
 - (void)getCardInfoDetailByUserId:(NSString *)userId
 {
     HPLoginModel *account = [HPUserTool account];
-    NSDictionary *userdic = (NSDictionary *)account.userInfo;
     NSMutableDictionary *detaildic = [NSMutableDictionary dictionary];
     detaildic[@"followedId"] = userId;
-    detaildic[@"userId"] = userdic[@"userId"];
+    detaildic[@"userId"] = account.userInfo.userId;
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/cardDetails" isNeedToken:YES paraments:detaildic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             self.cardDetailsModel = [HPCardDetailsModel mj_objectWithKeyValues:responseObject[@"data"][@"cardInfo"]];
@@ -30,8 +47,8 @@
             [self.companyLabel setText:self.cardDetailsModel.company.length >0 ?self.cardDetailsModel.company:@"未填写"];
             [self.descLabel setText:self.cardDetailsModel.signature.length >0 ?self.cardDetailsModel.signature:@"未填写"];
             [self.signatureLabel setText:self.cardDetailsModel.title.length > 0?self.cardDetailsModel.title:@"未填写"];
-            [self.portraitView sd_setImageWithURL:[NSURL URLWithString:self.cardDetailsModel.avatarUrl.length >0?self.cardDetailsModel.avatarUrl:userdic[@"avatarUrl"]] forState:UIControlStateNormal];
-            if ([self.userId intValue] == [userdic[@"userId"] intValue]) {
+            [self.portraitView sd_setImageWithURL:[NSURL URLWithString:self.cardDetailsModel.avatarUrl.length >0?self.cardDetailsModel.avatarUrl:account.userInfo.avatarUrl] forState:UIControlStateNormal];
+            if ([self.userId intValue] == [account.userInfo.userId intValue]) {
                 [self.editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
                 [self.editBtn setTag:HPMyCardTypeEdit];
                 [self.editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
@@ -128,8 +145,7 @@
 - (void)setupCardPanel:(UIView *)view {
     
     HPLoginModel *account = [HPUserTool account];
-    NSDictionary *userdic = (NSDictionary *)account.cardInfo;
-    NSString *avatarUrl = userdic[@"avatarUrl"];
+    NSString *avatarUrl = account.cardInfo.avatarUrl;
     UIButton *portraitView = [[UIButton alloc] init];
     [portraitView.layer setCornerRadius:getWidth(63.f) * 0.5];
     [portraitView.layer setMasksToBounds:YES];
@@ -149,7 +165,7 @@
     UILabel *phoneNumLabel = [[UILabel alloc] init];
     [phoneNumLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [phoneNumLabel setTextColor:COLOR_BLACK_333333];
-    phoneNumLabel.text = userdic[@"telephone"];
+    phoneNumLabel.text = account.cardInfo.telephone;
     [view addSubview:phoneNumLabel];
     _phoneNumLabel = phoneNumLabel;
     [phoneNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -175,7 +191,7 @@
     [editBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:10.f]];
     [editBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     
-    if ([self.userId intValue] == [userdic[@"userId"] intValue]) {
+    if ([self.userId intValue] == [account.cardInfo.userId intValue]) {
         [editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
         [editBtn setTag:HPMyCardTypeEdit];
         [editBtn addTarget:self action:@selector(focusSBToFansList:) forControlEvents:UIControlEventTouchUpInside];
