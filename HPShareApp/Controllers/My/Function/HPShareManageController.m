@@ -34,12 +34,10 @@
     _dataArray = [NSMutableArray array];
     
     HPLoginModel *loginModel = [HPUserTool account];
-    NSDictionary *dict = (NSDictionary *)loginModel.userInfo;
-    NSString *userId = dict[@"userId"];
     
     _shareListParam = [HPShareListParam new];
     [_shareListParam setCreateTimeOrderType:@"0"];
-    [_shareListParam setUserId:userId];
+    [_shareListParam setUserId:loginModel.userInfo.userId];
     
     [self setupUI];
 }

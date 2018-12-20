@@ -523,7 +523,7 @@
         return;
     }
     
-    NSString *userId = ((NSDictionary *)loginModel.userInfo)[@"userId"];
+    NSString *userId = loginModel.userInfo.userId;
     
     self.shareReleaseParam.title = title;
     self.shareReleaseParam.area = area;
