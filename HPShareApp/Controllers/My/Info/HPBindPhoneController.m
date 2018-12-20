@@ -160,10 +160,8 @@
 - (void)getCodeNumberInBindPhone
 {
     HPLoginModel *model = [HPUserTool account];
-    NSDictionary *dict = (NSDictionary *)model.userInfo;
-    NSString *mobile = dict[@"mobile"];
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"mobile"] = mobile;
+    dic[@"mobile"] = model.userInfo.mobile;
     dic[@"state"] = @"-1";
     
     kWeakSelf(weakSelf);
@@ -185,10 +183,8 @@
 - (void)confirmTochangeBindPhone
 {
     HPLoginModel *model = [HPUserTool account];
-    NSDictionary *dict = (NSDictionary *)model.userInfo;
-    NSString *mobile = dict[@"mobile"];
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"mobile"] = mobile;
+    dic[@"mobile"] = model.userInfo.mobile;
     dic[@"state"] = @"-1";
     dic[@"code"] = _codeTextField.text;
     
@@ -197,24 +193,13 @@
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"修改成功"];
             //获取本地用户数据
-            HPLoginModel *account = [HPUserTool account];
-            NSDictionary *dic = (NSDictionary *)model.userInfo;
-            HPLog(@"userInfo original:%@  ",account.userInfo);
-            HPUserInfo *userInfo = [[HPUserInfo alloc] init];
-            userInfo.avatarUrl = dic[@"avatarUrl"]?:@"";
-            userInfo.company = dic[@"company"]?:@"";
-            userInfo.password = dic[@"password"]?:@"";
-            userInfo.realName = dic[@"realName"]?:@"";
-            userInfo.signatureContext = dic[@"signatureContext"]?:@"";
-            userInfo.telephone = dic[@"telephone"]?:@"";
-            userInfo.title = dic[@"title"]?:@"";
-            userInfo.username = dic[@"username"]?:@"";
-            userInfo.userId = dic[@"userId"]?:@"";
-
-            userInfo.mobile = weakSelf.phoneNumTextField.text;
-            account.userInfo = userInfo;
-            HPLog(@"userInfo:%@  ",account.userInfo);
-            [HPUserTool saveAccount:account];
+            model.userInfo.avatarUrl = model.userInfo.avatarUrl?:@"";
+            model.userInfo.password = model.userInfo.password?:@"";
+            model.userInfo.username = model.userInfo.username?:@"";
+            model.userInfo.userId = model.userInfo.userId?:@"";
+            model.userInfo.mobile = weakSelf.phoneNumTextField.text;
+//            HPLog(@"userInfo:%@  ",account.userInfo);
+            [HPUserTool saveAccount:model];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 NSInteger count = self.navigationController.viewControllers.count;
                 UIViewController *vc = self.navigationController.viewControllers[count - 3];

@@ -33,11 +33,16 @@ static NSString *systemNotiCell = @"systemNotiCell";
     
     NSArray *systemNotiArray = self.param[@"data"];//@[@{@"createTime":@"1495453213",@"title":@"版本更新",@"message":@"合店站1.1.0版本更新。新版本中'人力共享'功能正式上线，店主可以通过该板块招募短工，降低招募正式员工的人力成本。同时用户也可以发…"},
 //                               @{@"createTime":@"1495453229",@"title":@"注册成功",@"message":@"尊敬的用户，恭喜您成为“合店站”会员，赶紧去制作你的专属名片，开启共享之旅吧!"}];
-    NSString *ti = @"1495453213";
-    NSDate *tme = [HPTimeString getLocateTime:[ti intValue]];
-    NSString *tiem = [HPTimeString getPassTimeSometimeWith:tme];
     _systemNotiArray = [HPInterActiveModel mj_objectArrayWithKeyValuesArray:systemNotiArray];
-    [self loadPartyCenterData:_systemNotiArray];
+    HPInterActiveModel *model = self.param[@"data"][0];
+    if ([model.subtitle isEqualToString:@"暂无数据"]) {
+        self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
+        self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_collect");
+        self.tableView.refreshNoDataView.tipLabel.text = @"暂无数据最新系统信息";
+        self.tableView.refreshNoDataView.tipBtn.hidden = YES;
+    }else{
+        [self loadPartyCenterData:_systemNotiArray];
+    }
 }
 
 #pragma mark - 数据中心处理

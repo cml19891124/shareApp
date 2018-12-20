@@ -30,13 +30,8 @@
 
 @interface HPUserInfo : NSObject<NSCoding>
 @property (nonatomic, copy) NSString *avatarUrl;
-@property (nonatomic, copy) NSString *company;
 @property (nonatomic, copy) NSString *password;
-@property (nonatomic, copy) NSString *realName;
-@property (nonatomic, copy) NSString *signatureContext;
-@property (nonatomic, copy) NSString *telephone;
 @property (nonatomic, copy) NSString *mobile;
-@property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *userId;
 +(instancetype)UserInfoWithDict:(NSDictionary *)dict;

@@ -67,17 +67,13 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 {
     [super viewWillAppear:animated];
     HPLoginModel *model = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)model.userInfo;
-    NSString *username = dic[@"username"];
-    NSString *mobile = dic[@"mobile"];
-    NSString *fianlMobile = mobile.length > 0?[mobile stringByReplacingCharactersInRange:NSMakeRange(3,4) withString:@"****"]:@"未填写";
-    NSString *password = dic[@"password"];
+    NSString *fianlMobile = model.userInfo.mobile.length > 0?[model.userInfo.mobile stringByReplacingCharactersInRange:NSMakeRange(3,4) withString:@"****"]:@"未填写";
     CGFloat cashSize = [HPClearCacheTool readCacheSize];
     NSString *cacheStr = [NSString stringWithFormat:@"%.2fMB",cashSize];
     [self setPortrait:[UIImage imageNamed:@"my_business_card_default_head_image"]];
-    [self setText:username.length > 0?username:@"未填写" ofBtnWithType:HPConfigGotoUserName];
+    [self setText:model.userInfo.username.length > 0?model.userInfo.username:@"未填写" ofBtnWithType:HPConfigGotoUserName];
     [self setText:fianlMobile > 0?fianlMobile:@"未填写" ofBtnWithType:HPConfigGotoPhoneNum];
-    [self setText:password?@"修改":@"未设置" ofBtnWithType:HPConfigGotoPassword];
+    [self setText:model.userInfo.password?@"修改":@"未设置" ofBtnWithType:HPConfigGotoPassword];
     [self setText:@"V1.1.0" ofBtnWithType:HPConfigGotoVersion];
     [self setText:cacheStr.length>0 ?cacheStr:@"16.8MB" ofBtnWithType:HPConfigGotoCache];
 }
@@ -294,10 +290,6 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 
 - (void)setupAccountInfoPanel:(UIView *)view {
     HPLoginModel *model = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)model.userInfo;
-    NSString *username = dic[@"username"];
-    NSString *avatarUrl = dic[@"avatarUrl"];
-    NSString *contact = dic[@"mobile"];
     UIView *portraitRow = [self addRowOfParentView:view withHeight:63.f * g_rateWidth margin:0.f isEnd:NO];
     
     UILabel *portraitLabel = [self setupTitleLabelWithTitle:@"头像"];
@@ -314,7 +306,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 //    [portraitView setBackgroundImage:ImageNamed(@"my_business_card_default_head_image") forState:UIControlStateNormal];
     [portraitView addTarget:self action:@selector(onClickGotoCtrl:) forControlEvents:UIControlEventTouchUpInside];
     [portraitRow addSubview:portraitView];
-    [portraitView sd_setImageWithURL:[NSURL URLWithString:avatarUrl.length > 0 ?avatarUrl:@""] forState:UIControlStateNormal];
+    [portraitView sd_setImageWithURL:[NSURL URLWithString:model.userInfo.avatarUrl.length > 0 ?model.userInfo.avatarUrl:@""] forState:UIControlStateNormal];
     [portraitView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(portraitRow).with.offset(-17.f * g_rateWidth);
         make.size.mas_equalTo(CGSizeMake(46.f, 46.f));
@@ -330,7 +322,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.centerY.equalTo(mailRow);
     }];
     
-    HPRightImageButton *mailGotoBtn = [self setupGotoBtnWithTitle:username.length > 0?username: @"未填写"];
+    HPRightImageButton *mailGotoBtn = [self setupGotoBtnWithTitle:model.userInfo.username.length > 0?model.userInfo.username: @"未填写"];
     [mailGotoBtn setTag:HPConfigGotoMail];
     [mailRow addSubview:mailGotoBtn];
     _mailGotoBtn = mailGotoBtn;
@@ -348,7 +340,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.centerY.equalTo(phoneNumRow);
     }];
     
-    HPRightImageButton *phoneNumGotoBtn = [self setupGotoBtnWithTitle:contact.length >0 ?contact:@"未绑定"];
+    HPRightImageButton *phoneNumGotoBtn = [self setupGotoBtnWithTitle:model.userInfo.mobile.length >0 ?model.userInfo.mobile:@"未绑定"];
     [phoneNumGotoBtn setTag:HPConfigGotoPhoneNum];
     [phoneNumRow addSubview:phoneNumGotoBtn];
     _phoneNumGotoBtn = phoneNumGotoBtn;
@@ -677,21 +669,15 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"avatarUrl"] = avatarUrl;
     HPLoginModel *account = [HPUserTool account];
-    NSDictionary *userdic = (NSDictionary *)account.userInfo;
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/updateUser" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
             HPUserInfo *userInfo = [[HPUserInfo alloc] init];
             userInfo.avatarUrl = responseObject[@"data"][@"avatarUrl"]?:@"";
-            userInfo.company = userdic[@"company"]?:@"";
-            userInfo.password = userdic[@"password"]?:@"";
-            userInfo.realName = userdic[@"realName"]?:@"";
-            userInfo.signatureContext = userdic[@"signatureContext"]?:@"";
-            userInfo.telephone = userdic[@"telephone"]?:@"";
-            userInfo.title = userdic[@"title"]?:@"";
-            userInfo.username = userdic[@"username"]?:@"";
-            userInfo.userId = userdic[@"userId"]?:@"";
-            userInfo.mobile = userdic[@"mobile"]?:@"";
+            userInfo.password = account.userInfo.password?:@"";
+            userInfo.username = account.userInfo.username?:@"";
+            userInfo.userId = account.userInfo.userId?:@"";
+            userInfo.mobile = account.userInfo.mobile?:@"";
             account.userInfo = userInfo;
             [HPUserTool saveAccount:account];
             [HPProgressHUD alertMessage:@"头像修改成功"];

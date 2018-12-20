@@ -36,6 +36,7 @@ static NSString *interactiveCell = @"interactiveCell";
     [self setUpNotiConfig];
     // Do any additional setup after loading the view.
     self.delegate = self;
+    _interArray = [NSMutableArray array];
     [self getDataResources];
     
     [self setupUI];
@@ -44,7 +45,7 @@ static NSString *interactiveCell = @"interactiveCell";
     [self.view setBackgroundColor:COLOR_GRAY_F7F7F7];
 
 }
-#pragma mark - 获取出事原始数据-也是设置消息是否已读的源数据
+#pragma mark - 获取原始数据-也是设置消息是否已读的源数据
 - (void)getDataResources
 {
     _hasNoti = NO;
@@ -70,13 +71,18 @@ static NSString *interactiveCell = @"interactiveCell";
 {
     _hasNoti = YES;
     [self.interArray removeAllObjects];
-//    HPLog(@"noti:%@",noti.userInfo);
     self.userInfo = noti.userInfo;
     NSString *date = self.userInfo[@"date"];
 
     NSString *title = self.userInfo[@"title"];
     NSString *subtitle = self.userInfo[@"content"];
-    NSArray *interArray = @[@{@"date":date,@"photo":@"system notification",@"title":title.length >0 ?title: @"暂无数据",@"subtitle":subtitle.length >0 ?subtitle: @"暂无数据"}];
+    HPInterActiveModel *model = [HPInterActiveModel new];
+    model.date = date;
+    model.photo = @"system notification";
+    model.title = title;
+    model.subtitle = subtitle;
+    model.hasnoti = YES;
+    NSArray *interArray = @[[model mj_keyValues],@{@"photo":@"activity center",@"title":@"活动中心",@"subtitle":@"暂无数据"}];
     self.interArray = [HPInterActiveModel mj_objectArrayWithKeyValuesArray:interArray];
     [self.tableView reloadData];
 }
@@ -128,11 +134,6 @@ static NSString *interactiveCell = @"interactiveCell";
     if (indexPath.section == 0) {
         
         cell.model = model;
-        if (_hasNoti) {
-            cell.badgeValue.hidden = NO;
-        }else{
-            cell.badgeValue.hidden = YES;
-        }
         cell.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
@@ -216,19 +217,11 @@ static NSString *interactiveCell = @"interactiveCell";
     _hasNoti = NO;
     [self.tableView reloadData];
     HPInterActiveModel *model = self.interArray[indexPath.row];
-
+    model.hasnoti = NO;
     if (indexPath.section == 0 && indexPath.row == 0) {
-        if ([model.subtitle isEqualToString:@"暂无数据"]) {
-            return;
-        }else{
             [self pushVCByClassName:@"HPSystemNotiController" withParam:@{@"data":self.interArray}];
-        }
     }else if (indexPath.section == 0 && indexPath.row == 1){
-        if ([model.subtitle isEqualToString:@"暂无数据"]) {
-            return;
-        }else{
             [self pushVCByClassName:@"HPPartyCenterController" withParam:@{@"data":self.interArray}];
-        }
     }
 }
 

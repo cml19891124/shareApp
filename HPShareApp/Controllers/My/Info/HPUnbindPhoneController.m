@@ -45,10 +45,8 @@
         make.height.mas_equalTo(titleLabel.font.pointSize);
     }];
     
-    HPLoginModel *model = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)model.userInfo;
-    NSString *mobile = dic[@"mobile"];
-    NSString *rangeStr = [mobile stringByReplacingCharactersInRange:NSMakeRange(3, 4) withString:@"****"];
+    HPLoginModel *account = [HPUserTool account];
+    NSString *rangeStr = [account.userInfo.mobile stringByReplacingCharactersInRange:NSMakeRange(3, 4) withString:@"****"];
     UILabel *descLabel = [[UILabel alloc] init];
     [descLabel setFont:[UIFont fontWithName:FONT_REGULAR size:12.f]];
     [descLabel setTextColor:COLOR_BLACK_666666];
@@ -131,10 +129,8 @@
 - (void)getCodeNumberInBindPhone
 {
     HPLoginModel *model = [HPUserTool account];
-    NSDictionary *dict = (NSDictionary *)model.userInfo;
-    NSString *mobile = dict[@"mobile"];
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"mobile"] = mobile;
+    dic[@"mobile"] = model.userInfo.mobile;
     dic[@"state"] = @"1";
     dic[@"code"] = _codeTextField.text;
 

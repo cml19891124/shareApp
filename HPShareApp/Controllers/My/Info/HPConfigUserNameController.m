@@ -139,20 +139,16 @@
     }
     dic[inputstr] = self.textField.text;
     HPLoginModel *account = [HPUserTool account];
-    NSDictionary *userdic = (NSDictionary *)account.userInfo;
-    NSDictionary *carddic = (NSDictionary *)account.cardInfo;
-
     [HPHTTPSever HPGETServerWithMethod:method isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             
             NSDictionary *result = responseObject[@"data"];
-            HPUserInfo *userInfo = [[HPUserInfo alloc] init];
             HPCardInfo *cardInfo = [[HPCardInfo alloc] init];
 
             NSString *inputstr;
             if ([self.param[@"title"] isEqualToString:@"设置您的用户名"]) {
                 inputstr = @"username";
-                userInfo.username = result[@"username"]?:@"";
+                account.userInfo.username = result[@"username"]?:@"";
             }else if ([self.param[@"title"] isEqualToString:@"编辑您的姓名"]) {
                 inputstr = @"realName";
                 cardInfo.realName = result[@"realName"]?:@"";
@@ -165,19 +161,15 @@
                 inputstr = @"telephone";
                 cardInfo.telephone = result[@"telephone"]?:@"";
             }
-            userInfo.avatarUrl = userdic[@"avatarUrl"]?:@"";
-            userInfo.password = userdic[@"password"]?:@"";
-            userInfo.signatureContext = userdic[@"signatureContext"]?:@"";
-            userInfo.title = userdic[@"title"]?:@"";
-            userInfo.userId = userdic[@"userId"]?:@"";
-            userInfo.mobile = userdic[@"mobile"]?:@"";
-            account.userInfo = userInfo;
+            account.userInfo.avatarUrl = account.userInfo.avatarUrl?:@"";
+            account.userInfo.password = account.userInfo.password?:@"";
+            account.userInfo.userId = account.userInfo.userId?:@"";
+            account.userInfo.mobile = account.userInfo.mobile?:@"";
             
-            cardInfo.avatarUrl = carddic[@"avatarUrl"]?:@"";
-            cardInfo.signature = carddic[@"signature"]?:@"";
-            cardInfo.title = carddic[@"title"]?:@"";
-            cardInfo.userId = carddic[@"userId"]?:@"";
-            account.cardInfo = cardInfo;
+            account.cardInfo.avatarUrl = account.cardInfo.avatarUrl?:@"";
+            account.cardInfo.signature = account.cardInfo.signature?:@"";
+            account.cardInfo.title = account.cardInfo.title?:@"";
+            account.cardInfo.userId = account.cardInfo.userId?:@"";
             [HPUserTool saveAccount:account];
             [HPProgressHUD alertMessage:@"修改成功"];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

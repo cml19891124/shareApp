@@ -9,6 +9,7 @@
 #import "HPPartyCenterController.h"
 #import "HPPartyCenterModel.h"
 #import "HPPartyCenterCell.h"
+#import "HPInterActiveModel.h"
 
 @interface HPPartyCenterController ()<UITableViewDelegate,UITableViewDataSource,HPBaseViewControllerDelegate,HPPartyCenterCellDelegate>
 @property (nonatomic, strong) UITableView *tableView;
@@ -29,7 +30,16 @@ static NSString *partyCenterCell = @"partyCenterCell";
     NSArray *partyArray = @[];//@[@{@"createTime":@"1495453213",@"image":@"party",@"title":@"锦鲤附身，您有1份新用户大礼包待领取",@"message":@"为了感谢广大用户对“合店站”的支持与信任，我们给每一位新入驻“合店站”的小伙伴精心准备了一份大礼包～戳我领取"},
 //                                 @{@"createTime":@"1495453229",@"image":@"party",@"title":@"锦鲤附身，您有1份新",@"message":@"对“合店站”的支持与信任，我们给每一位新入驻“合店站”的小伙伴精心准备了一份"}];
     _partyArray = [HPPartyCenterModel mj_objectArrayWithKeyValuesArray:partyArray];
-    [self loadPartyCenterData:_partyArray];
+    HPInterActiveModel *model = self.param[@"data"][0];
+
+    if ([model.subtitle isEqualToString:@"暂无数据"]) {
+        self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
+        self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_collect");
+        self.tableView.refreshNoDataView.tipLabel.text = @"暂无数据最新活动信息";
+        self.tableView.refreshNoDataView.tipBtn.hidden = YES;
+    }else{
+        [self loadPartyCenterData:_partyArray];
+    }
     [_tableView reloadData];
 }
 #pragma mark - 数据中心处理

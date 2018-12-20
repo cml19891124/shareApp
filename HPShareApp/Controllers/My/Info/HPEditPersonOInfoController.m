@@ -203,13 +203,6 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 }
 - (void)setupShadowOfPanel:(UIView *)view {
     HPLoginModel *model = [HPUserTool account];
-    NSDictionary *dic = (NSDictionary *)model.cardInfo;
-    NSDictionary *userdic = (NSDictionary *)model.userInfo;
-
-    NSString *realName = dic[@"realName"];
-    NSString *avatarUrl = dic[@"avatarUrl"];
-    NSString *contact = userdic[@"mobile"];
-    NSString *company = dic[@"company"];
 
     view.backgroundColor = UIColor.whiteColor;
     [view.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
@@ -236,7 +229,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
     UIButton *portraitView = [[UIButton alloc] init];
     [portraitView.layer setCornerRadius:23.f];
     [portraitView.layer setMasksToBounds:YES];
-    [portraitView sd_setImageWithURL:[NSURL URLWithString:avatarUrl.length > 0 ?avatarUrl:@""] forState:UIControlStateNormal];
+    [portraitView sd_setImageWithURL:[NSURL URLWithString:model.cardInfo.avatarUrl.length > 0 ?model.cardInfo.avatarUrl:@""] forState:UIControlStateNormal];
     [headerView addSubview:portraitView];
     self.portraitView = portraitView;
     [portraitView addTarget:self action:@selector(onClickGotoCtrl:) forControlEvents:UIControlEventTouchUpInside];
@@ -281,7 +274,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 
     }];
     
-    HPRightImageButton *nameBtn = [self setupGotoBtnWithTitle:realName.length > 0?realName:@"未填写"];
+    HPRightImageButton *nameBtn = [self setupGotoBtnWithTitle:model.cardInfo.realName.length > 0?model.cardInfo.realName:@"未填写"];
     [nameView addSubview:nameBtn];
     [nameBtn setTag:HPEditGotoFullName];
     [nameBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -306,7 +299,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 
     }];
 
-    HPRightImageButton *companyBtn = [self setupGotoBtnWithTitle:company.length > 0?company:@"未填写"];
+    HPRightImageButton *companyBtn = [self setupGotoBtnWithTitle:model.cardInfo.company.length > 0?model.cardInfo.company:@"未填写"];
     [companyView addSubview:companyBtn];
     [companyBtn setTag:HPEditGotoCompany];
     [companyBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -330,7 +323,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
         make.right.equalTo(contactView).with.offset(-18.f * g_rateWidth);
     }];
 
-    HPRightImageButton *contactBtn = [self setupGotoBtnWithTitle:contact.length > 0?contact:@"未填写"];
+    HPRightImageButton *contactBtn = [self setupGotoBtnWithTitle:model.userInfo.mobile.length > 0?model.userInfo.mobile:@"未填写"];
     [contactView addSubview:contactBtn];
     [contactBtn setTag:HPEditGotoContact];
     [contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -394,7 +387,6 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 - (void)uploadLocalImageGetAvatarUrl
 {
     NSString *url = [NSString stringWithFormat:@"%@/v1/file/uploadPicture",kBaseUrl];//放上传图片的网址
-    HPLoginModel *account = [HPUserTool account];
     NSString *historyTime = [HPTimeString getNowTimeTimestamp];
     [HPUploadImageHandle sendPOSTWithUrl:url withLocalImage:_photo isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
         NSString *url = [data[@"data"]firstObject][@"url"]?:@"";
@@ -411,20 +403,17 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 - (void)onClickChangeUpdateUser:(NSString *)avatarUrl
 {
     HPLoginModel *account = [HPUserTool account];
-    NSDictionary *carddic = (NSDictionary *)account.cardInfo;
 
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"avatarUrl"] = avatarUrl;
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/updateUser" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             NSDictionary *result= responseObject[@"data"];
-            HPCardInfo *cardInfo = [[HPCardInfo alloc] init];
             [self.portraitView sd_setImageWithURL:[NSURL URLWithString:result[@"avatarUrl"]?:@""] forState:UIControlStateNormal];
-            cardInfo.avatarUrl = result[@"avatarUrl"]?:@"";
-            cardInfo.signature = carddic[@"signature"]?:@"";
-            cardInfo.title = carddic[@"title"]?:@"";
-            cardInfo.userId = carddic[@"userId"]?:@"";
-            account.cardInfo = cardInfo;
+            account.cardInfo.avatarUrl = result[@"avatarUrl"]?:@"";
+            account.cardInfo.signature = account.cardInfo.signature?:@"";
+            account.cardInfo.title = account.cardInfo.title?:@"";
+            account.cardInfo.userId = account.cardInfo.userId?:@"";
             [HPUserTool saveAccount:account];
             [HPProgressHUD alertMessage:@"头像修改成功"];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

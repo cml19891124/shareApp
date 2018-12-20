@@ -115,5 +115,11 @@
     self.iconView.image = ImageNamed(model.photo);
     self.titleLabel.text = model.title;
     self.subtitleLabel.text = model.subtitle;
+    if ([model.title isEqualToString:@"活动中心"]||[model.subtitle isEqualToString:@"暂无数据"]||!model.hasnoti) {
+        self.badgeValue.hidden = YES;
+    }else{
+        self.badgeValue.hidden = NO;
+
+    }
 }
 @end
