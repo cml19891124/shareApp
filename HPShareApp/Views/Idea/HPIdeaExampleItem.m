@@ -18,6 +18,8 @@
 
 @property (nonatomic, weak) UIView *photoView;
 
+@property (nonatomic, weak) UIButton *detailBtn;
+
 @end
 
 @implementation HPIdeaExampleItem
@@ -94,6 +96,7 @@
     [detailBtn setImage:[UIImage imageNamed:@"icon_goto"] forState:UIControlStateNormal];
     [detailBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -10.f, 0.f, 10.f)];
     [detailBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, 49.f, 0.f, -49.f)];
+    [detailBtn setUserInteractionEnabled:NO];
     [self addSubview:detailBtn];
     _detailBtn = detailBtn;
     [detailBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -142,6 +145,7 @@
             imageView = [[UIImageView alloc] init];
             [imageView.layer setCornerRadius:5.f];
             [imageView.layer setMasksToBounds:YES];
+            [imageView setContentMode:UIViewContentModeScaleAspectFill];
             [_photoView addSubview:imageView];
             [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (i == 0) {

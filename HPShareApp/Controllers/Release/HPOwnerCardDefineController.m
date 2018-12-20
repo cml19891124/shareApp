@@ -531,18 +531,20 @@
     _canRelease = NO;
     
     HPAddressModel *addressModel = self.param[@"address"];
-    NSNumber *latitude;
-    NSNumber *longitude;
+    NSString *latitude;
+    NSString *longitude;
     NSString *address;
     if (addressModel) {
-        latitude = [NSNumber numberWithDouble:addressModel.lat];
-        longitude = [NSNumber numberWithDouble:addressModel.lon];
+        latitude = [NSString stringWithFormat:@"%lf", addressModel.lat];
+        longitude = [NSString stringWithFormat:@"%lf", addressModel.lon];
         address = addressModel.POIName;
     }
     
     NSString *title = _titleField.text;
     NSString *area = _areaField.text;
     NSString *areaId = [self getAreaIdByName:addressModel.district];
+    NSString *industryId = self.selectedIndustryModel.pid;
+    NSString *subIndustryId = self.selectedIndustryModel.industryId;
     NSString *rent = _priceField.text;
     NSString *rentType = self.unitSelectTable.selectedIndex == 0 ? @"1" : @"2";
     NSString *shareTime = [self.timePicker getTimeStr];
@@ -580,44 +582,46 @@
     
     NSString *userId = ((NSDictionary *)loginModel.userInfo)[@"userId"];
     
-    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
-    [param setObject:title forKey:@"title"];
-    [param setObject:area forKey:@"area"];
-    [param setObject:areaId forKey:@"areaId"];
-    [param setObject:latitude forKeyedSubscript:@"latitude"];
-    [param setObject:longitude forKeyedSubscript:@"longitude"];
-    [param setObject:address forKey:@"address"];
-    [param setObject:rent forKeyedSubscript:@"rent"];
-    [param setObject:rentType forKey:@"rentType"];
-    [param setObject:shareTime forKey:@"shareTime"];
-    [param setObject:shareDays forKey:@"shareDays"];
-    [param setObject:contact forKey:@"contact"];
-    [param setObject:contactMobile forKey:@"contactMobile"];
-    [param setObject:intention forKey:@"intention"];
-    [param setObject:remark forKey:@"remark"];
-    [param setObject:tag forKey:@"tag"];
-    [param setObject:type forKey:@"type"];
-    [param setObject:userId forKey:@"userId"];
-    [param setObject:@"0" forKey:@"isApproved"];
+    self.shareReleaseParam.title = title;
+    self.shareReleaseParam.area = area;
+    self.shareReleaseParam.areaId = areaId;
+    self.shareReleaseParam.latitude = latitude;
+    self.shareReleaseParam.longitude = longitude;
+    self.shareReleaseParam.address = address;
+    self.shareReleaseParam.industryId = industryId;
+    self.shareReleaseParam.subIndustryId = subIndustryId;
+    self.shareReleaseParam.rent = rent;
+    self.shareReleaseParam.rentType = rentType;
+    self.shareReleaseParam.shareTime = shareTime;
+    self.shareReleaseParam.shareDays = shareDays;
+    self.shareReleaseParam.contact = contact;
+    self.shareReleaseParam.contactMobile = contactMobile;
+    self.shareReleaseParam.intention = intention;
+    self.shareReleaseParam.remark = remark;
+    self.shareReleaseParam.tag = tag;
+    self.shareReleaseParam.type = type;
+    self.shareReleaseParam.userId = userId;
+    self.shareReleaseParam.isApproved = @"0";
     
-    NSMutableArray *pictureIdArr = [[NSMutableArray alloc] init];
     NSArray *photos = self.addPhotoView.photos;
     
     [HPUploadImageHandle upLoadImages:photos withUrl:kBaseUrl@"/v1/file/uploadPictures" parameterName:@"files" success:^(id responseObject) {
         if (CODE == 200) {
             NSArray<HPPictureModel *> *pictureModels = [HPPictureModel mj_objectArrayWithKeyValuesArray:DATA];
             for (HPPictureModel *pictureModel in pictureModels) {
-                [pictureIdArr addObject:pictureModel.pictureId];
+                [self.shareReleaseParam.pictureIdArr addObject:pictureModel.pictureId];
             }
             
-            [param setObject:pictureIdArr forKey:@"pictureIdArr"];
-            
+            NSDictionary *param = self.shareReleaseParam.mj_keyValues;
             [self releaseInfo:param];
         }
         else {
             self->_canRelease = YES;
             [HPProgressHUD alertMessage:MSG];
         }
+    } progress:^(double progress) {
+        NSLog(@"progress: %lf", progress);
+        [HPProgressHUD alertWithProgress:progress text:@"上传图片中"];
     } fail:^(NSError *error) {
         self->_canRelease = YES;
         ErrorNet
@@ -631,7 +635,7 @@
         self->_canRelease = YES;
         
         if (CODE == 200) {
-            [HPProgressHUD alertMessage:@"发布成功"];
+            [HPProgressHUD alertWithFinishText:@"发布成功"];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.navigationController popViewControllerAnimated:YES];
@@ -640,10 +644,11 @@
         else {
             [HPProgressHUD alertMessage:MSG];
         }
+    } Progress:^(double progress) {
+        [HPProgressHUD alertWithProgress:progress text:@"发布信息中"];
     } Failure:^(NSError * _Nonnull error) {
         self->_canRelease = YES;
-        NSLog(@"+++++++发布失败++++++");
-        NSLog(@"error: %@", error);
+        ErrorNet
     }];
 }
 

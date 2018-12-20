@@ -597,7 +597,6 @@
         return;
     }
     
-    NSLog(@"function btn: %@", btn.text);
     if ([btn.text isEqualToString:@"我的名片"]) {
         HPLoginModel *account = [HPUserTool account];
         NSDictionary *dic = (NSDictionary *)account.userInfo;

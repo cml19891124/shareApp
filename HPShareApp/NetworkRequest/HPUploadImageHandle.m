@@ -73,6 +73,11 @@
 
 + (void)upLoadImages:(NSArray *)images withUrl:(NSString *)url parameterName:(NSString *)name success:(SuccessBlock)successBlock fail:(FailBlock)failBlock
 {
+    [HPUploadImageHandle upLoadImages:images withUrl:url parameterName:name success:successBlock progress:nil fail:failBlock];
+}
+
++ (void)upLoadImages:(NSArray *)images withUrl:(NSString *)url parameterName:(NSString *)name success:(SuccessBlock)successBlock progress:(ProgressBlock)progressBlock fail:(FailBlock)failBlock
+{
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];//初始化请求对象
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];//设置服务器允许的请求格式内容
     
@@ -89,7 +94,9 @@
             [formData appendPartWithFileData:data name:name fileName:[NSString stringWithFormat:@"image_%d.jpg", i] mimeType:@"image/jpg"];
         }
     } progress:^(NSProgress * _Nonnull uploadProgress) {
-        //        NSLog(@"uploadProgress = %@",uploadProgress);
+        if (progressBlock) {
+            progressBlock(uploadProgress.fractionCompleted);
+        }
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         //        NSLog(@"responseObject = %@, task = %@",responseObject,task);
         

@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPIdeaExampleItem : HPBaseView
 
-@property (nonatomic, weak, readonly) UIButton *detailBtn;
-
 - (void)setTitle:(NSString *)title;
 
 - (void)setType:(NSString *)type;

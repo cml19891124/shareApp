@@ -7,15 +7,23 @@
 //
 
 #import "HPBaseTableViewCell.h"
+#import "HPShareListModel.h"
 
 typedef NS_ENUM(NSInteger, HPShareListCellType) {
-    HPShareListCellTypeStartup = 0,
-    HPShareListCellTypeOwner
+    HPShareListCellTypeOwner = 1,
+    HPShareListCellTypeStartup
+};
+
+typedef NS_ENUM(NSInteger, HPSharePriceUnitType) {
+    HPSharePriceUnitTypeHour = 1,
+    HPSharePriceUnitTypeDay = 2
 };
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPShareManageCell : HPBaseTableViewCell
+
+@property (nonatomic, strong) HPShareListModel *model;
 
 @property (nonatomic, weak, readonly) UIButton *editBtn;
 
@@ -23,15 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTitle:(NSString *)title;
 
-- (void)setTrade:(NSString *)trade;
-
-- (void)setRentTime:(NSString *)rentTime;
-
-- (void)setArea:(NSString *)area;
-
 - (void)setPrice:(NSString *)price;
 
-- (void)setTagType:(HPShareListCellType)type;
+- (void)setUnitType:(HPSharePriceUnitType)type;
+
+- (void)setType:(HPShareListCellType)type;
 
 - (void)setReleaseTime:(NSString *)time;
 

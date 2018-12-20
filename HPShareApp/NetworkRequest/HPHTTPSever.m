@@ -17,6 +17,11 @@
 
 + (void)HPPostServerWithMethod:(nonnull NSString*)method paraments:(nonnull NSDictionary *)dic needToken:(BOOL)isNeed complete:(nonnull Success)success Failure:(nonnull Failure)failure{
    
+    [HPHTTPSever HPPostServerWithMethod:method paraments:dic needToken:isNeed complete:success Progress:nil Failure:failure];
+}
+
++ (void)HPPostServerWithMethod:(nonnull NSString*)method paraments:(nonnull NSDictionary *)dic needToken:(BOOL)isNeed complete:(nonnull Success)success Progress:(Progress)progress Failure:(nonnull Failure)failure{
+    
     HPHTTPManager *manager = [HPHTTPManager shareHPHTTPManage];
     // 解析数据需要
     manager.requestSerializer = [AFJSONRequestSerializer serializerWithWritingOptions:NSJSONWritingPrettyPrinted];
@@ -34,7 +39,11 @@
     [manager.requestSerializer setTimeoutInterval:10];
     NSString * urlString  = [NSString stringWithFormat:@"%@%@",MHBaseUrl,method];
     
-    [manager POST:urlString parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager POST:urlString parameters:dic progress:^(NSProgress * _Nonnull uploadProgress) {
+        if (progress) {
+            progress(uploadProgress.fractionCompleted);
+        }
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         if (success) {
             

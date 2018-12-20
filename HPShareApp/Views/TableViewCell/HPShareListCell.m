@@ -24,6 +24,8 @@
 
 @property (nonatomic, weak) UIImageView *typeIcon;
 
+@property (nonatomic, weak) UIImageView *deleteIcon;
+
 @property (nonatomic, strong) NSMutableArray *tagItems;
 
 @property (nonatomic, weak) UIImageView *photoView;
@@ -169,6 +171,15 @@
         make.size.mas_equalTo(CGSizeMake(37.f, 50.f));
     }];
     
+    UIImageView *deleteIcon = [[UIImageView alloc] init];
+    [deleteIcon setImage:[UIImage imageNamed:@"share_delete"]];
+    [bgView addSubview:deleteIcon];
+    _deleteIcon = deleteIcon;
+    [deleteIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.and.right.equalTo(bgView);
+    }];
+    [deleteIcon setHidden:YES];
+    
     [titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(typeIcon.mas_left).with.offset(-22.f * g_rateWidth);
     }];
@@ -265,13 +276,21 @@
     
     [self setTitle:title];
     [self setPrice:price];
-    [self setType:type];
     [self setUnitType:unitType];
     if (tags) {
         [self setTags:tags];
     }
     if (photoUrl) {
         [self setPhotoUrl:photoUrl];
+    }
+    
+    if (model.deleteTime) {
+        [_typeIcon setHidden:YES];
+        [_deleteIcon setHidden:NO];
+    }
+    else {
+        [self setType:type];
+        [_deleteIcon setHidden:YES];
     }
 }
 

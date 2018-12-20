@@ -212,7 +212,6 @@
             //            NSString *spaceId = cell.model.spaceId;
             for (HPShareAnnotation *annotation in self.mapView.annotations) {
                 if ([annotation.model.spaceId isEqualToString:cell.model.spaceId]) {
-                    NSLog(@"selectAnnotation");
                     [self.mapView selectAnnotation:annotation animated:YES];
                 }
                 else {
@@ -287,7 +286,6 @@
 }
 
 - (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view {
-    NSLog(@"didSelectAnnotationView");
     [view setSelected:YES];
     [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
     [self.mapView setZoomLevel:15.f animated:YES];
@@ -319,7 +317,6 @@
         if (models.count == 0) {
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
             [self.tableView.mj_header endRefreshing];
-            NSLog(@"no more data");
         }
         else {
             [self setCount:models.count];

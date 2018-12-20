@@ -619,7 +619,6 @@
     
     [HPHTTPSever HPGETServerWithMethod:@"/v1/space/detail" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
-            NSLog(@"DATA: %@", DATA);
             HPShareDetailModel *model = [HPShareDetailModel mj_objectWithKeyValues:DATA];
             NSDictionary *userCardCase = DATA[@"userCardCase"];
             if (![userCardCase isMemberOfClass:NSNull.class]) {
@@ -735,7 +734,6 @@
                            @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544759503783&di=09a39857f77718ec68b74e9995c4ebfa&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fpic%2Fe%2Fe7%2Fe1f1827994.jpg%3Fdown",
                            @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544777936230&di=dc7dcbb7fc819adbc886667b4dbb0f1d&imgtype=0&src=http%3A%2F%2Fimg.79tao.com%2Fdata%2Fattachment%2Fforum%2F201804%2F14%2F001701vaash2sgdl8qchnh.jpg",
                            @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544778024308&di=400579aeb71c396c1b84f9eea507bdbd&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D2527094628%2C3273654962%26fm%3D214%26gp%3D0.jpg"];
-    int j = 0;
     
     if (model.pictures && model.pictures.count > 0) {
         if (model.pictures.count > 1) {
@@ -746,12 +744,8 @@
         NSMutableArray *array = [[NSMutableArray alloc] init];
         for (HPPictureModel *picModel in model.pictures) {
             UIImageView *imageView = [[UIImageView alloc] init];
-            if ([kBaseUrl isEqualToString:@"http://192.168.0.104:8083"])
-                [imageView sd_setImageWithURL:[NSURL URLWithString:testArray[j]] placeholderImage:ImageNamed(@"shared_shop_details_background")];
-            else
-                [imageView sd_setImageWithURL:[NSURL URLWithString:picModel.url] placeholderImage:ImageNamed(@"shared_shop_details_background")];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:picModel.url] placeholderImage:ImageNamed(@"shared_shop_details_background")];
             [array addObject:imageView];
-            j ++;
         }
         
         [_bannerView setImageViews:array];

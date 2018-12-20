@@ -10,6 +10,7 @@
 #import "HPBannerView.h"
 #import "HPImageUtil.h"
 #import "HPPageControlFactory.h"
+#import "HPShareIdeaModel.h"
 
 @interface HPHowToPlayDetailController () <HPBannerViewDelegate, UIScrollViewDelegate>
 
@@ -51,18 +52,24 @@
     
     [self setupUI];
     
-    [_titleLabel setText:@"健身房与轻食店"];
-    [_typeLabel setText:@"铺位共享"];
-    [_descLabel setText:@"健身房优化设备布局，能将闲置空间进行共享。通过系统匹配、推荐，选择最符合双方需求的轻食店进行合作，将闲置空间租给轻食店。"];
-    [_theoryLabel setText:@"健身房在选择共享合作店铺的时候，采用了产品或服务匹配的原理。将轻食店的简餐、减脂套餐作为健身运动的互补产品进行合作，通过运动与饮食相结合的方式，完善了自身健身服务，增加用户的粘性与忠诚度。\n\n\n轻食店在选择共享时，采用了人群、客流匹配的原理。轻食店的产品主要以素食、减肥餐、健身餐等食品为主。客户群体也多为健身或者是减肥等对饮食摄入要求较高的用户。这类客户群体与健身房的用户群体完全吻合。轻食店可以共享健身房的客群流量，来给店铺增加稳定的客流。"];
-    [_beforeFirstPlaceLabel setText:@"健身房"];
-    [_beforeFirstDescLabel setText:@"健身房的经营面积一般都较大，需要放置很多的健身设备，这就导致了会有许多的空间是闲置的，没有有效的利用起来。健身房的客户群体多以高收入人群为主，他们追求健康生活方式。注重运动，饮食。大量的运动过后，需要健康的饮食和营养品来进行补充。"];
-    [_beforeSecondPlaceLabel setText:@"轻食店"];
-    [_beforeSecondDescLabel setText:@"轻食店也属于普通餐馆的一种，需要在人流较大的地区开设店铺，导致店铺租金成本较高。但轻食店的目标群体并不是所有客户，而是部分以追求健康生活方式的人群为主。会提供一些低热量、低卡路里的减肥餐或者健身餐。所以客户较少。"];
-    [_afterFirstPlaceLabel setText:@"健身房"];
-    [_afterFirstDescLabel setText:@"健身房优化布局后，将闲置空间出租，换取收益，降低了店铺租金成本。轻食店的入驻，完善了健身房的整个生态链条，为健身房增加部分流量，增加了用户粘性。"];
-    [_afterSecondPlaceLabel setText:@"轻食店"];
-    [_afterSecondDescLabel setText:@"轻食店入驻健身房后，减少了店铺租金的压力。健身房给轻食店带来了大量稳定的客流，客户匹配程度非常高，增加了销售，带来收益。"];
+    HPShareIdeaModel *model = self.param[@"model"];
+    if (!model) {
+        return;
+    }
+    
+    [_bannerView setImages:model.photos];
+    [_titleLabel setText:model.title];
+    [_typeLabel setText:model.type];
+    [_descLabel setText:model.desc];
+    [_theoryLabel setText:model.theory];
+    [_beforeFirstPlaceLabel setText:model.firstPlace];
+    [_beforeFirstDescLabel setText:model.beforeFirstDesc];
+    [_beforeSecondPlaceLabel setText:model.secondPlace];
+    [_beforeSecondDescLabel setText:model.beforeSecondDesc];
+    [_afterFirstPlaceLabel setText:model.firstPlace];
+    [_afterFirstDescLabel setText:model.afterFirstDesc];
+    [_afterSecondPlaceLabel setText:model.secondPlace];
+    [_afterSecondDescLabel setText:model.afterSecondDesc];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -98,10 +105,7 @@
         make.edges.equalTo(self.view);
     }];
     
-    NSArray *images = @[[UIImage imageNamed:@"jingxuanwanfa_banner"], [UIImage imageNamed:@"jingxuanwanfa_banner"], [UIImage imageNamed:@"jingxuanwanfa_banner"]];
-    
     HPBannerView *bannerView = [[HPBannerView alloc] init];
-    [bannerView setImages:images];
     [bannerView setBannerViewDelegate:self];
     [scrollView addSubview:bannerView];
     _bannerView = bannerView;

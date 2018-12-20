@@ -34,6 +34,9 @@
     
     self.areaModels = [HPCommonData getAreaData];
     self.industryModels = [HPCommonData getIndustryData];
+    
+    _isUpdate = NO;
+    _shareReleaseParam = [HPShareReleaseParam new];
 }
 
 /*

@@ -9,6 +9,7 @@
 #import "HPShareManageController.h"
 #import "HPShareManageCell.h"
 #import "HPTextDialogView.h"
+#import "HPShareListParam.h"
 
 #define CELL_ID @"HPShareManageCell"
 
@@ -20,6 +21,8 @@
 
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
 
+@property (nonatomic, strong) HPShareListParam *shareListParam;
+
 @end
 
 @implementation HPShareManageController
@@ -27,18 +30,26 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    NSArray *testDataArray = @[@{@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner", @"releaseTime":@"2018.11.22"},
-                               @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"startup", @"releaseTime":@"2018.11.20"},
-                       @{@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner", @"releaseTime":@"2018.11.18"},
-                       @{@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner", @"releaseTime":@"2018.11.12"},
-                       @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"startup", @"releaseTime":@"2018.11.17"},
-                       @{@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner", @"releaseTime":@"2018.11.16"},
-                       @{@"title":@"金嘉味黄金铺位共享", @"trade":@"餐饮", @"rentTime":@"面议", @"area":@"30", @"price":@"50", @"type":@"owner", @"releaseTime":@"2018.11.15"},
-                       @{@"title":@"全聚德北京烤鸭店急求90家共享铺位", @"trade":@"服饰", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"startup", @"releaseTime":@"2018.11.10"},
-                       @{@"title":@"常德牛肉粉铺位共享", @"trade":@"餐饮", @"rentTime":@"短租", @"area":@"18", @"price":@"80", @"type":@"owner", @"releaseTime":@"2018.11.11"}];
-    _dataArray = [[NSMutableArray alloc] initWithArray:testDataArray];
+
+    _dataArray = [NSMutableArray array];
+    
+    HPLoginModel *loginModel = [HPUserTool account];
+    NSDictionary *dict = (NSDictionary *)loginModel.userInfo;
+    NSString *userId = dict[@"userId"];
+    
+    _shareListParam = [HPShareListParam new];
+    [_shareListParam setCreateTimeOrderType:@"0"];
+    [_shareListParam setUserId:userId];
     
     [self setupUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (!self.isPop) {
+        [self loadTableViewFreshUI];
+    }
 }
 
 /*
@@ -69,10 +80,26 @@
     }];
 }
 
-- (UITableViewCell *)getParentCellofView:(UIView *)view {
+- (void)loadTableViewFreshUI {
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        
+        self.shareListParam.page = 1;
+        [self getShareListData:self.shareListParam reload:YES];
+    }];
+    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        
+        self.shareListParam.page ++;
+        [self getShareListData:self.shareListParam reload:NO];
+    }];
+    
+    // 马上进入刷新状态
+    [self.tableView.mj_header beginRefreshing];
+}
+
+- (HPShareManageCell *)getParentCellofView:(UIView *)view {
     while (view != nil) {
-        if ([view isKindOfClass:UITableViewCell.class]) {
-            return (UITableViewCell *)view;
+        if ([view isKindOfClass:HPShareManageCell.class]) {
+            return (HPShareManageCell *)view;
         }
         
         view = view.superview;
@@ -84,7 +111,8 @@
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self pushVCByClassName:@"HPShareDetailController"];
+    HPShareListModel *model = _dataArray[indexPath.row];
+    [self pushVCByClassName:@"HPShareDetailController"withParam:@{@"model":model}];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -104,31 +132,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareManageCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
     
-    NSDictionary *dict = _dataArray[indexPath.row];
+    HPShareListModel *model = _dataArray[indexPath.row];
     
-    NSString *title = dict[@"title"];
-    NSString *trade = dict[@"trade"];
-    NSString *rentTime = dict[@"rentTime"];
-    NSString *area = dict[@"area"];
-    NSString *price = dict[@"price"];
-    NSString *type = dict[@"type"];
-    NSString *releaseTime = dict[@"releaseTime"];
-    
-    [cell setTitle:title];
-    [cell setTrade:trade];
-    [cell setRentTime:rentTime];
-    [cell setArea:area];
-    [cell setPrice:price];
-    [cell setReleaseTime:releaseTime];
+    [cell setModel:model];
     [cell.deleteBtn addTarget:self action:@selector(onClickDeleteBtn:) forControlEvents:UIControlEventTouchUpInside];
     [cell.editBtn addTarget:self action:@selector(onClickEditBtn) forControlEvents:UIControlEventTouchUpInside];
-    
-    if ([type isEqualToString:@"startup"]) {
-        [cell setTagType:HPShareListCellTypeStartup];
-    }
-    else if ([type isEqualToString:@"owner"]) {
-        [cell setTagType:HPShareListCellTypeOwner];
-    }
     
     return cell;
 }
@@ -152,16 +160,60 @@
     }
     
     [_textDialogView setConfirmCallback:^{
-        UITableViewCell *cell = [self getParentCellofView:btn];
-        if (cell) {
-            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-            
-            [self.dataArray removeObjectAtIndex:indexPath.row];
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        HPShareManageCell *cell = [self getParentCellofView:btn];
+        
+        if (!cell) {
+            return;
         }
+        
+        NSString *spaceId = cell.model.spaceId;
+        NSString *url = [NSString stringWithFormat:@"/v1/space/delete/%@", spaceId];
+        [HPHTTPSever HPGETServerWithMethod:url isNeedToken:YES paraments:@{} complete:^(id  _Nonnull responseObject) {
+            if (CODE == 200) {
+                [HPProgressHUD alertMessage:MSG];
+                
+                NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+                
+                [self.dataArray removeObjectAtIndex:indexPath.row];
+                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            }
+            else
+                [HPProgressHUD alertMessage:MSG];
+        } Failure:^(NSError * _Nonnull error) {
+            ErrorNet
+        }];
     }];
     
     [_textDialogView show:YES];
+}
+
+#pragma mark - NetWork
+
+- (void)getShareListData:(HPShareListParam *)param reload:(BOOL)isReload {
+    NSMutableDictionary *dict = param.mj_keyValues;
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:NO paraments:dict complete:^(id  _Nonnull responseObject) {
+        NSArray<HPShareListModel *> *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:DATA[@"list"]];
+        
+        if (models.count == 0) {
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            [self.tableView.mj_header endRefreshing];
+        }
+        else {
+            [self.tableView.mj_header endRefreshing];
+            [self.tableView.mj_footer endRefreshing];
+        }
+        
+        if (isReload) {
+            self.dataArray = [NSMutableArray arrayWithArray:models];
+        }
+        else {
+            [self.dataArray addObjectsFromArray:models];
+        }
+        [self.tableView reloadData];
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 @end

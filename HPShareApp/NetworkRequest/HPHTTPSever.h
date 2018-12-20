@@ -10,10 +10,17 @@
 
 typedef void(^Success)( id  _Nonnull responseObject) ;
 typedef void(^Failure)(NSError * _Nonnull  error) ;
+typedef void(^Progress)(double progress) ;
 
 @interface HPHTTPSever : NSObject
 
 + (void)HPPostServerWithMethod:(nonnull NSString*)method paraments:(nonnull NSDictionary *)dic needToken:(BOOL)isNeed complete:(nonnull Success)success Failure:(nonnull Failure)failure;
+
++ (void)HPPostServerWithMethod:(nonnull NSString*)method paraments:(nonnull NSDictionary *)dic needToken:(BOOL)isNeed complete:(nonnull Success)success Progress:(Progress)progress Failure:(nonnull Failure)failure;
+
 + (void)HPGETServerWithMethod:(nonnull NSString*)method  isNeedToken:(BOOL)isNeed paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure;
+
+
 + (void)HPSecretServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure;
+
 @end

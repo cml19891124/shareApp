@@ -10,6 +10,7 @@
 #import "HPBannerView.h"
 #import "HPPageControlFactory.h"
 #import "HPCommonData.h"
+#import "HPImageButton.h"
 
 typedef NS_ENUM(NSInteger, HPShareBtn) {
     HPShareBtnShop = 0,
@@ -64,7 +65,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
     [self.view setBackgroundColor:COLOR_GRAY_F6F6F6];
     
     HPBannerView *bannerView = [[HPBannerView alloc] init];
-    [bannerView setImages:@[[UIImage imageNamed:@"shouye_banner"], [UIImage imageNamed:@"shouye_banner"], [UIImage imageNamed:@"shouye_banner"]]];
+    [bannerView setImages:@[[UIImage imageNamed:@"shouye_banner1"], [UIImage imageNamed:@"shouye_banner2"]]];
     [bannerView setBannerViewDelegate:self];
     [self.view addSubview:bannerView];
     _bannerView = bannerView;
@@ -75,7 +76,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
     }];
     
     HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleRoundedRect];
-    [pageControl setNumberOfPages:3];
+    [pageControl setNumberOfPages:2];
     [pageControl setCurrentPage:0];
     [self.view addSubview:pageControl];
     _pageControl = pageControl;
@@ -147,7 +148,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.centerX.equalTo(view);
     }];
     
-    UIButton *shareShopBtn = [[UIButton alloc] init];
+    HPImageButton *shareShopBtn = [[HPImageButton alloc] init];
     [shareShopBtn setTag:HPShareBtnShop];
     [shareShopBtn setImage:[UIImage imageNamed:@"store_share"] forState:UIControlStateNormal];
     [centerView addSubview:shareShopBtn];
@@ -181,13 +182,13 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.width.mas_equalTo(getWidth(kScreenWidth/2));
     }];
     
-    UIButton *shareGoodsBtn = [[UIButton alloc] init];
+    HPImageButton *shareGoodsBtn = [[HPImageButton alloc] init];
     [shareGoodsBtn setTag:HPShareBtnGoods];
     [shareGoodsBtn setImage:[UIImage imageNamed:@"goods_share"] forState:UIControlStateNormal];
     [centerView addSubview:shareGoodsBtn];
     [shareGoodsBtn addTarget:self action:@selector(onClickShareBtn:) forControlEvents:UIControlEventTouchUpInside];
     [shareGoodsBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(shareShopBtn.mas_right).with.offset(getWidth(6.f));
+        make.left.equalTo(shareShopBtn.mas_right).with.offset(6.f);
         make.top.equalTo(centerView);
         make.right.equalTo(centerView);
         make.size.mas_equalTo(CGSizeMake(getWidth(161.f), getWidth(80.f)));
@@ -216,14 +217,14 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.width.mas_equalTo(getWidth(kScreenWidth/2));
     }];
     
-    UIButton *shareHumanBtn = [[UIButton alloc] init];
+    HPImageButton *shareHumanBtn = [[HPImageButton alloc] init];
     [shareHumanBtn setTag:HPShareBtnHuman];
     [shareHumanBtn setImage:[UIImage imageNamed:@"human_share"] forState:UIControlStateNormal];
     [centerView addSubview:shareHumanBtn];
     [shareHumanBtn addTarget:self action:@selector(onClickShareBtn:) forControlEvents:UIControlEventTouchUpInside];
     [shareHumanBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(shareGoodsBtn);
-        make.top.equalTo(shareGoodsBtn.mas_bottom).with.offset(getWidth(6.f));
+        make.top.equalTo(shareGoodsBtn.mas_bottom).with.offset(6.f);
         make.size.mas_equalTo(CGSizeMake(getWidth(161.f), getWidth(80.f)));
     }];
     
@@ -250,13 +251,13 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
         make.width.mas_equalTo(getWidth(kScreenWidth/2));
     }];
     
-    UIButton *shareMapBtn = [[UIButton alloc] init];
+    HPImageButton *shareMapBtn = [[HPImageButton alloc] init];
     [shareMapBtn setTag:HPShareBtnMap];
     [shareMapBtn setImage:[UIImage imageNamed:@"share_map"] forState:UIControlStateNormal];
     [centerView addSubview:shareMapBtn];
     [shareMapBtn addTarget:self action:@selector(onClickShareBtn:) forControlEvents:UIControlEventTouchUpInside];
     [shareMapBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(shareShopBtn.mas_bottom).with.offset(getWidth(6.f));
+        make.top.equalTo(shareShopBtn.mas_bottom).with.offset(6.f);
         make.left.and.width.equalTo(centerView);
         make.bottom.equalTo(centerView);
         make.size.mas_equalTo(CGSizeMake(getWidth(327.f), getWidth(79.f)));

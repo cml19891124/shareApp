@@ -12,6 +12,7 @@
 #import "Macro.h"
 
 typedef void(^SuccessBlock)(id responseObject);
+typedef void(^ProgressBlock)(double progress);
 typedef void(^FailBlock)(NSError *error);
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,6 +35,18 @@ NS_ASSUME_NONNULL_BEGIN
  @param failBlock 失败回调
  */
 + (void)upLoadImages:(NSArray *)images withUrl:(NSString *)url parameterName:(NSString *)name success:(SuccessBlock)successBlock fail:(FailBlock)failBlock;
+
+/**
+ 上传多张图片,progress中返回上传进度
+
+ @param images 图片数组
+ @param url 上传地址
+ @param name 参数名
+ @param successBlock 成功回调
+ @param progressBlock 进度回调
+ @param failBlock 失败回调
+ */
++ (void)upLoadImages:(NSArray *)images withUrl:(NSString *)url parameterName:(NSString *)name success:(SuccessBlock)successBlock progress:(ProgressBlock)progressBlock fail:(FailBlock)failBlock;
 
 @end
 

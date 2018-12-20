@@ -21,6 +21,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)alertMessage:(NSString *)msg hideAfterDelay:(NSTimeInterval)delay AtBottom:(BOOL)isBottom;
 
++ (void)alertWithProgress:(double)progress text:(NSString *)text;
+
++ (void)alertWithImage:(UIImage *)image text:(NSString *)text;
+
++ (void)alertWithFinishText:(NSString *)text;
+
 @end
 
 NS_ASSUME_NONNULL_END

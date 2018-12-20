@@ -20,6 +20,7 @@
 #import "HPAddPhotoView.h"
 #import "HPTimePicker.h"
 #import "HPCommonData.h"
+#import "HPShareReleaseParam.h"
 
 #define PANEL_SPACE 10.f
 
@@ -56,6 +57,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) HPDistrictModel *selectedDistrictModel;
 
 @property (nonatomic, strong) HPIndustryModel *selectedIndustryModel;
+
+@property (nonatomic, assign) BOOL isUpdate;
+
+@property (nonatomic, strong) HPShareReleaseParam *shareReleaseParam;
 
 //添加公共UI组件
 

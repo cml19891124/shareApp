@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *desc;
 
+@property (nonatomic, copy) NSString *theory;
+
 @property (nonatomic, strong) NSArray *photos;
 
 @property (nonatomic, copy) NSString *firstPlace;

@@ -287,8 +287,6 @@
     //开始定位
     [self.locationManager requestLocationWithReGeocode:YES completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
         if (!error) {
-            NSLog(@"lat: %lf, lon: %lf", location.coordinate.latitude, location.coordinate.longitude);
-            NSLog(@"Address: %@", regeocode.formattedAddress);
             [btn setEnabled:YES];
             [btn setSelected:YES];
             

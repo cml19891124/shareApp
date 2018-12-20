@@ -393,7 +393,6 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
         if (models.count == 0) {
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
             [self.tableView.mj_header endRefreshing];
-            NSLog(@"no more data");
         }
         else {
             [self.tableView.mj_header endRefreshing];
