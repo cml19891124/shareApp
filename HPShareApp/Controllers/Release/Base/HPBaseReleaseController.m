@@ -89,7 +89,7 @@
                         value:COLOR_GRAY_CCCCCC
                         range:NSMakeRange(0, text.length)];
     [placeholder addAttribute:NSFontAttributeName
-                        value:[UIFont fontWithName:FONT_MEDIUM size:15.f]
+                        value:kFont_Regular(14.f)
                         range:NSMakeRange(0, text.length)];
     [textField setAttributedPlaceholder:placeholder];
     

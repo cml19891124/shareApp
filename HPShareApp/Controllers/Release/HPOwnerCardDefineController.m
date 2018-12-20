@@ -19,14 +19,14 @@
 #import "HPAddressModel.h"
 #import "HPUploadImageHandle.h"
 #import "HPPictureModel.h"
-
+#import "HPShareSelectedItemView.h"
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：入驻本店需事先准备相关产品质检材料，入店时需确认，三无产品请绕道..."
 
-@interface HPOwnerCardDefineController () {
+@interface HPOwnerCardDefineController ()<HPShareSelectedItemViewDelegate> {
     BOOL _canRelease;
 }
-
+@property (nonatomic, strong) UILabel *infoLabel;
 @property (nonatomic, weak) UIButton *addressBtn;
 
 @property (nonatomic, weak) UITextField *titleField;//发布标题
@@ -45,6 +45,7 @@
 
 @property (nonatomic, weak) UITextView *remarkTextView;//备注信息
 
+@property (nonatomic, strong) HPShareSelectedItemView *itemView;
 @end
 
 @implementation HPOwnerCardDefineController
@@ -52,7 +53,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setupNavigationBarWithTitle:@"空间发布"];
     self.isPopGestureRecognize = NO;
     _canRelease = YES;
     [self setupUI];
@@ -86,76 +86,112 @@
 #pragma mark - setupUI
 
 - (void)setupUI {
+    UIView *navTitleView = [self setupNavigationBarWithTitle:@"填写店铺基础信息"];
+    [self.view addSubview:self.scrollView];
+    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.view);
+        make.top.mas_equalTo(navTitleView.mas_bottom);
+    }];
+    UILabel *infoLabel = [UILabel new];
+    infoLabel.backgroundColor = COLOR_BLUE_D5F2FF;
+    infoLabel.text = [NSString stringWithFormat:@"信息完善度越高搜索排名越靠前，当前信息完善度为%@",@"30%"];
+    infoLabel.textAlignment = NSTextAlignmentCenter;
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:infoLabel.text];
+    NSString *str = @"信息完善度越高搜索排名越靠前，当前信息完善度为";
+    NSRange range = [infoLabel.text rangeOfString:str];
+    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_666666 range:range];
+    [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:range];
+    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(range.length, infoLabel.text.length - str.length)];
+    [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(range.length, infoLabel.text.length - str.length)];
+    infoLabel.attributedText = attr;
+    [self.scrollView addSubview:infoLabel];
+    self.infoLabel = infoLabel;
+    [infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.scrollView);
+        make.top.mas_equalTo(navTitleView.mas_bottom);
+        make.height.mas_equalTo(getWidth(25.f));
+    }];
+    
     for (int i = 0; i < 5; i++) {
         [self setupPanelAtIndex:i ofView:self.scrollView];
     }
+    UIView *bottomView = [UIView new];
+    bottomView.backgroundColor = COLOR_GRAY_FFFFFF;
+    [self.view insertSubview:bottomView aboveSubview:self.scrollView];
+    [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.view);
+        make.centerX.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(kScreenWidth, getWidth(83.f) + g_bottomSafeAreaHeight));
+    }];
     
     UIButton *releaseBtn = [[UIButton alloc] init];
     [releaseBtn.layer setCornerRadius:7.f];
     [releaseBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [releaseBtn setBackgroundColor:COLOR_RED_FC4865];
-    [releaseBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [releaseBtn setTitle:@"确认发布" forState:UIControlStateNormal];
+    [releaseBtn setBackgroundColor:COLOR_RED_EA0000];
+    [releaseBtn.titleLabel setFont:kFont_Bold(16.f)];
+    [releaseBtn setTitle:@"下一步" forState:UIControlStateNormal];
     [releaseBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
-    [self.scrollView addSubview:releaseBtn];
+    [bottomView addSubview:releaseBtn];
     [releaseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.scrollView).with.offset(-20.f * g_rateWidth);
-        make.centerX.equalTo(self.scrollView);
-        make.top.equalTo(self.scrollView.subviews[4].mas_bottom).with.offset(40.f * g_rateWidth);
-        make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 45.f * g_rateWidth));
+        make.height.mas_equalTo(getWidth(45.f));
+        make.left.top.mas_equalTo(getWidth(20.f));
+        make.right.mas_equalTo(getWidth(-21.f));
     }];
     
-    kWeakSelf(weakSelf);
-    HPAlertSheet *alertSheet = [[HPAlertSheet alloc] init];
-    HPAlertAction *photoAction = [[HPAlertAction alloc] initWithTitle:@"拍照" completion:^{
-        [weakSelf onClickAlbumOrPhotoSheetWithTag:0];
-    }];
-    [alertSheet addAction:photoAction];
-    HPAlertAction *albumAction = [[HPAlertAction alloc] initWithTitle:@"从手机相册选择" completion:^{
-        [weakSelf onClickAlbumOrPhotoSheetWithTag:1];
-    }];
-    [alertSheet addAction:albumAction];
-    self.alertSheet = alertSheet;
+//    kWeakSelf(weakSelf);
+//    HPAlertSheet *alertSheet = [[HPAlertSheet alloc] init];
+//    HPAlertAction *photoAction = [[HPAlertAction alloc] initWithTitle:@"拍照" completion:^{
+//        [weakSelf onClickAlbumOrPhotoSheetWithTag:0];
+//    }];
+//    [alertSheet addAction:photoAction];
+//    HPAlertAction *albumAction = [[HPAlertAction alloc] initWithTitle:@"从手机相册选择" completion:^{
+//        [weakSelf onClickAlbumOrPhotoSheetWithTag:1];
+//    }];
+//    [alertSheet addAction:albumAction];
+//    self.alertSheet = alertSheet;
 }
 
 - (void)setupPanelAtIndex:(NSInteger)index ofView:(UIView *)view {
     HPRowPanel *panel = [[HPRowPanel alloc] init];
     [view addSubview:panel];
     
-    if (index == 0) {
-        [panel addRowView:[self setupPhotoRowView] withHeight:187.f * g_rateWidth];
+//    if (index == 0) {
+//        [panel addRowView:[self setupPhotoRowView] withHeight:187.f * g_rateWidth];
+//        [panel mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.and.width.equalTo(view);
+//            make.height.mas_equalTo(187.f * g_rateWidth);
+//            make.top.equalTo(view);
+//        }];
+//    }
+//    else
+        if (index == 0) {
+            //店铺简称
+        
+        [panel addRowView: [self setupStoreNameRowView]];
+//        [panel addRowView:[self setupSpaceAddressRowView]];
+//        [panel addRowView:[self setupTradeRowView]];
+        [panel addRowView:[self setupStoreTagRowView] withHeight:46.f * g_rateWidth];
+//        UIView *lastPanel = view.subviews[index - 1];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.and.width.equalTo(view);
-            make.height.mas_equalTo(187.f * g_rateWidth);
-            make.top.equalTo(view);
+            make.left.width.equalTo(view);
+            make.height.mas_equalTo(92.f * g_rateWidth);
+            make.top.equalTo(self.infoLabel.mas_bottom).offset(getWidth(15.f));
         }];
     }
     else if (index == 1) {
-        [panel addRowView:[self setupSpaceTitleRowView]];
-        [panel addRowView:[self setupSpaceAddressRowView]];
-        [panel addRowView:[self setupTradeRowView]];
-        [panel addRowView:[self setupSpaceTagRowView] withHeight:93.f * g_rateWidth];
+        [panel addRowView:[self setupAreaRowView]];
+        [panel addRowView:[self setupPriceRowView]];
+        [panel addRowView:[self setupShareTimeRowView]];
+//        [panel addRowView:[self setupShareDateRowView]];
+//        [panel addRowView:[self setupIntentTradeRowView]];
         UIView *lastPanel = view.subviews[index - 1];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.width.equalTo(view);
-            make.height.mas_equalTo(232.f * g_rateWidth);
+            make.height.mas_equalTo(138.f * g_rateWidth);
             make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
         }];
     }
     else if (index == 2) {
-        [panel addRowView:[self setupAreaRowView]];
-        [panel addRowView:[self setupPriceRowView]];
-        [panel addRowView:[self setupShareTimeRowView]];
-        [panel addRowView:[self setupShareDateRowView]];
-        [panel addRowView:[self setupIntentTradeRowView]];
-        UIView *lastPanel = view.subviews[index - 1];
-        [panel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.width.equalTo(view);
-            make.height.mas_equalTo(230.f * g_rateWidth);
-            make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
-        }];
-    }
-    else if (index == 3) {
         [panel addRowView:[self setupContactRowView]];
         [panel addRowView:[self setupPhoneNumRowView]];
         UIView *lastPanel = view.subviews[index - 1];
@@ -165,12 +201,12 @@
             make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
         }];
     }
-    else if (index == 4) {
-        [panel addRowView:[self setupRemarkRowView]withHeight:175.f * g_rateWidth];
+    else if (index == 3) {
+        [panel addRowView:[self setupRemarkRowView]withHeight:45.f * g_rateWidth];
         UIView *lastPanel = view.subviews[index - 1];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.width.equalTo(view);
-            make.height.mas_equalTo(175.f * g_rateWidth);
+            make.height.mas_equalTo(45.f * g_rateWidth);
             make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
         }];
     }
@@ -218,11 +254,11 @@
     return view;
 }
 
-- (UIView *)setupSpaceTitleRowView {
+- (UIView *)setupStoreNameRowView {
     UIView *view = [[UIView alloc] init];
     
-    [self setupTitleLabelWithText:@"发布标题" ofView:view];
-    _titleField = [self setupTextFieldWithPlaceholder:@"例：优品小店黄金铺位共享" ofView:view rightTo:view];
+    [self setupTitleLabelWithText:@"店铺简称" ofView:view];
+    _titleField = [self setupTextFieldWithPlaceholder:@"请填写店铺简称" ofView:view rightTo:view];
     
     return view;
 }
@@ -299,7 +335,7 @@
     return view;
 }
 
-- (UIView *)setupSpaceTagRowView {
+- (UIView *)setupStoreTagRowView {
     UIView *view = [[UIView alloc] init];
     
     UILabel *titleLabel = [[UILabel alloc] init];
@@ -314,17 +350,18 @@
     }];
     
     UIButton *addBtn = [[UIButton alloc] init];
-    [addBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:14.f]];
+    [addBtn.titleLabel setFont:kFont_Regular(13.f)];
     [addBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
     [addBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-    [addBtn setTitle:@"添加产品或品牌标签(最多3个）" forState:UIControlStateNormal];
-    [addBtn setImage:[UIImage imageNamed:@"customizing_business_cards_add_to"] forState:UIControlStateNormal];
-    [addBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 15.f * g_rateWidth, 0.f, -15.f * g_rateWidth)];
+    [addBtn setTitle:@"品牌连锁、百年老店、街角旺铺" forState:UIControlStateNormal];
+    [addBtn setImage:ImageNamed(@"customizing_business_cards_add_to") forState:UIControlStateNormal];
+    [addBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f,getWidth(-346.f), 0.f, -50.f * g_rateWidth)];
     [addBtn addTarget:self action:@selector(onClickTagBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:addBtn];
     [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(titleLabel);
-        make.top.equalTo(titleLabel.mas_bottom).with.offset(18.f * g_rateWidth);
+        make.right.equalTo(view).offset(getWidth(-21.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(20.f), getWidth(20.f)));
+        make.centerY.mas_equalTo(view);
     }];
     
     return view;
@@ -332,43 +369,85 @@
 
 - (UIView *)setupAreaRowView {
     UIView *view = [[UIView alloc] init];
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [view addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
+    }];
     
-    [self setupTitleLabelWithText:@"共享面积" ofView:view];
+    [self setupTitleLabelWithText:@"所在区域" ofView:view];
+    UIButton *cityBtn = [UIButton new];
+    [cityBtn setTitle:@"深圳市" forState:UIControlStateNormal];
+    [cityBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
+    [cityBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(-20.f), getWidth(51.f), getWidth(-19.f), 0)];
+    [cityBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(-49.f), 0, getWidth(10.f))];
+    cityBtn.titleLabel.font = kFont_Regular(14.f);
+    [cityBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
+    [view addSubview:cityBtn];
+    [cityBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(view).offset(getWidth(114.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(100.f), getWidth(14.f)));
+        make.centerY.mas_equalTo(view);
+    }];
     
-    UILabel *unitLabel = [self setupUnitLabelWithText:@"（㎡）" ofView:view];
+    UIButton *areaBtn = [UIButton new];
+    [areaBtn setTitle:@"请选择区域" forState:UIControlStateNormal];
+    [areaBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
+    [areaBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(-20.f), getWidth(128.f), getWidth(-19.f), 0)];
+    [areaBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(-49.f), 0, getWidth(10.f))];
+    areaBtn.titleLabel.font = kFont_Regular(14.f);
+    [areaBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
+    [view addSubview:areaBtn];
+    [areaBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(view).offset(getWidth(209.f));
+        make.right.mas_equalTo(view).offset(getWidth(-20.f));
+        make.height.mas_equalTo(getWidth(14.f));
+        make.centerY.mas_equalTo(view);
+    }];
+//    UILabel *unitLabel = [self setupUnitLabelWithText:@"（㎡）" ofView:view];
     
-    UITextField *textField = [self setupTextFieldWithPlaceholder:@"不填默认不限" ofView:view rightTo:unitLabel];
-    [textField setKeyboardType:UIKeyboardTypeDecimalPad];
-    _areaField = textField;
+//    UITextField *textField = [self setupTextFieldWithPlaceholder:@"不填默认不限" ofView:view rightTo:unitLabel];
+//    [textField setKeyboardType:UIKeyboardTypeDecimalPad];
+//    _areaField = textField;
     
     return view;
 }
 
 - (UIView *)setupPriceRowView {
     UIView *view = [[UIView alloc] init];
-    
-    [self setupTitleLabelWithText:@"共享租金" ofView:view];
-    
-    NSArray *options = @[@"（元/小时）", @"（元/天）"];
-    HPSelectTableLayout *layout = [[HPSelectTableLayout alloc] init];
-    [layout setColNum:2];
-    [layout setXSpace:-10.f * g_rateWidth];
-    [layout setItemSize:CGSizeMake(68.f, 13.f)];
-    [layout setNormalTextColor:COLOR_GRAY_CCCCCC];
-    [layout setSelectTextColor:COLOR_BLACK_666666];
-    [layout setNormalBgColor:UIColor.clearColor];
-    [layout setSelectedBgColor:UIColor.clearColor];
-    [layout setItemBorderWidth:0.f];
-    HPSelectTable *unitSelectTable = [[HPSelectTable alloc] initWithOptions:options layout:layout];
-    [unitSelectTable setBtnAtIndex:0 selected:YES];
-    [view addSubview:unitSelectTable];
-    _unitSelectTable = unitSelectTable;
-    [unitSelectTable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(view).with.offset(-10.f * g_rateWidth);
-        make.centerY.equalTo(view);
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [view addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
     }];
+    [self setupTitleLabelWithText:@"详细地址" ofView:view];
     
-    UITextField *textField = [self setupTextFieldWithPlaceholder:@"不填默认面议" ofView:view rightTo:unitSelectTable];
+//    NSArray *options = @[@"（元/小时）", @"（元/天）"];
+//    HPSelectTableLayout *layout = [[HPSelectTableLayout alloc] init];
+//    [layout setColNum:2];
+//    [layout setXSpace:-10.f * g_rateWidth];
+//    [layout setItemSize:CGSizeMake(68.f, 13.f)];
+//    [layout setNormalTextColor:COLOR_GRAY_CCCCCC];
+//    [layout setSelectTextColor:COLOR_BLACK_666666];
+//    [layout setNormalBgColor:UIColor.clearColor];
+//    [layout setSelectedBgColor:UIColor.clearColor];
+//    [layout setItemBorderWidth:0.f];
+//    HPSelectTable *unitSelectTable = [[HPSelectTable alloc] initWithOptions:@[] layout:layout];
+//    [unitSelectTable setBtnAtIndex:0 selected:YES];
+//    [view addSubview:unitSelectTable];
+//    _unitSelectTable = unitSelectTable;
+//    [unitSelectTable mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.right.equalTo(view).with.offset(-10.f * g_rateWidth);
+//        make.centerY.equalTo(view);
+//    }];
+
+    UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写店铺详细地址" ofView:view rightTo:view];
     [textField setKeyboardType:UIKeyboardTypeDecimalPad];
     _priceField = textField;
     
@@ -377,8 +456,16 @@
 
 - (UIView *)setupShareTimeRowView {
     UIView *view = [[UIView alloc] init];
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [view addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
+    }];
     
-    [self setupTitleLabelWithText:@"共享时段" ofView:view];
+    [self setupTitleLabelWithText:@"经营行业" ofView:view];
     UIImageView *downIcon = [self setupDownIconOfView:view];
     
     UIButton *valueBtn = [[UIButton alloc] init];
@@ -445,13 +532,22 @@
 - (UIView *)setupContactRowView {
     UIView *view = [[UIView alloc] init];
     [self setupTitleLabelWithText:@"联系人" ofView:view];
-    _contactField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
+    _contactField = [self setupTextFieldWithPlaceholder:@"完善称呼交流更方便" ofView:view rightTo:view];
     return view;
 }
 
 - (UIView *)setupPhoneNumRowView {
     UIView *view = [[UIView alloc] init];
-    [self setupTitleLabelWithText:@"手机号码" ofView:view];
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [view addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
+    }];
+    
+    [self setupTitleLabelWithText:@"联系方式" ofView:view];
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
     _phoneNumField = textField;
@@ -460,33 +556,61 @@
 
 - (UIView *)setupRemarkRowView {
     UIView *view = [[UIView alloc] init];
-    
-    UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:@"PingFangSC-Semibold" size:15.f]];
-    [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:@"备注信息"];
-    [view addSubview:titleLabel];
-    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(21.f * g_rateWidth);
-        make.top.equalTo(view).with.offset(16.f * g_rateWidth);
-        make.height.mas_equalTo(15.f);
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [view addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
     }];
     
-    UITextView *textView = [[UITextView alloc] init];
-    [textView.layer setCornerRadius:5.f];
-    [textView setFont:[UIFont fontWithName:@"PingFangSC-Medium" size:15.f]];
-    [textView setTextColor:COLOR_GRAY_CCCCCC];
-    [textView setBackgroundColor:COLOR_GRAY_F6F6F6];
-    [textView setText:TEXT_VIEW_PLACEHOLDER];
-    [textView setContentInset:UIEdgeInsetsMake(2.f, 5.f, 2.f, 5.f)];
-    [textView setDelegate:self];
-    [view addSubview:textView];
-    _remarkTextView = textView;
-    [textView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(titleLabel.mas_bottom).with.offset(16.f * g_rateWidth);
-        make.centerX.equalTo(view);
-        make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 108.f * g_rateWidth));
+    UIButton *birthBtn = [UIButton new];
+    [birthBtn setTitle:@"生成" forState:UIControlStateNormal];
+    birthBtn.layer.cornerRadius = 4.f;
+    birthBtn.layer.masksToBounds = YES;
+    birthBtn.backgroundColor = COLOR_RED_EA0000;
+    birthBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    [birthBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+    birthBtn.titleLabel.font = kFont_Medium(12.f);
+    [view addSubview:birthBtn];
+    [birthBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(view).offset(getWidth(-20.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(40.f), getWidth(25.f)));
+        make.centerY.mas_equalTo(view);
     }];
+    [self setupTitleLabelWithText:@"标题" ofView:view];
+    UITextField *textField = [self setupTextFieldWithPlaceholder:@"完善信息，生成标题更满意" ofView:view rightTo:birthBtn];
+    [textField setKeyboardType:UIKeyboardTypeNumberPad];
+    _phoneNumField = textField;
+    
+    
+//    UILabel *titleLabel = [[UILabel alloc] init];
+//    [titleLabel setFont:[UIFont fontWithName:@"PingFangSC-Semibold" size:15.f]];
+//    [titleLabel setTextColor:COLOR_BLACK_333333];
+//    [titleLabel setText:@"备注信息"];
+//    [view addSubview:titleLabel];
+//    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(view).with.offset(21.f * g_rateWidth);
+//        make.top.equalTo(view).with.offset(16.f * g_rateWidth);
+//        make.height.mas_equalTo(15.f);
+//    }];
+//
+//    UITextView *textView = [[UITextView alloc] init];
+//    [textView.layer setCornerRadius:5.f];
+//    [textView setFont:[UIFont fontWithName:@"PingFangSC-Medium" size:15.f]];
+//    [textView setTextColor:COLOR_GRAY_CCCCCC];
+//    [textView setBackgroundColor:COLOR_GRAY_F6F6F6];
+//    [textView setText:TEXT_VIEW_PLACEHOLDER];
+//    [textView setContentInset:UIEdgeInsetsMake(2.f, 5.f, 2.f, 5.f)];
+//    [textView setDelegate:self];
+//    [view addSubview:textView];
+//    _remarkTextView = textView;
+//    [textView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(titleLabel.mas_bottom).with.offset(16.f * g_rateWidth);
+//        make.centerX.equalTo(view);
+//        make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 108.f * g_rateWidth));
+//    }];
     return view;
 }
 
@@ -525,6 +649,7 @@
 }
 
 - (void)onClickReleaseBtn {
+    /*
     if (!_canRelease) {
         return;
     }
@@ -625,9 +750,20 @@
     } fail:^(NSError *error) {
         self->_canRelease = YES;
         ErrorNet
+    }];*/
+    HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];
+    itemView.delegate = self;
+    [self.view addSubview:itemView];
+    _itemView = itemView;
+    [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.view);
     }];
 }
-
+#pragma mark - 弹框提示移除按钮
+- (void)clickBtnInShareSelectViewToRemoveView
+{
+    [_itemView removeFromSuperview];
+}
 #pragma mark - NetWork
 
 - (void)releaseInfo:(NSDictionary *)param {
