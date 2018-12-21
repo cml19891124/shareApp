@@ -381,7 +381,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     HPAreaButton *cityBtn = [HPAreaButton new];
     [cityBtn setTitle:@"深圳市" forState:UIControlStateNormal];
     [cityBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
-    [cityBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
+    [cityBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
     [cityBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
     cityBtn.tag = HPSelectItemIndexCity;
     [view addSubview:cityBtn];
@@ -394,7 +394,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     
     HPAreaButton *areaBtn = [HPAreaButton new];
     [areaBtn setTitle:@"请选择区域" forState:UIControlStateNormal];
-    [areaBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
+    [areaBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
     [areaBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
     [areaBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:areaBtn];
@@ -426,6 +426,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写店铺详细地址" ofView:view rightTo:view];
     [textField setKeyboardType:UIKeyboardTypeDecimalPad];
     textField.text = @"fsadhgjg";
+    textField.textColor = COLOR_BLACK_333333;
     _addressField = textField;
     
     return view;
@@ -448,7 +449,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     UIButton *valueBtn = [[UIButton alloc] init];
     [valueBtn.titleLabel setFont:kFont_Regular(14.f)];
     [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-    [valueBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
+    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
 //    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
     [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
     valueBtn.tag = HPSelectItemIndexIndustry;
@@ -512,6 +513,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     UIView *view = [[UIView alloc] init];
     [self setupTitleLabelWithText:@"联系人" ofView:view];
     _contactField = [self setupTextFieldWithPlaceholder:@"完善称呼交流更方便" ofView:view rightTo:view];
+    _contactField.textColor = COLOR_BLACK_333333;
     return view;
 }
 
@@ -531,6 +533,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     UITextField *textField = [self setupTextFieldWithPlaceholder:account.userInfo.mobile?:@"" ofView:view rightTo:view];
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
     textField.text = account.userInfo.mobile?:@"";
+    textField.textColor = COLOR_BLACK_333333;
     textField.userInteractionEnabled = NO;//不允许交互，固定为注册登录人的手机号
     _phoneNumField = textField;
     return view;
@@ -565,6 +568,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     UILabel *shareTitle = [self setupTitleLabelWithText:@"标题" ofView:view];
     _shareTitle = shareTitle;
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"完善信息，生成标题更满意" ofView:view rightTo:birthBtn];
+    textField.textColor = COLOR_BLACK_333333;
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
     _convertTitleField = textField;
     
@@ -730,17 +734,17 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         ErrorNet
     }];*/
     
-    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _addressField.text.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0 && _convertTitleField.text.length != 0) {
+//    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _addressField.text.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0 && _convertTitleField.text.length != 0) {
         [self pushVCByClassName:@"HPReviseReleaseInfoViewController"];
-    }else{//弹框提示
-        HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];
-        [itemView show:YES];
-        itemView.delegate = self;
-        _itemView = itemView;
-        [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.view);
-        }];
-    }
+//    }else{//弹框提示
+//        HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];
+//        [itemView show:YES];
+//        itemView.delegate = self;
+//        _itemView = itemView;
+//        [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.edges.mas_equalTo(self.view);
+//        }];
+//    }
 
 }
 #pragma mark - 弹框提示移除按钮
