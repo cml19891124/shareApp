@@ -14,10 +14,13 @@
 #import "HPReleaseModalView.h"
 #import "HPOwnerCardDefineController.h"
 #import "HPStartUpCardDefineController.h"
+#import "HPJudgingLoginView.h"
+#import "HPLoginController.h"
 
 @interface HPMainTabBarController ()
 
 @property (nonatomic, weak) HPReleaseModalView *releaseModalView;
+@property (nonatomic, strong) HPJudgingLoginView *judgelogin;
 
 @end
 
@@ -151,19 +154,34 @@
         
         if (_releaseModalView == nil) {
             HPReleaseModalView *releaseModalView = [[HPReleaseModalView alloc] initWithParent:self.view];
+            _releaseModalView = releaseModalView;
             __weak UINavigationController *navigatorController = self.navigationController;
+            kWeakSelf(weakSelf);
             [releaseModalView setCallBack:^(HPReleaseCardType type) {
                 [btn setSelected:NO];
                 UIViewController *vc;
-                
-                if (type == HPReleaseCardTypeOwner) {
-                    vc = [[HPOwnerCardDefineController alloc] init];
+                HPLoginModel *account = [HPUserTool account];
+                if (account.token) {
+                    if (type == HPReleaseCardTypeOwner) {
+                        vc = [[HPOwnerCardDefineController alloc] init];
+                    }
+                    else if (type == HPReleaseCardTypeStartup) {
+                        vc = [[HPStartUpCardDefineController alloc] init];
+                    }
+                    
+                    [navigatorController pushViewController:vc animated:YES];
+                }else{
+                    HPJudgingLoginView *judgelogin = [[HPJudgingLoginView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+                    [judgelogin setConfirmCallback:^{
+                        [weakSelf.navigationController pushViewController:[HPLoginController new] animated:YES];
+                    }];
+                    [kAppdelegateWindow addSubview:judgelogin];
+                    self.judgelogin = judgelogin;
+                    [judgelogin setViewTapClickCallback:^{
+                        [weakSelf.judgelogin removeFromSuperview];
+                    }];
                 }
-                else if (type == HPReleaseCardTypeStartup) {
-                    vc = [[HPStartUpCardDefineController alloc] init];
-                }
                 
-                [navigatorController pushViewController:vc animated:YES];
             }];
             _releaseModalView = releaseModalView;
             [self.view bringSubviewToFront:btn];

@@ -13,7 +13,7 @@
 /**
  点击后移除弹框
  */
-- (void)clickBtnInShareSelectViewToRemoveView;
+- (void)clickBtnHiddenShareSelectView;
 
 @end
 NS_ASSUME_NONNULL_BEGIN

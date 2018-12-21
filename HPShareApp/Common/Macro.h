@@ -135,7 +135,7 @@
 #define kFont_Bold(font)  [UIFont fontWithName:@"PingFangSC-Bold"size:font]
 #define kFont_Regular(font)  [UIFont fontWithName:@"PingFangSC-Regular"size:font]
 #define kFont_Heavy(font)  [UIFont fontWithName:@"PingFangSC-Heavy"size:font]
-
+#define kRect(x, y, w, h)   CGRectMake(x, y, w, h)
 //#define kBaseUrl  @"https://inner.hepaicn.com"
 //#define kBaseUrl  @"https://app.hepaicn.com"
 #define kBaseUrl  @"http://192.168.0.104:8083"//测试

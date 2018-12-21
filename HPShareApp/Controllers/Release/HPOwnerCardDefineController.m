@@ -20,8 +20,20 @@
 #import "HPUploadImageHandle.h"
 #import "HPPictureModel.h"
 #import "HPShareSelectedItemView.h"
+#import "HPStoreItemButton.h"
+#import "HPAreaButton.h"
+//#import "HPDataHandlePickerView.h"
+#import "CDZPicker.h"
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：入驻本店需事先准备相关产品质检材料，入店时需确认，三无产品请绕道..."
+
+typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
+    HPSelectItemIndexCity = 100,
+    HPSelectItemIndexArea,
+    HPSelectItemIndexAddress,
+    HPSelectItemIndexIndustry,
+    HPSelectItemIndexShareTitle
+};
 
 @interface HPOwnerCardDefineController ()<HPShareSelectedItemViewDelegate> {
     BOOL _canRelease;
@@ -33,7 +45,7 @@
 
 @property (nonatomic, weak) UITextField *areaField;//期望面积
 
-@property (nonatomic, weak) UITextField *priceField;//期望价格
+@property (nonatomic, weak) UITextField *addressField;//详细地址
 
 @property (nonatomic, weak) HPSelectTable *unitSelectTable;//价格单位
 
@@ -46,6 +58,26 @@
 @property (nonatomic, weak) UITextView *remarkTextView;//备注信息
 
 @property (nonatomic, strong) HPShareSelectedItemView *itemView;
+
+@property (nonatomic, strong) HPAreaButton *cityBtn;
+@property (nonatomic, strong) HPAreaButton *areaBtn;
+
+/**
+ 行业
+ */
+@property (nonatomic, strong) UIButton *industryBtn;
+
+/**
+ 生成标题field
+ */
+@property (nonatomic, strong) UITextField *convertTitleField;
+
+/**
+ 标题
+ */
+@property (nonatomic, strong) UILabel *shareTitle;
+
+@property (nonatomic, strong) CDZPicker *pickerView;
 @end
 
 @implementation HPOwnerCardDefineController
@@ -58,11 +90,6 @@
     [self setupUI];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -73,27 +100,10 @@
     }
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
 #pragma mark - setupUI
 
 - (void)setupUI {
-    UIView *navTitleView = [self setupNavigationBarWithTitle:@"填写店铺基础信息"];
-//    [self.view addSubview:self.scrollView];
-//    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.bottom.mas_equalTo(self.view);
-//        make.top.mas_equalTo(navTitleView.mas_bottom);
-//    }];
-    
-    
+    [self setupNavigationBarWithTitle:@"填写店铺基础信息"];
     for (int i = 0; i < 5; i++) {
         [self setupPanelAtIndex:i ofView:self.scrollView];
     }
@@ -121,6 +131,7 @@
     }];
 
 }
+#pragma mark - 信息完整度
 - (UIView *)setUpInfoLabel
 {
     UIView *view = [UIView new];
@@ -142,16 +153,18 @@
     }];
     return view;
 }
+
+#pragma mark - row view
 - (void)setupPanelAtIndex:(NSInteger)index ofView:(UIView *)view {
     HPRowPanel *panel = [[HPRowPanel alloc] init];
     [view addSubview:panel];
         if (index == 0) {
-            [panel addRowView:[self setUpInfoLabel]];
+            [panel addRowView:[self setUpInfoLabel] withHeight:25.f * g_rateWidth];
 
             [panel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.right.mas_equalTo(self.scrollView);
                 make.top.equalTo(view);
-                make.height.mas_equalTo(getWidth(46.f));
+                make.height.mas_equalTo(getWidth(25.f));
                 make.width.mas_equalTo(self.view);
             }];
             
@@ -323,7 +336,7 @@
     
     return view;
 }
-
+#pragma mark - 店铺标签
 - (UIView *)setupStoreTagRowView {
     UIView *view = [[UIView alloc] init];
     
@@ -338,25 +351,21 @@
         make.height.mas_equalTo(titleLabel.font.pointSize);
     }];
     
-    UIButton *addBtn = [[UIButton alloc] init];
-    [addBtn.titleLabel setFont:kFont_Regular(13.f)];
-    [addBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [addBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
+    HPStoreItemButton *addBtn = [[HPStoreItemButton alloc] init];
     [addBtn setTitle:@"品牌连锁、百年老店、街角旺铺" forState:UIControlStateNormal];
     [addBtn setImage:ImageNamed(@"customizing_business_cards_add_to") forState:UIControlStateNormal];
-    [addBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f,getWidth(-25.f), 0.f, -50.f * g_rateWidth)];
-    [addBtn setImageEdgeInsets:UIEdgeInsetsMake(0, getWidth(30.f), 0, 0)];
     [addBtn addTarget:self action:@selector(onClickTagBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:addBtn];
     [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).offset(getWidth(122.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(100.f), getWidth(20.f)));
+        make.right.equalTo(view).offset(getWidth(-21.f));
+        make.height.mas_equalTo(getWidth(20.f));
         make.centerY.mas_equalTo(view);
     }];
     
     return view;
 }
-
+#pragma mark - 所在区域
 - (UIView *)setupAreaRowView {
     UIView *view = [[UIView alloc] init];
     UIButton *starBtn = [UIButton new];
@@ -369,38 +378,39 @@
     }];
     
     [self setupTitleLabelWithText:@"所在区域" ofView:view];
-    UIButton *cityBtn = [UIButton new];
+    HPAreaButton *cityBtn = [HPAreaButton new];
     [cityBtn setTitle:@"深圳市" forState:UIControlStateNormal];
     [cityBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
-    [cityBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(-20.f), getWidth(51.f), getWidth(-19.f), 0)];
-    [cityBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(-49.f), 0, getWidth(10.f))];
-    cityBtn.titleLabel.font = kFont_Regular(14.f);
     [cityBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
+    [cityBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
+    cityBtn.tag = HPSelectItemIndexCity;
     [view addSubview:cityBtn];
+    _cityBtn = cityBtn;
     [cityBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(view).offset(getWidth(122.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(100.f), getWidth(14.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(64.f), getWidth(20.f)));
         make.centerY.mas_equalTo(view);
     }];
     
-    UIButton *areaBtn = [UIButton new];
+    HPAreaButton *areaBtn = [HPAreaButton new];
     [areaBtn setTitle:@"请选择区域" forState:UIControlStateNormal];
-    [areaBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
-    [areaBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(-20.f), getWidth(128.f), getWidth(-19.f), 0)];
-    [areaBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(-49.f), 0, getWidth(10.f))];
-    areaBtn.titleLabel.font = kFont_Regular(14.f);
     [areaBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
+    [areaBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
+    [areaBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:areaBtn];
+    areaBtn.tag = HPSelectItemIndexArea;
+
+    _areaBtn = areaBtn;
     [areaBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(view).offset(getWidth(209.f));
+        make.left.mas_equalTo(cityBtn.mas_right).offset(getWidth(36.f));
         make.right.mas_equalTo(view).offset(getWidth(-20.f));
-        make.height.mas_equalTo(getWidth(14.f));
+        make.height.mas_equalTo(getWidth(20.f));
         make.centerY.mas_equalTo(view);
     }];
     
     return view;
 }
-
+#pragma mark -详细地址
 - (UIView *)setupPriceRowView {
     UIView *view = [[UIView alloc] init];
     UIButton *starBtn = [UIButton new];
@@ -415,7 +425,8 @@
 
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写店铺详细地址" ofView:view rightTo:view];
     [textField setKeyboardType:UIKeyboardTypeDecimalPad];
-    _priceField = textField;
+    textField.text = @"fsadhgjg";
+    _addressField = textField;
     
     return view;
 }
@@ -438,11 +449,13 @@
     [valueBtn.titleLabel setFont:kFont_Regular(14.f)];
     [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
     [valueBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
+//    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
     [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
+    valueBtn.tag = HPSelectItemIndexIndustry;
     [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(onClickTimeBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [valueBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:valueBtn];
+    _industryBtn = valueBtn;
     [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(122.f * g_rateWidth);
         make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
@@ -514,8 +527,11 @@
     }];
     
     [self setupTitleLabelWithText:@"联系方式" ofView:view];
-    UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
+    HPLoginModel *account = [HPUserTool account];
+    UITextField *textField = [self setupTextFieldWithPlaceholder:account.userInfo.mobile?:@"" ofView:view rightTo:view];
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
+    textField.text = account.userInfo.mobile?:@"";
+    textField.userInteractionEnabled = NO;//不允许交互，固定为注册登录人的手机号
     _phoneNumField = textField;
     return view;
 }
@@ -539,45 +555,41 @@
     birthBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     [birthBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
     birthBtn.titleLabel.font = kFont_Medium(12.f);
+    [birthBtn addTarget:self action:@selector(convertShareTitle:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:birthBtn];
     [birthBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(view).offset(getWidth(-20.f));
         make.size.mas_equalTo(CGSizeMake(getWidth(40.f), getWidth(25.f)));
         make.centerY.mas_equalTo(view);
     }];
-    [self setupTitleLabelWithText:@"标题" ofView:view];
+    UILabel *shareTitle = [self setupTitleLabelWithText:@"标题" ofView:view];
+    _shareTitle = shareTitle;
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"完善信息，生成标题更满意" ofView:view rightTo:birthBtn];
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
-    _phoneNumField = textField;
+    _convertTitleField = textField;
     
-    
-//    UILabel *titleLabel = [[UILabel alloc] init];
-//    [titleLabel setFont:[UIFont fontWithName:@"PingFangSC-Semibold" size:15.f]];
-//    [titleLabel setTextColor:COLOR_BLACK_333333];
-//    [titleLabel setText:@"备注信息"];
-//    [view addSubview:titleLabel];
-//    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(view).with.offset(21.f * g_rateWidth);
-//        make.top.equalTo(view).with.offset(16.f * g_rateWidth);
-//        make.height.mas_equalTo(15.f);
-//    }];
-//
-//    UITextView *textView = [[UITextView alloc] init];
-//    [textView.layer setCornerRadius:5.f];
-//    [textView setFont:[UIFont fontWithName:@"PingFangSC-Medium" size:15.f]];
-//    [textView setTextColor:COLOR_GRAY_CCCCCC];
-//    [textView setBackgroundColor:COLOR_GRAY_F6F6F6];
-//    [textView setText:TEXT_VIEW_PLACEHOLDER];
-//    [textView setContentInset:UIEdgeInsetsMake(2.f, 5.f, 2.f, 5.f)];
-//    [textView setDelegate:self];
-//    [view addSubview:textView];
-//    _remarkTextView = textView;
-//    [textView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(titleLabel.mas_bottom).with.offset(16.f * g_rateWidth);
-//        make.centerX.equalTo(view);
-//        make.size.mas_equalTo(CGSizeMake(335.f * g_rateWidth, 108.f * g_rateWidth));
-//    }];
     return view;
+}
+
+#pragma mark - 生成按钮事件
+- (void)convertShareTitle:(UIButton *)button
+{
+    button.selected = !button.selected;
+    if (button.selected) {
+        [button setTitle:@"清空" forState:UIControlStateNormal];
+        _shareTitle.hidden = YES;
+        [_convertTitleField mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.scrollView).offset(getWidth(21.f));
+        }];
+    }else{
+        [button setTitle:@"生成" forState:UIControlStateNormal];
+        _shareTitle.hidden = NO;
+        _convertTitleField.text = @"";
+        [_convertTitleField mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.scrollView).offset(getWidth(122.f));
+        }];
+    }
+    
 }
 
 #pragma mark - UITextViewDelegate
@@ -717,18 +729,24 @@
         self->_canRelease = YES;
         ErrorNet
     }];*/
-    HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];
-    itemView.delegate = self;
-    [self.view addSubview:itemView];
-    _itemView = itemView;
-    [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.view);
-    }];
+    
+    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _addressField.text.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0 && _convertTitleField.text.length != 0) {
+        [self pushVCByClassName:@"HPReviseReleaseInfoViewController"];
+    }else{//弹框提示
+        HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];
+        [itemView show:YES];
+        itemView.delegate = self;
+        _itemView = itemView;
+        [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.view);
+        }];
+    }
+
 }
 #pragma mark - 弹框提示移除按钮
-- (void)clickBtnInShareSelectViewToRemoveView
+- (void)clickBtnHiddenShareSelectView
 {
-    [_itemView removeFromSuperview];
+    [_itemView setHidden:YES];
 }
 #pragma mark - NetWork
 
@@ -754,4 +772,138 @@
     }];
 }
 
+#pragma mark - 点击叫出pickerview
+- (void)callPickerViewWithDataSource:(UIButton *)button
+{
+        [self setUpPickerView:button.tag];
+    
+}
+
+- (void)setUpPickerView:(HPSelectItemIndex)selectItemIndex
+{
+    CDZPicker *pickerView = [CDZPicker new];
+    _pickerView = pickerView;
+    kWeakSelf(weakSelf);
+    if (selectItemIndex == HPSelectItemIndexCity) {
+        pickerView.tipTitle = @"选择城市";
+        CDZPickerBuilder *builder = [CDZPickerBuilder new];
+        builder.showMask = YES;
+        builder.cancelTextColor = COLOR_GRAY_BBBBBB;
+        builder.confirmTextColor = COLOR_RED_EA0000;
+
+        [CDZPicker showSinglePickerInView:self.view withBuilder:builder strings:@[@"objective-c",@"java",@"python",@"php"] confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
+            [weakSelf.cityBtn setTitle:[strings componentsJoinedByString:@","] forState:UIControlStateNormal];
+            CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 20;
+            [weakSelf.cityBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(stringsW);
+            }];
+            NSLog(@"strings:%@ indexs:%@",strings,indexs);
+        }cancel:^{
+            //your code
+        }];
+    }else if (selectItemIndex == HPSelectItemIndexArea){
+        pickerView.tipTitle = @"请选择区域";
+        CDZPickerComponentObject *haizhu = [[CDZPickerComponentObject alloc]initWithText:@"海珠区"];
+        CDZPickerComponentObject *yuexiu = [[CDZPickerComponentObject alloc]initWithText:@"越秀区"];
+        
+        CDZPickerComponentObject *guangzhou = [[CDZPickerComponentObject alloc]initWithText:@"广州市"];
+            guangzhou.subArray = [NSMutableArray arrayWithObjects:haizhu,yuexiu, nil];
+        
+        CDZPickerComponentObject *xiangqiao = [[CDZPickerComponentObject alloc]initWithText:@"湘桥区"];
+        CDZPickerComponentObject *chaozhou = [[CDZPickerComponentObject alloc]initWithText:@"潮州市"];
+        chaozhou.subArray = [NSMutableArray arrayWithObjects:xiangqiao, nil];
+        
+        CDZPickerComponentObject *guangdong = [[CDZPickerComponentObject alloc]initWithText:@"广东省"];
+//        guangdong.subArray = [NSMutableArray arrayWithObjects:guangzhou,chaozhou, nil];
+        
+        CDZPickerComponentObject *pixian = [[CDZPickerComponentObject alloc]initWithText:@"郫县"];
+        
+        CDZPickerComponentObject *chengdu = [[CDZPickerComponentObject alloc]initWithText:@"成都市"];
+            chengdu.subArray = [NSMutableArray arrayWithObjects:pixian, nil];
+        
+        CDZPickerComponentObject *leshan = [[CDZPickerComponentObject alloc]initWithText:@"乐山市"];
+        
+//        CDZPickerComponentObject *sichuan = [[CDZPickerComponentObject alloc]initWithText:@"四川省"];
+//        sichuan.subArray = [NSMutableArray arrayWithObjects:chengdu,leshan, nil];
+        CDZPickerBuilder *builder = [CDZPickerBuilder new];
+        builder.cancelTextColor = COLOR_GRAY_BBBBBB;
+        builder.confirmTextColor = COLOR_RED_EA0000;
+        [CDZPicker showLinkagePickerInView:self.view withBuilder:builder components:@[guangzhou,chengdu] confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
+            CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 10;
+
+            [weakSelf.areaBtn setTitle:[strings componentsJoinedByString:@","] forState:UIControlStateNormal];
+            [weakSelf.areaBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(stringsW);
+            }];
+            NSLog(@"strings:%@ indexs:%@",strings,indexs);
+        }cancel:^{
+            //your code
+        }];
+    }else if (selectItemIndex == HPSelectItemIndexIndustry){
+        pickerView.tipTitle = @"请选择行业";
+        CDZPickerComponentObject *haizhu = [[CDZPickerComponentObject alloc]initWithText:@"海珠区"];
+        CDZPickerComponentObject *yuexiu = [[CDZPickerComponentObject alloc]initWithText:@"越秀区"];
+        
+        CDZPickerComponentObject *guangzhou = [[CDZPickerComponentObject alloc]initWithText:@"广州市"];
+        //    guangzhou.subArray = [NSMutableArray arrayWithObjects:haizhu,yuexiu, nil];
+        
+        CDZPickerComponentObject *xiangqiao = [[CDZPickerComponentObject alloc]initWithText:@"湘桥区"];
+        CDZPickerComponentObject *chaozhou = [[CDZPickerComponentObject alloc]initWithText:@"潮州市"];
+        chaozhou.subArray = [NSMutableArray arrayWithObjects:xiangqiao, nil];
+        
+        CDZPickerComponentObject *guangdong = [[CDZPickerComponentObject alloc]initWithText:@"广东省"];
+        guangdong.subArray = [NSMutableArray arrayWithObjects:guangzhou,chaozhou, nil];
+        
+        CDZPickerComponentObject *pixian = [[CDZPickerComponentObject alloc]initWithText:@"郫县"];
+        
+        CDZPickerComponentObject *chengdu = [[CDZPickerComponentObject alloc]initWithText:@"成都市"];
+        //    chengdu.subArray = [NSMutableArray arrayWithObjects:pixian, nil];
+        
+        CDZPickerComponentObject *leshan = [[CDZPickerComponentObject alloc]initWithText:@"乐山市"];
+        
+        CDZPickerComponentObject *sichuan = [[CDZPickerComponentObject alloc]initWithText:@"四川省"];
+        sichuan.subArray = [NSMutableArray arrayWithObjects:chengdu,leshan, nil];
+        CDZPickerBuilder *builder = [CDZPickerBuilder new];
+        builder.cancelTextColor = COLOR_GRAY_BBBBBB;
+        builder.confirmTextColor = COLOR_RED_EA0000;
+        [CDZPicker showLinkagePickerInView:self.view withBuilder:builder components:@[guangdong,sichuan] confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
+            [weakSelf.industryBtn setTitle:[strings componentsJoinedByString:@","] forState:UIControlStateNormal];
+            NSLog(@"strings:%@ indexs:%@",strings,indexs);
+        }cancel:^{
+            //your code
+        }];
+    }
+    /*
+    [pickerView show:YES];
+    kWeakSelf(wekSelf);
+    [pickerView setFinishClickCallback:^(NSString *model) {
+        HPLog(@"selectedModel:%@",model);
+        if (selectItemIndex == HPSelectItemIndexCity) {
+            [wekSelf.cityBtn setTitle:model forState:UIControlStateNormal];;
+        }else if (selectItemIndex == HPSelectItemIndexArea){
+            [wekSelf.areaBtn setTitle:model forState:UIControlStateNormal];;
+        }else if (selectItemIndex == HPSelectItemIndexIndustry){
+            [wekSelf.industryBtn setTitle:model forState:UIControlStateNormal];;
+        }
+        CGFloat modelW = BoundWithSize(model, kScreenWidth, 15.f).size.width+ 20;
+        [self.cityBtn setTitle:model forState:UIControlStateNormal];
+        [self.cityBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(modelW);
+        }];
+    }];
+    [pickerView setCancelClickCallback:^(NSString *model) {
+        if (selectItemIndex == HPSelectItemIndexCity) {
+            [wekSelf.cityBtn setTitle:@"请选择" forState:UIControlStateNormal];;
+        }else if (selectItemIndex == HPSelectItemIndexArea){
+            [wekSelf.areaBtn setTitle:@"请选择" forState:UIControlStateNormal];;
+        }else if (selectItemIndex == HPSelectItemIndexIndustry){
+            [wekSelf.industryBtn setTitle:@"请选择" forState:UIControlStateNormal];;
+        }
+        
+    }];
+    
+    [pickerView setViewTapClickCallback:^{
+        
+    }];*/
+}
 @end
