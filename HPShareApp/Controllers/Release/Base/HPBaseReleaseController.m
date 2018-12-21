@@ -35,8 +35,15 @@
     self.areaModels = [HPCommonData getAreaData];
     self.industryModels = [HPCommonData getIndustryData];
     
-    _isUpdate = NO;
     _shareReleaseParam = [HPShareReleaseParam new];
+    
+    if (self.param[@"spaceId"]) {
+        [self getShareDetailInfoById:self.param[@"spaceId"]];
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 }
 
 /*
@@ -328,7 +335,7 @@
         [self.imagePicker setMaxImagesCount:self.imagePicker.maxImagesCount - 1];
     }
     
-    [self dismissViewControllerAnimated:self.photoPicker completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - TZImagePickerControllerDelegate
@@ -370,6 +377,32 @@
     } Failure:^(NSError * _Nonnull error) {
         
     }];
+}
+
+- (void)getShareDetailInfoById:(NSString *)spaceId {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"spaceId"] = spaceId;
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/detail" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            HPShareDetailModel *model = [HPShareDetailModel mj_objectWithKeyValues:DATA];
+            NSDictionary *userCardCase = DATA[@"userCardCase"];
+            if (![userCardCase isMemberOfClass:NSNull.class]) {
+                model.avatarUrl = userCardCase[@"avatarUrl"];
+            }
+            [self loadData:model];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+#pragma mark - LoadData
+
+- (void)loadData:(HPShareDetailModel *)model {
+    //子类重写
 }
 
 @end

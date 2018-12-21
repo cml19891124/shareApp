@@ -78,8 +78,10 @@
         NSDate *date = [dateFormatter dateFromString:str];
         [array addObject:date];
     }
-    _selectedDates = array;
     
+    _selectedDates = array;
+    NSDate *firstDate = array[0];
+    [_calendarManager setDate:firstDate];
     [_calendarManager reload];
 }
 

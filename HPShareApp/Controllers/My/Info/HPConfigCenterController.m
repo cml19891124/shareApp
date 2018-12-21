@@ -303,10 +303,17 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     UIButton *portraitView = [[UIButton alloc] init];
     [portraitView.layer setCornerRadius:23.f];
     [portraitView.layer setMasksToBounds:YES];
-//    [portraitView setBackgroundImage:ImageNamed(@"my_business_card_default_head_image") forState:UIControlStateNormal];
+    [portraitView.imageView setContentMode:UIViewContentModeScaleAspectFill];
     [portraitView addTarget:self action:@selector(onClickGotoCtrl:) forControlEvents:UIControlEventTouchUpInside];
     [portraitRow addSubview:portraitView];
-    [portraitView sd_setImageWithURL:[NSURL URLWithString:model.userInfo.avatarUrl.length > 0 ?model.userInfo.avatarUrl:@""] forState:UIControlStateNormal];
+    
+    if (model.userInfo.avatarUrl && model.userInfo.avatarUrl.length > 0 ) {
+        [portraitView sd_setImageWithURL:[NSURL URLWithString:model.userInfo.avatarUrl] forState:(UIControlState)UIControlStateNormal placeholderImage:ImageNamed(@"personal_center_not_login_head")];
+    }
+    else {
+        [portraitView setImage:ImageNamed(@"personal_center_not_login_head") forState:UIControlStateNormal];
+    }
+    
     [portraitView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(portraitRow).with.offset(-17.f * g_rateWidth);
         make.size.mas_equalTo(CGSizeMake(46.f, 46.f));

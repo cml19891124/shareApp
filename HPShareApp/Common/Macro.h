@@ -131,8 +131,8 @@
 #define kFont_Heavy(font)  [UIFont fontWithName:@"PingFangSC-Heavy"size:font]
 
 //#define kBaseUrl  @"https://inner.hepaicn.com"
-//#define kBaseUrl  @"https://app.hepaicn.com"
-#define kBaseUrl  @"http://192.168.0.104:8083"//测试
+#define kBaseUrl  @"https://app.hepaicn.com"
+//#define kBaseUrl  @"http://192.168.0.104:8083"//测试
 //#define kBaseUrl  @"http://192.168.0.147:8083"//胜光
 
 #define BoundWithSize(str,width,font)   ([str boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:font]} context:nil])

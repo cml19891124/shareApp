@@ -271,7 +271,14 @@
 }
 
 - (void)setPrice:(NSString *)price {
-    [_priceLabel setText:price];
+    if (!price || [price isEqualToString:@""] || [price isEqualToString:@"0"]) {
+        [_priceLabel setText:@"面议"];
+        [_priceUnitLabel setHidden:YES];
+    }
+    else {
+        [_priceLabel setText:price];
+        [_priceUnitLabel setHidden:NO];
+    }
 }
 
 - (void)setType:(HPShareListCellType)type {
@@ -308,6 +315,9 @@
     for (int i = 0; i < _tagItems.count; i++) {
         HPTagView *tagItem = _tagItems[i];
         if (i < tags.count) {
+            if ([tags[i] isEqualToString:@""]) {
+                continue;
+            }
             [tagItem setHidden:NO];
             [tagItem setText:tags[i]];
         }

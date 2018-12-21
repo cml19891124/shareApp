@@ -21,6 +21,7 @@
 #import "HPTimePicker.h"
 #import "HPCommonData.h"
 #import "HPShareReleaseParam.h"
+#import "HPShareDetailModel.h"
 
 #define PANEL_SPACE 10.f
 
@@ -57,8 +58,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) HPDistrictModel *selectedDistrictModel;
 
 @property (nonatomic, strong) HPIndustryModel *selectedIndustryModel;
-
-@property (nonatomic, assign) BOOL isUpdate;
 
 @property (nonatomic, strong) HPShareReleaseParam *shareReleaseParam;
 
@@ -97,6 +96,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)getAreaList;
 
 - (void)getTradeList;
+
+//子类重写，编辑共享管理填充数据
+
+- (void)loadData:(HPShareDetailModel *)model;
 
 @end
 

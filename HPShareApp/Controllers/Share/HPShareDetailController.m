@@ -204,7 +204,6 @@
     [remarkRegion mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(scrollView);
         make.top.equalTo(shareDateRegion.mas_bottom).with.offset(15.f * g_rateWidth);
-        make.height.mas_equalTo(180.f * g_rateWidth);
         make.bottom.equalTo(scrollView).with.offset(-getWidth(80.f));
     }];
     [self setupRemarkRegion:remarkRegion];
@@ -227,6 +226,9 @@
     for (int i = 0; i < _tagItems.count; i++) {
         HPTagView *tagItem = _tagItems[i];
         if (i < tags.count) {
+            if ([tags[i] isEqualToString:@""]) {
+                continue;
+            }
             [tagItem setHidden:NO];
             [tagItem setText:tags[i]];
         }
@@ -523,11 +525,7 @@
         make.bottom.equalTo(view).with.offset(-20.f * g_rateWidth);
     }];
 }
-- (void)MyCardVC:(UITapGestureRecognizer *)tap
-{
-    HPShareDetailModel *model = self.param[@"model"];
-    [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":model.userId}];
-}
+
 - (void)setupContactRegion:(UIView *)view {
     UIImageView *portrait = [[UIImageView alloc] init];
     [portrait.layer setMasksToBounds:YES];
@@ -585,6 +583,13 @@
         make.centerY.equalTo(view);
     }];
 }
+
+- (void)MyCardVC:(UITapGestureRecognizer *)tap
+{
+    HPShareDetailModel *model = self.param[@"model"];
+    [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":model.userId}];
+}
+
 #pragma mark - 拨打电话
 - (void)makePhoneCall:(UIButton *)button{
     HPShareDetailModel *model = self.param[@"model"];
@@ -698,8 +703,11 @@
     NSString *subIndustry = [HPCommonData getIndustryNameById:model.subIndustryId];
     [_tradeLabel setText:[NSString stringWithFormat:@"%@·%@", industry, subIndustry]];
     
-    if (model.shareTime) {
+    if (model.shareTime && ![model.shareTime isEqualToString:@""]) {
         [_shareTimeLabel setText:model.shareTime];
+    }
+    else {
+        [_shareTimeLabel setText:@"面议"];
     }
     
     if (model.area && ![model.area isEqualToString:@"0"]) {
@@ -717,7 +725,12 @@
         [_priceUnitLabel setHidden:YES];
     }
     
-    [_remarkLabel setText:model.remark];
+    if (!model.remark || [model.remark isEqualToString:@""]) {
+        [_remarkLabel setText:@"用户很懒，什么也没有填写～"];
+    }
+    else {
+        [_remarkLabel setText:model.remark];
+    }
     
     if (model.avatarUrl) {
         [_portrait sd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholderImage:[UIImage imageNamed:@"shared_shop_details_head_portrait"]];

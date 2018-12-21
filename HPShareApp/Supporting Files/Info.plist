@@ -19,21 +19,17 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.0.1</string>
+	<string>1.0.0.2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAllowsArbitraryLoads</key>
 	<true/>
-	<key>NSCalendarsUsageDescription</key>
-	<string>合店站需要您的同意,才能访问日历</string>
 	<key>NSCameraUsageDescription</key>
-	<string>合店站需要您的同意,才能访问相机</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>合店站需要您的同意,才能始终访问位置</string>
+	<string>合店站需要您的同意使用相机，用于上传照片</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>合店站需要您的同意,才能在使用期间访问位置</string>
+	<string>合店站需要在应用期间获取您的位置，用于发布共享信息</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>合店站需要您的同意，才能访问相册</string>
+	<string>合店站需要访问您的相册，用于上传照片</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

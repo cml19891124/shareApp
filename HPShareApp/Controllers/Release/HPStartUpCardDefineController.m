@@ -506,7 +506,14 @@
     NSString *contact = _contactField.text;
     NSString *contactMobile = _phoneNumField.text;
     NSString *intention = _intentSpaceField.text;
-    NSString *remark = _remarkTextView.text;
+    
+    NSString *remark;
+    if ([_remarkTextView.text isEqualToString:TEXT_VIEW_PLACEHOLDER]) {
+        remark = @"";
+    }
+    else {
+        remark = _remarkTextView.text;
+    }
     
     NSString *tag = @"";
     for (NSString *tagItem in self.tagDialogView.checkItems) {
@@ -545,6 +552,52 @@
     self.shareReleaseParam.isApproved = @"0";
     
     NSArray *photos = self.addPhotoView.photos;
+    
+    if (photos.count == 0) {
+        [HPProgressHUD alertMessage:@"请上传照片"];
+        _canRelease = YES;
+        return;
+    }
+    else if ([title isEqualToString:@""]) {
+        [HPProgressHUD alertMessage:@"请填写标题"];
+        _canRelease = YES;
+        return;
+    }
+    else if (areaId == nil) {
+        [HPProgressHUD alertMessage:@"请选择区域"];
+        _canRelease = YES;
+        return;
+    }
+    else if (districtId == nil) {
+        [HPProgressHUD alertMessage:@"请选择区域"];
+        _canRelease = YES;
+        return;
+    }
+    else if (industryId == nil) {
+        [HPProgressHUD alertMessage:@"请选择行业"];
+        _canRelease = YES;
+        return;
+    }
+    else if (subIndustryId == nil) {
+        [HPProgressHUD alertMessage:@"请选择行业"];
+        _canRelease = YES;
+        return;
+    }
+    else if ([shareDays isEqualToString:@""]) {
+        [HPProgressHUD alertMessage:@"请选择共享日期"];
+        _canRelease = YES;
+        return;
+    }
+    else if ([contact isEqualToString:@""]) {
+        [HPProgressHUD alertMessage:@"请填写联系人"];
+        _canRelease = YES;
+        return;
+    }
+    else if ([contactMobile isEqualToString:@""]) {
+        [HPProgressHUD alertMessage:@"请填写联系方式"];
+        _canRelease = YES;
+        return;
+    }
     
     [HPUploadImageHandle upLoadImages:photos withUrl:kBaseUrl@"/v1/file/uploadPictures" parameterName:@"files" success:^(id responseObject) {
         if (CODE == 200) {
@@ -591,6 +644,13 @@
         self->_canRelease = YES;
         ErrorNet
     }];
+}
+
+#pragma mark - LoadData
+
+- (void)loadData:(HPShareDetailModel *)model {
+    [_titleField setText:model.title];
+    
 }
 
 @end

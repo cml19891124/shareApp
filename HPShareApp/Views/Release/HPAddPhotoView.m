@@ -87,6 +87,8 @@
     }
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    [imageView setContentMode:UIViewContentModeScaleAspectFill];
+    [imageView setClipsToBounds:YES];
     [self addSubview:imageView];
     [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
         if (self.imageViews.count == 0) {

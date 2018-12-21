@@ -30,6 +30,7 @@
     [calendarView.layer setCornerRadius:0.f];
     [calendarView.layer setShadowOpacity:0.f];
     [calendarView setContentCornerRadius:0.f];
+    [calendarView setStartMonthOfDate:[NSDate date]];
     [calendarView setCanTouch:YES];
     [view addSubview:calendarView];
     _calendarView = calendarView;

@@ -74,7 +74,11 @@
         [_keepNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.collectionNum]?:@"--"];
         [_followNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.followingNum]?:@"--"];
         [_historyNumLabel setText:[NSString stringWithFormat:@"%ld",_infoModel.browseNum]?:@"--"];
-//        [_spacenum setText:[NSString stringWithFormat:@"%ld",_infoModel.spaceNum]?:@"--"];
+        
+        if (_infoModel.spaceNum) {
+            NSString *spaceNumStr = [NSString stringWithFormat:@"%ld条",_infoModel.spaceNum];
+            [_spacenum setText:spaceNumStr];
+        }
 
         [_descLabel setHidden:YES];
         
@@ -458,12 +462,12 @@
     
     CGFloat xSpace = 61.f * g_rateWidth;
     CGFloat ySpace = 36.f * g_rateWidth;
-    NSString *spaceNum = [NSString stringWithFormat:@"%ld条",_infoModel.spaceNum];
-    UIView *shareManagementItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_sharing_management"] title:@"共享管理" desc:spaceNum];
+    UIView *shareManagementItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_sharing_management"] title:@"共享管理" desc:@"0条"];
     [centerView addSubview:shareManagementItem];
     [shareManagementItem mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.top.equalTo(centerView);
     }];
+    _spacenum = shareManagementItem.subviews[1];
     
     UIView *myCardItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_business_card"] title:@"我的名片" desc:@"交流更高效"];
     [centerView addSubview:myCardItem];
@@ -530,7 +534,6 @@
     [descLabel setTextColor:COLOR_GRAY_BBBBBB];
     [descLabel setText:desc];
     [view addSubview:descLabel];
-//    _spacenum = descLabel;
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(view);
         make.top.equalTo(btn.mas_bottom).with.offset(6.f * g_rateWidth);

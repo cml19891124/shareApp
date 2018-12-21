@@ -69,7 +69,7 @@
     [phoneNumTextField setKeyboardType:UIKeyboardTypeNumberPad];
     phoneNumTextField.delegate = self;
     self.phoneNumTextField = phoneNumTextField;
-    NSMutableAttributedString *phoneNumPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"手机号/邮箱/用户名"];
+    NSMutableAttributedString *phoneNumPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"手机号/用户名"];
     [phoneNumPlaceholder addAttribute:NSForegroundColorAttributeName
                                 value:COLOR_GRAY_CCCCCC
                                 range:NSMakeRange(0, 5)];
