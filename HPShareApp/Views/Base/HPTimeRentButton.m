@@ -9,7 +9,6 @@
 #import "HPTimeRentButton.h"
 #import "Macro.h"
 #import "HPGlobalVariable.h"
-#define margin  getWidth(10.f)
 #define viewW   self.frame.size.width
 #define viewH   self.frame.size.height
 
@@ -18,21 +17,21 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        self.titleLabel.font = kFont_Regular(13.f);
-        [self setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-        [self setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-        self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        self.titleLabel.font = kFont_Medium(10.f);
+        [self setTitleColor:COLOR_GRAY_999999 forState:UIControlStateNormal];
+        [self setTitleColor:COLOR_BLUE_83A4FF forState:UIControlStateSelected];
+        self.titleLabel.textAlignment = NSTextAlignmentCenter;
     }
     return self;
 }
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect
 {
-    return kRect(margin, margin, (viewW - 2 * margin), (viewW - 5 * margin)/4);
+    return kRect(getWidth(8.f), getWidth(12.f),getWidth(34.f),getWidth(37.f));
 }
 
 - (CGRect)titleRectForContentRect:(CGRect)contentRect
 {
-    return kRect(0, margin + (viewW - 2 * margin), viewW, 25);
+    return kRect(0,getWidth(46.f), viewW, getWidth(25.f));
 }
 @end

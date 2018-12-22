@@ -10,6 +10,7 @@
 #import "HPRightImageButton.h"
 #import "HPTimeRentView.h"
 #import "HPRowPanel.h"
+#import "HPRentAmountItemView.h"
 
 typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     HPShareGotoBtnTagSpace = 30,
@@ -40,6 +41,13 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
  */
 @property (nonatomic, strong) HPRightImageButton *leavesBtn;
 @property (strong, nonatomic) HPTimeRentView *timeRentView;
+@property (strong, nonatomic) HPRentAmountItemView *amountItemView;
+
+
+/**
+  租赁模式
+ */
+@property (nonatomic, strong) UIView *lastPanel;
 @end
 
 @implementation HPReviseReleaseInfoViewController
@@ -154,20 +162,25 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
         
     }else if (index == 4){
         //共享类型
-        [panel addRowView:[self setupRentTypeRowView] withHeight:45.f * g_rateWidth];
+        [panel addRowView:[self setupRentTypeRowView] withHeight:123.f * g_rateWidth];
+        [panel addRowView:[self setUpTimeRentView] withHeight:getWidth(77.f)];
+
         UIView *lastPanel = view.subviews[index - 1];
+        _lastPanel = lastPanel;
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.width.equalTo(view);
-            make.height.mas_equalTo(46.f * g_rateWidth);
+            make.height.mas_equalTo(123.f * g_rateWidth);
             make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
         }];
     }else if (index == 5) {
         //共享租金
-        [panel addRowView:[self setupRentAmountRowView]];
+        [panel addRowView:[self setupRentAmountRowView] withHeight:getWidth(137.f)];
+        [panel addRowView:[self setupRentAmountItemRowView] withHeight:getWidth(91.f)];
+
         UIView *lastPanel = view.subviews[index - 1];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.width.equalTo(view);
-            make.height.mas_equalTo(46.f * g_rateWidth);
+            make.height.mas_equalTo(137.f * g_rateWidth);
             make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
         }];
         
@@ -181,6 +194,26 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
         }];
         
     }
+}
+
+#pragma mark - 租金item
+- (UIView *)setupRentAmountItemRowView
+{
+    UIView *view = [UIView new];
+    HPRentAmountItemView *amountItemView = [HPRentAmountItemView new];
+    UIView *expandView = [self addRowOfParentView:view withHeight:91.f * g_rateWidth margin:0.f isEnd:YES];
+    expandView.backgroundColor = UIColor.clearColor;
+    [expandView addSubview:amountItemView];
+    kWeakSelf(weakSelf);
+//    [timeRentView setRentTypeClickBtnBlock:^(NSString *model) {
+//        //当前选中的租赁模式
+//        [weakSelf.rectTypeBtn setText:model];
+//    }];
+    _amountItemView = amountItemView;
+    [amountItemView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.right.mas_equalTo(expandView);
+    }];
+    return expandView;
 }
 
 #pragma mark - 空间row view
@@ -243,16 +276,26 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 #pragma mark - 出租模式view
 - (UIView *)setUpTimeRentView
 {
+    UIView *view = [UIView new];
     HPTimeRentView *timeRentView = [HPTimeRentView new];
+    UIView *expandView = [self addRowOfParentView:view withHeight:123.f * g_rateWidth margin:0.f isEnd:YES];
+    expandView.backgroundColor = UIColor.clearColor;
+    [expandView addSubview:timeRentView];
+    kWeakSelf(weakSelf);
+    [timeRentView setRentTypeClickBtnBlock:^(NSString *model) {
+        //当前选中的租赁模式
+        [weakSelf.rectTypeBtn setText:model];
+    }];
     _timeRentView = timeRentView;
-    return timeRentView;
+    [timeRentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.right.mas_equalTo(expandView);
+    }];
+    return expandView;
 }
 #pragma mark - 出租模式row view
 - (UIView *)setupRentTypeRowView
 {
     UIView *view = [[UIView alloc] init];
-    HPRowPanel *panel = [[HPRowPanel alloc] init];
-    [view addSubview:panel];
     UIView *rentView = [self addRowOfParentView:view withHeight:46.f * g_rateWidth margin:0.f isEnd:YES];
     [self setupTitleLabelWithText:@"我想出租的模式" ofView:rentView];
 
@@ -261,38 +304,16 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     [rectTypeBtn addTarget:self action:@selector(onClickShareReleaseBtn:) forControlEvents:UIControlEventTouchUpInside];
     [rentView addSubview:rectTypeBtn];
     _rectTypeBtn = rectTypeBtn;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickShareReleaseBtn:)];
-    [rentView addGestureRecognizer:tap];
-    [panel addRowView:rentView withHeight:getWidth(46.f)];
-    [panel addRowView:[self setUpTimeRentView] withHeight:1.f * g_rateWidth];
-    _timeRentView.backgroundColor = COLOR_RED_EA0000;
-    UIView *lastView = panel.subviews.lastObject;
-    [panel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(view);
-//        make.top.equalTo(lastView.mas_bottom);
-        make.top.equalTo(view);
-
-        make.height.mas_equalTo(getWidth(200.f));
-    }];
     [_rectTypeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(rentView);
         make.right.equalTo(rentView).with.offset(-20.f * g_rateWidth);
     }];
-//    [panel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.top.right.mas_equalTo(view);
-//        make.height.mas_equalTo(getWidth(46.f));
-//    }];
-    return panel;
+    return rentView;
 }
 
 #pragma mark - 租赁模式切换事件
-- (void)onClickShareReleaseBtn:(UITapGestureRecognizer *)tap
+- (void)onClickShareReleaseBtn:(HPRightImageButton *)button
 {
-//    if (button.tag == HPShareGotoBtnTagTimeDuring) {
-        [_timeRentView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(getWidth(260.f));
-        }];
-//    }
     
 }
 #pragma mark - 租金模式row view
