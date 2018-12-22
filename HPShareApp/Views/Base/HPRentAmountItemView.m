@@ -8,29 +8,60 @@
 
 #import "HPRentAmountItemView.h"
 #define margin  ((kScreenWidth - getWidth(34.f) * 4)/5)
-#define buttonW ((kScreenWidth - getWidth(10.f) * 3)/3)
+#define buttonW ((kScreenWidth - getWidth(10.f) * 5)/4)
+#define fillW   (BoundWithSize(self.fillField.placeholder, kScreenWidth, 12.f).size.width + 10)
+
 @implementation HPRentAmountItemView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        _rightButtonArray = @[@"（元/小时）",@"（元/天）",@"（元/月）"];
-
+        [kNotificationCenter addObserver:self selector:@selector(rectTypeModelNoti:) name:@"rectType" object:nil];
+        _rightButtonArray = @[@"(元/小时)",@"(元/天)",@"(元/月)"];
+        _itemArray = @[@"面议",@"9.9元/小时",@"20元/小时",@"30元/小时"];
         [self setUpDetailView];
         [self setSubviewsLayout];
+        [self setUpRentAmmountItemSubviews];
     }
     return self;
 }
 
+- (void)rectTypeModelNoti:(NSNotification *)noti
+{
+//    HPLog(@"noti:%@",noti);
+    self.rectTypeArr = noti.userInfo[@"rectType"];
+    UIButton *currBtn;
+    if ([self.rectTypeArr containsObject:@"按年起租"]&&self.rectTypeArr.count >= 1&&self.rectTypeArr.count <= 4){//年的优先级最高
+        [self.typeBtnYear setTitle:@"(元/年)" forState:UIControlStateNormal];
+        currBtn = self.typeBtnYear;
+    }else if ([self.rectTypeArr containsObject:@"按月起租"]&&self.rectTypeArr.count >= 1&&self.rectTypeArr.count <= 3){
+        [self.typeBtnMonth setTitle:@"(元/月)" forState:UIControlStateNormal];
+        currBtn = self.typeBtnMonth;
+        
+    }else if ([self.rectTypeArr containsObject:@"按天起租"]&&self.rectTypeArr.count >= 1&&self.rectTypeArr.count >= 1&&self.rectTypeArr.count <= 2){
+        [self.typeBtnDay setTitle:@"(元/天)" forState:UIControlStateNormal];
+        currBtn = self.typeBtnDay;
+    }else if ([self.rectTypeArr containsObject:@"按小时起租"]&&self.rectTypeArr.count == 1) {
+        [self.typeBtnHour setTitle:@"(元/小时)" forState:UIControlStateNormal];
+        currBtn = self.typeBtnHour;
+    }
+    [self changePriceBlockClick:currBtn];
+}
+- (void)dealloc
+{
+    [kNotificationCenter removeObserver:self];
+}
 - (void)setUpDetailView
 {
     [self addSubview:self.fillView];
-    [self addSubview:self.rightView];
+    //右边价格选项按钮父视图
+    [self.fillView addSubview:self.rightView];
+    [self.rightView addSubview:self.typeBtn];
+    //底部价格选项按钮
     [self setUpButtonSubviews];
     [self addSubview:self.fillField];
     [self addSubview:self.lineView];
     
-    [self setUpRentAmmountItemSubviews];
 }
 
 - (UIView *)lineView
@@ -48,21 +79,53 @@
         [typeBtn setTitle:self.rightButtonArray[i] forState:UIControlStateNormal];
         typeBtn.titleLabel.font = kFont_Regular(12.f);
         [typeBtn setTitleColor:COLOR_GRAY_999999 forState:UIControlStateNormal];
-        [typeBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateSelected];
-        typeBtn.backgroundColor = COLOR_RED_EA0000;
+        [typeBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
+        typeBtn.backgroundColor = UIColor.clearColor;
         typeBtn.layer.cornerRadius = 5.f;
         typeBtn.layer.masksToBounds = YES;
+        [typeBtn addTarget:self action:@selector(changePriceBlockClick:) forControlEvents:UIControlEventTouchUpInside];
+        if (i == 0) {
+            self.selectedBtn = typeBtn;
+            _typeBtnHour = typeBtn;
+        }else if (i == 1){
+            _typeBtnDay = typeBtn;
+        }else if (i == 2){
+            _typeBtnMonth = typeBtn;
+        }
         [self.rightView addSubview:typeBtn];
         _typeBtn = typeBtn;
+        CGFloat priceW = ((kScreenWidth - fillW - getWidth(21.f) * 2) - getWidth(10.f) * 4)/3+5;
+        [_typeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.mas_equalTo(self.rightView);
+            make.width.mas_equalTo(priceW);
+            make.left.mas_equalTo((getWidth(10.f)+priceW)*i);
+        }];
     }
 }
-//- (NSMutableArray *)rightButtonArray
-//{
-//    if (!_rightButtonArray) {
-//        _rightButtonArray = [NSMutableArray array];
-//    }
-//    return _rightButtonArray;
-//}
+
+- (void)changePriceBlockClick:(UIButton *)button
+{
+    self.selectedBtn.selected = NO;
+    button.selected = YES;
+    self.selectedBtn = button;
+    
+    if ([button.currentTitle isEqualToString:@"(元/小时)"]) {
+        _itemArray = @[@"面议",@"9.9元/小时",@"20元/小时",@"30元/小时"];
+    }else if ([button.currentTitle isEqualToString:@"(元/天)"]){
+        _itemArray = @[@"面议",@"10元/天",@"20元/天",@"30元/天"];
+    }else if ([button.currentTitle isEqualToString:@"(元/月)"]||[button.currentTitle isEqualToString:@"(元/年)"]){
+        _itemArray = @[@"面议",@"100元/天",@"200元/天",@"300元/天"];
+    }
+    for (int i = 0;i < _itemArray.count; i++) {
+        [_itemBtn setTitle:_itemArray[0] forState:UIControlStateNormal];
+        [_itemBtnOne setTitle:_itemArray[1] forState:UIControlStateNormal];
+        [_itemBtnTwo setTitle:_itemArray[2] forState:UIControlStateNormal];
+        [_itemBtnThree setTitle:_itemArray[3] forState:UIControlStateNormal];
+
+    }
+
+}
+
 - (void)setSubviewsLayout
 {
     [_fillView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -75,21 +138,15 @@
         make.left.mas_equalTo(getWidth(21.f));
         make.top.bottom.mas_equalTo(self.fillView);
         make.height.mas_equalTo(self.fillField.font.pointSize);
+        make.width.mas_equalTo(fillW);
     }];
     
-    [_rightView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.rightView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(getWidth(-24.f));
         make.top.bottom.mas_equalTo(self.fillView);
-        make.left.mas_equalTo(getWidth(164.f));
+    make.left.mas_equalTo(self.fillField.mas_right).offset(getWidth(10.f));
     }];
-    for (int j = 0; j < self.rightButtonArray.count; j++) {
-        [_typeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo((getWidth(-24.f)-buttonW)*j);
-            make.top.bottom.mas_equalTo(self.rightView);
-            make.width.mas_equalTo(buttonW);
-            make.left.mas_equalTo(getWidth(100.f));
-                                   }];
-    }
+   
     
     [_lineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(getWidth(335.f), getWidth(0.5f)));
@@ -113,6 +170,7 @@
     if (!_rightView) {
         _rightView = [UIView new];
         _rightView.backgroundColor = COLOR_GRAY_FFFFFF;
+        
     }
     return _rightView;
 }
@@ -124,16 +182,31 @@
         _fillField.placeholder = @"不满意参考价格，自己填";
         [_fillField setValue:COLOR_GRAY_999999 forKeyPath:@"_placeholderLabel.textColor"];
         [_fillField setValue:kFont_Regular(12.f) forKeyPath:@"_placeholderLabel.font"];
-
+        _fillField.returnKeyType = UIReturnKeyDone;
+        _fillField.delegate = self;
+        _fillField.tintColor = COLOR_RED_EA0000;
     }
     return _fillField;
 }
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self endEditing:YES];
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (textField.text.length) {
+        _fillField.text = [NSString stringWithFormat:@"%@(元/小时)",textField.text];
+    }
+    return YES;
+}
 - (void)setUpRentAmmountItemSubviews
 {
-    NSArray *itemAray = @[@"面议",@"100元/天",@"200元/天",@"300元/天"];
-    for (int i = 0; i < itemAray.count; i++) {
+    for (int i = 0; i < _itemArray.count; i++) {
         UIButton *itemBtn = [UIButton new];
-        [itemBtn setTitle:itemAray[i] forState:UIControlStateNormal];
+        [itemBtn setTitle:_itemArray[i] forState:UIControlStateNormal];
         itemBtn.titleLabel.font = kFont_Regular(12.f);
         [itemBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateSelected];
         [itemBtn setTitleColor:COLOR_GRAY_999999 forState:UIControlStateNormal];
@@ -143,14 +216,22 @@
         itemBtn.layer.masksToBounds = YES;
         [itemBtn addTarget:self action:@selector(selectRentAmountItem:) forControlEvents:UIControlEventTouchUpInside];
         if (i == 0) {
-            self.selectedBtn = itemBtn;
+            self.selectedItemBtn = itemBtn;
+            _itemBtn = itemBtn;
+        }else if (i == 1){
+            _itemBtnOne = itemBtn;
+        }else if (i == 2){
+            _itemBtnTwo = itemBtn;
+        }else if (i == 3){
+            _itemBtnThree = itemBtn;
         }
         [self addSubview:itemBtn];
+        _itemBtn = itemBtn;
         [itemBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset((getWidth(34.f)+margin) * i + margin);
+            make.left.mas_equalTo(self).offset((buttonW+getWidth(10.f)) * i + getWidth(10.f));
             make.top.mas_equalTo(self.lineView.mas_bottom).offset(getWidth(12.f));
             make.bottom.mas_equalTo(self).offset(getWidth(-11.f));
-            make.width.mas_equalTo(getWidth(50.f));
+            make.width.mas_equalTo(buttonW);
         }];
     }
 }
@@ -179,11 +260,14 @@
     
 }
 
+/**
+ 选择的单位价格
+ */
 - (void)selectRentAmountItem:(UIButton *)button
 {
-    self.selectedBtn.selected = NO;
+    self.selectedItemBtn.selected = NO;
     button.selected = YES;
-    self.selectedBtn = button;
+    self.selectedItemBtn = button;
     if (self.rentAmountItemClickBtnBlock) {
         self.rentAmountItemClickBtnBlock(button.currentTitle);
     }

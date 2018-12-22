@@ -48,6 +48,8 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
   租赁模式
  */
 @property (nonatomic, strong) UIView *lastPanel;
+
+@property (strong, nonatomic) NSMutableArray *modelArr;
 @end
 
 @implementation HPReviseReleaseInfoViewController
@@ -58,7 +60,9 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
     [self setupUI];
+    
 }
 
 - (void)setupUI {
@@ -282,9 +286,17 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     expandView.backgroundColor = UIColor.clearColor;
     [expandView addSubview:timeRentView];
     kWeakSelf(weakSelf);
+    self.modelArr = [NSMutableArray array];
+
     [timeRentView setRentTypeClickBtnBlock:^(NSString *model) {
         //当前选中的租赁模式
         [weakSelf.rectTypeBtn setText:model];
+        if (![weakSelf.modelArr containsObject:model]) {
+            [weakSelf.modelArr addObject:model];
+        }else{
+            [weakSelf.modelArr removeObject:model];
+        }
+        [kNotificationCenter postNotificationName:@"rectType" object:nil userInfo:@{@"rectType":weakSelf.modelArr}];
     }];
     _timeRentView = timeRentView;
     [timeRentView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -299,9 +311,9 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     UIView *rentView = [self addRowOfParentView:view withHeight:46.f * g_rateWidth margin:0.f isEnd:YES];
     [self setupTitleLabelWithText:@"我想出租的模式" ofView:rentView];
 
-    HPRightImageButton *rectTypeBtn = [self setupGotoBtnWithTitle:@"按小时起租"];
+    HPRightImageButton *rectTypeBtn = [self setupGotoBtnWithTitle:@""];
     [rectTypeBtn setTag:HPShareGotoBtnTagTimeDuring];
-    [rectTypeBtn addTarget:self action:@selector(onClickShareReleaseBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [rectTypeBtn addTarget:self action:@selector(onClickCallRentTypeViewBtn:) forControlEvents:UIControlEventTouchUpInside];
     [rentView addSubview:rectTypeBtn];
     _rectTypeBtn = rectTypeBtn;
     [_rectTypeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -311,8 +323,8 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     return rentView;
 }
 
-#pragma mark - 租赁模式切换事件
-- (void)onClickShareReleaseBtn:(HPRightImageButton *)button
+#pragma mark - 是否叫出租赁模式view
+- (void)onClickCallRentTypeViewBtn:(HPRightImageButton *)button
 {
     
 }

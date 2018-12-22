@@ -8,7 +8,8 @@
 #import "CDZPicker.h"
 #define SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
 #define SCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)
-#define BACKGROUND_BLACK_COLOR [UIColor colorWithRed:0.412 green:0.412 blue:0.412 alpha:0.7]
+#define BACKGROUND_BLACK_COLOR ([UIColor.blackColor colorWithAlphaComponent:0.6f])
+
 #define  CDZPickerViewDefaultHeight  SCREEN_HEIGHT/3;
 static const NSInteger CDZToolBarHeight = 44;
 
