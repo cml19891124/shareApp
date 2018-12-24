@@ -168,6 +168,14 @@
 		E6B4CEE021C5286F00429C11 /* TAPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED621C5286F00429C11 /* TAPageControl.m */; };
 		E6B4CEE121C5286F00429C11 /* TAAnimatedDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED721C5286F00429C11 /* TAAnimatedDotView.m */; };
 		E6B4CEE221C5286F00429C11 /* TAAbstractDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED821C5286F00429C11 /* TAAbstractDotView.m */; };
+		E6B8986B21D0B44C00FD443B /* LLShoppingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B8985F21D0B44C00FD443B /* LLShoppingViewController.m */; };
+		E6B8986C21D0B44C00FD443B /* MerchandiseCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B8986021D0B44C00FD443B /* MerchandiseCommentTableViewCell.m */; };
+		E6B8986D21D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B8986121D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.m */; };
+		E6B8986E21D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E6B8986221D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.xib */; };
+		E6B8986F21D0B44C00FD443B /* MerchandiseCommentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E6B8986321D0B44C00FD443B /* MerchandiseCommentTableViewCell.xib */; };
+		E6B8987021D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E6B8986521D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.xib */; };
+		E6B8987121D0B44C00FD443B /* LLShoppingViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6B8986921D0B44C00FD443B /* LLShoppingViewController.storyboard */; };
+		E6B8987221D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B8986A21D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.m */; };
 		E6D75F1321A78AD300B2067C /* HPSharePersonCard.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */; };
 		E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1621A811E500B2067C /* HPWhatIsShareSpaceController.m */; };
 		E6D75F1A21ABCA7B00B2067C /* HPHowToPlayShareSpaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1921ABCA7B00B2067C /* HPHowToPlayShareSpaceController.m */; };
@@ -558,6 +566,18 @@
 		E6B4CED921C5286F00429C11 /* TADotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TADotView.h; sourceTree = "<group>"; };
 		E6B4CEDA21C5286F00429C11 /* TAAnimatedDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAAnimatedDotView.h; sourceTree = "<group>"; };
 		E6B4CEDB21C5286F00429C11 /* TAPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAPageControl.h; sourceTree = "<group>"; };
+		E6B8985F21D0B44C00FD443B /* LLShoppingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLShoppingViewController.m; sourceTree = "<group>"; };
+		E6B8986021D0B44C00FD443B /* MerchandiseCommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MerchandiseCommentTableViewCell.m; sourceTree = "<group>"; };
+		E6B8986121D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MerchandiseShopBasicInfoTableViewCell.m; sourceTree = "<group>"; };
+		E6B8986221D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MerchandiseBasicInfoTableViewCell.xib; sourceTree = "<group>"; };
+		E6B8986321D0B44C00FD443B /* MerchandiseCommentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MerchandiseCommentTableViewCell.xib; sourceTree = "<group>"; };
+		E6B8986421D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MerchandiseBasicInfoTableViewCell.h; sourceTree = "<group>"; };
+		E6B8986521D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MerchandiseShopBasicInfoTableViewCell.xib; sourceTree = "<group>"; };
+		E6B8986621D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MerchandiseShopBasicInfoTableViewCell.h; sourceTree = "<group>"; };
+		E6B8986721D0B44C00FD443B /* MerchandiseCommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MerchandiseCommentTableViewCell.h; sourceTree = "<group>"; };
+		E6B8986821D0B44C00FD443B /* LLShoppingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLShoppingViewController.h; sourceTree = "<group>"; };
+		E6B8986921D0B44C00FD443B /* LLShoppingViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LLShoppingViewController.storyboard; sourceTree = "<group>"; };
+		E6B8986A21D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MerchandiseBasicInfoTableViewCell.m; sourceTree = "<group>"; };
 		E6D75F1121A78AD300B2067C /* HPSharePersonCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSharePersonCard.h; sourceTree = "<group>"; };
 		E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSharePersonCard.m; sourceTree = "<group>"; };
 		E6D75F1521A811E500B2067C /* HPWhatIsShareSpaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPWhatIsShareSpaceController.h; sourceTree = "<group>"; };
@@ -1202,6 +1222,7 @@
 		E661B091219BAC4300C86CF5 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				E6B8985E21D0B44C00FD443B /* HomeCon */,
 				E6292188219AC19D00BEF16C /* HPMainTabBarController.h */,
 				E6292189219AC19D00BEF16C /* HPMainTabBarController.m */,
 				E661B092219BACE900C86CF5 /* HPShareController.h */,
@@ -1508,6 +1529,25 @@
 			path = PageControl;
 			sourceTree = "<group>";
 		};
+		E6B8985E21D0B44C00FD443B /* HomeCon */ = {
+			isa = PBXGroup;
+			children = (
+				E6B8986821D0B44C00FD443B /* LLShoppingViewController.h */,
+				E6B8985F21D0B44C00FD443B /* LLShoppingViewController.m */,
+				E6B8986921D0B44C00FD443B /* LLShoppingViewController.storyboard */,
+				E6B8986021D0B44C00FD443B /* MerchandiseCommentTableViewCell.m */,
+				E6B8986121D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.m */,
+				E6B8986221D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.xib */,
+				E6B8986321D0B44C00FD443B /* MerchandiseCommentTableViewCell.xib */,
+				E6B8986421D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.h */,
+				E6B8986521D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.xib */,
+				E6B8986621D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.h */,
+				E6B8986721D0B44C00FD443B /* MerchandiseCommentTableViewCell.h */,
+				E6B8986A21D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.m */,
+			);
+			path = HomeCon;
+			sourceTree = "<group>";
+		};
 		E6D75F1421A811A600B2067C /* Idea */ = {
 			isa = PBXGroup;
 			children = (
@@ -1742,14 +1782,18 @@
 			files = (
 				E661B13021A28E8500C86CF5 /* README.md in Resources */,
 				E61E27A721C8D68000CD5288 /* EBBannerViewController.xib in Resources */,
+				E6B8986F21D0B44C00FD443B /* MerchandiseCommentTableViewCell.xib in Resources */,
 				E6292141219AA83A00BEF16C /* LaunchScreen.storyboard in Resources */,
 				E61E27A621C8D68000CD5288 /* EBBannerView.xib in Resources */,
 				E629216B219AAAB900BEF16C /* Default-568h@2x.png in Resources */,
+				E6B8987021D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.xib in Resources */,
 				E622A9C021C33989007C35BC /* RefreshTableView.bundle in Resources */,
 				E629213E219AA83A00BEF16C /* Assets.xcassets in Resources */,
 				E629213C219AA83100BEF16C /* Main.storyboard in Resources */,
 				E661B12321A28E8500C86CF5 /* LICENSE in Resources */,
 				E622A9C121C33989007C35BC /* .gitkeep in Resources */,
+				E6B8986E21D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.xib in Resources */,
+				E6B8987121D0B44C00FD443B /* LLShoppingViewController.storyboard in Resources */,
 				E61E27AC21C8D68000CD5288 /* EBMuteDetector.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1936,6 +1980,7 @@
 				69165D0F21C4D77100593D25 /* HPLinkageView.m in Sources */,
 				69165CE421BFB36500593D25 /* HPPictureModel.m in Sources */,
 				E6B4CEE221C5286F00429C11 /* TAAbstractDotView.m in Sources */,
+				E6B8987221D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.m in Sources */,
 				E6D75F8B21B69D0D00B2067C /* HPShareMapController.m in Sources */,
 				E61CB24021C779A90076540E /* YYGestureRecognizer.m in Sources */,
 				E61E278D21C8C36100CD5288 /* HPAboutUsViewController.m in Sources */,
@@ -2001,6 +2046,7 @@
 				E6D75F5021B0050B00B2067C /* HPFollowController.m in Sources */,
 				E61F710421C12F1C00932708 /* HPSystemNotiController.m in Sources */,
 				E661B12521A28E8500C86CF5 /* JTDateHelper.m in Sources */,
+				E6B8986C21D0B44C00FD443B /* MerchandiseCommentTableViewCell.m in Sources */,
 				E661B0C4219CFE6D00C86CF5 /* HPCheckTableCell.m in Sources */,
 				E6D75F3B21AEA15400B2067C /* HPConfigCenterController.m in Sources */,
 				E6B4CEDC21C5286F00429C11 /* SDCycleScrollView.m in Sources */,
@@ -2024,6 +2070,7 @@
 				E61FE0AA21BA6F5C00555F3F /* HPHTTPManager.m in Sources */,
 				E6292144219AA83A00BEF16C /* main.m in Sources */,
 				E6D75F5621B0D24D00B2067C /* HPHistoryController.m in Sources */,
+				E6B8986D21D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.m in Sources */,
 				E6D75F6A21B253D000B2067C /* HPPageView.m in Sources */,
 				E661B14321A679E200C86CF5 /* UIScrollView+GestureConflict.m in Sources */,
 				E661B0F4219FC13E00C86CF5 /* HPShareListCell.m in Sources */,
@@ -2040,6 +2087,7 @@
 				69165CF421C1FA8700593D25 /* HPShareListModel.m in Sources */,
 				E661B0A7219C0B9800C86CF5 /* HPBaseControl.m in Sources */,
 				E661B0B6219C2C0400C86CF5 /* HPCheckDialogView.m in Sources */,
+				E6B8986B21D0B44C00FD443B /* LLShoppingViewController.m in Sources */,
 				E622A9D021C3A6B3007C35BC /* HPCardDetailsModel.m in Sources */,
 				E661B0A4219C0B5600C86CF5 /* HPBaseView.m in Sources */,
 				E6F551E121B911DF0086094F /* HPInterActiveModel.m in Sources */,
