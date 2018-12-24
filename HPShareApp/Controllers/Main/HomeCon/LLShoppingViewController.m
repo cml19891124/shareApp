@@ -17,7 +17,7 @@
 #define SCREEN_WIDTH    [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT   [UIScreen mainScreen].bounds.size.height
 
-#define HEADER_VIEW_HEIGHT      getWidth(115.f)      // 顶部商品图片高度
+#define HEADER_VIEW_HEIGHT      getWidth(400.f)      // 顶部商品图片高度
 #define END_DRAG_SHOW_HEIGHT    80.0f       // 结束拖拽最大值时的显示
 #define BOTTOM_VIEW_HEIGHT      44.0f       // 底部视图高度（加入购物车＼立即购买）
 

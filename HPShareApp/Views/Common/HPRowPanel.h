@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) UIColor *lineColor;
 
+@property (nonatomic, assign) BOOL isShrink;
+
 /**
  为panel添加一行 view 并与上一行 view 用分割线分隔
 

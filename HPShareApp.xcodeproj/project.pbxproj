@@ -176,6 +176,7 @@
 		E6B8987021D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E6B8986521D0B44C00FD443B /* MerchandiseShopBasicInfoTableViewCell.xib */; };
 		E6B8987121D0B44C00FD443B /* LLShoppingViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6B8986921D0B44C00FD443B /* LLShoppingViewController.storyboard */; };
 		E6B8987221D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B8986A21D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.m */; };
+		E6B8987521D0D53900FD443B /* HPStoreLeavesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */; };
 		E6D75F1321A78AD300B2067C /* HPSharePersonCard.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */; };
 		E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1621A811E500B2067C /* HPWhatIsShareSpaceController.m */; };
 		E6D75F1A21ABCA7B00B2067C /* HPHowToPlayShareSpaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1921ABCA7B00B2067C /* HPHowToPlayShareSpaceController.m */; };
@@ -578,6 +579,8 @@
 		E6B8986821D0B44C00FD443B /* LLShoppingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLShoppingViewController.h; sourceTree = "<group>"; };
 		E6B8986921D0B44C00FD443B /* LLShoppingViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LLShoppingViewController.storyboard; sourceTree = "<group>"; };
 		E6B8986A21D0B44C00FD443B /* MerchandiseBasicInfoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MerchandiseBasicInfoTableViewCell.m; sourceTree = "<group>"; };
+		E6B8987321D0D53900FD443B /* HPStoreLeavesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPStoreLeavesViewController.h; sourceTree = "<group>"; };
+		E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPStoreLeavesViewController.m; sourceTree = "<group>"; };
 		E6D75F1121A78AD300B2067C /* HPSharePersonCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSharePersonCard.h; sourceTree = "<group>"; };
 		E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSharePersonCard.m; sourceTree = "<group>"; };
 		E6D75F1521A811E500B2067C /* HPWhatIsShareSpaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPWhatIsShareSpaceController.h; sourceTree = "<group>"; };
@@ -703,6 +706,8 @@
 				69165CC521BDFB4100593D25 /* HPBaseReleaseController.m */,
 				E61B5EAF21CC849600DC8A59 /* HPReviseReleaseInfoViewController.h */,
 				E61B5EB021CC849600DC8A59 /* HPReviseReleaseInfoViewController.m */,
+				E6B8987321D0D53900FD443B /* HPStoreLeavesViewController.h */,
+				E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -2092,6 +2097,7 @@
 				E661B0A4219C0B5600C86CF5 /* HPBaseView.m in Sources */,
 				E6F551E121B911DF0086094F /* HPInterActiveModel.m in Sources */,
 				E61E27A421C8D68000CD5288 /* EBBannerViewMaker.m in Sources */,
+				E6B8987521D0D53900FD443B /* HPStoreLeavesViewController.m in Sources */,
 				E6D75F8521B65AAD00B2067C /* HPFeedbackController.m in Sources */,
 				E61E27AD21C8D68000CD5288 /* EBBannerViewController.m in Sources */,
 				6993AD2721C685470019506C /* HPHeaderScrollView.m in Sources */,

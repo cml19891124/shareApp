@@ -42,7 +42,17 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 @property (nonatomic, strong) HPRightImageButton *leavesBtn;
 @property (strong, nonatomic) HPTimeRentView *timeRentView;
 @property (strong, nonatomic) HPRentAmountItemView *amountItemView;
-@property (nonatomic, strong) HPRowPanel *panel;
+
+/**
+ 模式
+ */
+@property (nonatomic, strong) HPRowPanel *rentModelPanel;
+
+/**
+ 金额
+ */
+@property (nonatomic, strong) HPRowPanel *rentAmountPanel;
+
 
 /**
   租赁模式
@@ -182,7 +192,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
             make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
         }];
         [panel shrinkFrom:1 to:1];
-        _panel = panel;
+        _rentModelPanel = panel;
     }else if (index == 5) {
         //共享租金
         [panel addRowView:[self setupRentAmountRowView] withHeight:getWidth(137.f)];
@@ -194,7 +204,8 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
             make.height.mas_equalTo(137.f * g_rateWidth);
             make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
         }];
-        
+        [panel shrinkFrom:1 to:1];
+        _rentAmountPanel = panel;
     }else if (index == 6) {
         [panel addRowView:[self setupShareLeavesRowView]];
         UIView *lastPanel = view.subviews[index - 1];
@@ -396,19 +407,40 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
             break;
         case HPShareGotoBtnTagRectType:
             HPLog(@"租赁模式");
-            [_panel expand];
+            if (_rentModelPanel.isShrink) {
+                [_rentModelPanel expand];
+                
+                if (!_rentAmountPanel.isShrink) {
+                    [_rentAmountPanel shrinkFrom:1 to:1];
+                }
+            }
+            else {
+                [_rentModelPanel shrinkFrom:1 to:1];
+            }
             break;
         case HPShareGotoBtnTagTimeDuring:
             HPLog(@"租赁时间段");
+            
             break;
         case HPShareGotoBtnTagInsustry:
             HPLog(@"租赁行业类型");
             break;
         case HPShareGotoBtnTagRect:
             HPLog(@"租赁金额");
+            if (_rentAmountPanel.isShrink) {
+                [_rentAmountPanel expand];
+                
+                if (!_rentModelPanel.isShrink) {
+                    [_rentModelPanel shrinkFrom:1 to:1];
+                }
+            }
+            else {
+                [_rentAmountPanel shrinkFrom:1 to:1];
+            }
             break;
         case HPShareGotoBtnTagLeaves:
             HPLog(@"租赁留言");
+            [self pushVCByClassName:@"HPStoreLeavesViewController"];
             break;
         default:
             break;

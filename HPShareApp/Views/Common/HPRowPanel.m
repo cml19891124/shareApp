@@ -109,6 +109,8 @@
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(self->wholeHeight - shrinkHeight);
     }];
+    
+    _isShrink = YES;
 }
 
 - (void)expand {
@@ -133,6 +135,8 @@
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(self->wholeHeight);
     }];
+    
+    _isShrink = NO;
 }
 
 
