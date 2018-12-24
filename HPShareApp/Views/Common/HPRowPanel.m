@@ -59,6 +59,7 @@
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
         make.left.and.width.equalTo(self);
+        
         if (self.rowViews.count > 0) {
             UIView *lastLine = self.lines.lastObject;
             make.top.equalTo(lastLine.mas_bottom);
@@ -94,14 +95,16 @@
         shrinkHeight += view.frame.size.height + line.frame.size.height;
     }
     
-    UIView *endNextView = self.rowViews[end + 1];
-    UIView *startUpLine = self.lines[start - 1];
-    CGFloat height = endNextView.frame.size.height;
-    [endNextView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.equalTo(self);
-        make.top.equalTo(startUpLine.mas_bottom);
-        make.height.mas_equalTo(height);
-    }];
+    if (end + 1 < self.rowViews.count) {
+        UIView *endNextView = self.rowViews[end + 1];
+        UIView *startUpLine = self.lines[start - 1];
+        CGFloat height = endNextView.frame.size.height;
+        [endNextView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.and.width.equalTo(self);
+            make.top.equalTo(startUpLine.mas_bottom);
+            make.height.mas_equalTo(height);
+        }];
+    }
     
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(self->wholeHeight - shrinkHeight);
@@ -116,14 +119,16 @@
         [line setHidden:NO];
     }
     
-    UIView *endNextView = self.rowViews[shrinkEnd + 1];
-    UIView *endNextLine = self.lines[shrinkEnd];
-    CGFloat height = endNextView.frame.size.height;
-    [endNextView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.equalTo(self);
-        make.top.equalTo(endNextLine.mas_bottom);
-        make.height.mas_equalTo(height);
-    }];
+    if (shrinkEnd + 1 < self.rowViews.count) {
+        UIView *endNextView = self.rowViews[shrinkEnd + 1];
+        UIView *endNextLine = self.lines[shrinkEnd];
+        CGFloat height = endNextView.frame.size.height;
+        [endNextView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.and.width.equalTo(self);
+            make.top.equalTo(endNextLine.mas_bottom);
+            make.height.mas_equalTo(height);
+        }];
+    }
     
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(self->wholeHeight);

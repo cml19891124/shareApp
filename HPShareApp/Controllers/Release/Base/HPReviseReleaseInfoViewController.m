@@ -129,7 +129,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 - (void)setupPanelAtIndex:(NSInteger)index ofView:(UIView *)view {
     HPRowPanel *panel = [[HPRowPanel alloc] init];
     [view addSubview:panel];
-    _panel = panel;
+//    _panel = panel;
     if (index == 0) {
         [panel addRowView:[self setUpInfoLabel] withHeight:25.f * g_rateWidth];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -174,7 +174,6 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
         //共享类型
         [panel addRowView:[self setupRentTypeRowView] withHeight:123.f * g_rateWidth];
         [panel addRowView:[self setUpTimeRentView] withHeight:getWidth(77.f)];
-//        [panel shrinkFrom:1 to:0];
         UIView *lastPanel = view.subviews[index - 1];
         _lastPanel = lastPanel;
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -182,6 +181,8 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
             make.height.mas_equalTo(123.f * g_rateWidth);
             make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
         }];
+        [panel shrinkFrom:1 to:1];
+        _panel = panel;
     }else if (index == 5) {
         //共享租金
         [panel addRowView:[self setupRentAmountRowView] withHeight:getWidth(137.f)];
