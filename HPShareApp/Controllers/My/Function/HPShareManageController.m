@@ -34,7 +34,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-
+    
     _dataArray = [NSMutableArray array];
     
     HPLoginModel *loginModel = [HPUserTool account];

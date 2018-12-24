@@ -15,7 +15,8 @@
 #import "HPShareDetailModel.h"
 #import "HPTagView.h"
 #import "HPCustomerServiceModalView.h"
-
+#import "HPTextDialogView.h"
+#import "HPShareReleaseParam.h"
 
 @interface HPShareDetailController () <HPBannerViewDelegate>
 
@@ -49,6 +50,8 @@
 
 @property (nonatomic, weak) HPCalendarView *calendarView;
 
+@property (nonatomic, weak) HPTextDialogView *textDialogView;
+
 /**
  共享租金
  */
@@ -69,6 +72,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.isPopGestureRecognize = NO;
+    
     _tagItems = [[NSMutableArray alloc] init];
     
     [self setupUI];
@@ -84,6 +90,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    if (self.param[@"refresh"]) {
+        [self loadData:self.param[@"refresh"]];
+    }
     
 }
 
@@ -223,6 +233,31 @@
         make.bottom.equalTo(self.view);
     }];
     [self setupContactRegion:contactRegion];
+    if (self.param[@"edit"]) {
+        [contactRegion setHidden:YES];
+    }
+    else {
+        [contactRegion setHidden:NO];
+    }
+    
+    UIView *editRegion = [[UIView alloc] init];
+    [editRegion setBackgroundColor:UIColor.whiteColor];
+    [editRegion.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
+    [editRegion.layer setShadowOffset:CGSizeMake(0.f, -2.f)];
+    [editRegion.layer setShadowOpacity:0.19f];
+    [self.view addSubview:editRegion];
+    [editRegion mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.width.equalTo(self.view);
+        make.height.mas_equalTo(60.f * g_rateWidth);
+        make.bottom.equalTo(self.view);
+    }];
+    [self setupEditRegion:editRegion];
+    if (self.param[@"edit"]) {
+        [contactRegion setHidden:NO];
+    }
+    else {
+        [contactRegion setHidden:YES];
+    }
 }
 
 - (void)setTag:(NSArray *)tags {
@@ -592,6 +627,34 @@
     }];
 }
 
+- (void)setupEditRegion:(UIView *)view {
+    UIButton *deleteBtn = [[UIButton alloc] init];
+    [deleteBtn.titleLabel setFont:kFont_Medium(18.f)];
+    [deleteBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [deleteBtn setTitle:@"删除" forState:UIControlStateNormal];
+    [deleteBtn setBackgroundColor:COLOR_ORANGE_F59C40];
+    [deleteBtn addTarget:self action:@selector(onClickDeleteBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:deleteBtn];
+    [deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.top.and.bottom.equalTo(view);
+        make.width.equalTo(view).multipliedBy(0.5f);
+    }];
+    
+    UIButton *editBtn = [[UIButton alloc] init];
+    [editBtn.titleLabel setFont:kFont_Medium(18.f)];
+    [editBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [editBtn setTitle:@"编辑" forState:UIControlStateNormal];
+    [editBtn setBackgroundColor:COLOR_RED_FE2A3B];
+    [editBtn addTarget:self action:@selector(onClickEditBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:editBtn];
+    [editBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(deleteBtn.mas_right);
+        make.top.and.bottom.and.right.equalTo(view);
+    }];
+}
+
+#pragma mark - 点击头像跳转到我的卡片
+
 - (void)MyCardVC:(UITapGestureRecognizer *)tap
 {
     HPShareDetailModel *model = self.param[@"model"];
@@ -612,16 +675,54 @@
         [_customerServiceModalView show:YES];
         [self.parentViewController.view bringSubviewToFront:_customerServiceModalView];
 }
-#pragma mark - HPbannerViewDelegate
-
-- (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
-    [_pageControl setCurrentPage:index];
-}
 
 #pragma mark - onClickBackBtn
 
 - (void)onClickBackBtn {
-    [self pop];
+    if (self.param[@"refresh"]) {
+        HPShareDetailModel *model = self.param[@"refresh"];
+        NSString *index = self.param[@"index"];
+        [self popWithParam:@{@"refresh":model, @"refreshIndex":index}];
+    }
+    else {
+        [self pop];
+    }
+}
+
+- (void)onClickDeleteBtn:(UIButton *)btn {
+    if (_textDialogView == nil) {
+        HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
+        _textDialogView = textDialogView;
+    }
+    
+    [_textDialogView setText:@"确定删除本条发布信息？"];
+    HPShareDetailModel *model = self.param[@"model"];
+    kWeakSelf(weakSelf);
+    [_textDialogView setConfirmCallback:^{
+        [weakSelf deleteInfoBySpaceId:model.spaceId];
+    }];
+    [_textDialogView show:YES];
+}
+
+- (void)onClickEditBtn:(UIButton *)btn {
+    if (_textDialogView == nil) {
+        HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
+        _textDialogView = textDialogView;
+    }
+    
+    [_textDialogView setText:@"是否编辑该条发布信息？"];
+    HPShareDetailModel *model = self.param[@"model"];
+    kWeakSelf(weakSelf);
+    [_textDialogView setConfirmCallback:^{
+        [weakSelf editInfoBySpaceId:model.spaceId type:model.type];
+    }];
+    [_textDialogView show:YES];
+}
+
+#pragma mark - HPbannerViewDelegate
+
+- (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
+    [_pageControl setCurrentPage:index];
 }
 
 #pragma mark - NetWork
@@ -712,6 +813,33 @@
     }];
 }
 
+//删除信息
+- (void)deleteInfoBySpaceId:(NSString *)spaceId {
+    NSString *url = [NSString stringWithFormat:@"/v1/space/delete/%@", spaceId];
+    [HPHTTPSever HPGETServerWithMethod:url isNeedToken:YES paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:@"删除成功"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                NSString *index = self.param[@"edit"];
+                [self popWithParam:@{@"delete":index}];
+            });
+        }
+        else
+            [HPProgressHUD alertMessage:MSG];
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+- (void)editInfoBySpaceId:(NSString *)spaceId type:(NSInteger)type {
+    if (type == 1) {
+        [self pushVCByClassName:@"HPOwnerCardDefineController" withParam:@{@"spaceId":spaceId}];
+    }
+    else if (type == 2) {
+        [self pushVCByClassName:@"HPStartUpCardDefineController" withParam:@{@"spaceId":spaceId}];
+    }
+}
+
 #pragma mark - LoadData
 
 - (void)loadData:(HPShareDetailModel *)model {
@@ -798,6 +926,101 @@
         if (model.pictures.count > 1) {
             [_pageControl setNumberOfPages:model.pictures.count];
             [_pageControl setCurrentPage:0];
+        }
+        else {
+            [_pageControl setHidden:YES];
+        }
+        
+        NSMutableArray *array = [[NSMutableArray alloc] init];
+        for (HPPictureModel *picModel in model.pictures) {
+            UIImageView *imageView = [[UIImageView alloc] init];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:picModel.url] placeholderImage:ImageNamed(@"shared_shop_details_background")];
+            [array addObject:imageView];
+        }
+        
+        [_bannerView setImageViews:array];
+        if (model.pictures.count > 1) {
+            [_bannerView startAutoScrollWithInterval:2.0];
+        }
+    }
+}
+
+- (void)updateData {
+    if (!self.param[@"update"]) {
+        return;
+    }
+    
+    HPShareReleaseParam *param = self.param[@"update"];
+    
+    [_titleLabel setText:param.title];
+    
+    if (param.tag) {
+        NSArray *tags = [param.tag componentsSeparatedByString:@","];
+        [self setTag:tags];
+    }
+    
+    if ([param.type isEqualToString:@"1"]) {//业主
+        [_addressLabel setText:[NSString stringWithFormat:@"店铺地址:%@",param.address]];
+        [_priceDescLabel setText:@"共享租金"];
+        [_areaDescLabel setText:@"共享面积"];
+        
+    }
+    else if ([param.type isEqualToString:@"2"]) { //创客
+        NSString *areaName = [HPCommonData getAreaNameById:param.areaId];
+        NSString *districeName = [HPCommonData getDistrictNameByAreaId:param.areaId districtId:param.districtId];
+        [_addressLabel setText:[NSString stringWithFormat:@"期望区域:%@-%@", areaName, districeName]];
+        [_priceDescLabel setText:@"期望租金"];
+        [_areaDescLabel setText:@"期望面积"];
+        
+    }
+    
+    NSString *industry = [HPCommonData getIndustryNameById:param.industryId];
+    NSString *subIndustry = [HPCommonData getIndustryNameById:param.subIndustryId];
+    [_tradeLabel setText:[NSString stringWithFormat:@"%@·%@", industry, subIndustry]];
+    
+    if (param.shareTime && ![param.shareTime isEqualToString:@""]) {
+        [_shareTimeLabel setText:param.shareTime];
+    }
+    else {
+        [_shareTimeLabel setText:@"面议"];
+    }
+    
+    if (param.area && ![param.area isEqualToString:@"0"]) {
+        [_areaLabel setText:[NSString stringWithFormat:@"%@ ㎡", param.area]];
+    }
+    else
+        [_areaLabel setText:@"面议"];
+    
+    if (param.rent && ![param.rent isEqualToString:@"0"]) {
+        [_priceLabel setText:param.rent];
+        [_priceUnitLabel setText:[param.rentType isEqualToString:@"1"] ? @"元/小时":@"元/天"];
+    }
+    else {
+        [_priceLabel setText:@"面议"];
+        [_priceUnitLabel setHidden:YES];
+    }
+    
+    if (!param.remark || [param.remark isEqualToString:@""]) {
+        [_remarkLabel setText:@"用户很懒，什么也没有填写～"];
+    }
+    else {
+        [_remarkLabel setText:param.remark];
+    }
+    
+    [_userNameLabel setText:param.contact];
+    
+    if (param.shareDays) {
+        NSArray *shareDays = [param.shareDays componentsSeparatedByString:@","];
+        [_calendarView setSelectedDateStrs:shareDays];
+    }
+    
+    if (param.pictures && param.pictures.count > 0) {
+        if (model.pictures.count > 1) {
+            [_pageControl setNumberOfPages:model.pictures.count];
+            [_pageControl setCurrentPage:0];
+        }
+        else {
+            [_pageControl setHidden:YES];
         }
         
         NSMutableArray *array = [[NSMutableArray alloc] init];
