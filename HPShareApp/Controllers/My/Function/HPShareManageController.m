@@ -10,10 +10,12 @@
 #import "HPShareManageCell.h"
 #import "HPTextDialogView.h"
 #import "HPShareListParam.h"
+#import "YYLRefreshNoDataView.h"
+#import "HPReleaseModalView.h"
 
 #define CELL_ID @"HPShareManageCell"
 
-@interface HPShareManageController () <UITableViewDelegate, UITableViewDataSource>
+@interface HPShareManageController () <UITableViewDelegate, UITableViewDataSource, YYLRefreshNoDataViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *dataArray;
 
@@ -22,6 +24,8 @@
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
 
 @property (nonatomic, strong) HPShareListParam *shareListParam;
+
+@property (nonatomic, weak) HPReleaseModalView *releaseModalView;
 
 @end
 
@@ -110,7 +114,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListModel *model = _dataArray[indexPath.row];
-    [self pushVCByClassName:@"HPShareDetailController"withParam:@{@"model":model}];
+    [self pushVCByClassName:@"HPShareDetailController" withParam:@{@"model":model}];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -134,7 +138,7 @@
     
     [cell setModel:model];
     [cell.deleteBtn addTarget:self action:@selector(onClickDeleteBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.editBtn addTarget:self action:@selector(onClickEditBtn) forControlEvents:UIControlEventTouchUpInside];
+    [cell.editBtn addTarget:self action:@selector(onClickEditBtn:) forControlEvents:UIControlEventTouchUpInside];
     
     return cell;
 }
@@ -145,8 +149,16 @@
 
 #pragma mark - OnClick
 
-- (void)onClickEditBtn {
-    [self pushVCByClassName:@"HPStartUpCardDefineController"];
+- (void)onClickEditBtn:(UIButton *)btn {
+    HPShareManageCell *cell = [self getParentCellofView:btn];
+    HPShareListModel *model = cell.model;
+    
+    if (model.type == 1) {
+        [self pushVCByClassName:@"HPOwnerCardDefineController" withParam:@{@"spaceId":model.spaceId}];
+    }
+    else if (model.type == 2) {
+        [self pushVCByClassName:@"HPStartUpCardDefineController" withParam:@{@"spaceId":model.spaceId}];
+    }
 }
 
 - (void)onClickDeleteBtn:(UIButton *)btn {
@@ -168,7 +180,7 @@
         NSString *url = [NSString stringWithFormat:@"/v1/space/delete/%@", spaceId];
         [HPHTTPSever HPGETServerWithMethod:url isNeedToken:YES paraments:@{} complete:^(id  _Nonnull responseObject) {
             if (CODE == 200) {
-                [HPProgressHUD alertMessage:MSG];
+                [HPProgressHUD alertMessage:@"删除成功"];
                 
                 NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
                 
@@ -185,6 +197,12 @@
     [_textDialogView show:YES];
 }
 
+- (void)onClickCancelBtn:(UIButton *)btn {
+    if (_releaseModalView) {
+        [_releaseModalView show:NO];
+    }
+}
+
 #pragma mark - NetWork
 
 - (void)getShareListData:(HPShareListParam *)param reload:(BOOL)isReload {
@@ -193,7 +211,7 @@
     [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:NO paraments:dict complete:^(id  _Nonnull responseObject) {
         NSArray<HPShareListModel *> *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:DATA[@"list"]];
         
-        if (models.count == 0) {
+        if (models.count < self.shareListParam.pageSize) {
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
             [self.tableView.mj_header endRefreshing];
         }
@@ -208,10 +226,49 @@
         else {
             [self.dataArray addObjectsFromArray:models];
         }
+        
+        if (self.dataArray.count == 0) {
+            self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
+            self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"list_default_page");
+            self.tableView.refreshNoDataView.tipLabel.text = @"店铺共享，你是第一个吃螃蟹的人！！";
+            [self.tableView.refreshNoDataView.tipBtn setTitle:@"立即发布" forState:UIControlStateNormal];
+            self.tableView.refreshNoDataView.delegate = self;
+        }
+        
         [self.tableView reloadData];
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
     }];
+}
+
+#pragma mark - YYLRefreshNoDataViewDelegate
+
+- (void)clickToCheckSTHForRequirments {
+    if (_releaseModalView == nil) {
+        HPReleaseModalView *releaseModalView = [[HPReleaseModalView alloc] init];
+        [releaseModalView setCallBack:^(HPReleaseCardType type) {
+            if (type == HPReleaseCardTypeOwner) {
+                [self pushVCByClassName:@"HPOwnerCardDefineController"];
+            }
+            else if (type == HPReleaseCardTypeStartup) {
+                [self pushVCByClassName:@"HPStartUpCardDefineController"];
+            }
+            
+        }];
+        
+        UIButton *cancelBtn = [[UIButton alloc] init];
+        [cancelBtn setImage:[UIImage imageNamed:@"customizing_business_cards_close_button"] forState:UIControlStateNormal];
+        [cancelBtn addTarget:self action:@selector(onClickCancelBtn:) forControlEvents:UIControlEventTouchUpInside];
+        [releaseModalView addSubview:cancelBtn];
+        [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self.view);
+            make.bottom.equalTo(self.mas_bottomLayoutGuideTop).with.offset(-6.f);
+        }];
+        
+        _releaseModalView = releaseModalView;
+    }
+    
+    [_releaseModalView show:YES];
 }
 
 @end

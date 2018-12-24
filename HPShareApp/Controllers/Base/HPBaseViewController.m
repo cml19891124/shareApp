@@ -15,11 +15,18 @@
 
 @implementation HPBaseViewController
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _isPopGestureRecognize = YES;
+        _isPop = NO;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    _isPopGestureRecognize = YES;
-    _isPop = NO;
 }
 
 /*

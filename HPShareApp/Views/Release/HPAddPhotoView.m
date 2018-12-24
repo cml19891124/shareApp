@@ -53,6 +53,12 @@
     }
 }
 
+- (void)dealloc {
+    for (UIImageView *imageView in _imageViews) {
+        [imageView removeObserver:self forKeyPath:@"image"];
+    }
+}
+
 - (void)setupUI {
     [self setBackgroundColor:UIColor.whiteColor];
 //    shop_transfer_cancel
@@ -125,6 +131,58 @@
     [_photos addObject:image];
 }
 
+- (void)addPhotoUrl:(NSString *)url {
+    if (_imageViews.count >= _maxNum) {
+        return;
+    }
+    
+    UIImageView *imageView = [[UIImageView alloc] init];
+    [imageView setBackgroundColor:COLOR_GRAY_F8F8F8];
+    [imageView sd_setImageWithURL:[NSURL URLWithString:url]];
+    [imageView addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:nil];
+    [imageView setContentMode:UIViewContentModeScaleAspectFill];
+    [imageView setClipsToBounds:YES];
+    [self addSubview:imageView];
+    [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        if (self.imageViews.count == 0) {
+            make.left.equalTo(self).with.offset(getWidth(20.f));
+        }
+        else {
+            UIImageView *lastImageView = self.imageViews.lastObject;
+            make.left.equalTo(lastImageView.mas_right).with.offset(getWidth(15.f));
+        }
+        
+        make.top.equalTo(self).with.offset(getWidth(20.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(70.f), getWidth(70.f)));
+    }];
+    
+    [_addBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+        if (self.imageViews.count != self.maxNum - 1) {
+            [self.leftConstraint uninstall];
+            self.leftConstraint = make.left.equalTo(imageView.mas_right).with.offset(getWidth(15.f));
+        }
+    }];
+    
+    UIButton *deleteBtn = [[UIButton alloc] init];
+    [deleteBtn setImage:[UIImage imageNamed:@"shop_transfer_cancel"] forState:UIControlStateNormal];
+    [deleteBtn addTarget:self action:@selector(onClickDeleteBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:deleteBtn];
+    [deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(imageView.mas_top);
+        make.centerX.equalTo(imageView.mas_right);
+        make.size.mas_equalTo(CGSizeMake(30.f, 30.f));
+    }];
+    
+    [_imageViews addObject:imageView];
+    [_deleteBtns addObject:deleteBtn];
+    if (imageView.image) {
+        [_photos addObject:imageView.image];
+    }
+    else {
+        [_photos addObject:[UIImage new]];
+    }
+}
+
 - (void)onClickDeleteBtn:(UIButton *)btn {
     NSInteger index = [_deleteBtns indexOfObject:btn];
     UIImageView *imageView = _imageViews[index];
@@ -193,6 +251,16 @@
     if (_addBtnCallBack) {
         _addBtnCallBack();
     }
+}
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    UIImageView *imageView = (UIImageView *)object;
+    NSInteger index = [_imageViews indexOfObject:imageView];
+    UIImage *newImage = [change objectForKey:NSKeyValueChangeNewKey];
+    UIImage *nImage = [UIImage imageWithCGImage:newImage.CGImage];
+    [_photos replaceObjectAtIndex:index withObject:nImage];
 }
 
 @end

@@ -14,6 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSArray *selectedDates;
 
+@property (nonatomic, strong) NSDate *startMonthOfDate;
+
+- (void)setSelectedDateStrs:(NSArray *)selectedDateStrs;
+
 @end
 
 NS_ASSUME_NONNULL_END

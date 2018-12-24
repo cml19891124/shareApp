@@ -27,6 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)alertWithFinishText:(NSString *)text;
 
++ (void)alertWithLoadingText:(NSString *)text;
+
++ (void)hideHud;
+
 @end
 
 NS_ASSUME_NONNULL_END

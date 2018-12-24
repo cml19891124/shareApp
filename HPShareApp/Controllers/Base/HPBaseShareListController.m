@@ -13,6 +13,8 @@
 #import "HPLinkageView.h"
 #import "HPCommonData.h"
 #import "HPRightImageButton.h"
+#import "YYLRefreshNoDataView.h"
+#import "HPReleaseModalView.h"
 
 typedef NS_ENUM(NSInteger, HPFilterBtn) {
     HPFilterBtnSort = 0, //全部
@@ -22,7 +24,7 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
     HPFilterBtnPrice     //价格
 };
 
-@interface HPBaseShareListController () <HPSortSelectViewDelegate, HPLinkageViewDelegate>
+@interface HPBaseShareListController () <HPSortSelectViewDelegate, HPLinkageViewDelegate, YYLRefreshNoDataViewDelegate>
 
 @property (nonatomic, strong) UIView *filterBar;
 
@@ -39,6 +41,8 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
 @property (nonatomic, weak) HPLinkageView *tradeLinkageView;
 
 @property (nonatomic, weak) HPLinkageView *areaLinkageView;
+
+@property (nonatomic, weak) HPReleaseModalView *releaseModalView;
 
 @end
 
@@ -225,7 +229,7 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
             HPSortSelectView *sortSelectView = [[HPSortSelectView alloc] initWithOptions:_sorts];
             [sortSelectView setBackgroundColor:COLOR_GRAY_F8F8F8];
             [sortSelectView setDelegate:self];
-            [_tableView addSubview:sortSelectView];
+            [self.view addSubview:sortSelectView];
             [sortSelectView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.and.width.equalTo(self.view);
                 make.top.equalTo(self.filterBar.mas_bottom);
@@ -243,7 +247,7 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
             [linkageData setChildNameKey:@"industryName"];
             HPLinkageView *linkageView = [[HPLinkageView alloc] initWithData:linkageData];
             [linkageView setDelegate:self];
-            [_tableView addSubview:linkageView];
+            [self.view addSubview:linkageView];
             [linkageView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.and.width.equalTo(self.view);
                 make.top.equalTo(self.filterBar.mas_bottom);
@@ -262,7 +266,7 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
             [linkageData setChildNameKey:@"name"];
             HPLinkageView *linkageView = [[HPLinkageView alloc] initWithData:linkageData];
             [linkageView setDelegate:self];
-            [_tableView addSubview:linkageView];
+            [self.view addSubview:linkageView];
             [linkageView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.and.width.equalTo(self.view);
                 make.top.equalTo(self.filterBar.mas_bottom);
@@ -377,7 +381,9 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
         [_areaBtn setSelected:NO];
         [_areaBtn setText:name];
         [_shareListParam setAreaId:areaId];
-        [_shareListParam setDistrictId:districtId];
+        if (![districtModel.name isEqualToString:@"不限"]) {
+            [_shareListParam setDistrictId:districtId];
+        }
         [self.tableView.mj_header beginRefreshing];
     }
 }
@@ -390,7 +396,7 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
     [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:NO paraments:dict complete:^(id  _Nonnull responseObject) {
         NSArray<HPShareListModel *> *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:DATA[@"list"]];
         
-        if (models.count == 0) {
+        if (models.count < self.shareListParam.pageSize) {
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
             [self.tableView.mj_header endRefreshing];
         }
@@ -405,10 +411,59 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
         else {
             [self.dataArray addObjectsFromArray:models];
         }
+        
+        if (self.dataArray.count == 0) {
+            [HPProgressHUD alertMessage:@"暂无数据"];
+//            self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
+//            self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"list_default_page");
+//            self.tableView.refreshNoDataView.tipLabel.text = @"店铺共享，你是第一个吃螃蟹的人！！";
+//            [self.tableView.refreshNoDataView.tipBtn setTitle:@"立即发布" forState:UIControlStateNormal];
+//            self.tableView.refreshNoDataView.delegate = self;
+        }
+//        else {
+//            self.tableView.loadErrorType = YYLLoadErrorTypeDefalt;
+//        }
+        
         [self.tableView reloadData];
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
     }];
+}
+
+#pragma mark - YYLRefreshNoDataViewDelegate
+
+- (void)clickToCheckSTHForRequirments {
+    if (_releaseModalView == nil) {
+        HPReleaseModalView *releaseModalView = [[HPReleaseModalView alloc] init];
+        [releaseModalView setCallBack:^(HPReleaseCardType type) {
+            if (type == HPReleaseCardTypeOwner) {
+                [self pushVCByClassName:@"HPOwnerCardDefineController"];
+            }
+            else if (type == HPReleaseCardTypeStartup) {
+                [self pushVCByClassName:@"HPStartUpCardDefineController"];
+            }
+            
+        }];
+        
+        UIButton *cancelBtn = [[UIButton alloc] init];
+        [cancelBtn setImage:[UIImage imageNamed:@"customizing_business_cards_close_button"] forState:UIControlStateNormal];
+        [cancelBtn addTarget:self action:@selector(onClickCancelBtn:) forControlEvents:UIControlEventTouchUpInside];
+        [releaseModalView addSubview:cancelBtn];
+        [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self.view);
+            make.bottom.equalTo(self.mas_bottomLayoutGuideTop).with.offset(-6.f);
+        }];
+        
+        _releaseModalView = releaseModalView;
+    }
+    
+    [_releaseModalView show:YES];
+}
+
+- (void)onClickCancelBtn:(UIButton *)btn {
+    if (_releaseModalView) {
+        [_releaseModalView show:NO];
+    }
 }
 
 @end

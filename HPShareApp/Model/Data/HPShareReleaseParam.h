@@ -54,6 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *isApproved;
 
+@property (nonatomic, copy) NSString *spaceId;
+
 @property (nonatomic, copy) NSMutableArray *pictureIdArr;
 
 @end

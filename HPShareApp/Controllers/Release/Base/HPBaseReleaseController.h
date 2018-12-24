@@ -91,6 +91,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)onClickAlbumOrPhotoSheetWithTag:(NSInteger)tag;
 
+//初始化弹窗控件
+
+- (void)initDistrictSheetViewWithBtn:(UIButton *)btn;
+
+- (void)initTradeSheetViewWithBtn:(UIButton *)btn;
+
+- (void)initTagDialogViewWithBtn:(UIButton *)btn;
+
+- (void)initTimePickerWithBtn:(UIButton *)btn;
+
+- (void)initCalendarViewWithBtn:(UIButton *)btn;
+
 //网络请求
 
 - (void)getAreaList;

@@ -19,6 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSString *)getTimeStr;
 
+/**
+ 初始化选择开始时间，结束时间
+
+ @param startTime 开始时间字符串，格式如 06:30
+ @param endTime 结束时间字符串， 格式如 23:50
+ */
+- (void)selectStartTime:(NSString *)startTime endTime:(NSString *)endTime;
+
 @end
 
 NS_ASSUME_NONNULL_END

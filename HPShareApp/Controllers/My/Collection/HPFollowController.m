@@ -115,7 +115,7 @@
                 self.tableView.refreshNoDataView.delegate = self;
             }
             
-            if ([weakSelf.dataArray count] < 10) {
+            if (collectionListModel.list.count < collectionListModel.pageSize) {
                 
                 [self.tableView.mj_footer endRefreshingWithNoMoreData];
             }

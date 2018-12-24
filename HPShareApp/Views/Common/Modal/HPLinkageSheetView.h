@@ -79,6 +79,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)selectCellAtParentIndex:(NSInteger)pIndex childIndex:(NSInteger)cIndex;
 
+/**
+ 每个子选项都有一个对应的model，model包含父选项子选项的信息， 根据model对应父选项的key，value和对应子选项的key，value选择相应位置的cell
+
+ @param pKey model对应父选项的key
+ @param pValue model对应父选项key的value
+ @param cKey model对应子选项的key
+ @param cValue model对应子选项key的value
+ */
+- (void)selectCellWithParentKey:(NSString *)pKey value:(NSString *)pValue ChildKey:(NSString *)cKey value:(NSString *)cValue;
+
 @end
 
 NS_ASSUME_NONNULL_END

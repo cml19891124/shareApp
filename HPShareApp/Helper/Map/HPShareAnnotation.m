@@ -41,11 +41,14 @@
 
 + (NSArray *)annotationArrayWithModels:(NSArray<HPShareListModel *> *)models {
     NSMutableArray *array = [[NSMutableArray alloc] init];
-    for (HPShareListModel *model in models) {
+    for (int i = 0; i < models.count; i++) {
+        HPShareListModel *model = models[i];
+        
         if (model.latitude == nil || model.longitude == nil) {
             continue;
         }
         HPShareAnnotation *annotation = [[HPShareAnnotation alloc] initWithModel:model];
+        [annotation setIndex:i];
         [array addObject:annotation];
     }
     return array;

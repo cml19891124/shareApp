@@ -9,27 +9,36 @@
 #import "HPShareMapController.h"
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <MAMapKit/MAMapKit.h>
+#import <AMapLocationKit/AMapLocationKit.h>
+#import <AMapSearchKit/AMapSearchKit.h>
 #import "HPShareListCell.h"
 #import "HPShareListParam.h"
 #import "HPShareAnnotationView.h"
+#import "HPCommonData.h"
 
 #define CELL_ID @"HPShareListCell"
 
-@interface HPShareMapController () <UITableViewDelegate, UITableViewDataSource, MAMapViewDelegate>
+@interface HPShareMapController () <UITableViewDelegate, UITableViewDataSource, MAMapViewDelegate, AMapSearchDelegate>
 
 @property (nonatomic, weak) MAMapView *mapView;
+
+@property (nonatomic, strong) AMapLocationManager *locationManager;
+
+@property (nonatomic, strong) AMapSearchAPI *searchAPI;
 
 @property (nonatomic, strong) NSMutableArray *dataArray;
 
 @property (nonatomic, strong) HPShareListParam *shareListParam;
+
+@property (nonatomic, weak) UIView *dataView;
+
+@property (nonatomic, strong) MASConstraint *dataViewTopConstraint;
 
 @property (nonatomic, weak) UITableView *tableView;
 
 @property (nonatomic, weak) UILabel *locationLabel;
 
 @property (nonatomic, weak) UILabel *countLabel;
-
-@property (nonatomic, assign) BOOL firstLocate;
 
 @end
 
@@ -41,8 +50,11 @@
     [AMapServices sharedServices].enableHTTPS = YES;
     _dataArray = [[NSMutableArray alloc] init];
     _shareListParam = [HPShareListParam new];
-    _firstLocate = YES;
+    
+    [self configLocationManager];
+    [self configSearchAPI];
     [self setupUI];
+    [self requestLocationIfNeedData:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -62,37 +74,30 @@
 - (void)setupUI {
     UIView *navigationView = [self setupNavigationBarWithTitle:@"共享地图"];
     
-    UIScrollView *scrollView = [[UIScrollView alloc] init];
-    [scrollView setShowsVerticalScrollIndicator:NO];
-    [scrollView setBounces:NO];
-    [self.view addSubview:scrollView];
-    [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(navigationView.mas_bottom);
-        make.left.and.width.equalTo(self.view);
-        make.bottom.equalTo(self.mas_bottomLayoutGuideTop);
-    }];
-    
     MAMapView *mapView = [[MAMapView alloc] init];
     mapView.showsUserLocation = YES;
     mapView.userTrackingMode = MAUserTrackingModeFollow;
     mapView.zoomLevel = 15.f;
     [mapView setDelegate:self];
-    [scrollView addSubview:mapView];
+    [self.view addSubview:mapView];
     _mapView = mapView;
     [mapView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(scrollView);
-        make.left.and.width.and.equalTo(scrollView);
-        make.height.mas_equalTo(getWidth(237.f));
+        make.top.equalTo(navigationView.mas_bottom);
+        make.left.and.width.and.equalTo(self.view);
     }];
     
     UIView *dataView = [[UIView alloc] init];
     [dataView setBackgroundColor:UIColor.whiteColor];
-    [scrollView addSubview:dataView];
+    [self.view addSubview:dataView];
+    _dataView = dataView;
     [dataView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.equalTo(scrollView);
-        make.top.equalTo(mapView.mas_bottom);
+        make.left.and.width.equalTo(self.view);
+        self.dataViewTopConstraint = make.top.equalTo(self.view.mas_bottom).with.offset(-getWidth(44.f));
         make.height.mas_equalTo(getWidth(367.f));
-        make.bottom.equalTo(scrollView);
+    }];
+    
+    [mapView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(dataView.mas_top);
     }];
     
     UIView *headerView = [[UIView alloc] init];
@@ -102,10 +107,18 @@
         make.height.mas_equalTo(getWidth(44.f));
     }];
     
+    UISwipeGestureRecognizer *swipeDownGest = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHeadeView:)];
+    [swipeDownGest setDirection:UISwipeGestureRecognizerDirectionDown];
+    [headerView addGestureRecognizer:swipeDownGest];
+    
+    UISwipeGestureRecognizer *swipeUpGest = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHeadeView:)];
+    [swipeUpGest setDirection:UISwipeGestureRecognizerDirectionUp];
+    [headerView addGestureRecognizer:swipeUpGest];
+    
     UILabel *locationLabel = [[UILabel alloc] init];
     [locationLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
     [locationLabel setTextColor:COLOR_BLACK_333333];
-    [locationLabel setText:@"南山区-科技园"];
+    [locationLabel setText:@"定位中..."];
     [headerView addSubview:locationLabel];
     _locationLabel = locationLabel;
     [locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -116,7 +129,7 @@
     UILabel *countLabel = [[UILabel alloc] init];
     [countLabel setFont:[UIFont fontWithName:FONT_BOLD size:12.f]];
     [countLabel setTextColor:COLOR_BLACK_666666];
-    [countLabel setText:@"15个铺位可共享"];
+    [countLabel setText:@"0个铺位可共享"];
     [headerView addSubview:countLabel];
     _countLabel = countLabel;
     [countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -150,7 +163,7 @@
     
     UIButton *refreshBtn = [self setupMapBtnWithImage:[UIImage imageNamed:@"map_refresh"]];
     [refreshBtn addTarget:self action:@selector(onClickRefreshBtn) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:refreshBtn];
+    [self.view addSubview:refreshBtn];
     [refreshBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(navigationView.mas_bottom).with.offset(getWidth(34.f));
         make.right.equalTo(self.view).with.offset(-getWidth(20.f));
@@ -159,7 +172,7 @@
     
     UIButton *locateBtn = [self setupMapBtnWithImage:[UIImage imageNamed:@"map_locate"]];
     [locateBtn addTarget:self action:@selector(onClickLocateBtn) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:locateBtn];
+    [self.view addSubview:locateBtn];
     [locateBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(refreshBtn.mas_bottom).with.offset(getWidth(14.f));
         make.right.equalTo(refreshBtn);
@@ -168,11 +181,6 @@
 }
 
 - (void)loadTableViewFreshUi {
-    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-        
-        self.shareListParam.page = 1;
-        [self getShareListData:self.shareListParam reload:YES];
-    }];
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         
         self.shareListParam.page ++;
@@ -207,19 +215,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     HPShareListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if (cell) {
-        if (cell.model) {
-            //            NSString *spaceId = cell.model.spaceId;
-            for (HPShareAnnotation *annotation in self.mapView.annotations) {
-                if ([annotation.model.spaceId isEqualToString:cell.model.spaceId]) {
-                    [self.mapView selectAnnotation:annotation animated:YES];
-                }
-                else {
-                    [self.mapView deselectAnnotation:annotation animated:YES];
-                }
-            }
-        }
-    }
+    [self pushVCByClassName:@"HPShareDetailController" withParam:@{@"model":cell.model}];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -260,20 +256,54 @@
     return _dataArray.count;
 }
 
+# pragma mark - Locate
+
+- (void)configLocationManager
+{
+    self.locationManager = [[AMapLocationManager alloc] init];
+    [self.locationManager setLocationTimeout:2];
+    [self.locationManager setPausesLocationUpdatesAutomatically:YES];
+}
+
+- (void)requestLocationIfNeedData:(BOOL)ifNeedData {
+    [HPProgressHUD alertWithLoadingText:@"定位中"];
+    //开始定位
+    [self.locationManager requestLocationWithReGeocode:YES completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
+        if (!error) {
+            NSString *areaId;
+            
+            if (regeocode) {
+                NSString *areaName = regeocode.district;
+                [self.locationLabel setText:areaName];
+                areaId = [HPCommonData getAreaIdByName:areaName];
+            }
+            
+            if (!areaId) {
+                areaId = @"1";
+                [self.locationLabel setText:@"南山区"];
+            }
+            
+            [self.shareListParam setPage:1];
+            [self.shareListParam setAreaId:areaId];
+            
+            if (ifNeedData) {
+                [self getShareListData:self.shareListParam reload:YES];
+            }
+            else {
+                [HPProgressHUD alertWithFinishText:@"定位成功"];
+            }
+        }
+        else {
+            [HPProgressHUD alertMessage:@"定位失败"];
+            HPLog(@"error: %@", error);
+        }
+    }];
+}
+
 #pragma mark - MAMapViewDelegate
 
-- (void)mapView:(MAMapView *)mapView didUpdateUserLocation:(MAUserLocation *)userLocation updatingLocation:(BOOL)updatingLocation {
-    if (!_firstLocate) {
-        return;
-    }
-    _firstLocate = NO;
-    double lat = userLocation.coordinate.latitude;
-    double lon = userLocation.coordinate.longitude;
-    NSString *latitude = [NSString stringWithFormat:@"%lf", lat];
-    NSString *longitude = [NSString stringWithFormat:@"%lf", lon];
-    [_shareListParam setLatitude:latitude];
-    [_shareListParam setLongitude:longitude];
-    [self.tableView.mj_header beginRefreshing];
+- (void)mapView:(MAMapView *)mapView didSingleTappedAtCoordinate:(CLLocationCoordinate2D)coordinate {
+    [self showDataView:NO];
 }
 
 - (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation {
@@ -287,18 +317,97 @@
 
 - (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view {
     [view setSelected:YES];
-    [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
-    [self.mapView setZoomLevel:15.f animated:YES];
+    if ([view isKindOfClass:HPShareAnnotationView.class]) {
+        HPShareAnnotation *shareAnnotation = (HPShareAnnotation *)view.annotation;
+        [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
+        [self.mapView setZoomLevel:18.f animated:YES];
+        [self showDataView:YES];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:shareAnnotation.index inSection:0];
+        [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
 }
 
 - (void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view {
     [view setSelected:NO];
 }
 
+- (void)mapView:(MAMapView *)mapView mapDidMoveByUser:(BOOL)wasUserAction {
+    if (wasUserAction) {
+        [self seachReGeocodeWithCoord:mapView.centerCoordinate];
+    }
+}
+
+#pragma mark - AMapSearchAPI
+
+- (void)configSearchAPI {
+    self.searchAPI = [[AMapSearchAPI alloc] init];
+    [self.searchAPI setDelegate:self];
+}
+
+- (void)seachReGeocodeWithCoord:(CLLocationCoordinate2D)coord {
+    AMapReGeocodeSearchRequest *request = [[AMapReGeocodeSearchRequest alloc] init];
+    AMapGeoPoint *point = [[AMapGeoPoint alloc] init];
+    [point setLatitude:coord.latitude];
+    [point setLongitude:coord.longitude];
+    [request setLocation:point];
+    
+    [_searchAPI AMapReGoecodeSearch:request];
+}
+
+#pragma mark - AMapSearchDelegate
+
+- (void)onReGeocodeSearchDone:(AMapReGeocodeSearchRequest *)request response:(AMapReGeocodeSearchResponse *)response {
+    NSString *areaName = response.regeocode.addressComponent.district;
+    NSString *areaId = [HPCommonData getAreaIdByName:areaName];
+    if (![areaId isEqualToString:_shareListParam.areaId]) {
+        [_locationLabel setText:areaName];
+        [_shareListParam setAreaId:areaId];
+        [self getShareListData:_shareListParam reload:YES];
+    }
+}
+
+#pragma mark - DataView
+
+- (void)showDataView:(BOOL)isShow {
+    [_dataView mas_updateConstraints:^(MASConstraintMaker *make) {
+        if (isShow) {
+            [self.dataViewTopConstraint uninstall];
+            self.dataViewTopConstraint = make.top.equalTo(self.view.mas_bottom).with.offset(-getWidth(367.f));
+        }
+        else {
+            [self.dataViewTopConstraint uninstall];
+            self.dataViewTopConstraint = make.top.equalTo(self.view.mas_bottom).with.offset(-getWidth(44.f));;
+        }
+    }];
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        [self.view layoutIfNeeded];
+    }];
+}
+
+#pragma mark - UIGestureRecogizerDelegate
+
+- (void)swipeHeadeView:(UISwipeGestureRecognizer *)swipeGest {
+    if (swipeGest.direction == UISwipeGestureRecognizerDirectionDown) {
+        [self showDataView:NO];
+        [_mapView showAnnotations:_mapView.annotations animated:YES];
+    }
+    else if (swipeGest.direction == UISwipeGestureRecognizerDirectionUp) {
+        [self showDataView:YES];
+    }
+}
+
 #pragma mark - OnClick
 
 - (void)onClickRefreshBtn {
-    [self.tableView.mj_header beginRefreshing];
+    [self showDataView:NO];
+    [_shareListParam setPage:1];
+    if (!_shareListParam.areaId) {
+        [self requestLocationIfNeedData:YES];
+    }
+    else {
+        [self getShareListData:_shareListParam reload:YES];
+    }
 }
 
 - (void)onClickLocateBtn {
@@ -311,16 +420,17 @@
 - (void)getShareListData:(HPShareListParam *)param reload:(BOOL)isReload {
     NSMutableDictionary *dict = param.mj_keyValues;
     
+    [HPProgressHUD alertWithLoadingText:@"数据加载中"];
+    
     [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:NO paraments:dict complete:^(id  _Nonnull responseObject) {
+        [HPProgressHUD alertWithFinishText:@"加载完成"];
+        
         NSArray<HPShareListModel *> *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:DATA[@"list"]];
         
-        if (models.count == 0) {
+        if (models.count < param.pageSize) {
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
-            [self.tableView.mj_header endRefreshing];
         }
         else {
-            [self setCount:models.count];
-            [self.tableView.mj_header endRefreshing];
             [self.tableView.mj_footer endRefreshing];
         }
         
@@ -330,6 +440,8 @@
         else {
             [self.dataArray addObjectsFromArray:models];
         }
+        
+        [self setCount:self.dataArray.count];
         [self.tableView reloadData];
         [self.mapView removeAnnotations:self.mapView.annotations];
         NSArray *annotations = [HPShareAnnotation annotationArrayWithModels:models];

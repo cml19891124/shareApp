@@ -85,6 +85,19 @@ static NSArray<HPAreaModel *> *areaModels;
     return nil;
 }
 
++ (NSString *)getAreaIdByName:(NSString *)name {
+    [HPCommonData getAreaData];
+    if (areaModels) {
+        for (HPAreaModel *model in areaModels) {
+            if ([name isEqualToString:model.name]) {
+                return model.areaId;
+            }
+        }
+    }
+    
+    return nil;
+}
+
 + (NSString *)getDistrictNameByAreaId:(NSString *)areaId districtId:(NSString *)districtId {
     [HPCommonData getAreaData];
     if (areaModels) {

@@ -124,6 +124,37 @@
     }
 }
 
+- (UIButton *)addCheckBtnWithTitle:(NSString *)title {
+    UIImage *rectangle = [HPImageUtil getRectangleByStrokeColor:COLOR_BLACK_666666 fillColor:UIColor.whiteColor borderWidth:2.f cornerRadius:3.f inRect:CGRectMake(0.f, 0.f, 17.f, 17.f)];
+    
+    UIButton *checkBtn = [[UIButton alloc] init];
+    [checkBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:17.f]];
+    [checkBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+    [checkBtn setTitle:title forState:UIControlStateNormal];
+    [checkBtn setImage:rectangle forState:UIControlStateNormal];
+    [checkBtn setImage:[UIImage imageNamed:@"customizing_business_cards_selected_ label"] forState:UIControlStateSelected];
+    [checkBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    [checkBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 26.f * g_rateWidth, 0.f, -26.f * g_rateWidth)];
+    [checkBtn addTarget:self action:@selector(onClickCheckBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [_scrollView addSubview:checkBtn];
+    [_checkBtns addObject:checkBtn];
+    
+    [_firstChectBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+        [self.topConstraint uninstall];
+    }];
+    
+    [checkBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.topConstraint = make.top.equalTo(self.scrollView);
+        make.left.equalTo(self.scrollView);
+        make.bottom.equalTo(self.firstChectBtn.mas_top).with.offset(-25.f * g_rateWidth);
+        make.width.mas_equalTo(268.f * g_rateWidth);
+        make.height.mas_equalTo(17.f);
+    }];
+    
+    _firstChectBtn = checkBtn;
+    return checkBtn;
+}
+
 #pragma mark - OnClick
 
 - (void)onClickCustomBtn:(UIButton *)btn {
@@ -154,6 +185,7 @@
         [textField setFont:[UIFont fontWithName:FONT_MEDIUM size:17.f]];
         [textField setTextColor:COLOR_BLACK_333333];
         [textField setTintColor:COLOR_RED_FF3C5E];
+        [textField setReturnKeyType:UIReturnKeyDone];
         [textField setDelegate:self];
         [view addSubview:textField];
         _textField = textField;
@@ -209,33 +241,7 @@
     [_modalView setHidden:NO];
     NSString *title = _textField.text;
     
-    UIImage *rectangle = [HPImageUtil getRectangleByStrokeColor:COLOR_BLACK_666666 fillColor:UIColor.whiteColor borderWidth:2.f cornerRadius:3.f inRect:CGRectMake(0.f, 0.f, 17.f, 17.f)];
-    
-    UIButton *checkBtn = [[UIButton alloc] init];
-    [checkBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:17.f]];
-    [checkBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-    [checkBtn setTitle:title forState:UIControlStateNormal];
-    [checkBtn setImage:rectangle forState:UIControlStateNormal];
-    [checkBtn setImage:[UIImage imageNamed:@"customizing_business_cards_selected_ label"] forState:UIControlStateSelected];
-    [checkBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [checkBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 26.f * g_rateWidth, 0.f, -26.f * g_rateWidth)];
-    [checkBtn addTarget:self action:@selector(onClickCheckBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [_scrollView addSubview:checkBtn];
-    [_checkBtns addObject:checkBtn];
-    
-    [_firstChectBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-        [self.topConstraint uninstall];
-    }];
-    
-    [checkBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        self.topConstraint = make.top.equalTo(self.scrollView);
-        make.left.equalTo(self.scrollView);
-        make.bottom.equalTo(self.firstChectBtn.mas_top).with.offset(-25.f * g_rateWidth);
-        make.width.mas_equalTo(268.f * g_rateWidth);
-        make.height.mas_equalTo(17.f);
-    }];
-    
-    _firstChectBtn = checkBtn;
+    [self addCheckBtnWithTitle:title];
 }
 
 - (void)onClickCheckBtn:(UIButton *)btn {
@@ -256,18 +262,63 @@
 
 #pragma mark - UITextFieldDelegate
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if (textField.text.length + string.length <= 5) {
-        return YES;
-    }
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [_textField endEditing:YES];
     
-    return NO;
+    return YES;
 }
 
 #pragma mark - NSNotification
 
 - (void)didTextFieldChange:(NSNotification *)notification {
-    [_countLabel setText:[NSString stringWithFormat:@"%lu/5", _textField.text.length]];
+    UITextField *textField = (UITextField *)notification.object;
+    
+    // text field 的内容
+    NSString *contentText = textField.text;
+    
+    // 获取高亮内容的范围
+    UITextRange *selectedRange = [textField markedTextRange];
+    // 这行代码 可以认为是 获取高亮内容的长度
+    NSInteger markedTextLength = [textField offsetFromPosition:selectedRange.start toPosition:selectedRange.end];
+    // 没有高亮内容时,对已输入的文字进行操作
+    if (markedTextLength == 0) {
+        // 如果 text field 的内容长度大于我们限制的内容长度
+        if (contentText.length > 5) {
+            // 截取从前面开始maxLength长度的字符串
+            //            textField.text = [contentText substringToIndex:maxLength];
+            // 此方法用于在字符串的一个range范围内，返回此range范围内完整的字符串的range
+            NSRange rangeRange = [contentText rangeOfComposedCharacterSequencesForRange:NSMakeRange(0, 5)];
+            textField.text = [contentText substringWithRange:rangeRange];
+        }
+    }
+    
+    [_countLabel setText:[NSString stringWithFormat:@"%lu/5", _textField.text.length - markedTextLength]];
+}
+
+#pragma mark - Select
+
+- (void)selectItems:(NSArray *)items {
+    if (!items || ![items isKindOfClass:NSArray.class]) {
+        return;
+    }
+    
+    for (NSString *item in items) {
+        [_checkItems addObject:item];
+        BOOL isFound = NO;
+        
+        for (UIButton *checkBtn in _checkBtns) {
+            if ([item isEqualToString:checkBtn.titleLabel.text]) {
+                [checkBtn setSelected:YES];
+                isFound = YES;
+                break;
+            }
+        }
+        
+        if (!isFound) {
+            UIButton *newCheckBtn = [self addCheckBtnWithTitle:item];
+            [newCheckBtn setSelected:YES];
+        }
+    }
 }
 
 @end

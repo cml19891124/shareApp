@@ -30,7 +30,6 @@
     [calendarView.layer setCornerRadius:0.f];
     [calendarView.layer setShadowOpacity:0.f];
     [calendarView setContentCornerRadius:0.f];
-    [calendarView setStartMonthOfDate:[NSDate date]];
     [calendarView setCanTouch:YES];
     [view addSubview:calendarView];
     _calendarView = calendarView;
@@ -43,6 +42,18 @@
 
 - (NSArray *)selectedDates {
     return _calendarView.selectedDates;
+}
+
+- (void)setStartMonthOfDate:(NSDate *)startMonthOfDate {
+    [_calendarView setStartMonthOfDate:startMonthOfDate];
+}
+
+- (NSDate *)startMonthOfDate {
+    return _calendarView.startMonthOfDate;
+}
+
+- (void)setSelectedDateStrs:(NSArray *)selectedDateStrs {
+    [_calendarView setSelectedDateStrs:selectedDateStrs];
 }
 
 @end

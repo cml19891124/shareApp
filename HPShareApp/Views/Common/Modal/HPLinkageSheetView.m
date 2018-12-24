@@ -245,21 +245,38 @@
     if (_singleCheckCell) {
         [_singleCheckCell setCheck:NO];
         [self.checkItems removeObject:_singleCheckCell.title];
+        _singleCheckCell = nil;
+    }
+}
+
+- (void)selectCellWithParentKey:(NSString *)pKey value:(NSString *)pValue ChildKey:(NSString *)cKey value:(NSString *)cValue {
+    for (int i = 0; i < [_data getParentCount]; i ++) {
+        for (int j = 0; j < [_data getChildrenCountOfParentIndex:i]; j ++) {
+            NSObject *model = [_data getChildModelOfParentIndex:i atChildIndex:j];
+            NSString *p_value = [model valueForKey:pKey];
+            NSString *c_value = [model valueForKey:cKey];
+            if ([p_value isEqualToString:pValue] && [c_value isEqualToString:cValue]) {
+                [self selectCellAtParentIndex:i childIndex:j];
+                return;
+            }
+        }
     }
 }
 
 - (void)selectCellAtParentIndex:(NSInteger)pIndex childIndex:(NSInteger)cIndex{
+    [self clearCheck];
     NSIndexPath *parentIndex = [NSIndexPath indexPathForRow:pIndex inSection:0];
-    [self.leftTableView selectRowAtIndexPath:parentIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
+    [self.leftTableView selectRowAtIndexPath:parentIndex animated:NO scrollPosition:UITableViewScrollPositionMiddle];
     _selectedParentIndex = pIndex;
     _selectedParent = [_data getParentNameAtIndex:pIndex];
     [self.rightTableView reloadData];
     
     NSIndexPath *childIndex = [NSIndexPath indexPathForRow:cIndex inSection:0];
-    [self.rightTableView selectRowAtIndexPath:childIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
+    [self.rightTableView selectRowAtIndexPath:childIndex animated:NO scrollPosition:UITableViewScrollPositionMiddle];
     HPCheckTableCell *cell = [self.rightTableView cellForRowAtIndexPath:childIndex];
     if (cell) {
         [self selectCheckCell:cell];
+        _selectCheckIndex = cIndex;
     }
     else {
         _selectCheckIndex = cIndex;

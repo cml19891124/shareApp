@@ -19,11 +19,21 @@
 
 @property (nonatomic, weak) UITextField *titleField;//发布标题
 
+@property (nonatomic, weak) UIButton *tradeBtn; //经营行业
+
+@property (nonatomic, weak) UIButton *tagBtn; //标签
+
 @property (nonatomic, weak) UITextField *areaField;//期望面积
 
 @property (nonatomic, weak) UITextField *priceField;//期望价格
 
 @property (nonatomic, weak) HPSelectTable *unitSelectTable;//价格单位
+
+@property (nonatomic, weak) UIButton *districtBtn; //期望区域
+
+@property (nonatomic, weak) UIButton *shareTimeBtn; //共享时段
+
+@property (nonatomic, weak) UIButton *shareDateBtn; //共享日期
 
 @property (nonatomic, weak) UITextField *intentSpaceField;//意向空间
 
@@ -72,12 +82,13 @@
         [self setupPanelAtIndex:i ofView:self.scrollView];
     }
     
+    NSString *title = self.param[@"spaceId"] ? @"确认修改":@"确认发布";
     UIButton *releaseBtn = [[UIButton alloc] init];
     [releaseBtn.layer setCornerRadius:7.f];
     [releaseBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [releaseBtn setBackgroundColor:COLOR_RED_FC4865];
     [releaseBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [releaseBtn setTitle:@"确认发布" forState:UIControlStateNormal];
+    [releaseBtn setTitle:title forState:UIControlStateNormal];
     [releaseBtn addTarget:self action:@selector(onClickReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
     [self.scrollView addSubview:releaseBtn];
     [releaseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -225,6 +236,7 @@
     [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [valueBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:valueBtn];
+    _tradeBtn = valueBtn;
     [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(122.f * g_rateWidth);
         make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
@@ -257,6 +269,7 @@
     [addBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 15.f * g_rateWidth, 0.f, -15.f * g_rateWidth)];
     [addBtn addTarget:self action:@selector(onClickTagBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:addBtn];
+    _tagBtn = addBtn;
     [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(titleLabel);
         make.top.equalTo(titleLabel.mas_bottom).with.offset(18.f * g_rateWidth);
@@ -326,6 +339,7 @@
     [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [valueBtn addTarget:self action:@selector(onClickDistrictBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:valueBtn];
+    _districtBtn = valueBtn;
     [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(122.f * g_rateWidth);
         make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
@@ -350,6 +364,7 @@
     [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [valueBtn addTarget:self action:@selector(onClickTimeBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:valueBtn];
+    _shareTimeBtn = valueBtn;
     [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(122.f * g_rateWidth);
         make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
@@ -375,6 +390,7 @@
     [calendarBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, getWidth(233.f)-15.f, 0.f, -(getWidth(233.f)-15.f))];
     [calendarBtn addTarget:self action:@selector(onClickCalendarBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:calendarBtn];
+    _shareDateBtn = calendarBtn;
     [calendarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(122.f * g_rateWidth);
         make.centerY.equalTo(view);
@@ -606,8 +622,15 @@
                 [self.shareReleaseParam.pictureIdArr addObject:pictureModel.pictureId];
             }
             
-            NSDictionary *param = self.shareReleaseParam.mj_keyValues;
-            [self releaseInfo:param];
+            if (self.param[@"spaceId"]) {
+                [self.shareReleaseParam setSpaceId:self.param[@"spaceId"]];
+                NSDictionary *param = self.shareReleaseParam.mj_keyValues;
+                [self updateInfo:param];
+            }
+            else {
+                NSDictionary *param = self.shareReleaseParam.mj_keyValues;
+                [self releaseInfo:param];
+            }
         }
         else {
             self->_canRelease = YES;
@@ -639,7 +662,29 @@
             [HPProgressHUD alertMessage:MSG];
         }
     } Progress:^(double progress) {
-        [HPProgressHUD alertWithProgress:progress text:@"发布信息中"];
+        [HPProgressHUD alertWithProgress:progress text:@"上传信息中"];
+    } Failure:^(NSError * _Nonnull error) {
+        self->_canRelease = YES;
+        ErrorNet
+    }];
+}
+
+- (void)updateInfo:(NSDictionary *)param {
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/space/update" paraments:param needToken:YES complete:^(id  _Nonnull responseObject) {
+        self->_canRelease = YES;
+        
+        if (CODE == 200) {
+            [HPProgressHUD alertWithFinishText:@"修改成功"];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController popViewControllerAnimated:YES];
+            });
+        }
+        else {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Progress:^(double progress) {
+        [HPProgressHUD alertWithProgress:progress text:@"上传信息中"];
     } Failure:^(NSError * _Nonnull error) {
         self->_canRelease = YES;
         ErrorNet
@@ -649,8 +694,78 @@
 #pragma mark - LoadData
 
 - (void)loadData:(HPShareDetailModel *)model {
+    if (model.pictures) {
+        for (HPPictureModel *pictureModel in model.pictures) {
+            [self.addPhotoView addPhotoUrl:pictureModel.url];
+        }
+        
+        [self.addPhotoView setHidden:NO];
+    }
+    
     [_titleField setText:model.title];
     
+    [self initTradeSheetViewWithBtn:_tradeBtn];
+    [self.tradeSheetView selectCellWithParentKey:@"pid" value:model.industryId ChildKey:@"industryId" value:model.subIndustryId];
+    self.tradeSheetView.confirmCallback(self.tradeSheetView.selectedParent, self.tradeSheetView.checkItems, self.tradeSheetView.selectedChildModel);
+    
+    if (model.tag && ![model.tag isEqualToString:@""]) {
+        NSArray *tagItems = [model.tag componentsSeparatedByString:@","];
+        [self initTagDialogViewWithBtn:_tagBtn];
+        [self.tagDialogView selectItems:tagItems];
+        self.tagDialogView.confirmCallback();
+    }
+    
+    if (model.area && ![model.area isEqualToString:@"0"]) {
+        [_areaField setText:model.area];
+    }
+    
+    if (model.rent && ![model.rent isEqualToString:@"0"]) {
+        [_priceField setText:model.rent];
+    }
+    
+    if (model.rentType == 1) {
+        [_unitSelectTable setBtnAtIndex:0 selected:YES];
+    }
+    else
+        [_unitSelectTable setBtnAtIndex:1 selected:YES];
+    
+    [self initDistrictSheetViewWithBtn:_districtBtn];
+    [self.districtSheetView selectCellWithParentKey:@"areaId" value:model.areaId ChildKey:@"districtId" value:model.districtId];
+    self.districtSheetView.confirmCallback(self.districtSheetView.selectedParent, self.districtSheetView.checkItems, self.districtSheetView.selectedChildModel);
+    
+    if (model.shareTime && ![model.shareTime isEqualToString:@""]) {
+        NSArray *shareTimes = [model.shareTime componentsSeparatedByString:@","];
+        NSString *startTime = shareTimes[0];
+        NSString *endTime = shareTimes[1];
+        [self initTimePickerWithBtn:_shareTimeBtn];
+        [self.timePicker selectStartTime:startTime endTime:endTime];
+        self.timePicker.confirmCallback();
+    }
+    
+    if (model.shareDays && ![model.shareDays isEqualToString:@""]) {
+        NSArray *shareDays = [model.shareDays componentsSeparatedByString:@","];
+        [self initCalendarViewWithBtn:_shareDateBtn];
+        [self.calendarDialogView setSelectedDateStrs:shareDays];
+        [self.calendarDialogView setStartMonthOfDate:[NSDate date]];
+        self.calendarDialogView.confirmCallback();
+    }
+    
+    if (model.intention && ![model.intention isEqualToString:@""]) {
+        [_intentSpaceField setText:model.intention];
+    }
+    
+    if (model.contact && ![model.contact isEqualToString:@""]) {
+        [_contactField setText:model.contact];
+    }
+    
+    if (model.contactMobile && ![model.contactMobile isEqualToString:@""]) {
+        [_phoneNumField setText:model.contactMobile];
+    }
+    
+    if (model.remark && ![model.remark isEqualToString:@""]) {
+        [_remarkTextView setText:model.remark];
+        [_remarkTextView setTextColor:COLOR_BLACK_333333];
+    }
 }
 
 @end

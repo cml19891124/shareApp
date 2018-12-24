@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)addPhoto:(UIImage *)image;
 
+- (void)addPhotoUrl:(NSString *)url;
+
 @end
 
 NS_ASSUME_NONNULL_END

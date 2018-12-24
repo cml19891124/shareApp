@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) HPShareListModel *model;
 
+@property (nonatomic, assign) NSInteger index;
+
 - (instancetype)initWithModel:(HPShareListModel *)model;
 
 + (NSArray *)annotationArrayWithModels:(NSArray<HPShareListModel *> *)models;

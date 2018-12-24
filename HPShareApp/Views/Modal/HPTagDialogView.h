@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)initWithItems:(NSArray *)items;
 
+- (void)selectItems:(NSArray *)items;
+
 @end
 
 NS_ASSUME_NONNULL_END

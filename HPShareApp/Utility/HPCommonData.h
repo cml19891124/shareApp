@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)getAreaNameById:(NSString *)areaId;
 
++ (NSString *)getAreaIdByName:(NSString *)name;
+
 + (NSString *)getDistrictNameByAreaId:(NSString *)areaId districtId:(NSString *)districtId;
 
 @end

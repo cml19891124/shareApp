@@ -264,4 +264,36 @@
     return [NSString stringWithFormat:@"%@:%@,%@:%@", _startHour, _startMinute, _endHour, _endMinute];
 }
 
+#pragma mark - Select
+
+- (void)selectStartTime:(NSString *)startTime endTime:(NSString *)endTime {
+    NSArray *startTimeArray = [startTime componentsSeparatedByString:@":"];
+    NSArray *endTimeArray = [endTime componentsSeparatedByString:@":"];
+    
+    if (startTimeArray.count > 1) {
+        _startHour = startTimeArray[0];
+        _startMinute = startTimeArray[1];
+    }
+    else
+        return;
+    
+    if (endTimeArray.count > 1) {
+        _endHour = endTimeArray[0];
+        _endMinute = endTimeArray[1];
+    }
+    else
+        return;
+    
+    [_startTimeLabel setText:startTime];
+    [_endTimeLabel setText:endTime];
+    NSInteger startHourIndex = _startHour.integerValue;
+    NSInteger startMinuteIndex = _startMinute.integerValue;
+    [_pickerView selectRow:startHourIndex inComponent:0 animated:NO];
+    UIButton *startHourBtn = (UIButton *)[_pickerView viewForRow:startHourIndex forComponent:0];
+    [_pickerView selectRow:startMinuteIndex inComponent:1 animated:NO];
+    UIButton *startMinuteBtn = (UIButton *)[_pickerView viewForRow:startMinuteIndex forComponent:1];
+    [startHourBtn setSelected:YES];
+    [startMinuteBtn setSelected:YES];
+}
+
 @end

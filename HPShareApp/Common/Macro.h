@@ -41,6 +41,7 @@
 #define COLOR_RED_F94766 [UIColor colorWithHexString:@"#F94766"]
 #define COLOR_RED_FF4260 [UIColor colorWithHexString:@"#FF4260"]
 #define COLOR_RED_FF4562 [UIColor colorWithHexString:@"#FF4562"]
+#define COLOR_RED_912D01 [UIColor colorWithHexString:@"#912D01"]
 
 #define COLOR_BLUE_0E78f6 [UIColor colorWithHexString:@"#0E78f6"]
 #define COLOR_BLUE_74A1BA [UIColor colorWithHexString:@"#74A1BA"]

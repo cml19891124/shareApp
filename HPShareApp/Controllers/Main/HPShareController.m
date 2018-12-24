@@ -303,11 +303,11 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
             break;
             
         case HPShareBtnGoods:
-            [self pushVCByClassName:@"HPShareGoodViewController"];
+            [self pushVCByClassName:@"HPShareTempGoodsController"];
             break;
             
         case HPShareBtnHuman:
-            [self pushVCByClassName:@"HPShareHumanListController"];
+            [self pushVCByClassName:@"HPShareTempHumanController"];
             break;
             
         case HPShareBtnMap:

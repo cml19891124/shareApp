@@ -43,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *spaceId;
 
+@property (nonatomic, copy) NSString *intention;
+
 @property (nonatomic, copy) NSString *remark;
 
 @property (nonatomic, assign) NSInteger type;
@@ -52,6 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *contactMobile;
 
 @property (nonatomic, copy) NSString *avatarUrl;
+
+@property (nonatomic, assign) NSInteger collected;
 
 @property (nonatomic, strong) NSArray<HPPictureModel *> *pictures;
 

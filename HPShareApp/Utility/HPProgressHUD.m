@@ -87,4 +87,29 @@
     [HPProgressHUD alertWithImage:[UIImage imageNamed:@"Checkmark"] text:text];
 }
 
++ (void)alertWithLoadingText:(NSString *)text {
+    UIView *currentView = [UIViewController getCurrentVC].view;
+    MBProgressHUD *hud = [MBProgressHUD HUDForView:currentView];
+    
+    if (!hud || hud.mode == MBProgressHUDModeText) {
+        hud = [MBProgressHUD showHUDAddedTo:currentView animated:YES];
+        [hud setRemoveFromSuperViewOnHide:YES];
+    }
+    
+    hud.mode = MBProgressHUDModeIndeterminate;
+    [hud.label setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
+    [hud setContentColor:UIColor.whiteColor];
+    hud.bezelView.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.5f];
+    [hud.bezelView.layer setCornerRadius:10.f];
+    hud.label.text = text;
+}
+
++ (void)hideHud {
+    UIView *currentView = [UIViewController getCurrentVC].view;
+    MBProgressHUD *hud = [MBProgressHUD HUDForView:currentView];
+    if (hud) {
+        [hud hideAnimated:YES];
+    }
+}
+
 @end

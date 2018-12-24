@@ -150,11 +150,12 @@
 
 - (void)onClickBackBtn {
     if (self.dialogView == nil) {
+        NSString *text = self.param[@"spaceId"] ? @"确定放弃编辑信息？":@"确定放弃本次发布？";
         HPTextDialogView *dialogView = [[HPTextDialogView alloc] init];
-        [dialogView setText:@"确定放弃本次发布？"];
+        [dialogView setText:text];
         __weak typeof(self) weakSelf = self;
         [dialogView setConfirmCallback:^{
-            [weakSelf.navigationController popViewControllerAnimated:YES];
+            [weakSelf pop];
         }];
         self.dialogView = dialogView;
     }
@@ -164,27 +165,7 @@
 
 - (void)onClickDistrictBtn:(UIButton *)btn {
     if (self.districtSheetView == nil) {
-        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:_areaModels];
-        HPLinkageSheetView *districtSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[] allSingleCheck:YES];
-        [districtSheetView setSelectDescription:@"选择区域"];
-        [districtSheetView selectCellAtParentIndex:0 childIndex:0];
-        
-        [districtSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems, NSObject *selectedChildModel) {
-            NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];;
-            for (NSString *checkItem in checkItems) {
-                checkItemStr = [checkItemStr stringByAppendingString:checkItem];
-                
-                if (checkItem != checkItems.lastObject) {
-                    checkItemStr = [checkItemStr stringByAppendingString:@", "];
-                }
-            }
-            
-            self.selectedDistrictModel = (HPDistrictModel *)selectedChildModel;
-            [btn setTitle:checkItemStr forState:UIControlStateSelected];
-            [btn setSelected:YES];
-        }];
-        
-        _districtSheetView = districtSheetView;
+        [self initDistrictSheetViewWithBtn:btn];
     }
     
     [_districtSheetView show:YES];
@@ -192,29 +173,7 @@
 
 - (void)onClickTradeBtn:(UIButton *)btn {
     if (self.tradeSheetView == nil) {
-        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:_industryModels];
-        [linkageData setParentNameKey:@"industryName"];
-        [linkageData setChildNameKey:@"industryName"];
-        HPLinkageSheetView *tradeSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[] allSingleCheck:YES];
-        [tradeSheetView setSelectDescription:@"选择行业"];
-        [tradeSheetView selectCellAtParentIndex:0 childIndex:0];
-        
-        [tradeSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems, NSObject *selectedChildModel) {
-            NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];;
-            for (NSString *checkItem in checkItems) {
-                checkItemStr = [checkItemStr stringByAppendingString:checkItem];
-                
-                if (checkItem != checkItems.lastObject) {
-                    checkItemStr = [checkItemStr stringByAppendingString:@", "];
-                }
-            }
-            
-            self.selectedIndustryModel = (HPIndustryModel *)selectedChildModel;
-            [btn setTitle:checkItemStr forState:UIControlStateSelected];
-            [btn setSelected:YES];
-        }];
-        
-        self.tradeSheetView = tradeSheetView;
+        [self initTradeSheetViewWithBtn:btn];
     }
     
     [self.tradeSheetView show:YES];
@@ -222,29 +181,7 @@
 
 - (void)onClickTagBtn:(UIButton *)btn {
     if (self.tagDialogView == nil) {
-        NSArray *items = @[@"品牌连锁", @"百年老店", @"街角旺铺", @"交通便利", @"客流量大", @"配套齐全"];
-        HPTagDialogView *tagDialogView = [[HPTagDialogView alloc] initWithItems:items];
-        [tagDialogView setModalTop:150.f * g_rateHeight];
-        [tagDialogView setModalSize:CGSizeMake(300.f * g_rateWidth, 343.f * g_rateWidth)];
-        [tagDialogView setMaxCheckNum:3];
-        __weak typeof(tagDialogView) weakTagDialogView = tagDialogView;
-        [tagDialogView setConfirmCallback:^{
-            NSArray *checkItems = weakTagDialogView.checkItems;
-            NSString *title = @"";
-            
-            for (int i = 0; i < checkItems.count; i ++) {
-                title = [title stringByAppendingString:checkItems[i]];
-                
-                if (i != checkItems.count - 1) {
-                    title = [title stringByAppendingString:@"，"];
-                }
-            }
-            
-            [btn setTitle:title forState:UIControlStateSelected];
-            [btn setSelected:YES];
-        }];
-        
-        self.tagDialogView = tagDialogView;
+        [self initTagDialogViewWithBtn:btn];
     }
     
     [self.tagDialogView show:YES];
@@ -252,13 +189,7 @@
 
 - (void)onClickTimeBtn:(UIButton *)btn {
     if (self.timePicker == nil) {
-        HPTimePicker *timePicker = [[HPTimePicker alloc] init];
-        __weak HPTimePicker *weakTimePicker = timePicker;
-        [timePicker setConfirmCallback:^{
-            [btn setTitle:[weakTimePicker getTimeStr] forState:UIControlStateSelected];
-            [btn setSelected:YES];
-        }];
-        self.timePicker = timePicker;
+        [self initTimePickerWithBtn:btn];
     }
     
     [self.timePicker show:YES];
@@ -266,19 +197,7 @@
 
 - (void)onClickCalendarBtn:(UIButton *)btn {
     if (self.calendarDialogView == nil) {
-        HPCalendarDialogView *calendarDialogView = [[HPCalendarDialogView alloc] init];
-        __weak HPCalendarDialogView *weakCalendarDialogView = calendarDialogView;
-        [calendarDialogView setConfirmCallback:^{
-            NSArray *selectedDates = weakCalendarDialogView.selectedDates;
-            if (selectedDates.count == 0) {
-                [btn setSelected:NO];
-            }
-            else {
-                [btn setTitle:[NSString stringWithFormat:@"%lu天", (unsigned long)selectedDates.count] forState:UIControlStateSelected];
-                [btn setSelected:YES];
-            }
-        }];
-        self.calendarDialogView = calendarDialogView;
+        [self initCalendarViewWithBtn:btn];
     }
     
     [self.calendarDialogView show:YES];
@@ -323,6 +242,111 @@
     }
 
     return YES;
+}
+
+#pragma mark - Init Modal
+
+- (void)initDistrictSheetViewWithBtn:(UIButton *)btn {
+    HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:_areaModels];
+    HPLinkageSheetView *districtSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[] allSingleCheck:YES];
+    [districtSheetView setSelectDescription:@"选择区域"];
+    [districtSheetView selectCellAtParentIndex:0 childIndex:0];
+    
+    [districtSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems, NSObject *selectedChildModel) {
+        NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];;
+        for (NSString *checkItem in checkItems) {
+            checkItemStr = [checkItemStr stringByAppendingString:checkItem];
+            
+            if (checkItem != checkItems.lastObject) {
+                checkItemStr = [checkItemStr stringByAppendingString:@", "];
+            }
+        }
+        
+        self.selectedDistrictModel = (HPDistrictModel *)selectedChildModel;
+        [btn setTitle:checkItemStr forState:UIControlStateSelected];
+        [btn setSelected:YES];
+    }];
+    
+    _districtSheetView = districtSheetView;
+}
+
+- (void)initTradeSheetViewWithBtn:(UIButton *)btn {
+    HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:_industryModels];
+    [linkageData setParentNameKey:@"industryName"];
+    [linkageData setChildNameKey:@"industryName"];
+    HPLinkageSheetView *tradeSheetView = [[HPLinkageSheetView alloc] initWithData:linkageData singleTitles:@[] allSingleCheck:YES];
+    [tradeSheetView setSelectDescription:@"选择行业"];
+    [tradeSheetView selectCellAtParentIndex:0 childIndex:0];
+    
+    [tradeSheetView setConfirmCallback:^(NSString *selectedParent, NSArray *checkItems, NSObject *selectedChildModel) {
+        NSString *checkItemStr = [NSString stringWithFormat:@"%@ : ", selectedParent];;
+        for (NSString *checkItem in checkItems) {
+            checkItemStr = [checkItemStr stringByAppendingString:checkItem];
+            
+            if (checkItem != checkItems.lastObject) {
+                checkItemStr = [checkItemStr stringByAppendingString:@", "];
+            }
+        }
+        
+        self.selectedIndustryModel = (HPIndustryModel *)selectedChildModel;
+        [btn setTitle:checkItemStr forState:UIControlStateSelected];
+        [btn setSelected:YES];
+    }];
+    
+    self.tradeSheetView = tradeSheetView;
+}
+
+- (void)initTagDialogViewWithBtn:(UIButton *)btn {
+    NSArray *items = @[@"品牌连锁", @"百年老店", @"街角旺铺", @"交通便利", @"客流量大", @"配套齐全"];
+    HPTagDialogView *tagDialogView = [[HPTagDialogView alloc] initWithItems:items];
+    [tagDialogView setModalTop:150.f * g_rateHeight];
+    [tagDialogView setModalSize:CGSizeMake(300.f * g_rateWidth, 343.f * g_rateWidth)];
+    [tagDialogView setMaxCheckNum:3];
+    __weak typeof(tagDialogView) weakTagDialogView = tagDialogView;
+    [tagDialogView setConfirmCallback:^{
+        NSArray *checkItems = weakTagDialogView.checkItems;
+        NSString *title = @"";
+        
+        for (int i = 0; i < checkItems.count; i ++) {
+            title = [title stringByAppendingString:checkItems[i]];
+            
+            if (i != checkItems.count - 1) {
+                title = [title stringByAppendingString:@"，"];
+            }
+        }
+        
+        [btn setTitle:title forState:UIControlStateSelected];
+        [btn setSelected:YES];
+    }];
+    
+    self.tagDialogView = tagDialogView;
+}
+
+- (void)initTimePickerWithBtn:(UIButton *)btn {
+    HPTimePicker *timePicker = [[HPTimePicker alloc] init];
+    __weak HPTimePicker *weakTimePicker = timePicker;
+    [timePicker setConfirmCallback:^{
+        [btn setTitle:[weakTimePicker getTimeStr] forState:UIControlStateSelected];
+        [btn setSelected:YES];
+    }];
+    self.timePicker = timePicker;
+}
+
+- (void)initCalendarViewWithBtn:(UIButton *)btn {
+    HPCalendarDialogView *calendarDialogView = [[HPCalendarDialogView alloc] init];
+    [calendarDialogView setStartMonthOfDate:[NSDate date]];
+    __weak HPCalendarDialogView *weakCalendarDialogView = calendarDialogView;
+    [calendarDialogView setConfirmCallback:^{
+        NSArray *selectedDates = weakCalendarDialogView.selectedDates;
+        if (selectedDates.count == 0) {
+            [btn setSelected:NO];
+        }
+        else {
+            [btn setTitle:[NSString stringWithFormat:@"%lu天", (unsigned long)selectedDates.count] forState:UIControlStateSelected];
+            [btn setSelected:YES];
+        }
+    }];
+    self.calendarDialogView = calendarDialogView;
 }
 
 #pragma mark - UIImagePickerControllerDelegate
@@ -383,8 +407,11 @@
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"spaceId"] = spaceId;
     
+    [HPProgressHUD alertWithLoadingText:@"数据加载中"];
+    
     [HPHTTPSever HPGETServerWithMethod:@"/v1/space/detail" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
+            [HPProgressHUD hideHud];
             HPShareDetailModel *model = [HPShareDetailModel mj_objectWithKeyValues:DATA];
             NSDictionary *userCardCase = DATA[@"userCardCase"];
             if (![userCardCase isMemberOfClass:NSNull.class]) {

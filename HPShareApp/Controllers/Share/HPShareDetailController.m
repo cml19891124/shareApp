@@ -57,7 +57,10 @@
  共享面积
  */
 @property (nonatomic, strong) UILabel *areaDescLabel;
+
 @property (nonatomic, weak) HPCustomerServiceModalView *customerServiceModalView;
+
+@property (nonatomic, weak) UIButton *keepBtn;
 
 @end
 
@@ -559,12 +562,17 @@
     UIButton *keepBtn = [[UIButton alloc] init];
     [keepBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:18.f]];
     [keepBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [keepBtn setTitleColor:COLOR_RED_912D01 forState:UIControlStateSelected];
     [keepBtn setImage:[UIImage imageNamed:@"shared_shop_details_calendar_collection"] forState:UIControlStateNormal];
+    [keepBtn setImage:ImageNamed(@"shared_shop_details_calendar_collection_selected") forState:UIControlStateSelected];
     [keepBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 6.f, 0.f, -6.f)];
     [keepBtn setBackgroundColor:COLOR_RED_FE2A3B];
     [keepBtn setTitle:@"收藏" forState:UIControlStateNormal];
+    [keepBtn setTitle:@"已收藏" forState:UIControlStateSelected];
+    [keepBtn setTitle:@"已收藏" forState:UIControlStateSelected|UIControlStateHighlighted];
     [view addSubview:keepBtn];
-    [keepBtn addTarget:self action:@selector(addCollection) forControlEvents:UIControlEventTouchUpInside];
+    _keepBtn = keepBtn;
+    [keepBtn addTarget:self action:@selector(addOrCancelCollection:) forControlEvents:UIControlEventTouchUpInside];
     [keepBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.and.bottom.equalTo(view);
         make.right.equalTo(phoneBtn.mas_left);
@@ -613,7 +621,7 @@
 #pragma mark - onClickBackBtn
 
 - (void)onClickBackBtn {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self pop];
 }
 
 #pragma mark - NetWork
@@ -622,8 +630,11 @@
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"spaceId"] = spaceId;
     
+    [HPProgressHUD alertWithLoadingText:@"数据加载中"];
+    
     [HPHTTPSever HPGETServerWithMethod:@"/v1/space/detail" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
+            [HPProgressHUD hideHud];
             HPShareDetailModel *model = [HPShareDetailModel mj_objectWithKeyValues:DATA];
             NSDictionary *userCardCase = DATA[@"userCardCase"];
             if (![userCardCase isMemberOfClass:NSNull.class]) {
@@ -653,8 +664,16 @@
     }];
 }
 
+- (void)addOrCancelCollection:(UIButton *)btn {
+    if (btn.isSelected) {
+        [self cancelCollection:btn];
+    }
+    else
+        [self addCollection:btn];
+}
+
 //添加收藏
-- (void)addCollection {
+- (void)addCollection:(UIButton *)btn {
     HPShareDetailModel *model = self.param[@"model"];
     if (!model) {
         return;
@@ -662,7 +681,28 @@
     
     [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/add" isNeedToken:YES paraments:@{@"spaceId":model.spaceId} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
+            [HPProgressHUD alertMessage:@"收藏成功"];
+            [btn setSelected:YES];
+        }else
+        {
             [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+//取消收藏
+- (void)cancelCollection:(UIButton *)btn {
+    HPShareDetailModel *model = self.param[@"model"];
+    if (!model) {
+        return;
+    }
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/collection/cancel" isNeedToken:YES paraments:@{@"spaceId":model.spaceId} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:@"取消收藏"];
+            [btn setSelected:NO];
         }else
         {
             [HPProgressHUD alertMessage:MSG];
@@ -737,6 +777,12 @@
     }
     
     [_userNameLabel setText:model.contact];
+    
+    if (model.collected == 1) {
+        [_keepBtn setSelected:YES];
+    }
+    else
+        [_keepBtn setSelected:NO];
     
     if (model.shareDays) {
         NSArray *shareDays = [model.shareDays componentsSeparatedByString:@","];
