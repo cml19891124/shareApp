@@ -198,9 +198,16 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     if (textField.text.length) {
-        _fillField.text = [NSString stringWithFormat:@"%@(元/小时)",textField.text];
+        NSString *fillstr = [NSString stringWithFormat:@"%@",textField.text];
+        _fillField.text = fillstr;
     }
     return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    _fillField.text = [NSString stringWithFormat:@"%@(元/小时)",textField.text];
+
 }
 - (void)setUpRentAmmountItemSubviews
 {

@@ -42,7 +42,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 @property (nonatomic, strong) HPRightImageButton *leavesBtn;
 @property (strong, nonatomic) HPTimeRentView *timeRentView;
 @property (strong, nonatomic) HPRentAmountItemView *amountItemView;
-
+@property (nonatomic, strong) HPRowPanel *panel;
 
 /**
   租赁模式
@@ -50,6 +50,11 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 @property (nonatomic, strong) UIView *lastPanel;
 
 @property (strong, nonatomic) NSMutableArray *modelArr;
+
+/**
+ 当前选中的租赁价格
+ */
+@property (nonatomic, copy) NSString *currentPrice;
 @end
 
 @implementation HPReviseReleaseInfoViewController
@@ -124,6 +129,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 - (void)setupPanelAtIndex:(NSInteger)index ofView:(UIView *)view {
     HPRowPanel *panel = [[HPRowPanel alloc] init];
     [view addSubview:panel];
+    _panel = panel;
     if (index == 0) {
         [panel addRowView:[self setUpInfoLabel] withHeight:25.f * g_rateWidth];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -168,7 +174,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
         //共享类型
         [panel addRowView:[self setupRentTypeRowView] withHeight:123.f * g_rateWidth];
         [panel addRowView:[self setUpTimeRentView] withHeight:getWidth(77.f)];
-
+//        [panel shrinkFrom:1 to:0];
         UIView *lastPanel = view.subviews[index - 1];
         _lastPanel = lastPanel;
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -209,10 +215,9 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     expandView.backgroundColor = UIColor.clearColor;
     [expandView addSubview:amountItemView];
     kWeakSelf(weakSelf);
-//    [timeRentView setRentTypeClickBtnBlock:^(NSString *model) {
-//        //当前选中的租赁模式
-//        [weakSelf.rectTypeBtn setText:model];
-//    }];
+    [amountItemView setRentAmountItemClickBtnBlock:^(NSString *model) {
+        weakSelf.currentPrice = model;
+    }];
     _amountItemView = amountItemView;
     [amountItemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.bottom.right.mas_equalTo(expandView);
@@ -224,11 +229,14 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 - (UIView *)setupStoreSpaceRowView {
     UIView *view = [UIView new];
     UIView *spaceView = [self addRowOfParentView:view withHeight:46.f * g_rateWidth margin:0.f isEnd:YES];
-    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickShareGotoButton:)];
+    [spaceView setTag:HPShareGotoBtnTagSpace];
+    [spaceView addGestureRecognizer:tap];
     [self setupTitleLabelWithText:@"我能出租的空间大小" ofView:spaceView];
-    _spaceBtn = [self setupGotoBtnWithTitle:@"不限"];
-    [_spaceBtn setTag:HPShareGotoBtnTagSpace];
-    [spaceView addSubview:_spaceBtn];
+    HPRightImageButton *spaceBtn = [self setupGotoBtnWithTitle:@"不限"];
+    [spaceBtn setTag:HPShareGotoBtnTagSpace];
+    [spaceView addSubview:spaceBtn];
+    _spaceBtn = spaceBtn;
     [_spaceBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(spaceView);
         make.right.equalTo(spaceView).with.offset(-20.f * g_rateWidth);
@@ -242,13 +250,15 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 {
     UIView *view = [[UIView alloc] init];
     UIView *timeView = [self addRowOfParentView:view withHeight:46.f * g_rateWidth margin:0.f isEnd:YES];
-
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickShareGotoButton:)];
+    [timeView setTag:HPShareGotoBtnTagTimeDuring];
+    [timeView addGestureRecognizer:tap];
     [self setupTitleLabelWithText:@"我想出租的时间段" ofView:timeView];
-    _shareTimeBtn = [self setupGotoBtnWithTitle:@"不限"];
-    [_shareTimeBtn addTarget:self action:@selector(onClickTimeBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [_shareTimeBtn setTag:HPShareGotoBtnTagTimeDuring];
-    [timeView addSubview:_shareTimeBtn];
-
+    HPRightImageButton *shareTimeBtn = [self setupGotoBtnWithTitle:@"不限"];
+    [shareTimeBtn setTag:HPShareGotoBtnTagTimeDuring];
+    [shareTimeBtn addTarget:self action:@selector(onClickTimeBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [timeView addSubview:shareTimeBtn];
+    _shareTimeBtn = shareTimeBtn;
     [_shareTimeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(timeView);
         make.right.equalTo(timeView).with.offset(-20.f * g_rateWidth);
@@ -263,13 +273,15 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 {
     UIView *view = [[UIView alloc] init];
     UIView *industryView = [self addRowOfParentView:view withHeight:46.f * g_rateWidth margin:0.f isEnd:YES];
-
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickShareGotoButton:)];
+    [industryView setTag:HPShareGotoBtnTagInsustry];
+    [industryView addGestureRecognizer:tap];
     [self setupTitleLabelWithText:@"我想合作的行业类型" ofView:industryView];
-    _industryBtn = [self setupGotoBtnWithTitle:@"面议"];
-    [_industryBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [_industryBtn setTag:HPShareGotoBtnTagTimeDuring];
-    [industryView addSubview:_industryBtn];
-
+    HPRightImageButton *industryBtn = [self setupGotoBtnWithTitle:@"面议"];
+    [industryBtn setTag:HPShareGotoBtnTagInsustry];
+    [industryBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [industryView addSubview:industryBtn];
+    _industryBtn = industryBtn;
     [_industryBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(industryView);
         make.right.equalTo(industryView).with.offset(-20.f * g_rateWidth);
@@ -310,10 +322,10 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     UIView *view = [[UIView alloc] init];
     UIView *rentView = [self addRowOfParentView:view withHeight:46.f * g_rateWidth margin:0.f isEnd:YES];
     [self setupTitleLabelWithText:@"我想出租的模式" ofView:rentView];
-
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickShareGotoButton:)];
+    [rentView setTag:HPShareGotoBtnTagRectType];
+    [rentView addGestureRecognizer:tap];
     HPRightImageButton *rectTypeBtn = [self setupGotoBtnWithTitle:@""];
-    [rectTypeBtn setTag:HPShareGotoBtnTagTimeDuring];
-    [rectTypeBtn addTarget:self action:@selector(onClickCallRentTypeViewBtn:) forControlEvents:UIControlEventTouchUpInside];
     [rentView addSubview:rectTypeBtn];
     _rectTypeBtn = rectTypeBtn;
     [_rectTypeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -323,24 +335,18 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     return rentView;
 }
 
-#pragma mark - 是否叫出租赁模式view
-- (void)onClickCallRentTypeViewBtn:(HPRightImageButton *)button
-{
-    
-}
 #pragma mark - 租金模式row view
 - (UIView *)setupRentAmountRowView
 {
     UIView *view = [[UIView alloc] init];
     UIView *rentView = [self addRowOfParentView:view withHeight:46.f * g_rateWidth margin:0.f isEnd:YES];
-    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickShareGotoButton:)];
+    [rentView setTag:HPShareGotoBtnTagRect];
+    [rentView addGestureRecognizer:tap];
     [self setupTitleLabelWithText:@"我期望的共享租金" ofView:rentView];
-    
-    _rectBtn = [self setupGotoBtnWithTitle:@""];
-    [_rectBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [_rectBtn setTag:HPShareGotoBtnTagTimeDuring];
-    [rentView addSubview:_rectBtn];
-    
+    HPRightImageButton *rectBtn = [self setupGotoBtnWithTitle:@""];
+    [rentView addSubview:rectBtn];
+    _rectBtn = rectBtn;
     [_rectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(rentView);
         make.right.equalTo(rentView).with.offset(-20.f * g_rateWidth);
@@ -354,28 +360,21 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 {
     UIView *view = [[UIView alloc] init];
     UIView *leavesView = [self addRowOfParentView:view withHeight:46.f * g_rateWidth margin:0.f isEnd:YES];
-    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickShareGotoButton:)];
+    [leavesView setTag:HPShareGotoBtnTagLeaves];
+    [leavesView addGestureRecognizer:tap];
     [self setupTitleLabelWithText:@"备注信息" ofView:leavesView];
-    
-    _leavesBtn = [self setupGotoBtnWithTitle:@""];
-    [_leavesBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [_leavesBtn setTag:HPShareGotoBtnTagTimeDuring];
-    [leavesView addSubview:_leavesBtn];
-    
+
+    HPRightImageButton *leavesBtn = [self setupGotoBtnWithTitle:@""];
+    [leavesView addSubview:leavesBtn];
+    _leavesBtn = leavesBtn;
     [_leavesBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(leavesView);
         make.right.equalTo(leavesView).with.offset(-20.f * g_rateWidth);
     }];
-    
     return leavesView;
 }
-- (void)onClickTradeBtn:(UIButton *)button
-{
-    button.selected = !button.selected;
-    if (button.selected) {
-        
-    }
-}
+
 - (HPRightImageButton *)setupGotoBtnWithTitle:(NSString *)title {
     HPRightImageButton *btn = [[HPRightImageButton alloc] init];
     [btn setImage:[UIImage imageNamed:@"shouye_gengduo"]];
@@ -384,14 +383,35 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     [btn setSpace:10.f];
     [btn setColor:COLOR_GRAY_999999];
     [btn setSelectedColor:COLOR_BLACK_333333];
-    [btn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];
     
     return btn;
 }
 
-- (void)onClickShareGotoButton:(UIButton *)button
+- (void)onClickShareGotoButton:(UITapGestureRecognizer *)tap
 {
-    
+    switch (tap.view.tag) {
+        case HPShareGotoBtnTagSpace:
+            HPLog(@"租赁空间大小");
+            break;
+        case HPShareGotoBtnTagRectType:
+            HPLog(@"租赁模式");
+            [_panel expand];
+            break;
+        case HPShareGotoBtnTagTimeDuring:
+            HPLog(@"租赁时间段");
+            break;
+        case HPShareGotoBtnTagInsustry:
+            HPLog(@"租赁行业类型");
+            break;
+        case HPShareGotoBtnTagRect:
+            HPLog(@"租赁金额");
+            break;
+        case HPShareGotoBtnTagLeaves:
+            HPLog(@"租赁留言");
+            break;
+        default:
+            break;
+    }
 }
 
 - (UIView *)addRowOfParentView:(UIView *)view withHeight:(CGFloat)height margin:(CGFloat)margin isEnd:(BOOL)isEnd {
