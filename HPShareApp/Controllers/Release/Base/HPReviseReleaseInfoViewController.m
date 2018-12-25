@@ -11,6 +11,8 @@
 #import "HPTimeRentView.h"
 #import "HPRowPanel.h"
 #import "HPRentAmountItemView.h"
+#import "CDZPicker.h"
+#import "HPIntentionListModel.h"
 
 typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     HPShareGotoBtnTagSpace = 30,
@@ -65,6 +67,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
  当前选中的租赁价格
  */
 @property (nonatomic, copy) NSString *currentPrice;
+@property (nonatomic, strong) NSMutableArray *intentionArray;
 @end
 
 @implementation HPReviseReleaseInfoViewController
@@ -75,9 +78,29 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    _intentionArray = [NSMutableArray array];
     [self setupUI];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self getIntentionIndustry];
+}
+
+#pragma mark - 获取意向行业类型
+- (void)getIntentionIndustry
+{
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/intentionIndustry/list" isNeedToken:YES paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            self.intentionArray = [HPIntentionListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 - (void)setupUI {
@@ -139,7 +162,6 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 - (void)setupPanelAtIndex:(NSInteger)index ofView:(UIView *)view {
     HPRowPanel *panel = [[HPRowPanel alloc] init];
     [view addSubview:panel];
-//    _panel = panel;
     if (index == 0) {
         [panel addRowView:[self setUpInfoLabel] withHeight:25.f * g_rateWidth];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -424,6 +446,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
             break;
         case HPShareGotoBtnTagInsustry:
             HPLog(@"租赁行业类型");
+            [self setUpIndustryTypePickerView];
             break;
         case HPShareGotoBtnTagRect:
             HPLog(@"租赁金额");
@@ -445,6 +468,32 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
         default:
             break;
     }
+}
+
+#pragma mark - 行业类型pickerview
+- (void)setUpIndustryTypePickerView
+{
+    CDZPicker *pickerView = [CDZPicker new];
+    pickerView.tipTitle = @"选择意向行业";
+    CDZPickerBuilder *builder = [CDZPickerBuilder new];
+    builder.showMask = YES;
+    builder.cancelTextColor = COLOR_GRAY_BBBBBB;
+    builder.confirmTextColor = COLOR_RED_EA0000;
+    NSMutableArray *intentionArray = [NSMutableArray array];;
+    for (int i = 0; i < self.intentionArray.count; i++) {
+        HPIntentionListModel *model = self.intentionArray[i];
+        [intentionArray addObject:model.industryName];
+    }
+    [CDZPicker showSinglePickerInView:self.view withBuilder:builder strings:intentionArray confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
+        [self.industryBtn setText:[strings componentsJoinedByString:@","]];
+        CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 20;
+        [self.industryBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(stringsW);
+        }];
+//        NSLog(@"strings:%@ indexs:%@",strings,indexs);
+    }cancel:^{
+        //your code
+    }];
 }
 
 - (UIView *)addRowOfParentView:(UIView *)view withHeight:(CGFloat)height margin:(CGFloat)margin isEnd:(BOOL)isEnd {

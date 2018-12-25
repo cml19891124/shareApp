@@ -801,7 +801,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
             [weakSelf.cityBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(stringsW);
             }];
-            NSLog(@"strings:%@ indexs:%@",strings,indexs);
+//            NSLog(@"strings:%@ indexs:%@",strings,indexs);
         }cancel:^{
             //your code
         }];

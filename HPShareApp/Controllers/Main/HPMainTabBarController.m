@@ -16,7 +16,7 @@
 #import "HPStartUpCardDefineController.h"
 #import "HPJudgingLoginView.h"
 #import "HPLoginController.h"
-#import "LLShoppingViewController.h"
+#import "HPHomeShareViewController.h"
 @interface HPMainTabBarController ()
 
 @property (nonatomic, weak) HPReleaseModalView *releaseModalView;
@@ -59,10 +59,8 @@
     self.tabBar.layer.shadowColor = COLOR_GRAY_E6E5E5.CGColor;
     self.tabBar.layer.shadowOffset = CGSizeMake(0, -2);
     self.tabBar.layer.shadowOpacity = 0.82f;
-    
-    UIStoryboard * sb = [UIStoryboard storyboardWithName:@"LLShoppingViewController" bundle:nil];
-    LLShoppingViewController * shareController = sb.instantiateInitialViewController;
-//    LLShoppingViewController *shareController = [[LLShoppingViewController alloc] init];
+
+    HPHomeShareViewController *shareController = [[HPHomeShareViewController alloc] init];
     shareController.tabBarItem.title = @"共享";
     shareController.tabBarItem.image = [UIImage imageNamed:@"share_unchecked"];
     shareController.tabBarItem.selectedImage = [UIImage imageNamed:@"share_checked"];

@@ -7,6 +7,7 @@
 //
 
 #import "HPRentAmountItemView.h"
+#import "HPImageUtil.h"
 #define margin  ((kScreenWidth - getWidth(34.f) * 4)/5)
 #define buttonW ((kScreenWidth - getWidth(10.f) * 5)/4)
 #define fillW   (BoundWithSize(self.fillField.placeholder, kScreenWidth, 12.f).size.width + 10)
@@ -217,8 +218,8 @@
         itemBtn.titleLabel.font = kFont_Regular(12.f);
         [itemBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateSelected];
         [itemBtn setTitleColor:COLOR_GRAY_999999 forState:UIControlStateNormal];
-        [itemBtn setBackgroundImage:[self createImageWithColor:COLOR_GRAY_F6F6F6] forState:UIControlStateNormal];
-        [itemBtn setBackgroundImage:[self createImageWithColor:COLOR_RED_EA0000] forState:UIControlStateSelected];
+        [itemBtn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_GRAY_F6F6F6] forState:UIControlStateNormal];
+        [itemBtn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_EA0000] forState:UIControlStateSelected];
         itemBtn.layer.cornerRadius = 5.f;
         itemBtn.layer.masksToBounds = YES;
         [itemBtn addTarget:self action:@selector(selectRentAmountItem:) forControlEvents:UIControlEventTouchUpInside];
@@ -241,30 +242,6 @@
             make.width.mas_equalTo(buttonW);
         }];
     }
-}
-
-//UIColor转UIImage
-
-- (UIImage*)createImageWithColor:(UIColor*)color
-
-{
-    
-    CGRect rect=CGRectMake(0.0f,0.0f,1.0f,1.0f);
-    
-    UIGraphicsBeginImageContext(rect.size);
-    
-    CGContextRef context =UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context,[color CGColor]);
-    
-    CGContextFillRect(context,rect);
-    
-    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    
-    return theImage;
-    
 }
 
 /**

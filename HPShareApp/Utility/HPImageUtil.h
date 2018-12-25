@@ -37,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (UIImage *)getRectangleByStrokeColor:(UIColor *)strokeColor fillColor:(UIColor *)fillColor borderWidth:(CGFloat)borderWidth cornerRadius:(CGFloat)radius inRect:(CGRect)rect;
 
+//UIColor转UIImage
+
++ (UIImage*)createImageWithColor:(UIColor*)color;
 @end
 
 NS_ASSUME_NONNULL_END
