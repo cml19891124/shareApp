@@ -52,7 +52,7 @@ static NSString *topMenuItemCell = @"topMenuItemCell";
     [self.openView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(0);
-        make.height.mas_equalTo(getWidth(135.f));
+        make.height.mas_equalTo(getWidth(140.f));
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -149,6 +149,7 @@ static NSString *topMenuItemCell = @"topMenuItemCell";
 - (HPTopMenuItemCell *)setUpMenuCell:(UITableView *)tableView
 {
     HPTopMenuItemCell *cell = [tableView dequeueReusableCellWithIdentifier:topMenuItemCell];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     kWeakSelf(weakSlef);
     [cell setClickMenuItemBlock:^(NSInteger HPHomeShareMenuItem) {
         switch (HPHomeShareMenuItem) {
@@ -187,7 +188,7 @@ static NSString *topMenuItemCell = @"topMenuItemCell";
 {
     switch (indexPath.section) {
         case 0:
-            return getWidth(360.f);
+            return getWidth(150.f);
             break;
             
         default:
