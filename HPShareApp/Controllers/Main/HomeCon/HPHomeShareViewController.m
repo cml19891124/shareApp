@@ -12,7 +12,7 @@
 #import "HPGamesCell.h"
 #import "HPHotShareStoreCell.h"
 #import "HPShareListCell.h"
-
+#define slideRatio fabs(y/100)
 typedef NS_ENUM(NSInteger, HPDisplaycellIndexpath) {
     HPDisplaycellIndexpathMenu = 50
 };
@@ -368,16 +368,15 @@ static NSString *shareListCell = @"shareListCell";
 //    }
     
     if(offset.y > 0){
-        [self updateWithExpand:NO animated:NO offset:offset.y];
+        [self updateSearchViewWithMaonryOffset:offset.y];
 
     }else{
-        [self updateWithExpand:NO animated:NO offset:offset.y];
+        [self updateSearchViewWithMaonryOffset:offset.y];
 
     }
 }
 
-- (void)updateWithExpand:(BOOL)isExpanded animated:(BOOL)animated offset:(CGFloat)y{
-    self.isExpaned = isExpanded;
+- (void)updateSearchViewWithMaonryOffset:(CGFloat)y{
     self.openView.sloganImageView.alpha -= y/10000.00;
     HPLog(@"ffff:%f",self.openView.sloganImageView.alpha);
     if (self.openView.sloganImageView.alpha <= 0) {
@@ -388,12 +387,8 @@ static NSString *shareListCell = @"shareListCell";
         self.openView.sloganImageView.hidden = NO;
         self.appNameLabel.hidden = YES;
     }
-
     
-    if (animated) {
-        
-    }
-    
+    /*
     if (y > 0) {
         [self.openView.searchView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(self.openView).offset(getWidth(-26.f)* fabs(y/200));
@@ -407,6 +402,59 @@ static NSString *shareListCell = @"shareListCell";
             make.top.mas_equalTo(self.openView).offset(getWidth(95.f) * fabs(y/200));
             make.centerX.mas_equalTo(self.openView);
         }];
-    }
+    }*/
+    static BOOL isMove; //默认是NO
+    if (isMove) {
+        isMove = NO;
+        // 注意需要先执行一次更新约束
+        [self.openView layoutIfNeeded];
+        //添加动画
+        [UIView animateWithDuration:0.5 animations:^{
+           
+            [self.openView.searchView mas_updateConstraints:^(MASConstraintMaker *make) {
+                //更改距顶上的高度
+//                make.right.mas_equalTo(self.openView).offset(getWidth(-26.f)* slideRatio);
+//                make.centerY.mas_equalTo(self.openView);
+//                make.height.mas_equalTo(getWidth(30.f)* slideRatio);
+//            make.left.mas_equalTo(self.openView.cityBtn.mas_right).offset(getWidth(22.f)* slideRatio);
+                make.centerY.mas_equalTo(self.openView);
+                make.size.mas_equalTo(CGSizeMake(getWidth(225.f)* slideRatio, getWidth(30.f)* slideRatio));
+                make.right.mas_equalTo(getWidth(-26.f)* slideRatio);
+                
+                //最小值
+                make.width.greaterThanOrEqualTo(@(getWidth(225.f)* slideRatio));
+                make.height.greaterThanOrEqualTo(@(getWidth(30.f)* slideRatio));
+
+                //最大值
+                make.width.lessThanOrEqualTo(@(getWidth(325.f)* slideRatio));
+                make.height.lessThanOrEqualTo(@(getWidth(40.f)* slideRatio));
+                }];
+            
+ //必须调用此方法，才能出动画效果
+            [self.openView.searchView layoutIfNeeded];
+            [self.openView layoutIfNeeded];
+        }];
+    }else{
+        isMove = YES;
+        [self.openView layoutIfNeeded];
+        //开始动画
+        [UIView beginAnimations:nil context:nil];
+       //设定动画持续时间
+        [UIView setAnimationDuration:1];
+        [self.openView.searchView mas_updateConstraints:^(MASConstraintMaker *make) {
+            //动画的内容,更改距顶上的高度
+            make.size.mas_equalTo(CGSizeMake(getWidth(325.f)* slideRatio, getWidth(40.f)* slideRatio));
+            make.top.mas_equalTo(self.openView).offset(getWidth(95.f) * slideRatio);
+            make.centerX.mas_equalTo(self.openView);
+            }];
+        
+        //必须调用此方法，才能出动画效果
+        [self.openView.searchView layoutIfNeeded];
+        [self.openView layoutIfNeeded];
+
+        //动画结束
+        [UIView commitAnimations];
+        
+     }
 }
 @end

@@ -134,7 +134,7 @@
     }];
     
     [self.searchField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(getWidth(84.f), getWidth(13.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(100.f), getWidth(13.f)));
         make.left.mas_equalTo(self.searchImage.mas_right).offset(getWidth(10.f));
         make.centerY.mas_equalTo(self.searchView);
     }];
