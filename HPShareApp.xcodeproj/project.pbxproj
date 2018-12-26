@@ -43,13 +43,6 @@
 		7A54489E21C6304C001301F3 /* HPCardHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54489D21C6304C001301F3 /* HPCardHeaderView.m */; };
 		7AAFF36521CD2EC20049D175 /* HPTimeRentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAFF36421CD2EC20049D175 /* HPTimeRentView.m */; };
 		7AAFF36821CD2F680049D175 /* HPTimeRentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAFF36721CD2F680049D175 /* HPTimeRentButton.m */; };
-		7AAFF39021D289B20049D175 /* CarouseViewPlus.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAFF38721D289B10049D175 /* CarouseViewPlus.m */; };
-		7AAFF39121D289B20049D175 /* CarouseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAFF38821D289B10049D175 /* CarouseView.m */; };
-		7AAFF39221D289B20049D175 /* 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7AAFF38A21D289B10049D175 /* 4.jpg */; };
-		7AAFF39321D289B20049D175 /* 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7AAFF38C21D289B10049D175 /* 5.jpg */; };
-		7AAFF39421D289B20049D175 /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7AAFF38D21D289B10049D175 /* 2.jpg */; };
-		7AAFF39521D289B20049D175 /* 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7AAFF38E21D289B10049D175 /* 3.jpg */; };
-		7AAFF39621D289B20049D175 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7AAFF38F21D289B10049D175 /* 1.jpg */; };
 		CAA2DAE424EC650C0D26D3DA /* Pods_HPShareApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */; };
 		DB490D1FA8BCD64C224C403A /* Pods_HPShareAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */; };
 		E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E611563B219AC8D7003A29C5 /* HPBaseViewController.m */; };
@@ -166,6 +159,9 @@
 		E661B14321A679E200C86CF5 /* UIScrollView+GestureConflict.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B14221A679E200C86CF5 /* UIScrollView+GestureConflict.m */; };
 		E661B14621A68BE300C86CF5 /* HPRoundedRectPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B14521A68BE300C86CF5 /* HPRoundedRectPageControl.m */; };
 		E661B14A21A6986B00C86CF5 /* StyledPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B14921A6986B00C86CF5 /* StyledPageControl.m */; };
+		E66F1CB221D3481D00C2DEEF /* HPGamesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E66F1CB121D3481D00C2DEEF /* HPGamesCell.m */; };
+		E66F1CB521D3569000C2DEEF /* HPHotShareStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E66F1CB421D3569000C2DEEF /* HPHotShareStoreCell.m */; };
+		E66F1CB821D3625D00C2DEEF /* HPHotImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = E66F1CB721D3625D00C2DEEF /* HPHotImageView.m */; };
 		E67B778E21CDEEB1007AC636 /* HPRentAmountItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = E67B778D21CDEEB1007AC636 /* HPRentAmountItemView.m */; };
 		E67D2EDD21CBBB72005134DB /* HPShareSelectedItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = E67D2EDC21CBBB72005134DB /* HPShareSelectedItemView.m */; };
 		E6830E4821D1D0B3000E0F39 /* HPIntentionListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E6830E4721D1D0B3000E0F39 /* HPIntentionListModel.m */; };
@@ -317,15 +313,6 @@
 		7AAFF36421CD2EC20049D175 /* HPTimeRentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPTimeRentView.m; sourceTree = "<group>"; };
 		7AAFF36621CD2F680049D175 /* HPTimeRentButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPTimeRentButton.h; sourceTree = "<group>"; };
 		7AAFF36721CD2F680049D175 /* HPTimeRentButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPTimeRentButton.m; sourceTree = "<group>"; };
-		7AAFF38721D289B10049D175 /* CarouseViewPlus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouseViewPlus.m; sourceTree = "<group>"; };
-		7AAFF38821D289B10049D175 /* CarouseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouseView.m; sourceTree = "<group>"; };
-		7AAFF38921D289B10049D175 /* CarouseViewPlus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouseViewPlus.h; sourceTree = "<group>"; };
-		7AAFF38A21D289B10049D175 /* 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4.jpg; sourceTree = "<group>"; };
-		7AAFF38B21D289B10049D175 /* CarouseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouseView.h; sourceTree = "<group>"; };
-		7AAFF38C21D289B10049D175 /* 5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 5.jpg; sourceTree = "<group>"; };
-		7AAFF38D21D289B10049D175 /* 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 2.jpg; sourceTree = "<group>"; };
-		7AAFF38E21D289B10049D175 /* 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 3.jpg; sourceTree = "<group>"; };
-		7AAFF38F21D289B10049D175 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
 		7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareAppUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4F1B350A3EBD7380C3F015D /* Pods-HPShareApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -561,6 +548,12 @@
 		E661B14521A68BE300C86CF5 /* HPRoundedRectPageControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRoundedRectPageControl.m; sourceTree = "<group>"; };
 		E661B14821A6986B00C86CF5 /* StyledPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyledPageControl.h; sourceTree = "<group>"; };
 		E661B14921A6986B00C86CF5 /* StyledPageControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyledPageControl.m; sourceTree = "<group>"; };
+		E66F1CB021D3481D00C2DEEF /* HPGamesCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPGamesCell.h; sourceTree = "<group>"; };
+		E66F1CB121D3481D00C2DEEF /* HPGamesCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPGamesCell.m; sourceTree = "<group>"; };
+		E66F1CB321D3569000C2DEEF /* HPHotShareStoreCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHotShareStoreCell.h; sourceTree = "<group>"; };
+		E66F1CB421D3569000C2DEEF /* HPHotShareStoreCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHotShareStoreCell.m; sourceTree = "<group>"; };
+		E66F1CB621D3625D00C2DEEF /* HPHotImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHotImageView.h; sourceTree = "<group>"; };
+		E66F1CB721D3625D00C2DEEF /* HPHotImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHotImageView.m; sourceTree = "<group>"; };
 		E67B778C21CDEEB1007AC636 /* HPRentAmountItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRentAmountItemView.h; sourceTree = "<group>"; };
 		E67B778D21CDEEB1007AC636 /* HPRentAmountItemView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRentAmountItemView.m; sourceTree = "<group>"; };
 		E67D2EDB21CBBB72005134DB /* HPShareSelectedItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareSelectedItemView.h; sourceTree = "<group>"; };
@@ -836,22 +829,6 @@
 				E6830E4721D1D0B3000E0F39 /* HPIntentionListModel.m */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		7AAFF38621D289B10049D175 /* CarouseView */ = {
-			isa = PBXGroup;
-			children = (
-				7AAFF38721D289B10049D175 /* CarouseViewPlus.m */,
-				7AAFF38821D289B10049D175 /* CarouseView.m */,
-				7AAFF38921D289B10049D175 /* CarouseViewPlus.h */,
-				7AAFF38A21D289B10049D175 /* 4.jpg */,
-				7AAFF38B21D289B10049D175 /* CarouseView.h */,
-				7AAFF38C21D289B10049D175 /* 5.jpg */,
-				7AAFF38D21D289B10049D175 /* 2.jpg */,
-				7AAFF38E21D289B10049D175 /* 3.jpg */,
-				7AAFF38F21D289B10049D175 /* 1.jpg */,
-			);
-			path = CarouseView;
 			sourceTree = "<group>";
 		};
 		D29D226676E10B1AF5705590 /* Frameworks */ = {
@@ -1383,6 +1360,10 @@
 				E6830E4D21D20364000E0F39 /* HPTopMenuItemCell.m */,
 				E64B727121D24DAC00DCA29A /* HPMenuCellbutton.h */,
 				E64B727221D24DAC00DCA29A /* HPMenuCellbutton.m */,
+				E66F1CB021D3481D00C2DEEF /* HPGamesCell.h */,
+				E66F1CB121D3481D00C2DEEF /* HPGamesCell.m */,
+				E66F1CB321D3569000C2DEEF /* HPHotShareStoreCell.h */,
+				E66F1CB421D3569000C2DEEF /* HPHotShareStoreCell.m */,
 			);
 			path = TableViewCell;
 			sourceTree = "<group>";
@@ -1404,6 +1385,8 @@
 				E61B5EB321CCB7F100DC8A59 /* HPJudgingLoginView.m */,
 				E6830E4F21D20594000E0F39 /* HPMenuOpenStoreView.h */,
 				E6830E5021D20594000E0F39 /* HPMenuOpenStoreView.m */,
+				E66F1CB621D3625D00C2DEEF /* HPHotImageView.h */,
+				E66F1CB721D3625D00C2DEEF /* HPHotImageView.m */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -1449,7 +1432,6 @@
 		E661B0FB21A28D7F00C86CF5 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
-				7AAFF38621D289B10049D175 /* CarouseView */,
 				E6B4CECC21C5286E00429C11 /* SDCycleScrollView */,
 				E622A9AF21C33989007C35BC /* YYLrefresh */,
 				E61FE09A21B9F94500555F3F /* iCarousel */,
@@ -1811,17 +1793,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7AAFF39521D289B20049D175 /* 3.jpg in Resources */,
-				7AAFF39221D289B20049D175 /* 4.jpg in Resources */,
 				E661B13021A28E8500C86CF5 /* README.md in Resources */,
-				7AAFF39421D289B20049D175 /* 2.jpg in Resources */,
 				E61E27A721C8D68000CD5288 /* EBBannerViewController.xib in Resources */,
-				7AAFF39621D289B20049D175 /* 1.jpg in Resources */,
 				E6292141219AA83A00BEF16C /* LaunchScreen.storyboard in Resources */,
 				E61E27A621C8D68000CD5288 /* EBBannerView.xib in Resources */,
 				E629216B219AAAB900BEF16C /* Default-568h@2x.png in Resources */,
 				E622A9C021C33989007C35BC /* RefreshTableView.bundle in Resources */,
-				7AAFF39321D289B20049D175 /* 5.jpg in Resources */,
 				E629213E219AA83A00BEF16C /* Assets.xcassets in Resources */,
 				E629213C219AA83100BEF16C /* Main.storyboard in Resources */,
 				E661B12321A28E8500C86CF5 /* LICENSE in Resources */,
@@ -1967,6 +1944,7 @@
 				E654C7DE21BFE58E0066C506 /* HPFansListModel.m in Sources */,
 				E622A9BD21C33989007C35BC /* YYLRefreshNoDataView.m in Sources */,
 				E661B12921A28E8500C86CF5 /* JTVerticalCalendarView.m in Sources */,
+				E66F1CB821D3625D00C2DEEF /* HPHotImageView.m in Sources */,
 				E67D2EDD21CBBB72005134DB /* HPShareSelectedItemView.m in Sources */,
 				E6D75F4D21AFF48200B2067C /* HPBindPhoneController.m in Sources */,
 				E6292172219AB28700BEF16C /* HPGlobalVariable.m in Sources */,
@@ -1983,7 +1961,6 @@
 				E6D75F3E21AFDEB700B2067C /* HPRightImageButton.m in Sources */,
 				E661B0C7219CFF1800C86CF5 /* HPProgressHUD.m in Sources */,
 				7AAFF36821CD2F680049D175 /* HPTimeRentButton.m in Sources */,
-				7AAFF39121D289B20049D175 /* CarouseView.m in Sources */,
 				E661B0CD219D1B9200C86CF5 /* HPRowPanel.m in Sources */,
 				E6D75F7F21B6463400B2067C /* HPShareManageCell.m in Sources */,
 				E661B14621A68BE300C86CF5 /* HPRoundedRectPageControl.m in Sources */,
@@ -2034,8 +2011,10 @@
 				E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */,
 				E6D75F2821AD463000B2067C /* HPLoginByPasswordController.m in Sources */,
 				E6D75F6421B2301600B2067C /* HPCirclePageControl.m in Sources */,
+				E66F1CB521D3569000C2DEEF /* HPHotShareStoreCell.m in Sources */,
 				E661B0B3219C2B1300C86CF5 /* HPTextDialogView.m in Sources */,
 				E661B09A219BADB200C86CF5 /* HPInteractiveController.m in Sources */,
+				E66F1CB221D3481D00C2DEEF /* HPGamesCell.m in Sources */,
 				E61FE0B021BA816D00555F3F /* HPUserTool.m in Sources */,
 				E6D75F1321A78AD300B2067C /* HPSharePersonCard.m in Sources */,
 				6993AD3D21C9E97D0019506C /* HPShareIdeaModel.m in Sources */,
@@ -2050,7 +2029,6 @@
 				E617887C21BE6E4F0092BFA3 /* HPUploadImageHandle.m in Sources */,
 				E6B4CEE121C5286F00429C11 /* TAAnimatedDotView.m in Sources */,
 				E661B0CA219D114300C86CF5 /* HPBaseTextInputController.m in Sources */,
-				7AAFF39021D289B20049D175 /* CarouseViewPlus.m in Sources */,
 				E61FE09D21B9F94500555F3F /* iCarousel.m in Sources */,
 				E661B0D3219D3BF500C86CF5 /* HPSelectTableLayout.m in Sources */,
 				6993AD4621CB37360019506C /* HPShareReleaseParam.m in Sources */,

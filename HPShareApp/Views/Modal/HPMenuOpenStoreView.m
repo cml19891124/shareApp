@@ -69,10 +69,11 @@
         _searchView = [UIView new];
         _searchView.backgroundColor = COLOR_GRAY_FFFFFF;
         _searchView.layer.cornerRadius = 3.f;
-//        _searchView.layer.masksToBounds = YES;
-        _searchView.layer.shadowColor = COLOR_GRAY_BBBBBB.CGColor;
-        _searchView.layer.shadowOffset = CGSizeMake(0, 3);
-        _searchView.layer.shadowOpacity = 0.7;
+        _searchView.layer.shadowColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:0.08].CGColor;
+        _searchView.layer.shadowOpacity = 1.f;
+        _searchView.layer.shadowOffset = CGSizeMake(0, 2);
+        _searchView.layer.shadowRadius = 17;
+        
     }
     return _searchView;
 }

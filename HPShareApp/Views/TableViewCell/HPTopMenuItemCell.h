@@ -7,9 +7,10 @@
 //
 
 #import "HPBaseTableViewCell.h"
-#import "HPMenuOpenStoreView.h"
-//#import "iCarousel.h"
-#import "CarouseViewPlus.h"
+#import "HPBannerView.h"
+#import "HPPageControl.h"
+#import "HPPageControlFactory.h"
+
 typedef NS_ENUM(NSInteger, HPHomeShareMenuItem) {
     HPHome_page_store_sharing = 50,
     HPHome_page_lobby_sharing,
@@ -25,14 +26,15 @@ typedef void (^ClickMenuItemBlock)(NSInteger HPHomeShareMenuItem);
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPTopMenuItemCell : HPBaseTableViewCell
+@interface HPTopMenuItemCell : HPBaseTableViewCell<HPBannerViewDelegate>
 
 @property (nonatomic, strong) UIView *bannerView;
 
 @property (nonatomic, copy) SelectItemInICarouselBlock selectItemInICarouselBlock;
 @property (nonatomic, copy) ClickMenuItemBlock clickMenuItemBlock;
-@property (strong, nonatomic) CarouseViewPlus *iCarousel;
-@property (strong, nonatomic) NSArray *bannerImageArr;
+@property (strong, nonatomic) HPBannerView *iCarousel;
+@property (nonatomic, strong) HPPageControl *pageControl;
+@property (strong, nonatomic) NSMutableArray *bannerImageArr;
 @end
 
 NS_ASSUME_NONNULL_END

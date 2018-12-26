@@ -25,7 +25,9 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.bannerImageArr = @[ImageNamed(@"boot_page_1"),ImageNamed(@"boot_page_2"),ImageNamed(@"boot_page_3")];
+        NSArray *bannerImageArr = @[ImageNamed(@"home_page_banner"),ImageNamed(@"home_page_banner"),ImageNamed(@"home_page_banner")];
+        self.bannerImageArr = [NSMutableArray array];
+        [self.bannerImageArr addObjectsFromArray:bannerImageArr];
         [self setUpTopMenuSubviews];
         [self setUpCellSubviewsFrame];
     }
@@ -34,39 +36,31 @@
 
 - (void)setUpTopMenuSubviews
 {
-    [self.contentView addSubview:self.bannerView];
-    [self.bannerView addSubview:self.iCarousel];
-    [self setupCarouseViewPlus];
+    [self.contentView addSubview:self.iCarousel];
+
+    [self.contentView addSubview:self.pageControl];
+    
     [self setUpMenuButtonViews];
 }
 
-#pragma mark - 轮播图2设置
-- (void)setupCarouseViewPlus
-{
-    // 图片数组，可以是其他的资源，设置到轮播图上就可以
-    NSMutableArray *imagerray = [NSMutableArray array];
-    for (int i = 0; i < self.bannerImageArr.count; i++)
-    {
-        // 先用空白页测试
-        UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", i + 1]];
-        [imagerray addObject:image];
-    }
-    
-    [self.iCarousel setupSubviewPages:imagerray withCallbackBlock:^(NSInteger pageIndex) {
-
-    }];
-}
 - (void)setUpCellSubviewsFrame
 {
     
-    [self.bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(getWidth(325.f), getWidth(140.f)));
-        make.centerX.mas_equalTo(self);
-        make.top.mas_equalTo(getWidth(5.f));
-    }];
+//    [self.bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.size.mas_equalTo(CGSizeMake(getWidth(325.f), getWidth(150.f)));
+//        make.centerX.mas_equalTo(self);
+//        make.top.mas_equalTo(getWidth(10.f));
+//    }];
     
     [self.iCarousel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.left.right.mas_equalTo(self.bannerView);
+        make.left.and.width.equalTo(self);
+        make.top.mas_equalTo(getWidth(10.f));
+        make.height.mas_equalTo(getWidth(150.f));
+    }];
+    
+    [_pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self);
+        make.bottom.equalTo(self.iCarousel).with.offset(-18.f * g_rateWidth);
     }];
 }
 
@@ -77,7 +71,6 @@
         _bannerView.backgroundColor = COLOR_GRAY_FFFFFF;
         _bannerView.layer.cornerRadius = 8.f;
         _bannerView.layer.masksToBounds = YES;
-        //        view.layer.masksToBounds = YES;
         _bannerView.layer.shadowColor = COLOR_GRAY_BBBBBB.CGColor;
         _bannerView.layer.shadowOffset = CGSizeMake(0, 1);
         _bannerView.layer.shadowOpacity = 0.7;
@@ -85,12 +78,30 @@
     return _bannerView;
 }
 
-- (CarouseViewPlus *)iCarousel
+- (HPBannerView *)iCarousel
 {
     if (!_iCarousel) {
-        _iCarousel = [CarouseViewPlus new];
+        _iCarousel = [[HPBannerView alloc] init];
+        [_iCarousel setImages:self.bannerImageArr];
+        [_iCarousel setImageContentMode:UIViewContentModeScaleToFill];
+        [_iCarousel setPageSpace:getWidth(15.f)];//space + width = 每次滑动到距离
+        [_iCarousel setPageMarginLeft:getWidth(25.f)];//距离屏幕左边的宽度
+        [_iCarousel setPageWidth:getWidth(325.f)];
+        [_iCarousel setPageItemSize:CGSizeMake(getWidth(325.f), getWidth(150.f))];//轮播里面卡片控件的大小。默认与width相等
+        [_iCarousel setBannerViewDelegate:self];
+        [_iCarousel startAutoScrollWithInterval:2];
     }
     return _iCarousel;
+}
+
+- (HPPageControl *)pageControl
+{
+    if (!_pageControl) {
+        _pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleRoundedRect];
+        [_pageControl setNumberOfPages:self.bannerImageArr.count];
+        [_pageControl setCurrentPage:0];
+    }
+    return _pageControl;
 }
 - (void)setUpMenuButtonViews
 {
@@ -107,8 +118,8 @@
         [self addSubview:menuBtn];
         CGFloat margin = (kScreenWidth - getWidth(52.f) * 4 - getWidth(26.f) * 2)/3;
         [menuBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(getWidth(26.f) + (getWidth(52.f) + margin) * col);
-            make.top.mas_equalTo(self.bannerView.mas_bottom).offset(getWidth(12.f) + (getWidth(77.f) + getWidth(21.f)) * row);
+            MASConstraint *leftContraint = make.left.mas_equalTo(getWidth(26.f) + (getWidth(52.f) + margin) * col);
+            make.top.mas_equalTo(self.iCarousel.mas_bottom).offset(getWidth(25.f) + (getWidth(77.f) + getWidth(21.f)) * row);
             make.size.mas_equalTo(CGSizeMake(getWidth(52.f), getWidth(77.f)));
         }];
     }
@@ -121,54 +132,10 @@
         self.clickMenuItemBlock(button.tag);
     }
 }
-/*
-#pragma mark - iCarouselDataSouce
+#pragma mark - HPBannerViewDelegate
 
--(NSInteger)numberOfItemsInCarousel:(iCarousel *)carousel{
-    return self.bannerImageArr.count;
-}
-- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
-{
-    if (view == nil)
-    {
-        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth - getWidth(50.f), getWidth(150.f))];
-        view.backgroundColor = COLOR_GRAY_FFFFFF;
-        view.contentMode = UIViewContentModeCenter;
-        view.layer.cornerRadius = 8.f;
-//        view.layer.masksToBounds = YES;
-        view.layer.shadowColor = COLOR_GRAY_BBBBBB.CGColor;
-        view.layer.shadowOffset = CGSizeMake(0, 1);
-        view.layer.shadowOpacity = 0.7;
-        UIImageView *bannerImageView = [[UIImageView alloc] initWithFrame:view.bounds];
-        bannerImageView.contentMode = UIViewContentModeScaleAspectFill;
-        bannerImageView.image = self.bannerImageArr[index];
-        bannerImageView.layer.cornerRadius = 8.f;
-        bannerImageView.layer.masksToBounds = YES;
-        [view addSubview:bannerImageView];
-    }
-    
-    // 支持循环的 可用（最后一个的下一个是第0个）
-    if (index == [self.bannerImageArr count] - 1) {
-        [carousel scrollToItemAtIndex:0 animated:YES];
-    } else {
-        [carousel scrollToItemAtIndex:index+1 animated:YES];
-    }
-    
-    return view;
-}
-- (CGFloat)carousel:(iCarousel *)carousel valueForOption:(iCarouselOption)option withDefault:(CGFloat)value
-{
-    if (option == iCarouselOptionSpacing)
-    {
-        return value * 1.03;
-    }
-    return value;
+- (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
+    [_pageControl setCurrentPage:index];
 }
 
-- (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
-{
-    if (self.selectItemInICarouselBlock) {
-        self.selectItemInICarouselBlock(self.bannerImageArr[index]);
-    }
-}*/
 @end
