@@ -109,25 +109,21 @@
     
     
     NSMutableArray *testArray = [NSMutableArray array];
-    [testArray addObject:@"看家"];
-    [testArray addObject:@"智能硬一"];
-    [testArray addObject:@"哇建立技术开发是"];
-    [testArray addObject:@"技术"];
-    [testArray addObject:@"索朗多"];
-    [testArray addObject:@"科技"];
-    [testArray addObject:@"索朗多索朗多"];
-    [testArray addObject:@"科技"];
-    [testArray addObject:@"上课福建省地方"];
-    [testArray addObject:@"科技"];
+    [testArray addObject:@"我们只提供场地，请自带相关设备"];
+    [testArray addObject:@"可提供桌椅"];
+    [testArray addObject:@"可以寄存小件货物"];
+    [testArray addObject:@"诚信合作，非诚勿扰"];
+    [testArray addObject:@"长短租均可"];
+    [testArray addObject:@"长租需要签约"];
+    [testArray addObject:@"有意向可实地面聊"];
     
     CGFloat startX = 10;
     CGFloat startY = getWidth(15.f);
     CGFloat buttonHeight = getWidth(25.f);
     
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < testArray.count; i++)
     {
         UIButton *btn = [[UIButton alloc]init];
-//        btn.backgroundColor = COLOR_GRAY_F6F6F6;
         [btn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_GRAY_F6F6F6] forState:UIControlStateNormal];
         [btn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_EA0000] forState:UIControlStateSelected];
         btn.layer.cornerRadius = 5.f;
@@ -157,9 +153,21 @@
 #pragma mark - 选中的留言类型
 - (void)selectedLeavesItem:(UIButton *)button
 {
+    self.leavesPlaceView.placehText = @"";
     self.selectedBtn.selected = NO;
     button.selected = YES;
     self.selectedBtn = button;
+    NSMutableArray *leavesArray = [NSMutableArray array];
+    if (![leavesArray containsObject:button.currentTitle]) {
+        [leavesArray addObject:button.currentTitle];
+    }else{
+        [leavesArray removeObject:button.currentTitle];
+    }
+    if (self.leavesPlaceView.text.length == 0) {
+        self.leavesPlaceView.text = [leavesArray componentsJoinedByString:@","];
+    }else{
+        self.leavesPlaceView.text = [self.leavesPlaceView.text stringByAppendingString:button.currentTitle];
+    }
 }
 - (void)setUpLeavesSubviewsFrame
 {
@@ -187,7 +195,7 @@
         make.left.mas_equalTo(getWidth(18.f));
         make.top.mas_equalTo(self.leavesView.mas_bottom).offset(getWidth(15.f));
         make.right.mas_equalTo(getWidth(-23.f));
-        make.height.mas_equalTo(getWidth(300.f));
+        make.bottom.mas_equalTo(self.bottomContainerView.mas_top);
     }];
     
     [self.sureBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -297,6 +305,13 @@
         return NO;
     }else{
         return YES;
+    }
+    
+    if ([text isEqualToString:@"\n"]){ //判断输入的字是否是回车，即按下return
+        
+        //在这里做你响应return键的代码
+        return NO; //这里返回NO，就代表return键值失效，即页面上按下return，不会出现换行，如果为yes，则输入页面会换行
+    
     }
 }
 

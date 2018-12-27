@@ -74,6 +74,9 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 - (void)onClickBackBtn {
     HPLog(@"确定放弃此次完善信息操作？");
     [self.navigationController popViewControllerAnimated:YES];
+    if ([self.delegate respondsToSelector:@selector(backvcIn:andShareInfo:andShareTime:andIndustry:andShareType:andShareRent:andShareRentAmount:)]) {
+        [self.delegate backvcIn:self andShareInfo:self.spaceBtn.text andShareTime:self.shareTimeBtn.text andIndustry:self.industryBtn.text andShareType:self.rectTypeBtn.text andShareRent:self.rectBtn.text andShareRentAmount:self.currentPrice];
+    }
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -133,7 +136,8 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 }
 
 - (void)onClickReleaseBtn {
-    
+    [self pushVCByClassName:@"HPOwnnerReleaseViewController"];
+
 }
 #pragma mark - 信息完整度
 - (UIView *)setUpInfoLabel
@@ -426,6 +430,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     switch (tap.view.tag) {
         case HPShareGotoBtnTagSpace:
             HPLog(@"租赁空间大小");
+            [self setUpPickerView:HPShareGotoBtnTagSpace];
             break;
         case HPShareGotoBtnTagRectType:
             HPLog(@"租赁模式");
@@ -442,7 +447,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
             break;
         case HPShareGotoBtnTagTimeDuring:
             HPLog(@"租赁时间段");
-            
+            [self setUpPickerView:HPShareGotoBtnTagTimeDuring];
             break;
         case HPShareGotoBtnTagInsustry:
             HPLog(@"租赁行业类型");
@@ -450,6 +455,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
             break;
         case HPShareGotoBtnTagRect:
             HPLog(@"租赁金额");
+            
             if (_rentAmountPanel.isShrink) {
                 [_rentAmountPanel expand];
                 
@@ -470,6 +476,39 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     }
 }
 
+#pragma mark - 选择空间大小
+- (void)setUpPickerView:(HPShareGotoBtnTag)type
+{
+    NSArray *typeArr;
+    if (type == HPShareGotoBtnTagSpace) {
+        typeArr = @[@"不限",@"小于5㎡",@"5-10㎡",@"10-20㎡",@"20㎡以上"];
+    }else if (type == HPShareGotoBtnTagTimeDuring){
+        typeArr = @[@"00:00",@"01:00",@"02:00",@"03:00",@"04:00",@"05:00",@"06:00",@"07:00",@"08:00",@"09:00",@"10:00",@"11:00",@"12:00",@"13:00",@"14:00",@"15:00",@"16:00",@"17:00",@"18:00",@"19:00",@"20:00",@"21:00",@"22:00",@"23:00",@"24:00"];
+    }
+    CDZPickerBuilder *builder = [CDZPickerBuilder new];
+    builder.showMask = YES;
+    builder.cancelTextColor = COLOR_GRAY_BBBBBB;
+    builder.confirmTextColor = COLOR_RED_EA0000;
+    kWeakSelf(weakSelf);
+    [CDZPicker showSinglePickerInView:self.view withBuilder:builder strings:typeArr confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
+        if (type == HPShareGotoBtnTagSpace) {
+            [weakSelf.spaceBtn setText:[strings componentsJoinedByString:@","]];
+            CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 20;
+            [weakSelf.spaceBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(stringsW);
+            }];
+        }else if (type == HPShareGotoBtnTagTimeDuring){
+            [weakSelf.shareTimeBtn setText:[strings componentsJoinedByString:@","]];
+            CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 20;
+            [weakSelf.shareTimeBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(stringsW);
+            }];
+        }
+        
+    }cancel:^{
+        //your code
+    }];
+}
 #pragma mark - 行业类型pickerview
 - (void)setUpIndustryTypePickerView
 {
@@ -490,7 +529,6 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
         [self.industryBtn mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(stringsW);
         }];
-//        NSLog(@"strings:%@ indexs:%@",strings,indexs);
     }cancel:^{
         //your code
     }];

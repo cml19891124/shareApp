@@ -22,7 +22,8 @@
 #import "HPShareSelectedItemView.h"
 #import "HPStoreItemButton.h"
 #import "HPAreaButton.h"
-//#import "HPDataHandlePickerView.h"
+#import "HPReleaseDistrictModel.h"
+#import "HPReviseReleaseInfoViewController.h"
 #import "CDZPicker.h"
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：入驻本店需事先准备相关产品质检材料，入店时需确认，三无产品请绕道..."
@@ -35,7 +36,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     HPSelectItemIndexShareTitle
 };
 
-@interface HPOwnerCardDefineController ()<HPShareSelectedItemViewDelegate> {
+@interface HPOwnerCardDefineController ()<HPShareSelectedItemViewDelegate,HPShareSpaceInfoDelegate> {
     BOOL _canRelease;
 }
 @property (nonatomic, strong) UILabel *infoLabel;
@@ -78,21 +79,43 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 @property (nonatomic, strong) UILabel *shareTitle;
 
 @property (nonatomic, strong) CDZPicker *pickerView;
+
+/**
+ 下一级界面逆传过来的数据
+ */
+@property (nonatomic, copy) NSString *shareSpace;
+@property (nonatomic, copy) NSString *shareTime;
+@property (nonatomic, copy) NSString *industry;
+@property (nonatomic, copy) NSString *type;
+@property (nonatomic, copy) NSString *rentType;
+@property (nonatomic, copy) NSString *rentAmount;
+
+@property (strong, nonatomic) NSMutableArray *cityArray,*disArray,*streetArray;
+@property (strong, nonatomic) NSMutableDictionary *streetDic;
 @end
 
 @implementation HPOwnerCardDefineController
-
+#pragma mark - HPShareSpaceInfoDelegate
+- (void)backvcIn:(HPReviseReleaseInfoViewController *)vc andShareInfo:(NSString *)shareSpace andShareTime:(NSString *)shareTime andIndustry:(NSString *)industry andShareType:(NSString *)type andShareRent:(NSString *)rent andShareRentAmount:(NSString *)amount
+{
+    self.shareSpace = shareSpace;
+    self.shareTime = shareTime;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.isPopGestureRecognize = NO;
     _canRelease = YES;
     [self setupUI];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    _cityArray = [NSMutableArray array];
+    _disArray = [NSMutableArray array];
+    _streetArray = [NSMutableArray array];
+    _streetDic = [NSMutableDictionary dictionary];
     HPAddressModel *addressModel = self.param[@"address"];
     if (addressModel) {
         [_addressBtn setTitle:addressModel.POIName forState:UIControlStateSelected];
@@ -382,7 +405,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [cityBtn setTitle:@"深圳市" forState:UIControlStateNormal];
     [cityBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
     [cityBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-    [cityBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
+//    [cityBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
     cityBtn.tag = HPSelectItemIndexCity;
     [view addSubview:cityBtn];
     _cityBtn = cityBtn;
@@ -450,7 +473,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [valueBtn.titleLabel setFont:kFont_Regular(14.f)];
     [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
     [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-//    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
     [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
     valueBtn.tag = HPSelectItemIndexIndustry;
     [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
@@ -581,8 +603,12 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     button.selected = !button.selected;
     if (button.selected) {
         [button setTitle:@"清空" forState:UIControlStateNormal];
+        //获取生存的字符串
+        [self getConvertString];
         _shareTitle.hidden = YES;
+        HPLog(@"dfggg:%@",_shareTitle);
         [_convertTitleField mas_updateConstraints:^(MASConstraintMaker *make) {
+            [make.left uninstall];
             make.left.mas_equalTo(self.scrollView).offset(getWidth(21.f));
         }];
     }else{
@@ -590,12 +616,18 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         _shareTitle.hidden = NO;
         _convertTitleField.text = @"";
         [_convertTitleField mas_updateConstraints:^(MASConstraintMaker *make) {
+            [make.left uninstall];
             make.left.mas_equalTo(self.scrollView).offset(getWidth(122.f));
         }];
     }
     
 }
 
+- (void)getConvertString
+{
+    NSString *titleString = [NSString stringWithFormat:@"%@%@店有%@空间可供出租",self.shareTitle.text,self.areaBtn.currentTitle,self.shareSpace?:@""];
+    self.convertTitleField.text = titleString;
+}
 #pragma mark - UITextViewDelegate
 
 - (void)textViewDidBeginEditing:(UITextView *)textView {
@@ -735,7 +767,10 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }];*/
     
 //    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _addressField.text.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0 && _convertTitleField.text.length != 0) {
-        [self pushVCByClassName:@"HPReviseReleaseInfoViewController"];
+    HPReviseReleaseInfoViewController *shareInfoVC = [HPReviseReleaseInfoViewController new];
+    shareInfoVC.delegate = self;
+    [self.navigationController pushViewController:shareInfoVC animated:YES];
+//        [self pushVCByClassName:@"HPReviseReleaseInfoViewController"];
 //    }else{//弹框提示
 //        HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];
 //        [itemView show:YES];
@@ -780,7 +815,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 - (void)callPickerViewWithDataSource:(UIButton *)button
 {
         [self setUpPickerView:button.tag];
-    
 }
 
 - (void)setUpPickerView:(HPSelectItemIndex)selectItemIndex
@@ -829,10 +863,34 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         
 //        CDZPickerComponentObject *sichuan = [[CDZPickerComponentObject alloc]initWithText:@"四川省"];
 //        sichuan.subArray = [NSMutableArray arrayWithObjects:chengdu,leshan, nil];
+        NSArray *areaArr = [HPCommonData getAreaData];
+        for (int i = 0; i < areaArr.count; i ++) {
+            HPAreaModel *model = areaArr[i];
+            _streetDic[@"area"] = model.name;
+
+//            [_disArray addObject:_streetDic];
+            NSMutableArray *streetArray = [NSMutableArray array];
+            
+            for (int j = 0; j < model.children.count; j++) {
+                HPDistrictModel *disModel = model.children[j];
+                if ([disModel.areaId intValue] == [model.areaId intValue]) {
+                    if (j <= model.children.count - 1) {
+                        [streetArray addObject:disModel.name];
+                    }
+                }
+            }
+            NSMutableArray *perArray = [NSMutableArray array];
+            perArray = [streetArray copy];
+            _streetDic[@"subArray"] = streetArray;
+            [_disArray addObject:_streetDic];
+
+        }
+        NSArray *arr = [HPReleaseDistrictModel mj_objectArrayWithKeyValuesArray:_disArray];
+
         CDZPickerBuilder *builder = [CDZPickerBuilder new];
         builder.cancelTextColor = COLOR_GRAY_BBBBBB;
         builder.confirmTextColor = COLOR_RED_EA0000;
-        [CDZPicker showLinkagePickerInView:self.view withBuilder:builder components:@[guangzhou,chengdu] confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
+        [CDZPicker showLinkagePickerInView:self.view withBuilder:builder components:arr confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
             CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 10;
 
             [weakSelf.areaBtn setTitle:[strings componentsJoinedByString:@","] forState:UIControlStateNormal];

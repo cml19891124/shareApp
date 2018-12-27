@@ -45,14 +45,7 @@
 
 - (void)selectButtonChooseRentType:(HPTimeRentButton *)button
 {
-//    self.selectedBtn.selected = NO;
-//    button.selected = YES;
-//    self.selectedBtn = button;
     button.selected = !button.selected;
-//    [self.rentItemView.rightButtonArray removeAllObjects];
-    if (![self.rentItemView.rightButtonArray containsObject:button.currentTitle]) {
-//        [self.rentItemView.rightButtonArray addObject:button.currentTitle];
-    }
     if (self.rentTypeClickBtnBlock) {
         self.rentTypeClickBtnBlock(button.currentTitle);
     }

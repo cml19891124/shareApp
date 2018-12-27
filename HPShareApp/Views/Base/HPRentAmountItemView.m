@@ -109,13 +109,18 @@
     self.selectedBtn.selected = NO;
     button.selected = YES;
     self.selectedBtn = button;
-    
+    if (button.selected) {
+        button.titleLabel.font = kFont_Medium(12.f);
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:12.f];
+    }else{
+        button.titleLabel.font = kFont_Regular(12.f);
+    }
     if ([button.currentTitle isEqualToString:@"(元/小时)"]) {
         _itemArray = @[@"面议",@"9.9元/小时",@"20元/小时",@"30元/小时"];
     }else if ([button.currentTitle isEqualToString:@"(元/天)"]){
-        _itemArray = @[@"面议",@"10元/天",@"20元/天",@"30元/天"];
-    }else if ([button.currentTitle isEqualToString:@"(元/月)"]||[button.currentTitle isEqualToString:@"(元/年)"]){
         _itemArray = @[@"面议",@"100元/天",@"200元/天",@"300元/天"];
+    }else if ([button.currentTitle isEqualToString:@"(元/月)"]||[button.currentTitle isEqualToString:@"(元/年)"]){
+        _itemArray = @[@"面议",@"1000元/月",@"3000元/月",@"5000元/月"];
     }
     for (int i = 0;i < _itemArray.count; i++) {
         [_itemBtn setTitle:_itemArray[0] forState:UIControlStateNormal];
@@ -145,7 +150,7 @@
     [self.rightView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(getWidth(-24.f));
         make.top.bottom.mas_equalTo(self.fillView);
-    make.left.mas_equalTo(self.fillField.mas_right).offset(getWidth(10.f));
+        make.left.mas_equalTo(self.fillField.mas_right).offset(getWidth(10.f));
     }];
    
     
