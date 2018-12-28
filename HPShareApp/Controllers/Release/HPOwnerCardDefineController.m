@@ -25,6 +25,8 @@
 #import "HPReviseReleaseInfoViewController.h"
 #import "CDZPicker.h"
 #import "HPDataHandlePickerView.h"
+#import "HPBotomPickerModalView.h"
+
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：入驻本店需事先准备相关产品质检材料，入店时需确认，三无产品请绕道..."
 
@@ -80,6 +82,8 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 
 @property (nonatomic, strong) CDZPicker *pickerView;
 
+@property (nonatomic, weak) HPBotomPickerModalView *areaPickerView;
+
 /**
  下一级界面逆传过来的数据
  */
@@ -92,6 +96,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 
 @property (strong, nonatomic) NSMutableArray *cityArray,*disArray,*streetArray;
 @property (strong, nonatomic) NSMutableDictionary *streetDic;
+
 @end
 
 @implementation HPOwnerCardDefineController
@@ -847,37 +852,51 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
             //your code
         }];*/
     }else if (selectItemIndex == HPSelectItemIndexArea){
-        NSArray *areaArr = [HPCommonData getAreaData];
-        for (int i = 0; i < areaArr.count; i ++) {
-            HPAreaModel *model = areaArr[i];
-            _streetDic[@"area"] = model.name;
-            NSMutableArray *streetArray = [NSMutableArray array];
-            
-            for (int j = 0; j < model.children.count; j++) {
-                HPDistrictModel *disModel = model.children[j];
-                if ([disModel.areaId intValue] == [model.areaId intValue]) {
-                    if (j <= model.children.count - 1) {
-                        [streetArray addObject:disModel.name];
-                    }
-                }
-            }
-            NSMutableArray *perArray = [NSMutableArray array];
-            perArray = [streetArray copy];
-            _streetDic[@"subArray"] = streetArray;
-            [_disArray addObject:_streetDic];
-
+//        NSArray *areaArr = [HPCommonData getAreaData];
+//        for (int i = 0; i < areaArr.count; i ++) {
+//            HPAreaModel *model = areaArr[i];
+//            _streetDic[@"area"] = model.name;
+//            NSMutableArray *streetArray = [NSMutableArray array];
+//
+//            for (int j = 0; j < model.children.count; j++) {
+//                HPDistrictModel *disModel = model.children[j];
+//                if ([disModel.areaId intValue] == [model.areaId intValue]) {
+//                    if (j <= model.children.count - 1) {
+//                        [streetArray addObject:disModel.name];
+//                    }
+//                }
+//            }
+//            NSMutableArray *perArray = [NSMutableArray array];
+//            perArray = [streetArray copy];
+//            _streetDic[@"subArray"] = streetArray;
+//            [_disArray addObject:_streetDic];
+//
+//        }
+//
+//        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:[HPCommonData getAreaData]];
+//        [linkageData setParentNameKey:@"areaName"];
+//        [linkageData setChildNameKey:@"areaName"];
+//        HPDataHandlePickerView *pickerView = [[HPDataHandlePickerView alloc] initWithFrame:CGRectZero withModel:linkageData];
+//        [self.view addSubview:pickerView];
+//
+//        [pickerView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.right.bottom.mas_equalTo(self.view);
+//            make.height.mas_equalTo(kScreenHeight/3);
+//        }];
+        if (!_areaPickerView) {
+            HPLinkageData *data = [[HPLinkageData alloc] initWithModels:[HPCommonData getAreaData]];
+            [data setChildNameKey:@"name"];
+            [data setParentNameKey:@"name"];
+            HPBotomPickerModalView *areaPickerView = [[HPBotomPickerModalView alloc] initWithData:data];
+            [areaPickerView setConfirmCallBack:^(NSInteger parentIndex, NSInteger childIndex, NSObject *model) {
+                HPDistrictModel *districtModel = (HPDistrictModel *)model;
+                NSString *areaName = [HPCommonData getAreaNameById:districtModel.areaId];
+                NSLog(@"Pick district: %@-%@", areaName, districtModel.name);
+            }];
+            _areaPickerView = areaPickerView;
         }
         
-        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:[HPCommonData getAreaData]];
-        [linkageData setParentNameKey:@"areaName"];
-        [linkageData setChildNameKey:@"areaName"];
-        HPDataHandlePickerView *pickerView = [[HPDataHandlePickerView alloc] initWithFrame:CGRectZero withModel:linkageData];
-        [self.view addSubview:pickerView];
-        
-        [pickerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.bottom.mas_equalTo(self.view);
-            make.height.mas_equalTo(kScreenHeight/3);
-        }];
+        [_areaPickerView show:YES];
     }else if (selectItemIndex == HPSelectItemIndexIndustry){
         pickerView.tipTitle = @"请选择行业";
         

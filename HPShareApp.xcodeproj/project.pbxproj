@@ -26,6 +26,7 @@
 		69165D0821C49C5B00593D25 /* HPSortTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165D0721C49C5B00593D25 /* HPSortTableCell.m */; };
 		69165D0B21C4AC5D00593D25 /* HPSortSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165D0A21C4AC5D00593D25 /* HPSortSelectView.m */; };
 		69165D0F21C4D77100593D25 /* HPLinkageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165D0E21C4D77100593D25 /* HPLinkageView.m */; };
+		6979CA8121D6220700B1518C /* HPBotomPickerModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6979CA8021D6220700B1518C /* HPBotomPickerModalView.m */; };
 		6993AD2721C685470019506C /* HPHeaderScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993AD2621C685470019506C /* HPHeaderScrollView.m */; };
 		6993AD2B21C688B30019506C /* HPHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993AD2A21C688B30019506C /* HPHeaderTableView.m */; };
 		6993AD2F21C797D20019506C /* HPShareAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993AD2E21C797D20019506C /* HPShareAnnotationView.m */; };
@@ -283,6 +284,8 @@
 		69165D0A21C4AC5D00593D25 /* HPSortSelectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSortSelectView.m; sourceTree = "<group>"; };
 		69165D0D21C4D77100593D25 /* HPLinkageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPLinkageView.h; sourceTree = "<group>"; };
 		69165D0E21C4D77100593D25 /* HPLinkageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPLinkageView.m; sourceTree = "<group>"; };
+		6979CA7F21D6220700B1518C /* HPBotomPickerModalView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPBotomPickerModalView.h; sourceTree = "<group>"; };
+		6979CA8021D6220700B1518C /* HPBotomPickerModalView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPBotomPickerModalView.m; sourceTree = "<group>"; };
 		6993AD2521C685470019506C /* HPHeaderScrollView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHeaderScrollView.h; sourceTree = "<group>"; };
 		6993AD2621C685470019506C /* HPHeaderScrollView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHeaderScrollView.m; sourceTree = "<group>"; };
 		6993AD2921C688B30019506C /* HPHeaderTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHeaderTableView.h; sourceTree = "<group>"; };
@@ -1397,6 +1400,8 @@
 				E6830E5021D20594000E0F39 /* HPMenuOpenStoreView.m */,
 				E66F1CB621D3625D00C2DEEF /* HPHotImageView.h */,
 				E66F1CB721D3625D00C2DEEF /* HPHotImageView.m */,
+				6979CA7F21D6220700B1518C /* HPBotomPickerModalView.h */,
+				6979CA8021D6220700B1518C /* HPBotomPickerModalView.m */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -1979,6 +1984,7 @@
 				E629217F219ABD6D00BEF16C /* UIView + Tag.m in Sources */,
 				E6F551DB21B8FA800086094F /* HPInteractiveCell.m in Sources */,
 				E661B0BD219C2DF700C86CF5 /* HPLinkageSheetView.m in Sources */,
+				6979CA8121D6220700B1518C /* HPBotomPickerModalView.m in Sources */,
 				E6F551DE21B901820086094F /* HPTimeString.m in Sources */,
 				E661B12E21A28E8500C86CF5 /* JTCalendarPageView.m in Sources */,
 				E6292179219AB7B800BEF16C /* UIColor+Hex.m in Sources */,
