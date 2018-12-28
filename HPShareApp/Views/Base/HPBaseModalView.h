@@ -13,10 +13,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^ModalShowCallBack)(BOOL isShow);
+
 /**
  弹出视图基类。
  */
 @interface HPBaseModalView : HPBaseView
+
+/**
+ modalView 弹出或隐藏时回调
+ */
+@property (nonatomic, strong) ModalShowCallBack modalShowCallBack;
 
 /**
  根据设定的父View初始化ModalView。

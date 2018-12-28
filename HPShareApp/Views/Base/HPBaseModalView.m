@@ -83,16 +83,26 @@
     if (isShow) {
         [self setHidden:NO];
         [self appearAnimationOfModalView:_modalView];
+        
+        if (_modalShowCallBack) {
+            _modalShowCallBack(isShow);
+        }
     }
     else {
         double delay = [self disappearAnimationOfModalView:_modalView];
         if (delay > 0) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self setHidden:YES];
+                if (self.modalShowCallBack) {
+                    self.modalShowCallBack(isShow);
+                }
             });
         }
         else {
             [self setHidden:YES];
+            if (_modalShowCallBack) {
+                _modalShowCallBack(isShow);
+            }
         }
     }
 }

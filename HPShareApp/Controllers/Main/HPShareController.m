@@ -9,7 +9,6 @@
 #import "HPShareController.h"
 #import "HPBannerView.h"
 #import "HPPageControlFactory.h"
-#import "HPCommonData.h"
 #import "HPImageButton.h"
 
 typedef NS_ENUM(NSInteger, HPShareBtn) {
@@ -32,9 +31,6 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [HPCommonData getAreaData];
-    [HPCommonData getIndustryData];
     
     [self setupUI];
 }
@@ -307,6 +303,7 @@ typedef NS_ENUM(NSInteger, HPShareBtn) {
             break;
             
         case HPShareBtnHuman:
+            //HPShareTempHumanController
             [self pushVCByClassName:@"HPShareTempHumanController"];
             break;
             

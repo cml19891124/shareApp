@@ -6,20 +6,26 @@
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPSortSelectView.h"
+#import "HPSortSelectModalView.h"
 #import "HPSortTableCell.h"
 
 #define CELL_ID @"HPSortTableCell"
 
-@interface HPSortSelectView () <UITableViewDelegate, UITableViewDataSource>
+@interface HPSortSelectModalView () <UITableViewDelegate, UITableViewDataSource>
+
+@property (nonatomic, weak) UITableView *tableView;
 
 @property (nonatomic, strong) NSArray *options;
 
 @property (nonatomic, strong) NSMutableArray *checkArray;
 
+@property (nonatomic, assign) NSInteger selectedIndex;
+
+@property (nonatomic, weak) HPSortTableCell *selectedCell;
+
 @end
 
-@implementation HPSortSelectView
+@implementation HPSortSelectModalView
 
 /*
 // Only override drawRect: if you perform custom drawing.
@@ -30,20 +36,21 @@
 */
 
 - (instancetype)initWithOptions:(NSArray *)options {
-    self = [super init];
-    if (self) {
-        _options = options;
-        _checkArray = [[NSMutableArray alloc] init];
-        for (int i =0; i < options.count; i++) {
-            [_checkArray addObject:[NSNumber numberWithBool:NO]];
-        }
-        
-        [self setupUI];
+    _options = options;
+    _checkArray = [[NSMutableArray alloc] init];
+    for (int i =0; i < options.count; i++) {
+        [_checkArray addObject:[NSNumber numberWithBool:NO]];
     }
+    self = [super init];
     return self;
 }
 
-- (void)setupUI {
+- (void)setupModalView:(UIView *)view {
+    [view setBackgroundColor:COLOR_GRAY_F8F8F8];
+    [view mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.width.and.top.equalTo(self);
+    }];
+    
     [self.layer setShadowColor:COLOR_GRAY_7A7878.CGColor];
     [self.layer setShadowOffset:CGSizeMake(0.f, 3.f)];
     [self.layer setShadowRadius:8.f];
@@ -56,29 +63,55 @@
     [tableView setDataSource:self];
     [tableView setBounces:NO];
     [tableView registerClass:HPSortTableCell.class forCellReuseIdentifier:CELL_ID];
-    [self addSubview:tableView];
+    [view addSubview:tableView];
+    _tableView = tableView;
     CGFloat height = _options.count * 12.f + getWidth(_options.count * 30.f + 15.f + 13.f);
     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
+        make.left.and.width.and.top.equalTo(view);
         make.height.mas_equalTo(height);
+        make.bottom.equalTo(view);
     }];
+}
+
+- (void)selectCellAtIndex:(NSInteger)index {
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    [_tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+    HPSortTableCell *cell = [_tableView cellForRowAtIndexPath:indexPath];
+    if (cell) {
+        [cell setCheck:YES];
+        _selectedCell = cell;
+    }
+    _selectedIndex = index;
 }
 
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     HPSortTableCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    for (HPSortTableCell *cellItem in tableView.visibleCells) {
-        if (cellItem == cell) {
-            [cellItem setCheck:YES];
-            [_checkArray replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:YES]];
-            if (_delegate && [_delegate respondsToSelector:@selector(sortSelectView:didSelectAtIndex:)]) {
-                [_delegate sortSelectView:self didSelectAtIndex:indexPath.row];
-            }
-        }
-        else
-            [cellItem setCheck:NO];
+    
+    if (_selectedCell) {
+        [_selectedCell setCheck:NO];
     }
+    
+    [cell setCheck:YES];
+    _selectedCell = cell;
+    _selectedIndex = indexPath.row;
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(sortSelectView:didSelectAtIndex:)]) {
+        [_delegate sortSelectView:self didSelectAtIndex:indexPath.row];
+    }
+    
+//    for (HPSortTableCell *cellItem in tableView.visibleCells) {
+//        if (cellItem == cell) {
+//            [cellItem setCheck:YES];
+//            [_checkArray replaceObjectAtIndex:indexPath.row withObject:[NSNumber numberWithBool:YES]];
+//            if (_delegate && [_delegate respondsToSelector:@selector(sortSelectView:didSelectAtIndex:)]) {
+//                [_delegate sortSelectView:self didSelectAtIndex:indexPath.row];
+//            }
+//        }
+//        else
+//            [cellItem setCheck:NO];
+//    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -110,8 +143,14 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPSortTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
     [cell setTitle:_options[indexPath.row]];
-    BOOL isCheck = ((NSNumber *)_checkArray[indexPath.row]).boolValue;
-    [cell setCheck:isCheck];
+    
+    if (indexPath.row == _selectedIndex) {
+        [cell setCheck:YES];
+        _selectedCell = cell;
+    }
+    else
+        [cell setCheck:NO];
+    
     return cell;
 }
 

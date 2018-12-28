@@ -19,6 +19,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *title;
 
+@property (nonatomic, assign) CGFloat textMarginLeft;
+
+@property (nonatomic, assign) CGFloat selectedIconMarginRight;
+
+@property (nonatomic, strong) UIImage *selectedIcon;
+
+@property (nonatomic, strong) UIFont *textFont;
+
+@property (nonatomic, strong) UIColor *textColor;
+
+@property (nonatomic, strong) UIColor *textSelectedColor;
+
 - (void)setCheck:(BOOL)isCheck;
 
 @end

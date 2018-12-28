@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithModels:(NSArray * _Nonnull)models;
 
+- (void)setModels:(NSArray *)models;
+
 - (NSString *)getParentNameAtIndex:(NSInteger)index;
 
 - (NSString *)getChildNameOfParentIndex:(NSInteger)parentIndex atChildIndex:(NSInteger)childIndex;
@@ -27,6 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger)getParentCount;
 
 - (NSInteger)getChildrenCountOfParentIndex:(NSInteger)index;
+
+- (void)addParentAllModel;
+
+- (void)addChildrenAllModelWithParentIdKey:(NSString *)parentIdKey childParentIdKey:(NSString *)childParentIdKey;
 
 @end
 

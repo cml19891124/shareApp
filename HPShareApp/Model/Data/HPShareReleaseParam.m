@@ -14,6 +14,7 @@
     self = [super init];
     if (self) {
         _pictureIdArr = [NSMutableArray array];
+        _pictureUrlArr = [NSMutableArray array];
     }
     return self;
 }

@@ -163,7 +163,7 @@
     }];
     
     [titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(typeIcon.mas_left).with.offset(-22.f * g_rateWidth);
+        make.right.equalTo(typeIcon.mas_left).with.offset(-10.f * g_rateWidth);
     }];
     
     UIView *line = [[UIView alloc] init];
@@ -316,10 +316,14 @@
         HPTagView *tagItem = _tagItems[i];
         if (i < tags.count) {
             if ([tags[i] isEqualToString:@""]) {
+                [tagItem setHidden:YES];
                 continue;
             }
             [tagItem setHidden:NO];
             [tagItem setText:tags[i]];
+        }
+        else {
+            [tagItem setHidden:YES];
         }
     }
 }

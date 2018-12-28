@@ -620,6 +620,7 @@
             NSArray<HPPictureModel *> *pictureModels = [HPPictureModel mj_objectArrayWithKeyValuesArray:DATA];
             for (HPPictureModel *pictureModel in pictureModels) {
                 [self.shareReleaseParam.pictureIdArr addObject:pictureModel.pictureId];
+                [self.shareReleaseParam.pictureUrlArr addObject:pictureModel.url];
             }
             
             if (self.param[@"spaceId"]) {
@@ -677,7 +678,8 @@
             [HPProgressHUD alertWithFinishText:@"修改成功"];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self popWithParam:@{@"update":self.shareReleaseParam}];
+                NSNumber *index = self.param[@"index"];
+                [self popWithParam:@{@"update":self.shareReleaseParam, @"index":index}];
             });
         }
         else {

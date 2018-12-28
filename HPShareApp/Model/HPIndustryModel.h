@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPIndustryModel : NSObject
+@interface HPIndustryModel : NSObject <NSCopying>
 
 @property (nonatomic, copy) NSString *industryId;
 

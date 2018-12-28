@@ -21,6 +21,44 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPLinkageView : HPBaseView
 
+@property (nonatomic, assign) CGFloat leftTableWidth;
+
+@property (nonatomic, strong) UIColor *leftTableColor;
+
+@property (nonatomic, assign) CGFloat leftHeaderHeight;
+
+@property (nonatomic, assign) CGFloat leftFooterHeight;
+
+@property (nonatomic, assign) CGFloat leftCellHeight;
+
+@property (nonatomic, assign) CGFloat leftTextMarginLeft;
+
+@property (nonatomic, strong) UIFont *leftTextFont;
+
+@property (nonatomic, strong) UIColor *leftTextColor;
+
+@property (nonatomic, strong) UIColor *leftTextSelectedColor;
+
+@property (nonatomic, strong) UIColor *rightTableColor;
+
+@property (nonatomic, assign) CGFloat rightHeaderHeight;
+
+@property (nonatomic, assign) CGFloat rightFooterHeight;
+
+@property (nonatomic, assign) CGFloat rightCellHeight;
+
+@property (nonatomic, assign) CGFloat rightTextMarginLeft;
+
+@property (nonatomic, strong) UIFont *rightTextFont;
+
+@property (nonatomic, strong) UIColor *rightTextColor;
+
+@property (nonatomic, strong) UIColor *rightTextSelectedColor;
+
+@property (nonatomic, strong) UIImage *selectedIcon;
+
+@property (nonatomic, assign) CGFloat selectedIconMarginRight;
+
 @property (nonatomic, weak) id <HPLinkageViewDelegate> delegate;
 
 - (instancetype)initWithData:(HPLinkageData *)data;

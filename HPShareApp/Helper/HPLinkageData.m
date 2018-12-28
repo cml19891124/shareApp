@@ -9,13 +9,15 @@
 #import "HPLinkageData.h"
 #import <objc/runtime.h>
 
-@interface HPLinkageData ()
-
-@property (nonatomic, strong) NSArray *models;
+@interface HPLinkageData () {
+    NSMutableArray *_models;
+}
 
 @property (nonatomic, copy) NSString *childrenKey;
 
 @property (nonatomic, assign) Class parentClass;
+
+@property (nonatomic, assign) Class childClass;
 
 @end
 
@@ -24,15 +26,31 @@
 - (instancetype)initWithModels:(NSArray *)models {
     self = [super init];
     if (self) {
-        _models = models;
-        if (models.count > 0) {
-            _parentClass = ((NSObject *)models[0]).class;
-        }
-        _parentNameKey = @"name";
-        _childNameKey = @"name";
-        _childrenKey = [self getChildrenKey];
+        [self setModels:models];
     }
     return self;
+}
+
+- (void)setModels:(NSArray *)models {
+    _parentClass = NSObject.class;
+    _childClass = NSObject.class;
+    
+    if (!models || ![models isKindOfClass:NSArray.class] || models.count <= 0) {
+        return;
+    }
+    
+    _models = [NSMutableArray arrayWithArray:models];
+    _parentClass = ((NSObject *)models[0]).class;
+    _parentNameKey = @"name";
+    _childNameKey = @"name";
+    _childrenKey = [self getChildrenKey];
+    
+    NSObject *firstParent = [models objectAtIndex:0];
+    NSArray *children = [firstParent valueForKey:_childrenKey];
+    if (children && [children isKindOfClass:NSArray.class] && children.count > 0) {
+        NSObject *child = children[0];
+        _childClass = child.class;
+    }
 }
 
 - (NSString *)getParentNameAtIndex:(NSInteger)index {
@@ -115,6 +133,44 @@
     free(properties);
     
     return @"children";
+}
+
+- (void)addParentAllModel {
+    if (_parentClass == NSObject.class || _childClass == NSObject.class) {
+        return;
+    }
+    
+    NSObject *allModel = [_parentClass alloc];
+    allModel = [allModel init];
+    [allModel setValue:@"全部" forKey:_parentNameKey];
+    NSObject *childModel = [_childClass alloc];
+    childModel = [childModel init];
+    [childModel setValue:@"全部" forKey:_childNameKey];
+    NSArray *children = [NSArray arrayWithObject:childModel];
+    [allModel setValue:children forKey:_childrenKey];
+    [_models insertObject:allModel atIndex:0];
+}
+
+- (void)addChildrenAllModelWithParentIdKey:(NSString *)parentIdKey childParentIdKey:(NSString *)childParentIdKey {
+    if (_parentClass == NSObject.class || _childClass == NSObject.class) {
+        return;
+    }
+    
+    if (!parentIdKey || !childParentIdKey) {
+        return;
+    }
+    
+    for (NSObject *parentModel in _models) {
+        NSArray *children = [parentModel valueForKey:_childrenKey];
+        NSMutableArray *mutableChildren = [NSMutableArray arrayWithArray:children];
+        NSObject *childModel = [_childClass alloc];
+        childModel = [childModel init];
+        [childModel setValue:@"不限" forKey:_childNameKey];
+        NSString *parentId = [parentModel valueForKey:parentIdKey];
+        [childModel setValue:parentId forKey:childParentIdKey];
+        [mutableChildren insertObject:childModel atIndex:0];
+        [parentModel setValue:mutableChildren forKey:_childrenKey];
+    }
 }
 
 @end

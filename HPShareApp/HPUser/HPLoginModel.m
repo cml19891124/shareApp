@@ -8,8 +8,7 @@
 
 +(instancetype)AccountStatusWithDict:(NSMutableDictionary *)dict
 {
-    HPLoginModel *account= [[self alloc]init];
-    [account setValuesForKeysWithDictionary:dict];
+    HPLoginModel *account = [HPLoginModel mj_objectWithKeyValues:dict];
     HPUserInfo *userInfo = [HPUserInfo UserInfoWithDict:dict[@"userInfo"]];
     account.userInfo = userInfo;
 
@@ -61,8 +60,9 @@
 @implementation HPCardInfo
 +(instancetype)CardInfoWithDict:(NSDictionary *)dict
 {
-    HPCardInfo *account= [[self alloc]init];
-    [account setValuesForKeysWithDictionary:dict];
+//    HPCardInfo *account= [[self alloc]init];
+//    [account setValuesForKeysWithDictionary:dict];
+    HPCardInfo *account = [HPCardInfo mj_objectWithKeyValues:dict];
     
     return account;
 }
@@ -102,8 +102,7 @@
 
 +(instancetype)UserInfoWithDict:(NSDictionary *)dict
 {
-    HPUserInfo *account= [[self alloc]init];
-    [account setValuesForKeysWithDictionary:dict];
+    HPUserInfo *account = [HPUserInfo mj_objectWithKeyValues:dict];
     return account;
 }
 - (void)encodeWithCoder:(NSCoder *)aCoder
@@ -135,4 +134,5 @@
     }
     return self;
 }
+
 @end

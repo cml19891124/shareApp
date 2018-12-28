@@ -58,6 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSMutableArray *pictureIdArr;
 
+@property (nonatomic, copy) NSMutableArray *pictureUrlArr;
+
 @end
 
 NS_ASSUME_NONNULL_END

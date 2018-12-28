@@ -9,8 +9,8 @@
 #import "HPBaseShareListController.h"
 #import "HPHTTPSever.h"
 #import "HPShareListCell.h"
-#import "HPSortSelectView.h"
-#import "HPLinkageView.h"
+#import "HPSortSelectModalView.h"
+#import "HPLinkageTopModalView.h"
 #import "HPCommonData.h"
 #import "HPRightImageButton.h"
 #import "YYLRefreshNoDataView.h"
@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
     HPFilterBtnPrice     //价格
 };
 
-@interface HPBaseShareListController () <HPSortSelectViewDelegate, HPLinkageViewDelegate, YYLRefreshNoDataViewDelegate>
+@interface HPBaseShareListController () <HPSortSelectModalViewDelegate, HPLinkageViewDelegate, YYLRefreshNoDataViewDelegate>
 
 @property (nonatomic, strong) UIView *filterBar;
 
@@ -34,13 +34,13 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
 
 @property (nonatomic, weak) HPRightImageButton *areaBtn;
 
-@property (nonatomic, weak) HPSortSelectView *sortSelectView;
+@property (nonatomic, weak) HPSortSelectModalView *sortSelectView;
 
 @property (nonatomic, strong) NSArray *sorts;
 
-@property (nonatomic, weak) HPLinkageView *tradeLinkageView;
+@property (nonatomic, weak) HPLinkageTopModalView *tradeLinkageView;
 
-@property (nonatomic, weak) HPLinkageView *areaLinkageView;
+@property (nonatomic, weak) HPLinkageTopModalView *areaLinkageView;
 
 @property (nonatomic, weak) HPReleaseModalView *releaseModalView;
 
@@ -224,20 +224,32 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
         [btn setSelected:YES];
     }
     
+    kWeakSelf(weakSelf);
     if (btn.tag == HPFilterBtnSort) {
         if (_sortSelectView == nil) {
-            HPSortSelectView *sortSelectView = [[HPSortSelectView alloc] initWithOptions:_sorts];
-            [sortSelectView setBackgroundColor:COLOR_GRAY_F8F8F8];
+            HPSortSelectModalView *sortSelectView = [[HPSortSelectModalView alloc] initWithOptions:_sorts];
             [sortSelectView setDelegate:self];
+            [sortSelectView setModalShowCallBack:^(BOOL isShow) {
+                [btn setSelected:isShow];
+                
+                if (weakSelf.tradeLinkageView && isShow) {
+                    [weakSelf.tradeLinkageView show:NO];
+                }
+                
+                if (weakSelf.areaLinkageView && isShow) {
+                    [weakSelf.areaLinkageView show:NO];
+                }
+            }];
+            [sortSelectView selectCellAtIndex:0];
             [self.view addSubview:sortSelectView];
-            [sortSelectView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.and.width.equalTo(self.view);
-                make.top.equalTo(self.filterBar.mas_bottom);
+            [sortSelectView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.and.width.and.bottom.equalTo(self.view);
+                make.top.equalTo(self.filterBar.mas_bottom).with.offset(1.f);
             }];
             _sortSelectView = sortSelectView;
         }
         
-        [_sortSelectView setHidden:!btn.isSelected];
+        [_sortSelectView show:btn.isSelected];
     }
     else if (btn.tag == HPFilterBtnTrade) {
         if (_tradeLinkageView == nil) {
@@ -245,18 +257,31 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
             HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:models];
             [linkageData setParentNameKey:@"industryName"];
             [linkageData setChildNameKey:@"industryName"];
-            HPLinkageView *linkageView = [[HPLinkageView alloc] initWithData:linkageData];
+            [linkageData addChildrenAllModelWithParentIdKey:@"industryId" childParentIdKey:@"pid"];
+            [linkageData addParentAllModel];
+            HPLinkageTopModalView *linkageView = [[HPLinkageTopModalView alloc] initWithData:linkageData];
             [linkageView setDelegate:self];
+            [linkageView setModalShowCallBack:^(BOOL isShow) {
+                [btn setSelected:isShow];
+                
+                if (weakSelf.sortSelectView && isShow) {
+                    [weakSelf.sortSelectView show:NO];
+                }
+                
+                if (weakSelf.areaLinkageView && isShow) {
+                    [weakSelf.areaLinkageView show:NO];
+                }
+            }];
+            [linkageView selectCellAtParentIndex:0 childIndex:0];
             [self.view addSubview:linkageView];
-            [linkageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.and.width.equalTo(self.view);
-                make.top.equalTo(self.filterBar.mas_bottom);
-                make.height.mas_equalTo(getWidth(250.f));
+            [linkageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.and.width.and.bottom.equalTo(self.view);
+                make.top.equalTo(self.filterBar.mas_bottom).with.offset(1.f);
             }];
             _tradeLinkageView = linkageView;
         }
         
-        [_tradeLinkageView setHidden:!btn.isSelected];
+        [_tradeLinkageView show:btn.isSelected];
     }
     else if (btn.tag == HPFilterBtnArea) {
         if (_areaLinkageView == nil) {
@@ -264,25 +289,61 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
             HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:models];
             [linkageData setParentNameKey:@"name"];
             [linkageData setChildNameKey:@"name"];
-            HPLinkageView *linkageView = [[HPLinkageView alloc] initWithData:linkageData];
+            [linkageData addParentAllModel];
+            HPLinkageTopModalView *linkageView = [[HPLinkageTopModalView alloc] initWithData:linkageData];
             [linkageView setDelegate:self];
+            [linkageView setModalShowCallBack:^(BOOL isShow) {
+                [btn setSelected:isShow];
+                
+                if (weakSelf.tradeLinkageView && isShow) {
+                    [weakSelf.tradeLinkageView show:NO];
+                }
+                
+                if (weakSelf.sortSelectView && isShow) {
+                    [weakSelf.sortSelectView show:NO];
+                }
+            }];
+            [linkageView selectCellAtParentIndex:0 childIndex:0];
             [self.view addSubview:linkageView];
-            [linkageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.and.width.equalTo(self.view);
-                make.top.equalTo(self.filterBar.mas_bottom);
-                make.height.mas_equalTo(getWidth(250.f));
+            [linkageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.and.width.and.bottom.equalTo(self.view);
+                make.top.equalTo(self.filterBar.mas_bottom).with.offset(1.f);
             }];
             _areaLinkageView = linkageView;
         }
         
-        [_areaLinkageView setHidden:!btn.isSelected];
+        [_areaLinkageView show:btn.isSelected];
     }
     else if (btn.tag == HPFilterBtnPrice) {
+        if (weakSelf.sortSelectView) {
+            [weakSelf.sortSelectView show:NO];
+        }
+        
+        if (weakSelf.tradeLinkageView) {
+            [weakSelf.tradeLinkageView show:NO];
+        }
+        
+        if (weakSelf.areaLinkageView) {
+            [weakSelf.areaLinkageView show:NO];
+        }
+        
         NSString *rentOrderType = btn.isSelected ? @"1" : @"0";
         [_shareListParam setRentOrderType:rentOrderType];
         [_tableView.mj_header beginRefreshing];
     }
     else if (btn.tag == HPFilterBtnTime) {
+        if (weakSelf.sortSelectView) {
+            [weakSelf.sortSelectView show:NO];
+        }
+        
+        if (weakSelf.tradeLinkageView) {
+            [weakSelf.tradeLinkageView show:NO];
+        }
+        
+        if (weakSelf.areaLinkageView) {
+            [weakSelf.areaLinkageView show:NO];
+        }
+        
         NSString *timeOrderType = btn.isSelected ? @"0" : @"1";
         [_shareListParam setCreateTimeOrderType:timeOrderType];
         [_tableView.mj_header beginRefreshing];
@@ -334,8 +395,8 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
 
 #pragma mark - HPSortSelectViewDelegate
 
-- (void)sortSelectView:(HPSortSelectView *)sortSelectView didSelectAtIndex:(NSInteger)index {
-    [sortSelectView setHidden:YES];
+- (void)sortSelectView:(HPSortSelectModalView *)sortSelectView didSelectAtIndex:(NSInteger)index {
+    [sortSelectView show:NO];
     NSString *type;
     
     switch (index) {
@@ -362,27 +423,40 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
 #pragma mark - HPLinkageViewDelegate
 
 - (void)linkageView:(HPLinkageView *)linkageView didSelectParentIndex:(NSInteger)pIndex childIndex:(NSInteger)cIndex withChildModel:(NSObject *)model {
-    if (linkageView == _tradeLinkageView) {
+    if (!model) {
+        return;
+    }
+    
+    if ([model isKindOfClass:HPIndustryModel.class]) {
         HPIndustryModel *industryModel = (HPIndustryModel *)model;
         NSString *tradeName = industryModel.industryName;
-        NSString *industryId = industryModel.industryId;
-        [_tradeLinkageView setHidden:YES];
+        NSString *industryId = industryModel.pid;
+        NSString *subIndustryId = industryModel.industryId;
+        [_tradeLinkageView show:NO];
         [_tradeBtn setSelected:NO];
+        if (industryId && !subIndustryId) {
+            tradeName = [HPCommonData getIndustryNameById:industryId];
+        }
         [_tradeBtn setText:tradeName];
         [_shareListParam setIndustryId:industryId];
+        [_shareListParam setSubIndustryId:subIndustryId];
         [self.tableView.mj_header beginRefreshing];
     }
-    else if (linkageView == _areaLinkageView) {
+    else if ([model isKindOfClass:HPDistrictModel.class]) {
         HPDistrictModel *districtModel = (HPDistrictModel *)model;
         NSString *name = districtModel.name;
         NSString *areaId = districtModel.areaId;
         NSString *districtId = districtModel.districtId;
-        [_areaLinkageView setHidden:YES];
+        [_areaLinkageView show:NO];
         [_areaBtn setSelected:NO];
         [_areaBtn setText:name];
         [_shareListParam setAreaId:areaId];
-        if (![districtModel.name isEqualToString:@"不限"]) {
+        if (![name isEqualToString:@"不限"]) {
             [_shareListParam setDistrictId:districtId];
+        }
+        else {
+            name = [HPCommonData getAreaNameById:areaId];
+            [_areaBtn setText:name];
         }
         [self.tableView.mj_header beginRefreshing];
     }

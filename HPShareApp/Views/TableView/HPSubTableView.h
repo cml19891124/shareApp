@@ -1,5 +1,5 @@
 //
-//  HPHeaderScrollView.h
+//  HPHeaderTableView.h
 //  HPShareApp
 //
 //  Created by Jay on 2018/12/16.
@@ -10,7 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPHeaderScrollView : UIScrollView
+@interface HPSubTableView : UITableView
+
+@property (nonatomic, assign) BOOL canRefresh;
 
 @property (nonatomic, assign) BOOL canScroll;
 

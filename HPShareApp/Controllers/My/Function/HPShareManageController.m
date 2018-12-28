@@ -12,6 +12,7 @@
 #import "HPShareListParam.h"
 #import "YYLRefreshNoDataView.h"
 #import "HPReleaseModalView.h"
+#import "HPShareReleaseParam.h"
 
 #define CELL_ID @"HPShareManageCell"
 
@@ -51,6 +52,14 @@
     
     if (!self.isPop) {
         [self loadTableViewFreshUI];
+    }
+    
+    if (self.param[@"update"]) {
+        [self updataCellData];
+    }
+    
+    if (self.param[@"delete"]) {
+        [self deleteCell];
     }
 }
 
@@ -114,7 +123,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListModel *model = _dataArray[indexPath.row];
-    [self pushVCByClassName:@"HPShareDetailController" withParam:@{@"model":model}];
+    NSNumber *index = [NSNumber numberWithInteger:indexPath.row];
+    [self pushVCByClassName:@"HPShareDetailController" withParam:@{@"model":model, @"index":index}];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -151,13 +161,14 @@
 
 - (void)onClickEditBtn:(UIButton *)btn {
     HPShareManageCell *cell = [self getParentCellofView:btn];
+    NSNumber *index = [NSNumber numberWithInteger:[_tableView indexPathForCell:cell].row];
     HPShareListModel *model = cell.model;
     
     if (model.type == 1) {
-        [self pushVCByClassName:@"HPOwnerCardDefineController" withParam:@{@"spaceId":model.spaceId}];
+        [self pushVCByClassName:@"HPOwnerCardDefineController" withParam:@{@"spaceId":model.spaceId, @"index":index}];
     }
     else if (model.type == 2) {
-        [self pushVCByClassName:@"HPStartUpCardDefineController" withParam:@{@"spaceId":model.spaceId}];
+        [self pushVCByClassName:@"HPStartUpCardDefineController" withParam:@{@"spaceId":model.spaceId, @"index":index}];
     }
 }
 
@@ -269,6 +280,47 @@
     }
     
     [_releaseModalView show:YES];
+}
+
+#pragma mark - UpdateData
+
+- (void)updataCellData {
+    if (!self.param[@"update"]) {
+        return;
+    }
+    
+    HPShareReleaseParam *param = self.param[@"update"];
+    NSInteger index = ((NSNumber *)self.param[@"index"]).integerValue;
+    
+    HPShareManageCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+    if (cell) {
+        [cell setTitle:param.title];
+        [cell setPhotoUrl:param.pictureUrlArr[0]];
+        [cell setPrice:param.rent];
+        [cell setUnitType:param.rentType.integerValue];
+        if (param.tag && ![param.tag isEqualToString:@""]) {
+            NSArray *tags = [param.tag componentsSeparatedByString:@","];
+            [cell setTags:tags];
+        }
+        else {
+            [cell setTags:@[@""]];
+        }
+    }
+    
+    [self.param removeObjectsForKeys:@[@"update", @"index"]];
+}
+
+- (void)deleteCell {
+    if (!self.param[@"delete"]) {
+        return;
+    }
+    
+    NSInteger index = ((NSNumber *)self.param[@"delete"]).integerValue;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    [self.dataArray removeObjectAtIndex:index];
+    [_tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    
+    [self.param removeObjectsForKeys:@[@"delete", @"index"]];
 }
 
 @end

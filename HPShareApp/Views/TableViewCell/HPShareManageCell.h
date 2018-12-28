@@ -39,6 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setReleaseTime:(NSString *)time;
 
+- (void)setTags:(NSArray *)tags;
+
+- (void)setPhotoUrl:(NSString *)url;
+
 @end
 
 NS_ASSUME_NONNULL_END

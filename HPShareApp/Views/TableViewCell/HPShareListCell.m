@@ -181,7 +181,7 @@
     [deleteIcon setHidden:YES];
     
     [titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(typeIcon.mas_left).with.offset(-22.f * g_rateWidth);
+        make.right.equalTo(typeIcon.mas_left).with.offset(-10.f * g_rateWidth);
     }];
     
     UIImage *normalImage = [HPImageUtil getRectangleByStrokeColor:COLOR_GRAY_BCC1CF fillColor:UIColor.whiteColor borderWidth:1.f cornerRadius:10.f inRect:CGRectMake(0.f, 0.f, 19.f, 19.f)];

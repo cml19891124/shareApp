@@ -6,20 +6,11 @@
 //  Copyright © 2018 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPHeaderScrollView.h"
+#import "HPParentScrollView.h"
 
-@implementation HPHeaderScrollView
+@implementation HPParentScrollView
 
 #pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    
-    if (!_canScroll) {
-        NO;
-    }
-    
-    return YES;
-}
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     

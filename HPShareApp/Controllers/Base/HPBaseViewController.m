@@ -20,6 +20,7 @@
     if (self) {
         _isPopGestureRecognize = YES;
         _isPop = NO;
+        _param = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -148,7 +149,11 @@
         if ([object isKindOfClass:HPBaseViewController.class]) {
             HPBaseViewController *baseVC = (HPBaseViewController *)object;
             baseVC = [baseVC init];
-            [baseVC setParam:param];
+            
+            if (param) {
+                [baseVC.param addEntriesFromDictionary:param];
+            }
+            
             [self.navigationController pushViewController:baseVC animated:YES];
         }
         else if ([object isKindOfClass:UIViewController.class]) {
@@ -171,7 +176,10 @@
     if ([lastVC isKindOfClass:HPBaseViewController.class]) {
         HPBaseViewController *lastBaseVC = (HPBaseViewController *)lastVC;
         lastBaseVC.isPop = YES;
-        lastBaseVC.param = param;
+        
+        if (param) {
+            [lastBaseVC.param addEntriesFromDictionary:param];
+        }
     }
     
     [self.navigationController popViewControllerAnimated:YES];

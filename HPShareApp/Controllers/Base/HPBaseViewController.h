@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPBaseViewController : UIViewController
 
-@property (nonatomic, strong) NSDictionary *param;
+@property (nonatomic, strong) NSMutableDictionary *param;
 
 @property (nonatomic, assign) BOOL isPop;
 

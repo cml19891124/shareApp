@@ -10,7 +10,9 @@
 #import "HPCheckTableCell.h"
 #import "HPImageUtil.h"
 
-@interface HPLinkageView () <UITableViewDelegate, UITableViewDataSource>
+@interface HPLinkageView () <UITableViewDelegate, UITableViewDataSource> {
+    BOOL _isInit;
+}
 
 @property (nonatomic, weak) UITableView *leftTableView;
 
@@ -46,20 +48,74 @@
         _selectedParent = [data getParentNameAtIndex:0];
         _selectedParentIndex = 0;
         _selectCheckIndex = -1;
-        [self setupUI];
+        [self initView];
+        [self initProperties];
     }
     return self;
 }
 
-- (void)setupUI {
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    if (!_isInit) {
+        _isInit = YES;
+        [self setupUI];
+    }
+}
+
+- (void)initView {
     [self setBackgroundColor:COLOR_GRAY_F8F8F8];
     [self.layer setShadowColor:COLOR_GRAY_7A7878.CGColor];
     [self.layer setShadowOffset:CGSizeMake(0.f, 3.f)];
     [self.layer setShadowRadius:8.f];
     [self.layer setShadowOpacity:0.2f];
+}
+
+- (void)initProperties {
+    _leftTableWidth = getWidth(150.f);
     
+    _leftTableColor = [UIColor colorWithHexString:@"#FBFBFB"];
+    
+    _leftTextColor = UIColor.whiteColor;
+    
+    _leftHeaderHeight = 8.f * g_rateWidth;
+    
+    _leftFooterHeight = 0.f;
+    
+    _leftCellHeight = 40.f * g_rateWidth;
+    
+    _leftTextMarginLeft = 26.f * g_rateWidth;
+    
+    _leftTextFont = [UIFont fontWithName:FONT_MEDIUM size:16.f];
+    
+    _leftTextColor = COLOR_BLACK_444444;
+    
+    _leftTextSelectedColor = COLOR_RED_FF3C5E;
+    
+    _rightTableColor = UIColor.clearColor;
+    
+    _rightHeaderHeight = 8.f * g_rateWidth;
+    
+    _rightFooterHeight = 0.f;
+    
+    _rightCellHeight = 40.f * g_rateWidth;
+    
+    _rightTextMarginLeft = 47.f * g_rateWidth;
+    
+    _rightTextFont = [UIFont fontWithName:FONT_MEDIUM size:16.f];
+    
+    _rightTextColor = COLOR_BLACK_444444;
+    
+    _rightTextSelectedColor = COLOR_RED_FC4865;
+    
+    _selectedIcon = [UIImage imageNamed:@"find_shop_pair_number"];
+    
+    _selectedIconMarginRight = getWidth(28.f);
+}
+
+- (void)setupUI {
     UITableView *leftTableView = [[UITableView alloc] init];
-    [leftTableView setBackgroundColor:[UIColor colorWithHexString:@"#FBFBFB"]];
+    [leftTableView setBackgroundColor:_leftTableColor];
     [leftTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [leftTableView setShowsVerticalScrollIndicator:NO];
     [leftTableView setDelegate:self];
@@ -70,11 +126,11 @@
         make.left.equalTo(self);
         make.top.equalTo(self);
         make.bottom.equalTo(self);
-        make.width.mas_equalTo(getWidth(150.f));
+        make.width.mas_equalTo(self.leftTableWidth);
     }];
     
     UITableView *rightTableView = [[UITableView alloc] init];
-    [rightTableView setBackgroundColor:UIColor.clearColor];
+    [rightTableView setBackgroundColor:_rightTableColor];
     [rightTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [rightTableView setDelegate:self];
     [rightTableView setDataSource:self];
@@ -91,13 +147,13 @@
 
 - (void)selectCellAtParentIndex:(NSInteger)pIndex childIndex:(NSInteger)cIndex{
     NSIndexPath *parentIndex = [NSIndexPath indexPathForRow:pIndex inSection:0];
-    [self.leftTableView selectRowAtIndexPath:parentIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
+    [self.leftTableView selectRowAtIndexPath:parentIndex animated:NO scrollPosition:UITableViewScrollPositionMiddle];
     _selectedParentIndex = pIndex;
     _selectedParent = [_data getParentNameAtIndex:pIndex];
     [self.rightTableView reloadData];
     
     NSIndexPath *childIndex = [NSIndexPath indexPathForRow:cIndex inSection:0];
-    [self.rightTableView selectRowAtIndexPath:childIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
+    [self.rightTableView selectRowAtIndexPath:childIndex animated:NO scrollPosition:UITableViewScrollPositionMiddle];
     HPCheckTableCell *cell = [self.rightTableView cellForRowAtIndexPath:childIndex];
     if (cell) {
         [self selectCheckCell:cell];
@@ -143,7 +199,11 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 40.f * g_rateWidth;
+    if (tableView == _leftTableView) {
+        return _leftCellHeight;
+    }
+    else
+        return _rightCellHeight;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -152,7 +212,24 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 8.f * g_rateWidth;
+    if (tableView == _leftTableView) {
+        return _leftHeaderHeight;
+    }
+    else
+        return _rightHeaderHeight;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    UIView *footer = [[UIView alloc] init];
+    return footer;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    if (tableView == _leftTableView) {
+        return _leftFooterHeight;
+    }
+    else
+        return _rightFooterHeight;
 }
 
 
@@ -167,13 +244,13 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
             [cell setBackgroundColor:UIColor.clearColor];
-            UIImage *selectedBg = [HPImageUtil getImageByColor:UIColor.clearColor inRect:CGRectMake(0, 0.f, 150.f * g_rateWidth, 40.f * g_rateWidth)];
+            UIImage *selectedBg = [HPImageUtil getImageByColor:UIColor.clearColor inRect:CGRectMake(0.f, 0.f, _leftTableWidth, _leftCellHeight)];
             [cell setSelectedBackgroundView:[[UIImageView alloc] initWithImage:selectedBg]];
-            [cell.textLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];
-            [cell.textLabel setTextColor:COLOR_BLACK_444444];
-            [cell.textLabel setHighlightedTextColor:COLOR_RED_FF3C5E];
+            [cell.textLabel setFont:_leftTextFont];
+            [cell.textLabel setTextColor:_leftTextColor];
+            [cell.textLabel setHighlightedTextColor:_leftTextSelectedColor];
             [cell.textLabel setTextAlignment:NSTextAlignmentLeft];
-            [cell setIndentationWidth:26.f * g_rateWidth];
+            [cell setIndentationWidth:_leftTextMarginLeft];
             [cell setIndentationLevel:1];
         }
         
@@ -187,6 +264,12 @@
         
         if (cell == nil) {
             cell = [[HPCheckTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+            [cell setTextMarginLeft:_rightTextMarginLeft];
+            [cell setTextFont:_rightTextFont];
+            [cell setTextColor:_rightTextColor];
+            [cell setTextSelectedColor:_rightTextSelectedColor];
+            [cell setSelectedIcon:_selectedIcon];
+            [cell setSelectedIconMarginRight:_selectedIconMarginRight];
             
             if (indexPath.row == _selectCheckIndex) {
                 [cell setTitle:child];

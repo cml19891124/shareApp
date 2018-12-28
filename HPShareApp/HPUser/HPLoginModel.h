@@ -5,7 +5,11 @@
 @interface HPLoginModel : NSObject<NSCoding>
 
 @property (nonatomic, copy) NSString *token;
+
+@property (nonatomic, copy) NSString *salesman;
+
 @property (nonatomic, strong) HPCardInfo *cardInfo;
+
 @property (nonatomic, strong) HPUserInfo *userInfo;
 
 +(instancetype)AccountStatusWithDict:(NSMutableDictionary *)dict;

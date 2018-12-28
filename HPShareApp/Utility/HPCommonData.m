@@ -20,6 +20,10 @@ static NSArray<HPAreaModel *> *areaModels;
         [HPCommonData requestIndustryData];
     }
     
+    if (industryModels) {
+        return [[NSArray alloc] initWithArray:industryModels copyItems:YES];
+    }
+    
     return industryModels;
 }
 
@@ -56,6 +60,10 @@ static NSArray<HPAreaModel *> *areaModels;
 + (NSArray<HPAreaModel *> *)getAreaData {
     if (areaModels == nil) {
         [HPCommonData requestAreaData];
+    }
+    
+    if (areaModels) {
+        return [[NSArray alloc] initWithArray:areaModels copyItems:YES];
     }
     
     return areaModels;

@@ -91,10 +91,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (self.param[@"refresh"]) {
-        [self loadData:self.param[@"refresh"]];
+    if (self.param[@"update"]) {
+        [self updateData];
     }
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -233,7 +232,7 @@
         make.bottom.equalTo(self.view);
     }];
     [self setupContactRegion:contactRegion];
-    if (self.param[@"edit"]) {
+    if (self.param[@"index"]) {
         [contactRegion setHidden:YES];
     }
     else {
@@ -252,11 +251,12 @@
         make.bottom.equalTo(self.view);
     }];
     [self setupEditRegion:editRegion];
-    if (self.param[@"edit"]) {
-        [contactRegion setHidden:NO];
+    
+    if (self.param[@"index"]) {
+        [editRegion setHidden:NO];
     }
     else {
-        [contactRegion setHidden:YES];
+        [editRegion setHidden:YES];
     }
 }
 
@@ -679,10 +679,8 @@
 #pragma mark - onClickBackBtn
 
 - (void)onClickBackBtn {
-    if (self.param[@"refresh"]) {
-        HPShareDetailModel *model = self.param[@"refresh"];
-        NSString *index = self.param[@"index"];
-        [self popWithParam:@{@"refresh":model, @"refreshIndex":index}];
+    if (self.param[@"update"]) {
+        [self popWithParam:self.param];
     }
     else {
         [self pop];
@@ -820,7 +818,7 @@
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"删除成功"];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                NSString *index = self.param[@"edit"];
+                NSNumber *index = self.param[@"index"];
                 [self popWithParam:@{@"delete":index}];
             });
         }
@@ -833,10 +831,10 @@
 
 - (void)editInfoBySpaceId:(NSString *)spaceId type:(NSInteger)type {
     if (type == 1) {
-        [self pushVCByClassName:@"HPOwnerCardDefineController" withParam:@{@"spaceId":spaceId}];
+        [self pushVCByClassName:@"HPOwnerCardDefineController" withParam:@{@"spaceId":spaceId, @"index":self.param[@"index"]}];
     }
     else if (type == 2) {
-        [self pushVCByClassName:@"HPStartUpCardDefineController" withParam:@{@"spaceId":spaceId}];
+        [self pushVCByClassName:@"HPStartUpCardDefineController" withParam:@{@"spaceId":spaceId, @"index":self.param[@"index"]}];
     }
 }
 
@@ -1014,9 +1012,9 @@
         [_calendarView setSelectedDateStrs:shareDays];
     }
     
-    if (param.pictures && param.pictures.count > 0) {
-        if (model.pictures.count > 1) {
-            [_pageControl setNumberOfPages:model.pictures.count];
+    if (param.pictureIdArr && param.pictureIdArr.count > 0) {
+        if (param.pictureIdArr.count > 1) {
+            [_pageControl setNumberOfPages:param.pictureIdArr.count];
             [_pageControl setCurrentPage:0];
         }
         else {
@@ -1024,15 +1022,18 @@
         }
         
         NSMutableArray *array = [[NSMutableArray alloc] init];
-        for (HPPictureModel *picModel in model.pictures) {
+        for (NSString *pictureUrl in param.pictureUrlArr) {
             UIImageView *imageView = [[UIImageView alloc] init];
-            [imageView sd_setImageWithURL:[NSURL URLWithString:picModel.url] placeholderImage:ImageNamed(@"shared_shop_details_background")];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:pictureUrl] placeholderImage:ImageNamed(@"shared_shop_details_background")];
             [array addObject:imageView];
         }
-        
+
         [_bannerView setImageViews:array];
-        if (model.pictures.count > 1) {
+        if (param.pictureUrlArr.count > 1) {
             [_bannerView startAutoScrollWithInterval:2.0];
+        }
+        else {
+            [_bannerView stopAutoScroll];
         }
     }
 }

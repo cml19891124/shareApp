@@ -15,6 +15,7 @@
 #import <UserNotifications/UserNotifications.h>
 #import "HPTextDialogView.h"
 #import "HPGuideViewController.h"
+#import "HPCommonData.h"
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate>
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
@@ -109,6 +110,8 @@
         // Fallback on earlier versions
     }*/
     [HPGlobalVariable initVariable];
+    [HPCommonData getAreaData];
+    [HPCommonData getIndustryData];
     
     [self configureAMapKey];
     HPGuideViewController *guidevc = [[HPGuideViewController alloc] init];

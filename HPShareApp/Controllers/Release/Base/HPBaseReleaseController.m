@@ -315,8 +315,13 @@
             }
         }
         
-        [btn setTitle:title forState:UIControlStateSelected];
-        [btn setSelected:YES];
+        if (![title isEqualToString:@""]) {
+            [btn setTitle:title forState:UIControlStateSelected];
+            [btn setSelected:YES];
+        }
+        else {
+            [btn setSelected:NO];
+        }
     }];
     
     self.tagDialogView = tagDialogView;

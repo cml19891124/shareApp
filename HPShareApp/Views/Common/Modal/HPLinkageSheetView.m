@@ -265,6 +265,9 @@
 
 - (void)selectCellAtParentIndex:(NSInteger)pIndex childIndex:(NSInteger)cIndex{
     [self clearCheck];
+    if (pIndex >= [_data getParentCount] || cIndex >= [_data getChildrenCountOfParentIndex:pIndex])
+        return;
+    
     NSIndexPath *parentIndex = [NSIndexPath indexPathForRow:pIndex inSection:0];
     [self.leftTableView selectRowAtIndexPath:parentIndex animated:NO scrollPosition:UITableViewScrollPositionMiddle];
     _selectedParentIndex = pIndex;
