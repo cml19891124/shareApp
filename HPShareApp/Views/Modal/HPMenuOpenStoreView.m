@@ -118,7 +118,8 @@
     [self.cityBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self).offset(getWidth(18.f));
         make.width.mas_equalTo(63.f * g_rateWidth);
-        make.centerY.mas_equalTo(self.sloganImageView);
+        make.top.mas_equalTo(g_statusBarHeight + 15.f);
+        make.height.mas_equalTo(self.cityBtn.titleLabel.font.pointSize);
     }];
     
     [self.searchView mas_makeConstraints:^(MASConstraintMaker *make) {

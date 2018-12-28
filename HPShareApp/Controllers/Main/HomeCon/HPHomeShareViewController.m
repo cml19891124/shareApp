@@ -43,7 +43,8 @@ static NSString *shareListCell = @"shareListCell";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
+//    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    self.navigationController.navigationBar.translucent = NO;
     _dataArray = [NSMutableArray array];
     [self getShareListData];
 }
@@ -147,7 +148,7 @@ static NSString *shareListCell = @"shareListCell";
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.view).offset(g_statusBarHeight + 44.f);
+        make.top.mas_equalTo(self.view).offset(g_statusBarHeight +44.f);
         make.bottom.mas_equalTo(getWidth(-g_bottomSafeAreaHeight - 49));
     }];
 }
@@ -175,8 +176,14 @@ static NSString *shareListCell = @"shareListCell";
         [_tableView registerClass:HPHotShareStoreCell.class forCellReuseIdentifier:hotShareStoreCell];
         [_tableView registerClass:HPShareListCell.class forCellReuseIdentifier:shareListCell];
         _tableView.showsVerticalScrollIndicator = NO;
-        _tableView.contentInset = UIEdgeInsetsMake((g_statusBarHeight + 54.f), 0, 0, 0);
-        [_tableView setContentOffset:CGPointMake(0, -(g_statusBarHeight + 54.f)) animated:YES];
+        CGFloat topHeight;
+        if (IPHONE_HAS_NOTCH) {
+            topHeight = 54.f;
+        }else{
+            topHeight = 94.f;
+        }
+        _tableView.contentInset = UIEdgeInsetsMake(topHeight, 0, 0, 0);
+        [_tableView setContentOffset:CGPointMake(0, -topHeight) animated:YES];
     }
     return _tableView;
 }
@@ -368,14 +375,14 @@ static NSString *shareListCell = @"shareListCell";
     
     HPLog(@"yyyyy:%f",y);
     
-    CGPoint selfCenter = self.openView.searchView.center;
+    CGPoint selfCenter = self.openView.cityBtn.center;
     
     if (y > -50 && y < 100) {
         if (y>0 && y < 100) {//上滑
             
             [UIView animateWithDuration:0.35 delay:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
-                self.openView.searchView.transform = CGAffineTransformMakeTranslation(getWidth(50.f), getWidth(-40.f));
-                self.openView.searchView.transform = CGAffineTransformScale(self.openView.searchView.transform,0.7, 0.95);
+                self.openView.searchView.transform = CGAffineTransformTranslate(self.openView.searchView.transform, getWidth(0.f), getWidth(-71.f));//CGAffineTransformMakeTranslation(getWidth(0.f), getWidth(-71.f));
+//                self.openView.searchView.transform = CGAffineTransformScale(self.openView.searchView.transform,0.7, 0.95);
             } completion:^(BOOL finished) {
             }];
 
