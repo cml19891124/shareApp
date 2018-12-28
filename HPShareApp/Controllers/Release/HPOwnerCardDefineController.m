@@ -83,7 +83,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 @property (nonatomic, strong) CDZPicker *pickerView;
 
 @property (nonatomic, weak) HPBotomPickerModalView *areaPickerView;
-
+@property (nonatomic, strong) HPBotomPickerModalView *industryPickerView;
 /**
  下一级界面逆传过来的数据
  */
@@ -852,37 +852,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
             //your code
         }];*/
     }else if (selectItemIndex == HPSelectItemIndexArea){
-//        NSArray *areaArr = [HPCommonData getAreaData];
-//        for (int i = 0; i < areaArr.count; i ++) {
-//            HPAreaModel *model = areaArr[i];
-//            _streetDic[@"area"] = model.name;
-//            NSMutableArray *streetArray = [NSMutableArray array];
-//
-//            for (int j = 0; j < model.children.count; j++) {
-//                HPDistrictModel *disModel = model.children[j];
-//                if ([disModel.areaId intValue] == [model.areaId intValue]) {
-//                    if (j <= model.children.count - 1) {
-//                        [streetArray addObject:disModel.name];
-//                    }
-//                }
-//            }
-//            NSMutableArray *perArray = [NSMutableArray array];
-//            perArray = [streetArray copy];
-//            _streetDic[@"subArray"] = streetArray;
-//            [_disArray addObject:_streetDic];
-//
-//        }
-//
-//        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:[HPCommonData getAreaData]];
-//        [linkageData setParentNameKey:@"areaName"];
-//        [linkageData setChildNameKey:@"areaName"];
-//        HPDataHandlePickerView *pickerView = [[HPDataHandlePickerView alloc] initWithFrame:CGRectZero withModel:linkageData];
-//        [self.view addSubview:pickerView];
-//
-//        [pickerView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.left.right.bottom.mas_equalTo(self.view);
-//            make.height.mas_equalTo(kScreenHeight/3);
-//        }];
         if (!_areaPickerView) {
             HPLinkageData *data = [[HPLinkageData alloc] initWithModels:[HPCommonData getAreaData]];
             [data setChildNameKey:@"name"];
@@ -892,23 +861,38 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
                 HPDistrictModel *districtModel = (HPDistrictModel *)model;
                 NSString *areaName = [HPCommonData getAreaNameById:districtModel.areaId];
                 NSLog(@"Pick district: %@-%@", areaName, districtModel.name);
+                NSString *areaTitle = [NSString stringWithFormat:@"%@-%@", areaName, districtModel.name];
+                CGFloat areaW = BoundWithSize(areaTitle, kScreenWidth, 13.f).size.width + 15;
+               [self.areaBtn setTitle:areaTitle forState:UIControlStateNormal];
+                [self.areaBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(areaW);
+                }];
             }];
             _areaPickerView = areaPickerView;
         }
         
         [_areaPickerView show:YES];
     }else if (selectItemIndex == HPSelectItemIndexIndustry){
-        pickerView.tipTitle = @"请选择行业";
+        if (!_industryPickerView) {
+            HPLinkageData *data = [[HPLinkageData alloc] initWithModels:[HPCommonData getIndustryData]];
+            [data setChildNameKey:@"industryName"];
+            [data setParentNameKey:@"industryName"];
+            HPBotomPickerModalView *industryPickerView = [[HPBotomPickerModalView alloc] initWithData:data];
+            [industryPickerView setConfirmCallBack:^(NSInteger parentIndex, NSInteger childIndex, NSObject *model) {
+                HPIndustryModel *industryModel = (HPIndustryModel *)model;
+                NSString *industryName = [HPCommonData getIndustryNameById:industryModel.industryId];
+                NSLog(@"Pick industryTitle: %@-%@", industryName, industryModel.industryName);
+                NSString *industryTitle = [NSString stringWithFormat:@"%@-%@", industryName, industryModel.industryName];
+                CGFloat industryW = BoundWithSize(industryTitle, kScreenWidth, 13.f).size.width + 15;
+                [self.industryBtn setTitle:industryTitle forState:UIControlStateNormal];
+                [self.industryBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(industryW);
+                }];
+            }];
+            _industryPickerView = industryPickerView;
+        }
         
-        CDZPickerBuilder *builder = [CDZPickerBuilder new];
-        builder.cancelTextColor = COLOR_GRAY_BBBBBB;
-        builder.confirmTextColor = COLOR_RED_EA0000;
-        [CDZPicker showLinkagePickerInView:self.view withBuilder:builder components:@[] confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
-            [weakSelf.industryBtn setTitle:[strings componentsJoinedByString:@","] forState:UIControlStateNormal];
-//            NSLog(@"strings:%@ indexs:%@",strings,indexs);
-        }cancel:^{
-            //your code
-        }];
+        [_industryPickerView show:YES];
     }
     /*
     [pickerView show:YES];

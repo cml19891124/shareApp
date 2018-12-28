@@ -68,7 +68,7 @@
 {
     if (!_bannerView) {
         _bannerView = [UIView new];
-        _bannerView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _bannerView.backgroundColor = [[UIColor clearColor] colorWithAlphaComponent:0.001];;
         _bannerView.layer.cornerRadius = 8.f;
         _bannerView.layer.masksToBounds = YES;
         _bannerView.layer.shadowColor = COLOR_GRAY_BBBBBB.CGColor;
@@ -90,6 +90,7 @@
         [_iCarousel setPageItemSize:CGSizeMake(getWidth(325.f), getWidth(150.f))];//轮播里面卡片控件的大小。默认与width相等
         [_iCarousel setBannerViewDelegate:self];
         [_iCarousel startAutoScrollWithInterval:2];
+        _iCarousel.backgroundColor = [[UIColor clearColor] colorWithAlphaComponent:0.001];
     }
     return _iCarousel;
 }

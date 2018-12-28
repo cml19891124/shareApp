@@ -53,7 +53,6 @@
 		E61B5EAE21CC790700DC8A59 /* HPAreaButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E61B5EAD21CC790700DC8A59 /* HPAreaButton.m */; };
 		E61B5EB121CC849600DC8A59 /* HPReviseReleaseInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E61B5EB021CC849600DC8A59 /* HPReviseReleaseInfoViewController.m */; };
 		E61B5EB421CCB7F100DC8A59 /* HPJudgingLoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = E61B5EB321CCB7F100DC8A59 /* HPJudgingLoginView.m */; };
-		E61B5EB721CCD96A00DC8A59 /* HPDataHandlePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E61B5EB621CCD96A00DC8A59 /* HPDataHandlePickerView.m */; };
 		E61B5EC721CCF70800DC8A59 /* CDZPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = E61B5EBB21CCF70800DC8A59 /* CDZPicker.m */; };
 		E61CB23D21C772460076540E /* HPMyCardController.m in Sources */ = {isa = PBXBuildFile; fileRef = E61CB23C21C772460076540E /* HPMyCardController.m */; };
 		E61CB24021C779A90076540E /* YYGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = E61CB23F21C779A90076540E /* YYGestureRecognizer.m */; };
@@ -336,8 +335,6 @@
 		E61B5EB021CC849600DC8A59 /* HPReviseReleaseInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPReviseReleaseInfoViewController.m; sourceTree = "<group>"; };
 		E61B5EB221CCB7F100DC8A59 /* HPJudgingLoginView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPJudgingLoginView.h; sourceTree = "<group>"; };
 		E61B5EB321CCB7F100DC8A59 /* HPJudgingLoginView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPJudgingLoginView.m; sourceTree = "<group>"; };
-		E61B5EB521CCD96A00DC8A59 /* HPDataHandlePickerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPDataHandlePickerView.h; sourceTree = "<group>"; };
-		E61B5EB621CCD96A00DC8A59 /* HPDataHandlePickerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPDataHandlePickerView.m; sourceTree = "<group>"; };
 		E61B5EBB21CCF70800DC8A59 /* CDZPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDZPicker.m; sourceTree = "<group>"; };
 		E61B5EBC21CCF70800DC8A59 /* CDZPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDZPicker.h; sourceTree = "<group>"; };
 		E61CB23B21C772460076540E /* HPMyCardController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPMyCardController.h; sourceTree = "<group>"; };
@@ -1283,8 +1280,6 @@
 				E61B5EA721CC739200DC8A59 /* HPStoreItemButton.m */,
 				E61B5EAC21CC790700DC8A59 /* HPAreaButton.h */,
 				E61B5EAD21CC790700DC8A59 /* HPAreaButton.m */,
-				E61B5EB521CCD96A00DC8A59 /* HPDataHandlePickerView.h */,
-				E61B5EB621CCD96A00DC8A59 /* HPDataHandlePickerView.m */,
 				7AAFF36321CD2EC20049D175 /* HPTimeRentView.h */,
 				7AAFF36421CD2EC20049D175 /* HPTimeRentView.m */,
 				7AAFF36621CD2F680049D175 /* HPTimeRentButton.h */,
@@ -2075,7 +2070,6 @@
 				E661B0D9219D43A200C86CF5 /* HPAlertAction.m in Sources */,
 				E661B12421A28E8500C86CF5 /* JTCalendarSettings.m in Sources */,
 				E61F710A21C1307000932708 /* HPSystemNotiCell.m in Sources */,
-				E61B5EB721CCD96A00DC8A59 /* HPDataHandlePickerView.m in Sources */,
 				E661B13D21A3DFD600C86CF5 /* HPReleaseModalView.m in Sources */,
 				E661B12C21A28E8500C86CF5 /* JTCalendarWeekView.m in Sources */,
 				6993AD2F21C797D20019506C /* HPShareAnnotationView.m in Sources */,
