@@ -7,6 +7,7 @@
 //
 
 #import "HPBaseModalView.h"
+#import "HPLinkageData.h"
 typedef void(^ViewTapClickCallback)(void);
 
 typedef void(^FinishClickCallback)(NSString *model);
@@ -29,9 +30,11 @@ NS_ASSUME_NONNULL_BEGIN
  用来说明显示什么功能的提示语句
  */
 @property (nonatomic, copy) NSString *tipTitle;
-@property (nonatomic, strong) NSArray *dataSource;
+@property (nonatomic, strong) HPLinkageData *dataSource;
 
+@property (nonatomic, strong) NSMutableArray *areaNameArr;
 @property (nonatomic, strong) UILabel* pickerLabel;
+- (instancetype)initWithFrame:(CGRect)frame withModel:(HPLinkageData *)data;
 @end
 
 NS_ASSUME_NONNULL_END

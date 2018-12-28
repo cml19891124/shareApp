@@ -7,27 +7,17 @@
 //
 
 #import "HPDataHandlePickerView.h"
+#import "HPAreaModel.h"
 #define viewW   (self.frame.size.width)
 #define viewH   (self.frame.size.height)
 
-
 @implementation HPDataHandlePickerView
 
-//- (void)setupModalView:(UIView *)view
-//{
-//    view.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.6f];
-//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapModalOutSide:)];
-//    [self addGestureRecognizer:tap];
-//
-//    [self addSubview:self.bgview];
-//    [self addSubview:self.toolBar];
-//    [self addSubview:self.pickerView];
-//    [self setUpSubviewsLayout];
-//}
-
-- (instancetype)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame withModel:(HPLinkageData *)data
 {
     if (self = [super initWithFrame:frame]) {
+        self.dataSource = data;
+        _areaNameArr = [NSMutableArray array];
         self.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.6f];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapModalOutSide:)];
         [self addGestureRecognizer:tap];
@@ -35,9 +25,20 @@
         [self addSubview:self.bgview];
         [self addSubview:self.toolBar];
         [self addSubview:self.pickerView];
+        [self.pickerView reloadAllComponents];
         [self setUpSubviewsLayout];
     }
     return self;
+}
+
+- (void)setDataSource:(NSArray *)dataSource
+{
+    _dataSource = dataSource;
+//    for (int i = 0; i < self.dataSource.count; i++) {
+//        HPReleaseDistrictModel *areaNameModel = _areaNameArr[i];
+//        [_areaNameArr addObject:areaNameModel.name];
+//    }
+    
 }
 
 - (void)onTapModalOutSide:(UITapGestureRecognizer *)tap {
@@ -91,9 +92,10 @@
             if (singleLine.frame.size.height < 1)
             {
                 singleLine.backgroundColor = COLOR_GRAY_CCCCCC;
-//                [singleLine removeFromSuperview];
+                [singleLine removeFromSuperview];
             }
         }
+        [self.pickerView reloadAllComponents];
     }
     return _pickerView;
 }
@@ -135,12 +137,23 @@
 #pragma mark - UIPickerView DataSource and Delegate
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
-    return 1;
+    return 2;
 }
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-//    return self.dataSource.count;
-    return 10;
+    HPLinkageData *data = [HPLinkageData new];
+    NSInteger rows = 0;
+    switch (component) {
+        case 0:
+            rows = [data getParentCount];
+            break;
+        case 1:
+            rows = [data getChildrenCountOfParentIndex:component];
+            break;
+        default:
+            break;
+    }
+    return 0;
 }
 - (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
 {
@@ -148,7 +161,23 @@
 }
 - (nullable NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    return [NSString stringWithFormat:@"JerseyCocoa %ld",row];
+    HPLinkageData *data = [HPLinkageData new];
+    NSString * title = nil;
+    switch (component) {
+        case 0:
+            
+            title = @"fgsd";
+            [self.pickerView reloadComponent:row];
+            break;
+        case 1:
+            [data getChildModelOfParentIndex:row atChildIndex:component];
+            title = @"city";
+            break;
+        default:
+            break;
+    }
+    return title;
+
 }
 
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view

@@ -6,6 +6,7 @@
 //  Copyright © 2016年 Nemocdz. All rights reserved.
 
 #import "CDZPicker.h"
+#import "MJExtension.h"
 #define SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
 #define SCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)
 #define BACKGROUND_BLACK_COLOR ([UIColor.blackColor colorWithAlphaComponent:0.6f])

@@ -367,18 +367,15 @@ static NSString *shareListCell = @"shareListCell";
 //        scrollView.contentOffset = offset;
 //    }
     
-    if(offset.y > 0){
+//    if(offset.y > 0){
         [self updateSearchViewWithMaonryOffset:offset.y];
-
-    }else{
-        [self updateSearchViewWithMaonryOffset:offset.y];
-
-    }
+//    }
 }
 
 - (void)updateSearchViewWithMaonryOffset:(CGFloat)y{
     self.openView.sloganImageView.alpha -= y/10000.00;
-    HPLog(@"ffff:%f",self.openView.sloganImageView.alpha);
+//    HPLog(@"ffff:%f",self.openView.sloganImageView.alpha);
+    HPLog(@"yyyyy:%f",y)
     if (self.openView.sloganImageView.alpha <= 0) {
         self.openView.sloganImageView.alpha = 0;
         self.openView.sloganImageView.hidden = YES;
@@ -413,10 +410,6 @@ static NSString *shareListCell = @"shareListCell";
            
             [self.openView.searchView mas_updateConstraints:^(MASConstraintMaker *make) {
                 //更改距顶上的高度
-//                make.right.mas_equalTo(self.openView).offset(getWidth(-26.f)* slideRatio);
-//                make.centerY.mas_equalTo(self.openView);
-//                make.height.mas_equalTo(getWidth(30.f)* slideRatio);
-//            make.left.mas_equalTo(self.openView.cityBtn.mas_right).offset(getWidth(22.f)* slideRatio);
                 make.centerY.mas_equalTo(self.openView);
                 make.size.mas_equalTo(CGSizeMake(getWidth(225.f)* slideRatio, getWidth(30.f)* slideRatio));
                 make.right.mas_equalTo(getWidth(-26.f)* slideRatio);

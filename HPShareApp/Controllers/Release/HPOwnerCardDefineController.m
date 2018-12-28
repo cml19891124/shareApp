@@ -22,9 +22,9 @@
 #import "HPShareSelectedItemView.h"
 #import "HPStoreItemButton.h"
 #import "HPAreaButton.h"
-#import "HPReleaseDistrictModel.h"
 #import "HPReviseReleaseInfoViewController.h"
 #import "CDZPicker.h"
+#import "HPDataHandlePickerView.h"
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：入驻本店需事先准备相关产品质检材料，入店时需确认，三无产品请绕道..."
 
@@ -448,7 +448,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写店铺详细地址" ofView:view rightTo:view];
     [textField setKeyboardType:UIKeyboardTypeDecimalPad];
-    textField.text = @"fsadhgjg";
+//    textField.text = @"fsadhgjg";
     textField.textColor = COLOR_BLACK_333333;
     _addressField = textField;
     
@@ -606,7 +606,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         //获取生存的字符串
         [self getConvertString];
         _shareTitle.hidden = YES;
-        HPLog(@"dfggg:%@",_shareTitle);
+//        HPLog(@"dfggg:%@",_shareTitle);
         [_convertTitleField mas_updateConstraints:^(MASConstraintMaker *make) {
             [make.left uninstall];
             make.left.mas_equalTo(self.scrollView).offset(getWidth(21.f));
@@ -625,8 +625,15 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 
 - (void)getConvertString
 {
-    NSString *titleString = [NSString stringWithFormat:@"%@%@店有%@空间可供出租",self.shareTitle.text,self.areaBtn.currentTitle,self.shareSpace?:@""];
+    NSString *areaString;
+    if ([self.areaBtn.currentTitle isEqualToString:@"请选择区域"]) {
+        areaString = nil;
+    }else{
+        areaString = self.areaBtn.currentTitle;
+    }
+    NSString *titleString = [NSString stringWithFormat:@"%@%@店有%@空间可供出租",self.titleField.text,areaString?:@"",self.shareSpace?:@""];
     self.convertTitleField.text = titleString;
+    
 }
 #pragma mark - UITextViewDelegate
 
@@ -823,7 +830,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     _pickerView = pickerView;
     kWeakSelf(weakSelf);
     if (selectItemIndex == HPSelectItemIndexCity) {
-        pickerView.tipTitle = @"选择城市";
+        /*pickerView.tipTitle = @"选择城市";
         CDZPickerBuilder *builder = [CDZPickerBuilder new];
         builder.showMask = YES;
         builder.cancelTextColor = COLOR_GRAY_BBBBBB;
@@ -835,40 +842,15 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
             [weakSelf.cityBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(stringsW);
             }];
-//            NSLog(@"strings:%@ indexs:%@",strings,indexs);
+
         }cancel:^{
             //your code
-        }];
+        }];*/
     }else if (selectItemIndex == HPSelectItemIndexArea){
-        pickerView.tipTitle = @"请选择区域";
-        CDZPickerComponentObject *haizhu = [[CDZPickerComponentObject alloc]initWithText:@"海珠区"];
-        CDZPickerComponentObject *yuexiu = [[CDZPickerComponentObject alloc]initWithText:@"越秀区"];
-        
-        CDZPickerComponentObject *guangzhou = [[CDZPickerComponentObject alloc]initWithText:@"广州市"];
-            guangzhou.subArray = [NSMutableArray arrayWithObjects:haizhu,yuexiu, nil];
-        
-        CDZPickerComponentObject *xiangqiao = [[CDZPickerComponentObject alloc]initWithText:@"湘桥区"];
-        CDZPickerComponentObject *chaozhou = [[CDZPickerComponentObject alloc]initWithText:@"潮州市"];
-        chaozhou.subArray = [NSMutableArray arrayWithObjects:xiangqiao, nil];
-        
-        CDZPickerComponentObject *guangdong = [[CDZPickerComponentObject alloc]initWithText:@"广东省"];
-//        guangdong.subArray = [NSMutableArray arrayWithObjects:guangzhou,chaozhou, nil];
-        
-        CDZPickerComponentObject *pixian = [[CDZPickerComponentObject alloc]initWithText:@"郫县"];
-        
-        CDZPickerComponentObject *chengdu = [[CDZPickerComponentObject alloc]initWithText:@"成都市"];
-            chengdu.subArray = [NSMutableArray arrayWithObjects:pixian, nil];
-        
-        CDZPickerComponentObject *leshan = [[CDZPickerComponentObject alloc]initWithText:@"乐山市"];
-        
-//        CDZPickerComponentObject *sichuan = [[CDZPickerComponentObject alloc]initWithText:@"四川省"];
-//        sichuan.subArray = [NSMutableArray arrayWithObjects:chengdu,leshan, nil];
         NSArray *areaArr = [HPCommonData getAreaData];
         for (int i = 0; i < areaArr.count; i ++) {
             HPAreaModel *model = areaArr[i];
             _streetDic[@"area"] = model.name;
-
-//            [_disArray addObject:_streetDic];
             NSMutableArray *streetArray = [NSMutableArray array];
             
             for (int j = 0; j < model.children.count; j++) {
@@ -885,52 +867,26 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
             [_disArray addObject:_streetDic];
 
         }
-        NSArray *arr = [HPReleaseDistrictModel mj_objectArrayWithKeyValuesArray:_disArray];
-
-        CDZPickerBuilder *builder = [CDZPickerBuilder new];
-        builder.cancelTextColor = COLOR_GRAY_BBBBBB;
-        builder.confirmTextColor = COLOR_RED_EA0000;
-        [CDZPicker showLinkagePickerInView:self.view withBuilder:builder components:arr confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
-            CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 10;
-
-            [weakSelf.areaBtn setTitle:[strings componentsJoinedByString:@","] forState:UIControlStateNormal];
-            [weakSelf.areaBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(stringsW);
-            }];
-            NSLog(@"strings:%@ indexs:%@",strings,indexs);
-        }cancel:^{
-            //your code
+        
+        HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:[HPCommonData getAreaData]];
+        [linkageData setParentNameKey:@"areaName"];
+        [linkageData setChildNameKey:@"areaName"];
+        HPDataHandlePickerView *pickerView = [[HPDataHandlePickerView alloc] initWithFrame:CGRectZero withModel:linkageData];
+        [self.view addSubview:pickerView];
+        
+        [pickerView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.mas_equalTo(self.view);
+            make.height.mas_equalTo(kScreenHeight/3);
         }];
     }else if (selectItemIndex == HPSelectItemIndexIndustry){
         pickerView.tipTitle = @"请选择行业";
-        CDZPickerComponentObject *haizhu = [[CDZPickerComponentObject alloc]initWithText:@"海珠区"];
-        CDZPickerComponentObject *yuexiu = [[CDZPickerComponentObject alloc]initWithText:@"越秀区"];
         
-        CDZPickerComponentObject *guangzhou = [[CDZPickerComponentObject alloc]initWithText:@"广州市"];
-        //    guangzhou.subArray = [NSMutableArray arrayWithObjects:haizhu,yuexiu, nil];
-        
-        CDZPickerComponentObject *xiangqiao = [[CDZPickerComponentObject alloc]initWithText:@"湘桥区"];
-        CDZPickerComponentObject *chaozhou = [[CDZPickerComponentObject alloc]initWithText:@"潮州市"];
-        chaozhou.subArray = [NSMutableArray arrayWithObjects:xiangqiao, nil];
-        
-        CDZPickerComponentObject *guangdong = [[CDZPickerComponentObject alloc]initWithText:@"广东省"];
-        guangdong.subArray = [NSMutableArray arrayWithObjects:guangzhou,chaozhou, nil];
-        
-        CDZPickerComponentObject *pixian = [[CDZPickerComponentObject alloc]initWithText:@"郫县"];
-        
-        CDZPickerComponentObject *chengdu = [[CDZPickerComponentObject alloc]initWithText:@"成都市"];
-        //    chengdu.subArray = [NSMutableArray arrayWithObjects:pixian, nil];
-        
-        CDZPickerComponentObject *leshan = [[CDZPickerComponentObject alloc]initWithText:@"乐山市"];
-        
-        CDZPickerComponentObject *sichuan = [[CDZPickerComponentObject alloc]initWithText:@"四川省"];
-        sichuan.subArray = [NSMutableArray arrayWithObjects:chengdu,leshan, nil];
         CDZPickerBuilder *builder = [CDZPickerBuilder new];
         builder.cancelTextColor = COLOR_GRAY_BBBBBB;
         builder.confirmTextColor = COLOR_RED_EA0000;
-        [CDZPicker showLinkagePickerInView:self.view withBuilder:builder components:@[guangdong,sichuan] confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
+        [CDZPicker showLinkagePickerInView:self.view withBuilder:builder components:@[] confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
             [weakSelf.industryBtn setTitle:[strings componentsJoinedByString:@","] forState:UIControlStateNormal];
-            NSLog(@"strings:%@ indexs:%@",strings,indexs);
+//            NSLog(@"strings:%@ indexs:%@",strings,indexs);
         }cancel:^{
             //your code
         }];
