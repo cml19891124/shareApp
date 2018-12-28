@@ -12,7 +12,7 @@
 #import "HPGamesCell.h"
 #import "HPHotShareStoreCell.h"
 #import "HPShareListCell.h"
-#define slideRatio fabs(y/100)
+#define slideRatio fabs(y/70)
 typedef NS_ENUM(NSInteger, HPDisplaycellIndexpath) {
     HPDisplaycellIndexpathMenu = 50
 };
@@ -167,7 +167,8 @@ static NSString *shareListCell = @"shareListCell";
         _appNameLabel.textColor = COLOR_GRAY_FFFFFF;
         _appNameLabel.font = kFont_Medium(20.f);
         _appNameLabel.textAlignment = NSTextAlignmentLeft;
-        _appNameLabel.hidden = YES;
+        _appNameLabel.hidden = NO;
+        _appNameLabel.alpha = 0.00;
     }
     return _appNameLabel;
 }
@@ -242,6 +243,8 @@ static NSString *shareListCell = @"shareListCell";
         switch (HPHomeShareMenuItem) {
             case HPHome_page_store_sharing:
                 HPLog(@"HPHome_page_store_sharing");
+                [self pushVCByClassName:@"HPShareShopListController"];
+
                 break;
             case HPHome_page_lobby_sharing:
                 HPLog(@"HPHome_page_lobby_sharing");
@@ -251,6 +254,8 @@ static NSString *shareListCell = @"shareListCell";
                 break;
             case HPHome_page_map:
                 HPLog(@"HPHome_page_map");
+                [self pushVCByClassName:@"HPShareMapController"];
+
                 break;
             case HPHome_page_stock_purchase:
                 HPLog(@"HPHome_page_stock_purchase");
@@ -367,39 +372,30 @@ static NSString *shareListCell = @"shareListCell";
 //        scrollView.contentOffset = offset;
 //    }
     
-//    if(offset.y > 0){
-        [self updateSearchViewWithMaonryOffset:offset.y];
-//    }
+    [self updateSearchViewWithMaonryOffset:offset.y];
 }
 
 - (void)updateSearchViewWithMaonryOffset:(CGFloat)y{
     self.openView.sloganImageView.alpha -= y/10000.00;
+    self.appNameLabel.hidden = NO;
+    self.appNameLabel.alpha += y/1000.00;
 //    HPLog(@"ffff:%f",self.openView.sloganImageView.alpha);
-    HPLog(@"yyyyy:%f",y)
     if (self.openView.sloganImageView.alpha <= 0) {
         self.openView.sloganImageView.alpha = 0;
-        self.openView.sloganImageView.hidden = YES;
-        self.appNameLabel.hidden = NO;
+
     }else if(self.openView.sloganImageView.alpha >= 1){
-        self.openView.sloganImageView.hidden = NO;
-        self.appNameLabel.hidden = YES;
+
     }
     
+    if (self.appNameLabel.alpha >= 1) {
+        self.appNameLabel.alpha = 1;
+    }else if (self.appNameLabel.alpha <= 0){
+        self.appNameLabel.alpha = 0;
+    }
+    
+    HPLog(@"yyyyy:%f",y);
+//    HPLog(@"fffff:%f",self.appNameLabel.alpha);
     /*
-    if (y > 0) {
-        [self.openView.searchView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.openView).offset(getWidth(-26.f)* fabs(y/200));
-            make.centerY.mas_equalTo(self.openView);
-            make.height.mas_equalTo(getWidth(30.f)* fabs(y/200));
-            make.left.mas_equalTo(self.openView.cityBtn.mas_right).offset(getWidth(22.f)* fabs(y/200));
-        }];
-    }else {
-        [self.openView.searchView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(getWidth(325.f)* fabs(y/200), getWidth(40.f)* fabs(y/200)));
-            make.top.mas_equalTo(self.openView).offset(getWidth(95.f) * fabs(y/200));
-            make.centerX.mas_equalTo(self.openView);
-        }];
-    }*/
     static BOOL isMove; //默认是NO
     if (isMove) {
         isMove = NO;
@@ -411,16 +407,16 @@ static NSString *shareListCell = @"shareListCell";
             [self.openView.searchView mas_updateConstraints:^(MASConstraintMaker *make) {
                 //更改距顶上的高度
                 make.centerY.mas_equalTo(self.openView);
-                make.size.mas_equalTo(CGSizeMake(getWidth(225.f)* slideRatio, getWidth(30.f)* slideRatio));
-                make.right.mas_equalTo(getWidth(-26.f)* slideRatio);
+                make.size.mas_equalTo(CGSizeMake(getWidth(225.f)* slideRatio, getWidth(30.f)* slideRatio)).priorityLow();
+                make.right.mas_equalTo(getWidth(-26.f));
                 
                 //最小值
-                make.width.greaterThanOrEqualTo(@(getWidth(225.f)* slideRatio));
-                make.height.greaterThanOrEqualTo(@(getWidth(30.f)* slideRatio));
+                make.width.greaterThanOrEqualTo(@(getWidth(225.f)));
+                make.height.greaterThanOrEqualTo(@(getWidth(30.f)));
 
                 //最大值
-                make.width.lessThanOrEqualTo(@(getWidth(325.f)* slideRatio));
-                make.height.lessThanOrEqualTo(@(getWidth(40.f)* slideRatio));
+                make.width.lessThanOrEqualTo(@(getWidth(325.f)));
+                make.height.lessThanOrEqualTo(@(getWidth(40.f)));
                 }];
             
  //必须调用此方法，才能出动画效果
@@ -436,7 +432,9 @@ static NSString *shareListCell = @"shareListCell";
         [UIView setAnimationDuration:1];
         [self.openView.searchView mas_updateConstraints:^(MASConstraintMaker *make) {
             //动画的内容,更改距顶上的高度
-            make.size.mas_equalTo(CGSizeMake(getWidth(325.f)* slideRatio, getWidth(40.f)* slideRatio));
+//            make.size.mas_equalTo(CGSizeMake(getWidth(325.f)* slideRatio, getWidth(40.f)* slideRatio)).priorityLow();
+            make.width.mas_equalTo(getWidth(325.f)* slideRatio).priorityLow();
+            make.height.mas_equalTo(getWidth(40.f)* slideRatio).priorityLow();
             make.top.mas_equalTo(self.openView).offset(getWidth(95.f) * slideRatio);
             make.centerX.mas_equalTo(self.openView);
             }];
@@ -448,6 +446,41 @@ static NSString *shareListCell = @"shareListCell";
         //动画结束
         [UIView commitAnimations];
         
-     }
+     }*/
+    CGRect frame = self.openView.searchView.frame;
+    if (y > -50 && y < 100) {
+        if (y>0 && y < 100) {//上滑
+            frame.origin.x ++;
+            if (frame.origin.x >= CGRectGetMaxX(self.openView.cityBtn.frame) + getWidth(30.f)) {
+                frame.origin.x = CGRectGetMaxX(self.openView.cityBtn.frame) + getWidth(30.f);
+            }
+            frame.origin.y --;
+            if (frame.origin.y >= CGRectGetMaxX(self.openView.searchView.frame) - self.openView.searchView.frame.size.height/2) {
+                frame.origin.y = CGRectGetMaxX(self.openView.searchView.frame) - self.openView.searchView.frame.size.height/2;
+            }
+            frame.size.width --;
+            if (frame.size.width <= getWidth(225.f)) {
+                frame.size.width = getWidth(225.f);
+            }
+            frame.size.height --;
+            if (frame.size.height <= getWidth(30.f)) {
+                frame.size.width = getWidth(30.f);
+            }
+            [UIView animateWithDuration:0.35 delay:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
+                self.openView.searchView.transform = CGAffineTransformMakeTranslation(getWidth(50.f), getWidth(-30.f));
+//                self.openView.searchView.transform = CGAffineTransformMakeScale(2/3, 4/5);
+            } completion:^(BOOL finished) {
+                
+            }];
+
+        }else if(y < 0){
+            [UIView animateWithDuration:0.35 delay:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
+                self.openView.searchView.transform = CGAffineTransformIdentity;
+            } completion:^(BOOL finished) {
+                
+            }];
+        }
+    }
 }
+
 @end
