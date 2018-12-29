@@ -99,7 +99,6 @@
                         value:[UIFont fontWithName:FONT_MEDIUM size:15.f]
                         range:NSMakeRange(0, text.length)];
     [textField setAttributedPlaceholder:placeholder];
-    
     [view addSubview:textField];
     [textField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(122.f * g_rateWidth);

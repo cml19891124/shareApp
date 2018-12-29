@@ -19,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *signature;
 @property (nonatomic, copy) NSString *telephone;
 @property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *userId;
 @end
 
 NS_ASSUME_NONNULL_END

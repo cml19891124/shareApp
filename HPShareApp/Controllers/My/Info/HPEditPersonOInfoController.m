@@ -52,7 +52,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"编辑名片"];
+    [self setupNavigationBarWithTitle:@"编辑名片"];
     [self setUpUI];
     kWeakSelf(weakSelf);
     HPAlertSheet *alertSheet = [[HPAlertSheet alloc] init];
@@ -103,12 +103,12 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
     UILabel *signInfoLabel = [[UILabel alloc] init];
     [signInfoLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
     [signInfoLabel setTextColor:COLOR_BLACK_333333];
-    [signInfoLabel setText:@"签名信息(完善签名，让用户更懂你)"];
+    [signInfoLabel setText:@"签名信息 (完善签名，让用户更懂你)"];
     NSMutableAttributedString *signstr = [[NSMutableAttributedString alloc] initWithString:signInfoLabel.text];
-    [signstr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(0, 4)];
-    [signstr addAttribute:NSFontAttributeName value:[UIFont fontWithName:FONT_BOLD size:16.f] range:NSMakeRange(0, 4)];
-    [signstr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(4,signstr.length - 4)];
-    [signstr addAttribute:NSFontAttributeName value:[UIFont fontWithName:FONT_BOLD size:12.f] range:NSMakeRange(4,signstr.length - 4)];
+    [signstr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(0, 5)];
+    [signstr addAttribute:NSFontAttributeName value:[UIFont fontWithName:FONT_BOLD size:16.f] range:NSMakeRange(0, 5)];
+    [signstr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(5,signstr.length - 5)];
+    [signstr addAttribute:NSFontAttributeName value:[UIFont fontWithName:FONT_BOLD size:12.f] range:NSMakeRange(5,signstr.length - 5)];
     signInfoLabel.attributedText = signstr;
     [scrollView addSubview:signInfoLabel];
     [signInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -229,7 +229,15 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
     UIButton *portraitView = [[UIButton alloc] init];
     [portraitView.layer setCornerRadius:23.f];
     [portraitView.layer setMasksToBounds:YES];
-    [portraitView sd_setImageWithURL:[NSURL URLWithString:model.cardInfo.avatarUrl.length > 0 ?model.cardInfo.avatarUrl:@""] forState:UIControlStateNormal];
+    [portraitView.imageView setContentMode:UIViewContentModeScaleAspectFill];
+    
+    if (model.cardInfo.avatarUrl && model.cardInfo.avatarUrl.length > 0) {
+        [portraitView sd_setImageWithURL:[NSURL URLWithString:model.cardInfo.avatarUrl] forState:UIControlStateNormal placeholderImage:ImageNamed(@"my_business_card_default_head_image")];
+    }
+    else {
+        [portraitView setImage:ImageNamed(@"my_business_card_default_head_image") forState:UIControlStateNormal];
+    }
+    
     [headerView addSubview:portraitView];
     self.portraitView = portraitView;
     [portraitView addTarget:self action:@selector(onClickGotoCtrl:) forControlEvents:UIControlEventTouchUpInside];
@@ -371,7 +379,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
     UIImage *photo = info[UIImagePickerControllerOriginalImage];
     _photo = photo;
-    [self dismissViewControllerAnimated:self.photoPicker completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
     [self uploadLocalImageGetAvatarUrl];
 }
 
@@ -406,7 +414,7 @@ typedef NS_ENUM(NSInteger, HPEditInfoGoto) {
 
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"avatarUrl"] = avatarUrl;
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/updateUser" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/cardInfo" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             NSDictionary *result= responseObject[@"data"];
             [self.portraitView sd_setImageWithURL:[NSURL URLWithString:result[@"avatarUrl"]?:@""] forState:UIControlStateNormal];

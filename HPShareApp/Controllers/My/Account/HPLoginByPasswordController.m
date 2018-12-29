@@ -251,6 +251,8 @@
 
 - (void)isCanLogin
 {
+    [self.view endEditing:YES];
+    
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"password"] = _passwordTextField.text;
     dic[@"mobile"] = _phoneNumTextField.text;

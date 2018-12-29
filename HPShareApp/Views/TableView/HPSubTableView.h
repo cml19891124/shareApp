@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL canScroll;
 
+@property (nonatomic, assign) CGFloat contentHeight;
+
 @end
 
 NS_ASSUME_NONNULL_END

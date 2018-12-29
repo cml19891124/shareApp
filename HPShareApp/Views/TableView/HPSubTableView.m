@@ -10,8 +10,6 @@
 
 @interface HPSubTableView ()
 
-@property (nonatomic, assign) CGFloat contentHeight;
-
 @end
 
 @implementation HPSubTableView

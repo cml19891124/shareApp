@@ -147,6 +147,11 @@
         [_releaseModalView show:NO];
     }
     else {
+        if(![HPUserTool account]) {
+            [HPProgressHUD alertMessage:@"发布信息需要您先登录"];
+            return;
+        }
+        
         [btn setSelected:YES];
         
         if (_releaseModalView == nil) {

@@ -49,9 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param startColor  开始的颜色值
  @param endColor    结束的颜色值
  */
-- (void)DrawGradientColor:(CGContextRef)context rect:(CGRect)clipRect
-                    point:(CGPoint) startPoint
-                    point:(CGPoint) endPoint
++ (void)drawGradientColor:(CGContextRef)context rect:(CGRect)clipRect
+                    startPoint:(CGPoint) startPoint
+                    endPoint:(CGPoint) endPoint
                   options:(CGGradientDrawingOptions) options
                startColor:(UIColor*)startColor
                  endColor:(UIColor*)endColor;

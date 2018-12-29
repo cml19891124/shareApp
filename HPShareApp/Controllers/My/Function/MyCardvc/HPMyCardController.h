@@ -12,7 +12,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPMyCardController : HPBaseViewController
-@property (assign, nonatomic) CGPoint printPoint;
 
 @end
 

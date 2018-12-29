@@ -421,6 +421,10 @@
     [self setupTitleLabelWithText:@"手机号码" ofView:view];
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
+    [textField setKeyboardType:UIKeyboardTypeNumberPad];
+    NSString *phoneNum = HPUserTool.account.userInfo.mobile;
+    [textField setText:phoneNum];
+    [textField setEnabled:NO];
     _phoneNumField = textField;
     return view;
 }

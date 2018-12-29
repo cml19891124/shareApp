@@ -143,7 +143,6 @@
         if (CODE == 200) {
             
             NSDictionary *result = responseObject[@"data"];
-            HPCardInfo *cardInfo = [[HPCardInfo alloc] init];
 
             NSString *inputstr;
             if ([self.param[@"title"] isEqualToString:@"设置您的用户名"]) {
@@ -151,25 +150,28 @@
                 account.userInfo.username = result[@"username"]?:@"";
             }else if ([self.param[@"title"] isEqualToString:@"编辑您的姓名"]) {
                 inputstr = @"realName";
-                cardInfo.realName = result[@"realName"]?:@"";
+                account.cardInfo.realName = result[@"realName"]?:@"";
 
             }else if ([self.param[@"title"] isEqualToString:@"编辑您的公司名"]) {
                 inputstr = @"company";
-                cardInfo.company = result[@"company"]?:@"";
+                account.cardInfo.company = result[@"company"]?:@"";
 
             }else if ([self.param[@"title"] isEqualToString:@"编辑您的联系方式"]) {
                 inputstr = @"telephone";
-                cardInfo.telephone = result[@"telephone"]?:@"";
+                account.cardInfo.telephone = result[@"telephone"]?:@"";
             }
+            
             account.userInfo.avatarUrl = account.userInfo.avatarUrl?:@"";
             account.userInfo.password = account.userInfo.password?:@"";
             account.userInfo.userId = account.userInfo.userId?:@"";
             account.userInfo.mobile = account.userInfo.mobile?:@"";
-            
+
             account.cardInfo.avatarUrl = account.cardInfo.avatarUrl?:@"";
             account.cardInfo.signature = account.cardInfo.signature?:@"";
             account.cardInfo.title = account.cardInfo.title?:@"";
             account.cardInfo.userId = account.cardInfo.userId?:@"";
+            account.cardInfo.realName = account.cardInfo.realName?:@"";
+            
             [HPUserTool saveAccount:account];
             [HPProgressHUD alertMessage:@"修改成功"];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
