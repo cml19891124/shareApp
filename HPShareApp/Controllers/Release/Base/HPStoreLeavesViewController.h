@@ -7,11 +7,19 @@
 //
 
 #import "HPBaseReleaseController.h"
+@class HPStoreLeavesViewController;
+@protocol HPLeavesVCDelegate <NSObject>
 
+/**
+ 留言信息
+ */
+- (void)backVcIn:(HPStoreLeavesViewController *)vc andLeaves:(NSString *)leaves;
+
+@end
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPStoreLeavesViewController : HPBaseReleaseController
-
+@property (nonatomic, weak) id<HPLeavesVCDelegate> delegate;
 @end
 
 NS_ASSUME_NONNULL_END

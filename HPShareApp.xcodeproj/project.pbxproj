@@ -170,6 +170,7 @@
 		E6830E5121D20594000E0F39 /* HPMenuOpenStoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6830E5021D20594000E0F39 /* HPMenuOpenStoreView.m */; };
 		E692144121D46CB300ED6B5C /* HPOwnnerReleaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E692144021D46CB300ED6B5C /* HPOwnnerReleaseViewController.m */; };
 		E692144521D4802700ED6B5C /* HPUploadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E692144421D4802700ED6B5C /* HPUploadButton.m */; };
+		E6A8108321D700CE0048AA01 /* HPSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A8108221D700CE0048AA01 /* HPSearchBar.m */; };
 		E6B4CECB21C51A4400429C11 /* HPGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CECA21C51A4400429C11 /* HPGuideViewController.m */; };
 		E6B4CEDC21C5286F00429C11 /* SDCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED021C5286E00429C11 /* SDCycleScrollView.m */; };
 		E6B4CEDD21C5286F00429C11 /* UIView+SDExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED121C5286F00429C11 /* UIView+SDExtension.m */; };
@@ -572,6 +573,8 @@
 		E692144021D46CB300ED6B5C /* HPOwnnerReleaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOwnnerReleaseViewController.m; sourceTree = "<group>"; };
 		E692144321D4802700ED6B5C /* HPUploadButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPUploadButton.h; sourceTree = "<group>"; };
 		E692144421D4802700ED6B5C /* HPUploadButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUploadButton.m; sourceTree = "<group>"; };
+		E6A8108121D700CE0048AA01 /* HPSearchBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSearchBar.h; sourceTree = "<group>"; };
+		E6A8108221D700CE0048AA01 /* HPSearchBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSearchBar.m; sourceTree = "<group>"; };
 		E6B4CEC521C4DD5200429C11 /* HPShareApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HPShareApp.entitlements; sourceTree = "<group>"; };
 		E6B4CEC921C51A4400429C11 /* HPGuideViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPGuideViewController.h; sourceTree = "<group>"; };
 		E6B4CECA21C51A4400429C11 /* HPGuideViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPGuideViewController.m; sourceTree = "<group>"; };
@@ -1397,6 +1400,8 @@
 				E66F1CB721D3625D00C2DEEF /* HPHotImageView.m */,
 				6979CA7F21D6220700B1518C /* HPBotomPickerModalView.h */,
 				6979CA8021D6220700B1518C /* HPBotomPickerModalView.m */,
+				E6A8108121D700CE0048AA01 /* HPSearchBar.h */,
+				E6A8108221D700CE0048AA01 /* HPSearchBar.m */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -2120,6 +2125,7 @@
 				69165CF721C221C000593D25 /* HPCommonData.m in Sources */,
 				7A54489E21C6304C001301F3 /* HPCardHeaderView.m in Sources */,
 				E622A9C721C358DA007C35BC /* AppDelegate+Config.m in Sources */,
+				E6A8108321D700CE0048AA01 /* HPSearchBar.m in Sources */,
 				E61E27A321C8D68000CD5288 /* EBBannerView.m in Sources */,
 				E692144521D4802700ED6B5C /* HPUploadButton.m in Sources */,
 				E6D75F8821B68A4D00B2067C /* HPCustomerServiceModalView.m in Sources */,

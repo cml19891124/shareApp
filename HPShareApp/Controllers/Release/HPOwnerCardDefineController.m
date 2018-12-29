@@ -42,6 +42,12 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     BOOL _canRelease;
 }
 @property (nonatomic, strong) UILabel *infoLabel;
+@property (nonatomic, strong) UILabel *ratioLabel;
+
+/**
+ 完整度/l比例
+ */
+@property (nonatomic, copy) NSString *ratio;
 @property (nonatomic, weak) UIButton *addressBtn;
 
 @property (nonatomic, weak) UITextField *titleField;//发布标题
@@ -163,25 +169,52 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 - (UIView *)setUpInfoLabel
 {
     UIView *view = [UIView new];
-    UILabel *infoLabel = [UILabel new];
-    infoLabel.backgroundColor = COLOR_BLUE_D5F2FF;
-    infoLabel.text = [NSString stringWithFormat:@"信息完善度越高搜索排名越靠前，当前信息完善度为%@",@"30%"];
-    infoLabel.textAlignment = NSTextAlignmentCenter;
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:infoLabel.text];
-    NSString *str = @"信息完善度越高搜索排名越靠前，当前信息完善度为";
-    NSRange range = [infoLabel.text rangeOfString:str];
-    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_666666 range:range];
-    [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:range];
-    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(range.length, infoLabel.text.length - str.length)];
-    [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(range.length, infoLabel.text.length - str.length)];
-    infoLabel.attributedText = attr;
-    [view addSubview:infoLabel];
-    [infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(view);
+    [view addSubview:self.infoLabel];
+    [_infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.mas_equalTo(view);
+        make.right.mas_equalTo(getWidth(-60.f));
+    }];
+    
+    [view addSubview:self.ratioLabel];
+    [_ratioLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.infoLabel.mas_right);
+        make.top.bottom.right.mas_equalTo(view);
     }];
     return view;
 }
 
+- (UILabel *)infoLabel
+{
+    if (!_infoLabel) {
+        UILabel *infoLabel = [UILabel new];
+        infoLabel.backgroundColor = COLOR_BLUE_D5F2FF;
+        infoLabel.text = [NSString stringWithFormat:@"信息完善度越高搜索排名越靠前，当前信息完善度为 "];
+        infoLabel.textAlignment = NSTextAlignmentCenter;
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:infoLabel.text];
+        NSString *str = @"信息完善度越高搜索排名越靠前，当前信息完善度为";
+        NSRange range = [infoLabel.text rangeOfString:str];
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_666666 range:range];
+        [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:range];
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(range.length, infoLabel.text.length - str.length)];
+        [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(range.length, infoLabel.text.length - str.length)];
+        infoLabel.attributedText = attr;
+        _infoLabel = infoLabel;
+    }
+    return _infoLabel;
+}
+
+- (UILabel *)ratioLabel
+{
+    if (!_ratioLabel) {
+        _ratioLabel = [UILabel new];
+        _ratioLabel.backgroundColor = COLOR_BLUE_D5F2FF;
+        _ratioLabel.text = @"0%";
+        _ratioLabel.textColor = COLOR_RED_FF3C5E;
+        _ratioLabel.textAlignment = NSTextAlignmentLeft;
+        _ratioLabel.font  = kFont_Medium(12.f);
+    }
+    return _ratioLabel;
+}
 #pragma mark - row view
 - (void)setupPanelAtIndex:(NSInteger)index ofView:(UIView *)view {
     HPRowPanel *panel = [[HPRowPanel alloc] init];
@@ -289,7 +322,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     
     [self setupTitleLabelWithText:@"店铺简称" ofView:view];
     _titleField = [self setupTextFieldWithPlaceholder:@"请填写店铺简称" ofView:view rightTo:view];
-    
+    _titleField.font = kFont_Regular(13.f);
     return view;
 }
 
@@ -369,7 +402,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     UIView *view = [[UIView alloc] init];
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
+    [titleLabel setFont:kFont_Bold(15.f)];
     [titleLabel setTextColor:COLOR_BLACK_333333];
     [titleLabel setText:@"店铺标签"];
     [view addSubview:titleLabel];
@@ -452,9 +485,9 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [self setupTitleLabelWithText:@"详细地址" ofView:view];
 
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写店铺详细地址" ofView:view rightTo:view];
-    [textField setKeyboardType:UIKeyboardTypeDecimalPad];
-//    textField.text = @"fsadhgjg";
+//    [textField setKeyboardType:UIKeyboardTypeDecimalPad];
     textField.textColor = COLOR_BLACK_333333;
+    textField.font = kFont_Regular(13.f);
     _addressField = textField;
     
     return view;
@@ -475,7 +508,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     UIImageView *downIcon = [self setupDownIconOfView:view];
     
     UIButton *valueBtn = [[UIButton alloc] init];
-    [valueBtn.titleLabel setFont:kFont_Regular(14.f)];
+    [valueBtn.titleLabel setFont:kFont_Regular(13.f)];
     [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
     [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
     [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
@@ -541,6 +574,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [self setupTitleLabelWithText:@"联系人" ofView:view];
     _contactField = [self setupTextFieldWithPlaceholder:@"完善称呼交流更方便" ofView:view rightTo:view];
     _contactField.textColor = COLOR_BLACK_333333;
+    _contactField.font = kFont_Regular(13.f);
     return view;
 }
 
@@ -561,6 +595,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
     textField.text = account.userInfo.mobile?:@"";
     textField.textColor = COLOR_BLACK_333333;
+    textField.font = kFont_Regular(13.f);
     textField.userInteractionEnabled = NO;//不允许交互，固定为注册登录人的手机号
     _phoneNumField = textField;
     return view;
@@ -596,6 +631,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     _shareTitle = shareTitle;
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"完善信息，生成标题更满意" ofView:view rightTo:birthBtn];
     textField.textColor = COLOR_BLACK_333333;
+    textField.font = kFont_Regular(13.f);
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
     _convertTitleField = textField;
     
@@ -605,27 +641,35 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 #pragma mark - 生成按钮事件
 - (void)convertShareTitle:(UIButton *)button
 {
-    button.selected = !button.selected;
-    if (button.selected) {
-        [button setTitle:@"清空" forState:UIControlStateNormal];
-        //获取生存的字符串
-        [self getConvertString];
-        _shareTitle.hidden = YES;
-//        HPLog(@"dfggg:%@",_shareTitle);
-        [_convertTitleField mas_updateConstraints:^(MASConstraintMaker *make) {
-            [make.left uninstall];
-            make.left.mas_equalTo(self.scrollView).offset(getWidth(21.f));
-        }];
+    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _addressField.text.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
+        button.selected = !button.selected;
+        if (button.selected) {
+            [button setTitle:@"清空" forState:UIControlStateNormal];
+            //获取生存的字符串
+            [self getConvertString];
+            _shareTitle.hidden = YES;
+            [_convertTitleField mas_updateConstraints:^(MASConstraintMaker *make) {
+                [make.left uninstall];
+                make.left.mas_equalTo(self.scrollView).offset(getWidth(21.f));
+            }];
+        }else{
+            [button setTitle:@"生成" forState:UIControlStateNormal];
+            _shareTitle.hidden = NO;
+            _convertTitleField.text = @"";
+            [_convertTitleField mas_updateConstraints:^(MASConstraintMaker *make) {
+                [make.left uninstall];
+                make.left.mas_equalTo(self.scrollView).offset(getWidth(122.f));
+            }];
+        }
     }else{
-        [button setTitle:@"生成" forState:UIControlStateNormal];
-        _shareTitle.hidden = NO;
-        _convertTitleField.text = @"";
-        [_convertTitleField mas_updateConstraints:^(MASConstraintMaker *make) {
-            [make.left uninstall];
-            make.left.mas_equalTo(self.scrollView).offset(getWidth(122.f));
+        HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];
+        [itemView show:YES];
+        itemView.delegate = self;
+        _itemView = itemView;
+        [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.view);
         }];
     }
-    
 }
 
 - (void)getConvertString
@@ -778,20 +822,49 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         ErrorNet
     }];*/
     
-//    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _addressField.text.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0 && _convertTitleField.text.length != 0) {
-    HPReviseReleaseInfoViewController *shareInfoVC = [HPReviseReleaseInfoViewController new];
-    shareInfoVC.delegate = self;
-    [self.navigationController pushViewController:shareInfoVC animated:YES];
+    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _addressField.text.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
+        
+        NSMutableArray *contentArray = [NSMutableArray array];
+        if (_cityBtn.currentTitle.length) {
+            [contentArray addObject:_cityBtn.currentTitle];
+        }
+        if (_areaBtn.currentTitle.length) {
+            [contentArray addObject:_areaBtn.currentTitle];
+        }
+        if (_addressField.text.length) {
+            [contentArray addObject:_addressField.text];
+        }
+        
+        if (_industryBtn.currentTitle.length) {
+            [contentArray addObject:_industryBtn.currentTitle];
+        }
+        if (_phoneNumField.text.length) {
+            [contentArray addObject:_phoneNumField.text];
+        }
+        
+        if (_contactField.text.length) {
+            [contentArray addObject:_contactField.text];
+        }
+        
+        if (_titleField.text.length) {
+            [contentArray addObject:_titleField.text];
+        }
+        self.ratio = [NSString stringWithFormat:@"%.2f%%",contentArray.count/15.00];
+        self.ratioLabel.text = [NSString stringWithFormat:@"%@",self.ratio.length>0?self.ratio:@"0"];
+
+        HPReviseReleaseInfoViewController *shareInfoVC = [HPReviseReleaseInfoViewController new];
+        shareInfoVC.delegate = self;
+        [self.navigationController pushViewController:shareInfoVC animated:YES];
 //        [self pushVCByClassName:@"HPReviseReleaseInfoViewController"];
-//    }else{//弹框提示
-//        HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];
-//        [itemView show:YES];
-//        itemView.delegate = self;
-//        _itemView = itemView;
-//        [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.edges.mas_equalTo(self.view);
-//        }];
-//    }
+    }else{//弹框提示
+        HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];
+        [itemView show:YES];
+        itemView.delegate = self;
+        _itemView = itemView;
+        [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.view);
+        }];
+    }
 
 }
 #pragma mark - 弹框提示移除按钮
@@ -833,7 +906,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 {
     CDZPicker *pickerView = [CDZPicker new];
     _pickerView = pickerView;
-    kWeakSelf(weakSelf);
+//    kWeakSelf(weakSelf);
     if (selectItemIndex == HPSelectItemIndexCity) {
         /*pickerView.tipTitle = @"选择城市";
         CDZPickerBuilder *builder = [CDZPickerBuilder new];
@@ -894,37 +967,5 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         
         [_industryPickerView show:YES];
     }
-    /*
-    [pickerView show:YES];
-    kWeakSelf(wekSelf);
-    [pickerView setFinishClickCallback:^(NSString *model) {
-        HPLog(@"selectedModel:%@",model);
-        if (selectItemIndex == HPSelectItemIndexCity) {
-            [wekSelf.cityBtn setTitle:model forState:UIControlStateNormal];;
-        }else if (selectItemIndex == HPSelectItemIndexArea){
-            [wekSelf.areaBtn setTitle:model forState:UIControlStateNormal];;
-        }else if (selectItemIndex == HPSelectItemIndexIndustry){
-            [wekSelf.industryBtn setTitle:model forState:UIControlStateNormal];;
-        }
-        CGFloat modelW = BoundWithSize(model, kScreenWidth, 15.f).size.width+ 20;
-        [self.cityBtn setTitle:model forState:UIControlStateNormal];
-        [self.cityBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(modelW);
-        }];
-    }];
-    [pickerView setCancelClickCallback:^(NSString *model) {
-        if (selectItemIndex == HPSelectItemIndexCity) {
-            [wekSelf.cityBtn setTitle:@"请选择" forState:UIControlStateNormal];;
-        }else if (selectItemIndex == HPSelectItemIndexArea){
-            [wekSelf.areaBtn setTitle:@"请选择" forState:UIControlStateNormal];;
-        }else if (selectItemIndex == HPSelectItemIndexIndustry){
-            [wekSelf.industryBtn setTitle:@"请选择" forState:UIControlStateNormal];;
-        }
-        
-    }];
-    
-    [pickerView setViewTapClickCallback:^{
-        
-    }];*/
 }
 @end

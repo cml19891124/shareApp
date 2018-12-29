@@ -96,6 +96,9 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
 @implementation HPOwnnerReleaseViewController
 - (void)onClickBackBtn {
     HPLog(@"确定放弃此次完善信息操作？");
+    if ([self.delegate respondsToSelector:@selector(backvcIn:andPhotosArray:)]) {
+        [self.delegate backvcIn:self andPhotosArray:self.photoArray];
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)viewDidLoad {

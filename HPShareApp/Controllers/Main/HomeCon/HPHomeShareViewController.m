@@ -12,7 +12,9 @@
 #import "HPGamesCell.h"
 #import "HPHotShareStoreCell.h"
 #import "HPShareListCell.h"
-#define slideRatio fabs(y/70)
+#import "HPSearchBar.h"
+#define slideRatio fabs(y/71.0f)
+
 typedef NS_ENUM(NSInteger, HPDisplaycellIndexpath) {
     HPDisplaycellIndexpathMenu = 50
 };
@@ -31,6 +33,15 @@ typedef NS_ENUM(NSInteger, HPDisplaycellIndexpath) {
 
 @property (nonatomic, assign) BOOL isExpaned;
 
+/**
+ searchBar 所属父视图
+ */
+@property (nonatomic, strong) UIView *headerView;
+/**
+ 搜索栏
+ */
+@property (nonatomic, strong) HPSearchBar *searchBar;
+
 @end
 
 @implementation HPHomeShareViewController
@@ -43,10 +54,19 @@ static NSString *shareListCell = @"shareListCell";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-//    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     self.navigationController.navigationBar.translucent = NO;
     _dataArray = [NSMutableArray array];
     [self getShareListData];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    CGPoint cityPoint = [self.view convertPoint:self.openView.cityBtn.center fromView:self.openView];
+    CGPoint searchPoint = self.headerView.center;
+    CGFloat deltaY = (searchPoint.y - cityPoint.y)/g_rateWidth;
+    NSLog(@"deltaY : %f", deltaY);
 }
 
 #pragma mark - 共享发布数据
@@ -114,10 +134,11 @@ static NSString *shareListCell = @"shareListCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view addSubview:self.openView];
-//    [self.openView addSubview:self.appNameLabel];
-    [self.view setBackgroundColor:COLOR_GRAY_F6F6F6];
+    [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     
     [self.view insertSubview:self.tableView aboveSubview:self.openView];
+    [self.view addSubview:[self createHeaderView]];
+    [self.headerView addSubview:self.searchBar];
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         
         NSInteger page = [self.page integerValue];
@@ -143,7 +164,7 @@ static NSString *shareListCell = @"shareListCell";
     [self.openView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(0);
-        make.height.mas_equalTo(getWidth(142.f));
+        make.height.mas_equalTo(g_statusBarHeight + getWidth(95.f));
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -151,6 +172,22 @@ static NSString *shareListCell = @"shareListCell";
         make.top.mas_equalTo(self.view).offset(g_statusBarHeight +44.f);
         make.bottom.mas_equalTo(getWidth(-g_bottomSafeAreaHeight - 49));
     }];
+    
+    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(getWidth(325.f), getWidth(40.f)));
+        make.centerY.mas_equalTo(self.openView.mas_bottom);
+        make.centerX.mas_equalTo(self.tableView);
+    }];
+    [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.top.mas_equalTo(self.headerView);
+    }];
+}
+
+-(UIView *)createHeaderView {
+    self.headerView = [[UIView alloc] init];
+//    self.headerView.backgroundColor = [UIColor redColor];
+    return  self.headerView;
+    
 }
 
 - (HPMenuOpenStoreView *)openView
@@ -176,16 +213,24 @@ static NSString *shareListCell = @"shareListCell";
         [_tableView registerClass:HPHotShareStoreCell.class forCellReuseIdentifier:hotShareStoreCell];
         [_tableView registerClass:HPShareListCell.class forCellReuseIdentifier:shareListCell];
         _tableView.showsVerticalScrollIndicator = NO;
-        CGFloat topHeight;
-        if (IPHONE_HAS_NOTCH) {
-            topHeight = 54.f;
-        }else{
-            topHeight = 94.f;
-        }
-        _tableView.contentInset = UIEdgeInsetsMake(topHeight, 0, 0, 0);
-        [_tableView setContentOffset:CGPointMake(0, -topHeight) animated:YES];
+        _tableView.contentInset = UIEdgeInsetsMake(getWidth(71.f), 0, 0, 0);
+        [_tableView setContentOffset:CGPointMake(0, getWidth(-71.f)) animated:YES];
     }
     return _tableView;
+}
+
+- (UIView *)searchBar
+{
+    if (!_searchBar) {
+        _searchBar = [HPSearchBar new];
+        _searchBar.layer.cornerRadius = 3.f;
+        _searchBar.layer.shadowColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:0.08].CGColor;
+        _searchBar.layer.shadowOpacity = 1.f;
+        _searchBar.layer.shadowOffset = CGSizeMake(0, 2);
+        _searchBar.layer.shadowRadius = 17;
+        
+    }
+    return _searchBar;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -356,46 +401,40 @@ static NSString *shareListCell = @"shareListCell";
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGPoint offset = scrollView.contentOffset;
     
-//    if (offset.y < -g_statusBarHeight) {
-//        offset.y = -g_statusBarHeight;
-//        scrollView.contentOffset = offset;
-//    }
-    
     [self updateSearchViewWithMaonryOffset:offset.y];
 }
 
 - (void)updateSearchViewWithMaonryOffset:(CGFloat)y{
-    self.openView.sloganImageView.alpha -= y/1000.00;
-    if (self.openView.sloganImageView.alpha <= 0) {
-        self.openView.sloganImageView.alpha = 0;
 
-    }else if(self.openView.sloganImageView.alpha >= 1){
-
+    if (y > -71.f && y <= 0.f) {
+        [self.openView.sloganImageView setAlpha:slideRatio];
+        [self.headerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(getWidth(325.f) - (getWidth(325) - getWidth(225.f)) * (1 - slideRatio));
+            make.height.mas_equalTo(getWidth(40.f) - (getWidth(40.f) - getWidth(30.f)) * (1 - slideRatio));
+            make.centerY.mas_equalTo(self.openView.cityBtn).offset(getWidth(73.5f) * slideRatio);
+            make.centerX.mas_equalTo(self.tableView);
+        }];
+    }
+    else if (y <= -71.f) {
+        [self.openView.sloganImageView setAlpha:1.f];
+        [self.headerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(getWidth(325.f));
+            make.height.mas_equalTo(getWidth(40.f));
+            make.centerY.mas_equalTo(self.openView.cityBtn).offset(getWidth(73.5f));
+            make.centerX.mas_equalTo(self.tableView);
+        }];
+    }
+    else if (y > 0.f) {
+        [self.openView.sloganImageView setAlpha:0.f];
+        [self.headerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(getWidth(225.f));
+            make.height.mas_equalTo(getWidth(30.f));
+            make.centerY.mas_equalTo(self.openView.cityBtn).offset(0.f);
+            make.centerX.mas_equalTo(self.tableView);
+        }];
     }
     
-    HPLog(@"yyyyy:%f",y);
-    
-    CGPoint selfCenter = self.openView.cityBtn.center;
-    
-    if (y > -50 && y < 100) {
-        if (y>0 && y < 100) {//上滑
-            
-            [UIView animateWithDuration:0.35 delay:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
-                self.openView.searchView.transform = CGAffineTransformTranslate(self.openView.searchView.transform, getWidth(0.f), getWidth(-71.f));//CGAffineTransformMakeTranslation(getWidth(0.f), getWidth(-71.f));
-//                self.openView.searchView.transform = CGAffineTransformScale(self.openView.searchView.transform,0.7, 0.95);
-            } completion:^(BOOL finished) {
-            }];
-
-        }else if(y < 0){
-            [UIView animateWithDuration:0.35 delay:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
-                self.openView.searchView.transform = CGAffineTransformIdentity;
-                self.openView.searchView.center = selfCenter;
-
-            } completion:^(BOOL finished) {
-                
-            }];
-        }
-    }
+//    HPLog(@"yyyyy:%f",y);
 }
 
 @end

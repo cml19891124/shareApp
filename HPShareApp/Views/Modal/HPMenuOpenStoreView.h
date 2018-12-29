@@ -11,11 +11,10 @@
 #import "Macro.h"
 #import "HPGlobalVariable.h"
 typedef void(^ClickCityBtnBlock) (void);
-typedef void(^SearchClickBtnBlock) (NSString *model);
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPMenuOpenStoreView : UIView<UITextFieldDelegate>
+@interface HPMenuOpenStoreView : UIView
 
 /**
  背景视图
@@ -29,20 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIButton *cityBtn;
 
-/**
- 搜索栏
- */
-@property (nonatomic, strong) UIView *searchView;
-
-/**
- 搜索按钮
- */
-@property (nonatomic, strong) UIButton *searchImage;
-
-@property (nonatomic, strong) UITextField *searchField;
-
 @property (nonatomic, copy) ClickCityBtnBlock clickCityBtnBlock;
-@property (nonatomic, copy) SearchClickBtnBlock searchClickBtnBlock;
 
 @end
 

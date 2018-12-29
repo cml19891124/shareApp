@@ -13,6 +13,8 @@
 #import "HPRentAmountItemView.h"
 #import "CDZPicker.h"
 #import "HPIntentionListModel.h"
+#import "HPOwnnerReleaseViewController.h"
+#import "HPStoreLeavesViewController.h"
 
 typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     HPShareGotoBtnTagSpace = 30,
@@ -22,7 +24,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     HPShareGotoBtnTagRect,
     HPShareGotoBtnTagLeaves
 };
-@interface HPReviseReleaseInfoViewController ()
+@interface HPReviseReleaseInfoViewController ()<HPLeavesVCDelegate,HPReleasePhotoDelegate>
 
 /**
  空间大小按钮
@@ -68,9 +70,47 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
  */
 @property (nonatomic, copy) NSString *currentPrice;
 @property (nonatomic, strong) NSMutableArray *intentionArray;
+
+/**
+ 完整度/l比例
+ */
+@property (nonatomic, copy) NSString *ratio;
+@property (nonatomic, strong) UILabel *ratioLabel;
+@property (nonatomic, strong) UILabel *infoLabel;
+
+/**
+ 逆传留言信息
+ */
+@property (nonatomic, copy) NSString *leavesInfo;
+
+/**
+ 逆传的图片数组
+ */
+@property (nonatomic, strong) NSArray *photosArray;
+
+/**
+ 信息数组
+ */
+@property (nonatomic, strong) NSMutableArray *contentArray;
 @end
 
 @implementation HPReviseReleaseInfoViewController
+#pragma mark -HPLeavesVCDelegate
+- (void)backVcIn:(id)vc andLeaves:(NSString *)leaves
+{
+    self.leavesInfo = leaves;
+}
+#pragma mark -HPReleasePhotoDelegate
+- (void)backvcIn:(id)vc andPhotosArray:(NSArray *)photosArray
+{
+    self.photosArray = photosArray;
+    NSString *photoStr = [self.contentArray componentsJoinedByString:@","];
+    if (photoStr.length) {
+        [self.contentArray addObject:photoStr];
+    }
+    self.ratio = [NSString stringWithFormat:@"%.2f%%",_contentArray.count/15.00];
+    self.ratioLabel.text = [NSString stringWithFormat:@"%@",self.ratio.length>0?self.ratio:@"0"];
+}
 - (void)onClickBackBtn {
     HPLog(@"确定放弃此次完善信息操作？");
     [self.navigationController popViewControllerAnimated:YES];
@@ -136,30 +176,86 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 }
 
 - (void)onClickReleaseBtn {
-    [self pushVCByClassName:@"HPOwnnerReleaseViewController"];
+    NSMutableArray *contentArray = [NSMutableArray array];
+    self.contentArray = contentArray;
+    if (_spaceBtn.text.length) {
+        [contentArray addObject:_spaceBtn.text];
+    }
+    if (_shareTimeBtn.text.length) {
+        [contentArray addObject:_shareTimeBtn.text];
+    }
+    if (_industryBtn.text.length) {
+        [contentArray addObject:_industryBtn.text];
+    }
+    
+    if (_rectTypeBtn.text.length) {
+        [contentArray addObject:_rectTypeBtn.text];
+    }
+    if (_rectBtn.text.length) {
+        [contentArray addObject:_rectBtn.text];
+    }
+    
+    if (_leavesInfo.length) {
+        [contentArray addObject:_leavesInfo];
+    }
+    
+    self.ratio = [NSString stringWithFormat:@"%.2f%%",contentArray.count/15.00];
+    self.ratioLabel.text = [NSString stringWithFormat:@"%@",self.ratio.length>0?self.ratio:@"0"];
+    HPOwnnerReleaseViewController *ownnervc = [HPOwnnerReleaseViewController new];
+    ownnervc.delegate = self;
+    [self.navigationController pushViewController:ownnervc animated:YES];
+//    [self pushVCByClassName:@"HPOwnnerReleaseViewController"];
 
 }
 #pragma mark - 信息完整度
 - (UIView *)setUpInfoLabel
 {
     UIView *view = [UIView new];
-    UILabel *infoLabel = [UILabel new];
-    infoLabel.backgroundColor = COLOR_BLUE_D5F2FF;
-    infoLabel.text = [NSString stringWithFormat:@"信息完善度越高搜索排名越靠前，当前信息完善度为%@",@"30%"];
-    infoLabel.textAlignment = NSTextAlignmentCenter;
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:infoLabel.text];
-    NSString *str = @"信息完善度越高搜索排名越靠前，当前信息完善度为";
-    NSRange range = [infoLabel.text rangeOfString:str];
-    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_666666 range:range];
-    [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:range];
-    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(range.length, infoLabel.text.length - str.length)];
-    [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(range.length, infoLabel.text.length - str.length)];
-    infoLabel.attributedText = attr;
-    [view addSubview:infoLabel];
-    [infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(view);
+    [view addSubview:self.infoLabel];
+    [_infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.mas_equalTo(view);
+        make.right.mas_equalTo(getWidth(-60.f));
+    }];
+    
+    [view addSubview:self.ratioLabel];
+    [_ratioLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.infoLabel.mas_right);
+        make.top.bottom.right.mas_equalTo(view);
     }];
     return view;
+}
+
+- (UILabel *)infoLabel
+{
+    if (!_infoLabel) {
+        UILabel *infoLabel = [UILabel new];
+        infoLabel.backgroundColor = COLOR_BLUE_D5F2FF;
+        infoLabel.text = [NSString stringWithFormat:@"信息完善度越高搜索排名越靠前，当前信息完善度为 "];
+        infoLabel.textAlignment = NSTextAlignmentCenter;
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:infoLabel.text];
+        NSString *str = @"信息完善度越高搜索排名越靠前，当前信息完善度为";
+        NSRange range = [infoLabel.text rangeOfString:str];
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_666666 range:range];
+        [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:range];
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(range.length, infoLabel.text.length - str.length)];
+        [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(range.length, infoLabel.text.length - str.length)];
+        infoLabel.attributedText = attr;
+        _infoLabel = infoLabel;
+    }
+    return _infoLabel;
+}
+
+- (UILabel *)ratioLabel
+{
+    if (!_ratioLabel) {
+        _ratioLabel = [UILabel new];
+        _ratioLabel.backgroundColor = COLOR_BLUE_D5F2FF;
+        _ratioLabel.text = @"0%";
+        _ratioLabel.textColor = COLOR_RED_FF3C5E;
+        _ratioLabel.textAlignment = NSTextAlignmentLeft;
+        _ratioLabel.font  = kFont_Medium(12.f);
+    }
+    return _ratioLabel;
 }
 
 #pragma mark - row view
@@ -469,13 +565,21 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
             break;
         case HPShareGotoBtnTagLeaves:
             HPLog(@"租赁留言");
-            [self pushVCByClassName:@"HPStoreLeavesViewController"];
+            [self jumpToLeavesVC];
+            
             break;
         default:
             break;
     }
 }
 
+- (void)jumpToLeavesVC
+{
+    HPStoreLeavesViewController *leavesvc = [HPStoreLeavesViewController new];
+    leavesvc.delegate = self;
+    [self.navigationController pushViewController:leavesvc animated:YES];
+    //            [self pushVCByClassName:@"HPStoreLeavesViewController"];
+}
 #pragma mark - 选择空间大小
 - (void)setUpPickerView:(HPShareGotoBtnTag)type
 {

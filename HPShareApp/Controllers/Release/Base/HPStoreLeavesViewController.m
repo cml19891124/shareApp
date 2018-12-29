@@ -44,7 +44,13 @@
 @end
 
 @implementation HPStoreLeavesViewController
-
+- (void)onClickBackBtn
+{
+    if ([self.delegate respondsToSelector:@selector(backVcIn:andLeaves:)]) {
+        [self.delegate backVcIn:self andLeaves:self.leavesPlaceView.text];
+    }
+    [self.navigationController popViewControllerAnimated:YES];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
