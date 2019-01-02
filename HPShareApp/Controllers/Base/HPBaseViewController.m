@@ -42,7 +42,7 @@
 
 - (UIView *)setupStatusbar {
     UIView *statusBar = [[UIView alloc] init];
-    [statusBar setBackgroundColor:COLOR_RED_FF3C5E];
+    [statusBar setBackgroundColor:COLOR_RED_EA0000];
     [self.view addSubview:statusBar];
     [statusBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.and.left.and.width.equalTo(self.view);
@@ -56,7 +56,7 @@
     UIView *statusBar = [self setupStatusbar];
     
     UIView *navigationBar = [[UIView alloc] init];
-    [navigationBar setBackgroundColor:COLOR_RED_FF3C5E];
+    [navigationBar setBackgroundColor:COLOR_RED_EA0000];
     [self.view addSubview:navigationBar];
     [navigationBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(self.view);

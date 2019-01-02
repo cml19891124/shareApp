@@ -553,7 +553,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 确定清除缓存数据
 - (void)setUpAlertViewForWarning
 {
-    UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:@"" message:@"确定要清理缓存n吗？" preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:@"" message:@"确定要清理缓存吗？" preferredStyle:UIAlertControllerStyleActionSheet];
     //默认只有标题 没有操作的按钮:添加操作的按钮 UIAlertAction
     
     UIAlertAction *cancelBtn = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
