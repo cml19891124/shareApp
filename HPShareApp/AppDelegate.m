@@ -32,27 +32,31 @@
         //获取本地版本号
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-        NSString *build = [infoDictionary objectForKey:@"CFBundleVersion"];
-        NSString *newVersion = [NSString stringWithFormat:@"%@.%@", version, build];
+//        NSString *build = [infoDictionary objectForKey:@"CFBundleVersion"];
+        NSString *newVersion = [NSString stringWithFormat:@"%@", version];
         NSArray *currentVersionArr = [newVersion componentsSeparatedByString:@"."];
         NSString *currentVersion =@"";
         for (int i = 0;i < currentVersionArr.count; i++) {
             currentVersion = [currentVersion stringByAppendingString:currentVersionArr[i]];
         }
         //获取appStore网络版本号
-        /*NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@", kAppleId]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@", kAppleId]];
         NSString * file =  [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
         
         NSRange substr = [file rangeOfString:@"\"version\":\""];
         NSRange range1 = NSMakeRange(substr.location+substr.length,10);
         NSRange substr2 = [file rangeOfString:@"\"" options:NSCaseInsensitiveSearch  range:range1];
         NSRange range2 = NSMakeRange(substr.location+substr.length, substr2.location-substr.location-substr.length);
-        NSString *appStoreVersion =[file substringWithRange:range2];*/
-        
+        NSString *appStoreVersion =[file substringWithRange:range2];
+        NSArray *appStoreVersionArr = [appStoreVersion componentsSeparatedByString:@"."];
+        NSString *onlineVersion = @"";
+        for (int i = 0;i < appStoreVersionArr.count; i++) {
+            onlineVersion = [onlineVersion stringByAppendingString:appStoreVersionArr[i]];
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
             // 更新界面
             //如果不一样去更新
-            if([currentVersion intValue] > 1)
+            if([currentVersion intValue] < [onlineVersion intValue])
             {
                 [self showAlert];
             }
@@ -74,7 +78,7 @@
         [textDialogView setConfirmBtnTitle:@"前往更新"];
         _textDialogView = textDialogView;
     }
-    //    kWeakSelf(weakSlef);
+    
     [_textDialogView setConfirmCallback:^{
         // 此处加入应用在app store的地址，方便用户去更新，一种实现方式如下：
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/us/app/id%@?ls=1&mt=8", kAppleId]];
@@ -88,27 +92,7 @@
     // Override point for customization after application launch.
     [AppDelegate setUpConfig];
     
-//    [self updateAppVersionInfo];
-    // 使用 UNUserNotificationCenter 来管理通知
-    /*if (@available(iOS 10.0, *)) {
-        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-        //监听回调事件
-        center.delegate = self;
-        
-        //iOS 10 使用以下方法注册，才能得到授权，注册通知以后，会自动注册 deviceToken，如果获取不到 deviceToken，Xcode8下要注意开启 Capability->Push Notification。
-        [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound)
-                              completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                                  // Enable or disable features based on authorization.
-                              }];
-        
-        //获取当前的通知设置，UNNotificationSettings 是只读对象，不能直接修改，只能通过以下方法获取
-        [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
-            
-        }];
-        
-    } else {
-        // Fallback on earlier versions
-    }*/
+    [self updateAppVersionInfo];
     [HPGlobalVariable initVariable];
     [HPCommonData getAreaData];
     [HPCommonData getIndustryData];
