@@ -86,6 +86,11 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
  */
 @property (nonatomic, strong) UIButton *industryBtn;
 
+
+/**
+ 地址按钮
+ */
+@property (strong, nonatomic) UIButton *detailAddressBtn;
 /**
  生成标题field
  */
@@ -139,8 +144,8 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     _streetDic = [NSMutableDictionary dictionary];
     HPAddressModel *addressModel = self.param[@"address"];
     if (addressModel) {
-        [_addressBtn setTitle:addressModel.POIName forState:UIControlStateSelected];
-        [_addressBtn setSelected:YES];
+        [_detailAddressBtn setTitle:addressModel.formattedAddress forState:UIControlStateSelected];
+        [_detailAddressBtn setSelected:YES];
     }
 }
 
@@ -497,13 +502,36 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }];
     [self setupTitleLabelWithText:@"详细地址" ofView:view];
 
-    UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写店铺详细地址" ofView:view rightTo:view];
+    /*UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写店铺详细地址" ofView:view rightTo:view];
 //    [textField setKeyboardType:UIKeyboardTypeDecimalPad];
     textField.textColor = COLOR_BLACK_333333;
     textField.font = kFont_Regular(13.f);
-    _addressField = textField;
+    _addressField = textField;*/
+    UIImageView *downIcon = [self setupDownIconOfView:view];
+
+    UIButton *addressBtn = [[UIButton alloc] init];
+    [addressBtn.titleLabel setFont:kFont_Regular(13.f)];
+    [addressBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+    [addressBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+    [addressBtn setTitle:@"请选择" forState:UIControlStateNormal];
+    addressBtn.tag = HPSelectItemIndexIndustry;
+    [addressBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    [addressBtn addTarget:self action:@selector(callDetailAddressVc:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:addressBtn];
+    _detailAddressBtn = addressBtn;
+    [addressBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
+        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
+        make.centerY.equalTo(view);
+    }];
     
     return view;
+}
+
+#pragma mark - 详细地址vc
+- (void)callDetailAddressVc:(UIButton *)button
+{
+    [self pushVCByClassName:@"HPShareAddressController"];
 }
 
 - (UIView *)setupShareTimeRowView {
@@ -527,7 +555,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
     valueBtn.tag = HPSelectItemIndexIndustry;
     [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
+    [valueBtn addTarget:self action:@selector(onClickTagBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:valueBtn];
     _industryBtn = valueBtn;
     [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -655,7 +683,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 #pragma mark - 生成按钮事件
 - (void)convertShareTitle:(UIButton *)button
 {
-    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _addressField.text.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
+    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _detailAddressBtn.currentTitle.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
         button.selected = !button.selected;
         if (button.selected) {
             [button setTitle:@"清空" forState:UIControlStateNormal];
@@ -892,7 +920,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         ErrorNet
     }];*/
     
-    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _addressField.text.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
+    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _detailAddressBtn.currentTitle.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
         
         NSMutableArray *contentArray = [NSMutableArray array];
         if (_cityBtn.currentTitle.length) {
@@ -901,8 +929,8 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         if (_areaBtn.currentTitle.length) {
             [contentArray addObject:_areaBtn.currentTitle];
         }
-        if (_addressField.text.length) {
-            [contentArray addObject:_addressField.text];
+        if (_detailAddressBtn.currentTitle.length) {
+            [contentArray addObject:_detailAddressBtn.currentTitle];
         }
         
         if (_industryBtn.currentTitle.length) {
@@ -921,10 +949,14 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         }
         self.ratio = [NSString stringWithFormat:@"%.2f%%",contentArray.count/15.00];
         self.ratioLabel.text = [NSString stringWithFormat:@"%@",self.ratio.length>0?self.ratio:@"0"];
-
-        HPReviseReleaseInfoViewController *shareInfoVC = [HPReviseReleaseInfoViewController new];
-        shareInfoVC.delegate = self;
-        [self.navigationController pushViewController:shareInfoVC animated:YES];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            HPReviseReleaseInfoViewController *shareInfoVC = [HPReviseReleaseInfoViewController new];
+            shareInfoVC.ratio =  self.ratioLabel.text;
+            shareInfoVC.contentArray = contentArray;
+            shareInfoVC.delegate = self;
+            [self.navigationController pushViewController:shareInfoVC animated:YES];
+        });
+        
 //        [self pushVCByClassName:@"HPReviseReleaseInfoViewController"];
     }else{//弹框提示
         HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];

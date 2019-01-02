@@ -71,10 +71,6 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 @property (nonatomic, copy) NSString *currentPrice;
 @property (nonatomic, strong) NSMutableArray *intentionArray;
 
-/**
- 完整度/l比例
- */
-@property (nonatomic, copy) NSString *ratio;
 @property (nonatomic, strong) UILabel *ratioLabel;
 @property (nonatomic, strong) UILabel *infoLabel;
 
@@ -88,10 +84,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
  */
 @property (nonatomic, strong) NSArray *photosArray;
 
-/**
- 信息数组
- */
-@property (nonatomic, strong) NSMutableArray *contentArray;
+
 @end
 
 @implementation HPReviseReleaseInfoViewController
@@ -176,34 +169,37 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 }
 
 - (void)onClickReleaseBtn {
-    NSMutableArray *contentArray = [NSMutableArray array];
-    self.contentArray = contentArray;
+//    NSMutableArray *contentArray = [NSMutableArray array];
+//    self.contentArray = contentArray;
     if (_spaceBtn.text.length) {
-        [contentArray addObject:_spaceBtn.text];
+        [_contentArray addObject:_spaceBtn.text];
     }
     if (_shareTimeBtn.text.length) {
-        [contentArray addObject:_shareTimeBtn.text];
+        [_contentArray addObject:_shareTimeBtn.text];
     }
     if (_industryBtn.text.length) {
-        [contentArray addObject:_industryBtn.text];
+        [_contentArray addObject:_industryBtn.text];
     }
     
     if (_rectTypeBtn.text.length) {
-        [contentArray addObject:_rectTypeBtn.text];
+        [_contentArray addObject:_rectTypeBtn.text];
     }
     if (_rectBtn.text.length) {
-        [contentArray addObject:_rectBtn.text];
+        [_contentArray addObject:_rectBtn.text];
     }
     
     if (_leavesInfo.length) {
-        [contentArray addObject:_leavesInfo];
+        [_contentArray addObject:_leavesInfo];
     }
     
-    self.ratio = [NSString stringWithFormat:@"%.2f%%",contentArray.count/15.00];
+    self.ratio = [NSString stringWithFormat:@"%.2f%%",_contentArray.count/15.00];
     self.ratioLabel.text = [NSString stringWithFormat:@"%@",self.ratio.length>0?self.ratio:@"0"];
-    HPOwnnerReleaseViewController *ownnervc = [HPOwnnerReleaseViewController new];
-    ownnervc.delegate = self;
-    [self.navigationController pushViewController:ownnervc animated:YES];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        HPOwnnerReleaseViewController *ownnervc = [HPOwnnerReleaseViewController new];
+        ownnervc.delegate = self;
+        [self.navigationController pushViewController:ownnervc animated:YES];
+    });
+    
 //    [self pushVCByClassName:@"HPOwnnerReleaseViewController"];
 
 }
@@ -250,7 +246,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     if (!_ratioLabel) {
         _ratioLabel = [UILabel new];
         _ratioLabel.backgroundColor = COLOR_BLUE_D5F2FF;
-        _ratioLabel.text = @"0%";
+        _ratioLabel.text = self.ratio;// @"0%";
         _ratioLabel.textColor = COLOR_RED_FF3C5E;
         _ratioLabel.textAlignment = NSTextAlignmentLeft;
         _ratioLabel.font  = kFont_Medium(12.f);
