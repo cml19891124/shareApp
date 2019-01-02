@@ -66,7 +66,7 @@ static NSString *shareListCell = @"shareListCell";
     CGPoint cityPoint = [self.view convertPoint:self.openView.cityBtn.center fromView:self.openView];
     CGPoint searchPoint = self.headerView.center;
     CGFloat deltaY = (searchPoint.y - cityPoint.y)/g_rateWidth;
-    NSLog(@"deltaY : %f", deltaY);
+//    HPLog(@"deltaY : %f", deltaY);
 }
 
 #pragma mark - 共享发布数据
