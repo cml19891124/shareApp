@@ -163,7 +163,6 @@
 #define ErrorNet                 [HPProgressHUD alertMessage:@"网络错误"];
 //弱引用/强引用
 #define kWeakSelf(weakSelf)  __weak __typeof(&*self) weakSelf = self;
-#define kStrongSelf(weakSelf) __strong typeof(&*weakSelf) strongSelf = weakSelf;
 
 //字符串是否为空
 #define kStringIsEmpty(str) ([str isKindOfClass:[NSNull class]] || str == nil || [str length] < 1 ? YES : NO )

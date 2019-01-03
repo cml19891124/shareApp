@@ -19,10 +19,19 @@
 typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     HPShareGotoBtnTagSpace = 30,
     HPShareGotoBtnTagTimeDuring,
-    HPShareGotoBtnTagInsustry,
+    HPShareGotoBtnTagIndustry,
     HPShareGotoBtnTagRectType,
     HPShareGotoBtnTagRect,
     HPShareGotoBtnTagLeaves
+};
+
+typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
+    HPShareGotoViewTagSpace = 200,
+    HPShareGotoViewTagTimeDuring,
+    HPShareGotoViewTagInsustry,
+    HPShareGotoViewTagRectType,
+    HPShareGotoViewTagRect,
+    HPShareGotoViewTagLeaves
 };
 @interface HPReviseReleaseInfoViewController ()<HPLeavesVCDelegate,HPReleasePhotoDelegate>
 
@@ -69,7 +78,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
  当前选中的租赁价格
  */
 @property (nonatomic, copy) NSString *currentPrice;
-@property (nonatomic, strong) NSMutableArray *intentionArray;
+//@property (nonatomic, strong) NSMutableArray *intentionArray;
 
 @property (nonatomic, strong) UILabel *ratioLabel;
 @property (nonatomic, strong) UILabel *infoLabel;
@@ -114,7 +123,6 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    _intentionArray = [NSMutableArray array];
     [self setupUI];
     
 }
@@ -122,21 +130,6 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self getIntentionIndustry];
-}
-
-#pragma mark - 获取意向行业类型
-- (void)getIntentionIndustry
-{
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/intentionIndustry/list" isNeedToken:YES paraments:@{} complete:^(id  _Nonnull responseObject) {
-        if (CODE == 200) {
-            self.intentionArray = [HPIntentionListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
-        }else{
-            [HPProgressHUD alertMessage:MSG];
-        }
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
-    }];
 }
 
 - (void)setupUI {
@@ -169,15 +162,13 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
 }
 
 - (void)onClickReleaseBtn {
-//    NSMutableArray *contentArray = [NSMutableArray array];
-//    self.contentArray = contentArray;
-    if (_spaceBtn.text.length) {
+    if (_spaceBtn.text.length && ![_spaceBtn.text isEqualToString:@"不限"]) {
         [_contentArray addObject:_spaceBtn.text];
     }
-    if (_shareTimeBtn.text.length) {
+    if (_shareTimeBtn.text.length&& ![_shareTimeBtn.text isEqualToString:@"不限"]) {
         [_contentArray addObject:_shareTimeBtn.text];
     }
-    if (_industryBtn.text.length) {
+    if (_industryBtn.text.length&& ![_industryBtn.text isEqualToString:@"面议"]) {
         [_contentArray addObject:_industryBtn.text];
     }
     
@@ -246,7 +237,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     if (!_ratioLabel) {
         _ratioLabel = [UILabel new];
         _ratioLabel.backgroundColor = COLOR_BLUE_D5F2FF;
-        _ratioLabel.text = self.ratio;// @"0%";
+        _ratioLabel.text = self.ratio;
         _ratioLabel.textColor = COLOR_RED_FF3C5E;
         _ratioLabel.textAlignment = NSTextAlignmentLeft;
         _ratioLabel.font  = kFont_Medium(12.f);
@@ -365,6 +356,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     [self setupTitleLabelWithText:@"我能出租的空间大小" ofView:spaceView];
     HPRightImageButton *spaceBtn = [self setupGotoBtnWithTitle:@"不限"];
     [spaceBtn setTag:HPShareGotoBtnTagSpace];
+    [spaceBtn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];
     [spaceView addSubview:spaceBtn];
     _spaceBtn = spaceBtn;
     [_spaceBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -385,8 +377,8 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     [timeView addGestureRecognizer:tap];
     [self setupTitleLabelWithText:@"我想出租的时间段" ofView:timeView];
     HPRightImageButton *shareTimeBtn = [self setupGotoBtnWithTitle:@"不限"];
-    [shareTimeBtn setTag:HPShareGotoBtnTagTimeDuring];
-    [shareTimeBtn addTarget:self action:@selector(onClickTimeBtn:) forControlEvents:UIControlEventTouchUpInside];
+//    [shareTimeBtn setTag:HPShareGotoBtnTagTimeDuring];
+//    [shareTimeBtn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];
     [timeView addSubview:shareTimeBtn];
     _shareTimeBtn = shareTimeBtn;
     [_shareTimeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -404,12 +396,12 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     UIView *view = [[UIView alloc] init];
     UIView *industryView = [self addRowOfParentView:view withHeight:46.f * g_rateWidth margin:0.f isEnd:YES];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickShareGotoButton:)];
-    [industryView setTag:HPShareGotoBtnTagInsustry];
+    [industryView setTag:HPShareGotoBtnTagIndustry];
     [industryView addGestureRecognizer:tap];
     [self setupTitleLabelWithText:@"我想合作的行业类型" ofView:industryView];
     HPRightImageButton *industryBtn = [self setupGotoBtnWithTitle:@"面议"];
-    [industryBtn setTag:HPShareGotoBtnTagInsustry];
-    [industryBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [industryBtn setTag:210];
+    [industryBtn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];
     [industryView addSubview:industryBtn];
     _industryBtn = industryBtn;
     [_industryBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -456,6 +448,8 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     [rentView setTag:HPShareGotoBtnTagRectType];
     [rentView addGestureRecognizer:tap];
     HPRightImageButton *rectTypeBtn = [self setupGotoBtnWithTitle:@""];
+//    [rectTypeBtn setTag:HPShareGotoBtnTagRectType];
+//    [rectTypeBtn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];
     [rentView addSubview:rectTypeBtn];
     _rectTypeBtn = rectTypeBtn;
     [_rectTypeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -475,6 +469,8 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     [rentView addGestureRecognizer:tap];
     [self setupTitleLabelWithText:@"我期望的共享租金" ofView:rentView];
     HPRightImageButton *rectBtn = [self setupGotoBtnWithTitle:@""];
+//    [rectBtn setTag:HPShareGotoViewTagRect];
+//    [rectBtn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];
     [rentView addSubview:rectBtn];
     _rectBtn = rectBtn;
     [_rectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -496,6 +492,8 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     [self setupTitleLabelWithText:@"备注信息" ofView:leavesView];
 
     HPRightImageButton *leavesBtn = [self setupGotoBtnWithTitle:@""];
+//    [leavesBtn setTag:HPShareGotoBtnTagLeaves];
+//    [leavesBtn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];
     [leavesView addSubview:leavesBtn];
     _leavesBtn = leavesBtn;
     [_leavesBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -541,9 +539,9 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
             HPLog(@"租赁时间段");
             [self setUpPickerView:HPShareGotoBtnTagTimeDuring];
             break;
-        case HPShareGotoBtnTagInsustry:
+        case HPShareGotoBtnTagIndustry:
             HPLog(@"租赁行业类型");
-            [self setUpIndustryTypePickerView];
+            [self getIndustryInfo];
             break;
         case HPShareGotoBtnTagRect:
             HPLog(@"租赁金额");
@@ -569,6 +567,13 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     }
 }
 
+#pragma mark - 调取父类方法 获取意向行业名称
+- (void)getIndustryInfo
+{
+    UIButton *industryBtn = [self.view viewWithTag:210];
+
+    [self onClickGetIndustryTagBtn:industryBtn];
+}
 - (void)jumpToLeavesVC
 {
     HPStoreLeavesViewController *leavesvc = [HPStoreLeavesViewController new];
@@ -605,30 +610,6 @@ typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
             }];
         }
         
-    }cancel:^{
-        //your code
-    }];
-}
-#pragma mark - 行业类型pickerview
-- (void)setUpIndustryTypePickerView
-{
-    CDZPicker *pickerView = [CDZPicker new];
-    pickerView.tipTitle = @"选择意向行业";
-    CDZPickerBuilder *builder = [CDZPickerBuilder new];
-    builder.showMask = YES;
-    builder.cancelTextColor = COLOR_GRAY_BBBBBB;
-    builder.confirmTextColor = COLOR_RED_EA0000;
-    NSMutableArray *intentionArray = [NSMutableArray array];;
-    for (int i = 0; i < self.intentionArray.count; i++) {
-        HPIntentionListModel *model = self.intentionArray[i];
-        [intentionArray addObject:model.industryName];
-    }
-    [CDZPicker showSinglePickerInView:self.view withBuilder:builder strings:intentionArray confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
-        [self.industryBtn setText:[strings componentsJoinedByString:@","]];
-        CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 20;
-        [self.industryBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(stringsW);
-        }];
     }cancel:^{
         //your code
     }];

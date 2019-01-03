@@ -41,6 +41,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) HPTagDialogView *tagDialogView;
 
+/**
+ 意向行业的弹框
+ */
+@property (nonatomic, weak) HPTagDialogView *tagIntentionView;
+
 @property (nonatomic, weak) HPTimePicker *timePicker;
 
 @property (nonatomic, weak) HPCalendarDialogView *calendarDialogView;
@@ -60,6 +65,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) HPIndustryModel *selectedIndustryModel;
 
 @property (nonatomic, strong) HPShareReleaseParam *shareReleaseParam;
+
+@property (nonatomic, strong) NSMutableArray *intentionArray;
 
 //添加公共UI组件
 
@@ -85,6 +92,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)onClickTagBtn:(UIButton *)btn;
 
+- (void)onClickGetIndustryTagBtn:(UIButton *)btn;
+
 - (void)onClickTimeBtn:(UIButton *)btn;
 
 - (void)onClickCalendarBtn:(UIButton *)btn;
@@ -98,6 +107,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initTradeSheetViewWithBtn:(UIButton *)btn;
 
 - (void)initTagDialogViewWithBtn:(UIButton *)btn;
+#pragma mark - 意向行业
+- (void)initTagDialogViewWithIntentionIndustryBtn:(UIButton *)btn;
 
 - (void)initTimePickerWithBtn:(UIButton *)btn;
 

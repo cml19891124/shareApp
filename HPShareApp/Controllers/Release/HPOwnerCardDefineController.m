@@ -260,8 +260,8 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }
     else if (index == 2) {
         [panel addRowView:[self setupAreaRowView]];
-        [panel addRowView:[self setupPriceRowView]];
-        [panel addRowView:[self setupShareTimeRowView]];
+        [panel addRowView:[self setupDetailAddressRowView]];
+        [panel addRowView:[self setupManagerIndustryRowView]];
         UIView *lastPanel = view.subviews[index - 1];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.width.equalTo(view);
@@ -291,48 +291,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }
 }
 
-- (UIView *)setupPhotoRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    HPAlignCenterButton *uploadBtn = [[HPAlignCenterButton alloc] initWithImage:[UIImage imageNamed:@"shop_transfer_upload"]];
-    [uploadBtn setTextFont:[UIFont fontWithName:FONT_BOLD size:14.f]];
-    [uploadBtn setTextColor:COLOR_RED_FF3C5E];
-    [uploadBtn setText:@"上传图片"];
-    [uploadBtn addTarget:self action:@selector(onClickUploadBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:uploadBtn];
-    [uploadBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(view);
-        make.top.equalTo(view).with.offset(43.f * g_rateWidth);
-        make.size.mas_equalTo(CGSizeMake(55.f, 72.f));
-    }];
-    
-    UILabel *descLabel = [[UILabel alloc] init];
-    [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
-    [descLabel setTextColor:COLOR_GRAY_CCCCCC];
-    [descLabel setText:@"上传共享空间照片，让匹配更高效。"];
-    [view addSubview:descLabel];
-    [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(view);
-        make.top.equalTo(uploadBtn.mas_bottom).with.offset(12.f * g_rateWidth);
-        make.height.mas_equalTo(12.f);
-    }];
-    
-    HPAddPhotoView *addPhotoView = [[HPAddPhotoView alloc] init];
-    [addPhotoView setMaxNum:4];
-    kWeakSelf(weakSelf);
-    [addPhotoView setAddBtnCallBack:^{
-        [weakSelf.alertSheet show:YES];
-    }];
-    [view addSubview:addPhotoView];
-    self.addPhotoView = addPhotoView;
-    [addPhotoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(view);
-    }];
-    [addPhotoView setHidden:YES];
-    
-    return view;
-}
-
+#pragma mark - 店铺简称
 - (UIView *)setupStoreNameRowView {
     UIView *view = [[UIView alloc] init];
     
@@ -342,84 +301,12 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     return view;
 }
 
-- (UIView *)setupSpaceAddressRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    [self setupTitleLabelWithText:@"店铺地址" ofView:view];
-    UIImageView *downIcon = [self setupDownIconOfView:view];
-    
-    UIButton *valueBtn = [[UIButton alloc] init];
-    [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-    [valueBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
-    [valueBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-    [valueBtn setTitle:@"请输入店铺或空间地址" forState:UIControlStateNormal];
-    [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(onClickAddressbtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:valueBtn];
-    _addressBtn = valueBtn;
-    [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
-        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
-    
-    
-    return view;
-}
-
-- (UIView *)setupTradeRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    [self setupTitleLabelWithText:@"经营行业" ofView:view];
-    UIImageView *downIcon = [self setupDownIconOfView:view];
-    
-    UIButton *valueBtn = [[UIButton alloc] init];
-    [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-    [valueBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
-    [valueBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-    [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
-    [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:valueBtn];
-    _tradeBtn = valueBtn;
-    [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
-        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
-    
-    return view;
-}
-
-- (UIView *)setupcCertificationRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    [self setupTitleLabelWithText:@"资格认证" ofView:view];
-    
-    UIButton *certificationBtn = [[UIButton alloc] init];
-    [certificationBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:14.f]];
-    [certificationBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
-    [certificationBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
-    [certificationBtn setTitle:@"认证" forState:UIControlStateNormal];
-    [certificationBtn setImage:[UIImage imageNamed:@"select_the_arrow"] forState:UIControlStateNormal];
-    [certificationBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, 27.f, 0.f, -27.f)];
-    [certificationBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -30.f, 0.f, 30.f)];
-    [view addSubview:certificationBtn];
-    [certificationBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(view).with.offset(-20.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
-    
-    return view;
-}
 #pragma mark - 店铺标签
 - (UIView *)setupStoreTagRowView {
     UIView *view = [[UIView alloc] init];
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:kFont_Bold(15.f)];
+    [titleLabel setFont:kFont_Medium(15.f)];
     [titleLabel setTextColor:COLOR_BLACK_333333];
     [titleLabel setText:@"店铺标签"];
     [view addSubview:titleLabel];
@@ -461,7 +348,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [cityBtn setTitle:@"深圳市" forState:UIControlStateNormal];
     [cityBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
     [cityBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-//    [cityBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
     cityBtn.tag = HPSelectItemIndexCity;
     [view addSubview:cityBtn];
     _cityBtn = cityBtn;
@@ -490,7 +376,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     return view;
 }
 #pragma mark -详细地址
-- (UIView *)setupPriceRowView {
+- (UIView *)setupDetailAddressRowView {
     UIView *view = [[UIView alloc] init];
     UIButton *starBtn = [UIButton new];
     [starBtn setTitle:@"*" forState:UIControlStateNormal];
@@ -502,11 +388,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }];
     [self setupTitleLabelWithText:@"详细地址" ofView:view];
 
-    /*UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写店铺详细地址" ofView:view rightTo:view];
-//    [textField setKeyboardType:UIKeyboardTypeDecimalPad];
-    textField.textColor = COLOR_BLACK_333333;
-    textField.font = kFont_Regular(13.f);
-    _addressField = textField;*/
     UIImageView *downIcon = [self setupDownIconOfView:view];
 
     UIButton *addressBtn = [[UIButton alloc] init];
@@ -514,7 +395,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [addressBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
     [addressBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
     [addressBtn setTitle:@"请选择" forState:UIControlStateNormal];
-    addressBtn.tag = HPSelectItemIndexIndustry;
+    addressBtn.tag = HPSelectItemIndexAddress;
     [addressBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [addressBtn addTarget:self action:@selector(callDetailAddressVc:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:addressBtn];
@@ -534,7 +415,8 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [self pushVCByClassName:@"HPShareAddressController"];
 }
 
-- (UIView *)setupShareTimeRowView {
+#pragma mark - 经营行业
+- (UIView *)setupManagerIndustryRowView {
     UIView *view = [[UIView alloc] init];
     UIButton *starBtn = [UIButton new];
     [starBtn setTitle:@"*" forState:UIControlStateNormal];
@@ -555,7 +437,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
     valueBtn.tag = HPSelectItemIndexIndustry;
     [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(onClickTagBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [valueBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:valueBtn];
     _industryBtn = valueBtn;
     [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -567,50 +449,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     return view;
 }
 
-- (UIView *)setupShareDateRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    [self setupTitleLabelWithText:@"共享排期" ofView:view];
-    
-    UIButton *calendarBtn = [[UIButton alloc] init];
-    [calendarBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:14.f]];
-    [calendarBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [calendarBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-    [calendarBtn setTitle:@"请选择" forState:UIControlStateNormal];
-    [calendarBtn setImage:[UIImage imageNamed:@"customizing_business_calendar"] forState:UIControlStateNormal];
-    [calendarBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [calendarBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -15.f, 0.f, 15.f)];
-    [calendarBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, getWidth(233.f)-15.f, 0.f, -(getWidth(233.f)-15.f))];
-    [calendarBtn addTarget:self action:@selector(onClickCalendarBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:calendarBtn];
-    _shareDateBtn = calendarBtn;
-    [calendarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
-        make.centerY.equalTo(view);
-        make.right.equalTo(view).with.offset(-20.f * g_rateWidth);
-    }];
-    
-    return view;
-}
-
-- (UIView *)setupIntentTradeRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
-    [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:@"意向行业/产品"];
-    [view addSubview:titleLabel];
-    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(21.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
-    
-    _intentSpaceField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
-    
-    return view;
-}
-
+#pragma mark - 联系人
 - (UIView *)setupContactRowView {
     UIView *view = [[UIView alloc] init];
     [self setupTitleLabelWithText:@"联系人" ofView:view];
@@ -620,6 +459,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     return view;
 }
 
+#pragma mark - 联系方式
 - (UIView *)setupPhoneNumRowView {
     UIView *view = [[UIView alloc] init];
     UIButton *starBtn = [UIButton new];
@@ -643,6 +483,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     return view;
 }
 
+#pragma mark - 生成
 - (UIView *)setupRemarkRowView {
     UIView *view = [[UIView alloc] init];
     UIButton *starBtn = [UIButton new];
@@ -1001,7 +842,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 #pragma mark - 点击叫出pickerview
 - (void)callPickerViewWithDataSource:(UIButton *)button
 {
-        [self setUpPickerView:button.tag];
+    [self setUpPickerView:button.tag];
 }
 
 - (void)setUpPickerView:(HPSelectItemIndex)selectItemIndex

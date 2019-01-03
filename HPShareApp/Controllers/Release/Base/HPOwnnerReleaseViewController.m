@@ -29,9 +29,17 @@ typedef NS_ENUM(NSInteger, HPDeleteImageBtnIndex) {
     HPDeleteImageBtnIndexStoreInside,
     HPDeleteImageBtnIndexFreeSpace,
     HPDeleteImageBtnIndexFreeeSpaceMore,
-    HPDeleteImageBtnIndexAdd
+    HPDeleteImageBtnIndexFreeSpaceZeroInRowOne,
+    HPDeleteImageBtnIndexFreeSpaceOneInRowOne,
+    HPDeleteImageBtnIndexFreeSpaceTwoInRowOne,
+    HPDeleteImageBtnIndexFreeSpaceThreeInRowOne
 };
 @interface HPOwnnerReleaseViewController ()
+
+/**
+ 是否是第一次点击选择图片，否就需要交换元素，是就需要把后续来的图片插入倒数第二的位置
+ */
+@property (nonatomic, assign) BOOL isFirst;
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
 
 @property (nonatomic, strong) UIView *navTilteView;
@@ -177,15 +185,27 @@ typedef NS_ENUM(NSInteger, HPDeleteImageBtnIndex) {
     [self.bottomView addSubview:self.releaseBtn];
 }
 
+#pragma mark - 创建照片按钮
 - (void)setUpUploadButton
 {
+    [_photoView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     for (int i = 0; i < self.photoArray.count; i++) {
         CGFloat row = i/4;
         CGFloat col = i%4;
         CGFloat btnY = getWidth(15.f) + getWidth(75.f) *row;
         HPUploadButton *btn = [HPUploadButton new];
         [btn setImage:ImageNamed(@"shop_transfer_upload") forState:UIControlStateNormal];
-        [btn setTitle:self.uploadTextArray[i] forState:UIControlStateNormal];
+        
+        if ([self.photoArray[i] isKindOfClass:UIImage.class]) {
+            [btn setImage:ImageNamed(@"") forState:UIControlStateNormal];
+            [btn setBackgroundImage:self.photoArray[i] forState:UIControlStateNormal];
+        }else if ([self.photoArray[i] isKindOfClass:NSString.class]){
+
+            [btn setImage:ImageNamed(self.photoArray[i]) forState:UIControlStateNormal];
+        }
+        if (i == self.photoArray.count-1 && self.photoArray.count == 1) {
+            [btn setImage:ImageNamed(@"shop_transfer_upload") forState:UIControlStateNormal];
+        }
         [btn setTitleColor:COLOR_GRAY_999999 forState:UIControlStateNormal];
         btn.backgroundColor = COLOR_GRAY_F2F2F2;
         btn.layer.cornerRadius = 2.f;
@@ -193,11 +213,11 @@ typedef NS_ENUM(NSInteger, HPDeleteImageBtnIndex) {
         btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         btn.titleLabel.font = kFont_Medium(11.f);
         btn.tag = 150 + i;
-        
-        [btn addTarget:self action:@selector(cameraBtn_clicked:) forControlEvents:UIControlEventTouchUpInside];
+        //点击后替换图片
+        [btn addTarget:self action:@selector(replaceCurrentImage:) forControlEvents:UIControlEventTouchUpInside];
         [self.photoView addSubview:btn];
         self.btn = btn;
-        if (i == 0) {
+        if (i == 0 && self.photoArray.count != 1) {
             btn.faceLabel.hidden = NO;
         }
         
@@ -216,6 +236,13 @@ typedef NS_ENUM(NSInteger, HPDeleteImageBtnIndex) {
         deleteBtn.tag = 160 + i;
         [deleteBtn addTarget:self action:@selector(clickToDeletephoto:) forControlEvents:UIControlEventTouchUpInside];
         [self.photoView addSubview:deleteBtn];
+
+        if (i == self.photoArray.count - 1) {
+            deleteBtn.hidden = YES;
+            [btn addTarget:self action:@selector(clickedCameraBtnToAddImages:) forControlEvents:UIControlEventTouchUpInside];
+
+        }
+        
         [deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo((getWidth(75.f) + space)*col + getWidth(67.5f) + getWidth(20.f));
             make.top.mas_equalTo(self.photoView).offset(getWidth(15.f) + getWidth(-7.5f) + (space + getWidth(65.f)) * row);
@@ -225,6 +252,14 @@ typedef NS_ENUM(NSInteger, HPDeleteImageBtnIndex) {
     }
 }
 
+
+#pragma mark - 替换图片-只有店铺封面才可以点击替换
+- (void)replaceCurrentImage:(UIButton *)button
+{
+    if (button.tag == HPReleaseImageBtnIndexFace) {//店铺封面按钮
+        [self makePhotosSheetClick:button];
+    }
+}
 
 /**
  @param image 图片参数 可为 本地图片 可为 拍照图片
@@ -244,7 +279,9 @@ static int selectBtn_tag = -1;
     selectBtn_tag = (int)button.tag;
     [self makePhotosSheetClick:button];
 }
-- (void)cameraBtn_clicked:(UIButton *)button
+
+#pragma mark - 添加图片按钮的点击事件
+- (void)clickedCameraBtnToAddImages:(UIButton *)button
 {
     [self makePhotosSheetClick:button];
 }
@@ -263,19 +300,30 @@ static int selectBtn_tag = -1;
         [textDialogView setConfirmBtnTitle:@"删除"];
         _textDialogView = textDialogView;
     }
-    //    kWeakSelf(weakSlef);
+    kWeakSelf(weakSelf);
+    __strong typeof(&*weakSelf) strongSelf = weakSelf;
     [_textDialogView setConfirmCallback:^{
         // 此处加入点击确认后的操作
         if (button.tag == HPDeleteImageBtnIndexFace) {
-            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFace];
+            [self.photoArray replaceObjectAtIndex:HPDeleteImageBtnIndexFace - 160 withObject:@"shop_transfer_upload"];
         }else if(button.tag == HPDeleteImageBtnIndexStoreInside){
-            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexStoreInside];
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexStoreInside - 160];
         }else if(button.tag == HPDeleteImageBtnIndexFreeSpace){
-            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeSpace];
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeSpace - 160];
         }else if(button.tag == HPDeleteImageBtnIndexFreeeSpaceMore){
-            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeeSpaceMore];
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeeSpaceMore - 160];
+        }else if(button.tag == HPDeleteImageBtnIndexFreeSpaceZeroInRowOne){
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeSpaceZeroInRowOne - 160];
+        }else if(button.tag == HPDeleteImageBtnIndexFreeSpaceOneInRowOne){
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeSpaceOneInRowOne - 160];
+        }else if(button.tag == HPDeleteImageBtnIndexFreeSpaceTwoInRowOne){
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeSpaceTwoInRowOne - 160];
+        }else if(button.tag == HPDeleteImageBtnIndexFreeSpaceThreeInRowOne){
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeSpaceThreeInRowOne - 160];
         }
-        
+        [strongSelf setUpUploadButton];
+        [strongSelf.photoView layoutIfNeeded];
+        [strongSelf.view layoutIfNeeded];
     }];
     
     [_textDialogView show:YES];
@@ -518,11 +566,12 @@ static int selectBtn_tag = -1;
     [self.uploadView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.navTilteView.mas_bottom);
-        if (self.photoArray.count > 4) {
-            make.height.mas_equalTo(getWidth(256.f));
-        }else{
-            make.height.mas_equalTo(getWidth(181.f));
-        }
+//        if (self.photoArray.count > 4) {
+//            make.height.mas_equalTo(getWidth(256.f));
+//        }else{
+//            make.height.mas_equalTo(getWidth(202.f));
+//        }
+        make.bottom.mas_equalTo(self.leavesLabel.mas_bottom).offset(getWidth(20.f));
     }];
     
     [self.uploadLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -653,10 +702,14 @@ static int selectBtn_tag = -1;
 - (void)makePhotosSheetClick:(UIButton *)button
 {
     self.selectedPhotoBtnIndex = button.tag;
-
-    [self.alertSheet show:YES];
+    if (self.photoArray.count == 8) {
+        [HPProgressHUD alertMessage:@"最多上传8张图片"];
+    }else{
+        [self.alertSheet show:YES];
+    }
 }
 
+#pragma mark - 进入相册或拍照
 - (void)onClickAlbumOrPhotoSheetWithTag:(NSInteger)tag {
     if (tag == 0) {
         if (self.photoPicker == nil) {
@@ -690,7 +743,7 @@ static int selectBtn_tag = -1;
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
     UIImage *photo = info[UIImagePickerControllerOriginalImage];
-//    [self setPhotosAboveSheet:self.selectedPhotoBtnIndex andphoto:photo];
+
     if(selectBtn_tag >= 0 && (selectBtn_tag != (_photoArray.count - 1))){
         [_photoArray replaceObjectAtIndex:selectBtn_tag withObject:photo];
         selectBtn_tag = -1;
@@ -704,65 +757,76 @@ static int selectBtn_tag = -1;
             [_photoArray insertObject:photo atIndex:0];
         }
     }
+    
+    [self.view layoutIfNeeded];
+    [self.photoView layoutIfNeeded];
+    
     [_photoView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
-    for (int i = 0; i < _photoArray.count; i ++) {
-        int row = i % 4;
-        UIButton *btn = [self creatButtonWithImage:_photoArray[i] With:row];
-        [btn setBackgroundImage:_photoArray[i] forState:UIControlStateNormal];
-        [_photoView addSubview:btn];
-        
-        if (i == _photoArray.count-1) {
-            [btn addTarget:self action:@selector(cameraBtn_clicked:) forControlEvents:UIControlEventTouchUpInside];
-        }
+    [self setUpUploadButton];
+    
+    
+    if (self.photoArray.count >= 9) {//数量达到
+        [self.photoArray removeLastObject];
     }
-    HPLog(@"333:%@",_photoArray);
+    self.uploadNumLabel.text = [NSString stringWithFormat:@"%ld/8",self.photoArray.count];
+    [self setUpUploadButton];
+    CGFloat space = (kScreenWidth - getWidth(75.f) * 4 - getWidth(45.f))/3;
+    
+    [self.photoView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.uploadView);
+        make.top.mas_equalTo(self.uploadLine.mas_bottom);
+        if (self.photoArray.count > 4) {
+            make.height.mas_equalTo(getWidth(75.f) * 2 + space);
+        }else{
+            make.height.mas_equalTo(getWidth(75.f) + space);
+        }
+    }];
+    
+    [self.view layoutIfNeeded];
+    [self.photoView layoutIfNeeded];
 
     [self dismissViewControllerAnimated:self.photoPicker completion:nil];
 }
 
-#pragma mark -获取来的图片进行btn赋值设置
-- (void)setPhotosAboveSheet:(HPReleaseImageBtnIndex)btnIndex andphoto:(UIImage *)photo
-{
-    NSString *photoKey = [NSString stringWithFormat:@"%ld",btnIndex];
-    NSMutableDictionary *photoDic = [NSMutableDictionary dictionary];
-    photoDic[photoKey] = photo;
-    if (![self.photoArray containsObject:photoDic]) {
-        [self.photoArray addObject:photoDic];
-    }else{
-        [self.photoArray removeObject:photoDic];
-    }
-    self.uploadNumLabel.text = [NSString stringWithFormat:@"%ld/8",self.photoArray.count];;
-    UIButton *photoBtn = [self.view viewWithTag:btnIndex];
-    [photoBtn setImage:ImageNamed(@"") forState:UIControlStateNormal];
-    [photoBtn setTitle:@"" forState:UIControlStateNormal];
-    switch (self.selectedPhotoBtnIndex) {
-        case HPReleaseImageBtnIndexFace:
-            [photoBtn setBackgroundImage:photo forState:UIControlStateNormal];
-            break;
-        case HPReleaseImageBtnIndexStoreInside:
-            [photoBtn setBackgroundImage:photo forState:UIControlStateNormal];
-            
-            break;
-        case HPReleaseImageBtnIndexFreeSpace:
-            [photoBtn setBackgroundImage:photo forState:UIControlStateNormal];
-            
-            break;
-        case HPReleaseImageBtnIndexFreeeSpaceMore:
-            [photoBtn setBackgroundImage:photo forState:UIControlStateNormal];
-            
-            break;
-        default:
-           
-            break;
-    }
-}
 #pragma mark - TZImagePickerControllerDelegate
 
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-    picker.allowCrop = YES;
-    UIImage *photo = photos[0];
-    [self setPhotosAboveSheet:self.selectedPhotoBtnIndex andphoto:photo];
+    
+    if (!_isFirst) {//默认否 交换元素
+        picker.allowCrop = YES;
+        _isFirst = YES;
+        [_photoView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        [self.photoArray addObjectsFromArray:photos];
+        //移除第一个
+        [self.photoArray removeObjectAtIndex:0];
+        //将默认图片 插入最后一位
+        [self.photoArray insertObject:@"shop_transfer_upload" atIndex:self.photoArray.count];
+        
+    }else{//获取到的图片c依次插入倒数第二
+        for (int i = 0; i < photos.count; i++) {
+            [self.photoArray insertObject:photos[i] atIndex:self.photoArray.count - 1];
+        }
+    }
+    if (self.photoArray.count >= 9) {//数量达到
+        [self.photoArray removeLastObject];
+    }
+    self.uploadNumLabel.text = [NSString stringWithFormat:@"%ld/8",self.photoArray.count];
+    [self setUpUploadButton];
+    CGFloat space = (kScreenWidth - getWidth(75.f) * 4 - getWidth(45.f))/3;
+    
+    [self.photoView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.uploadView);
+        make.top.mas_equalTo(self.uploadLine.mas_bottom);
+        if (self.photoArray.count > 4) {
+            make.height.mas_equalTo(getWidth(75.f) * 2 + space);
+        }else{
+            make.height.mas_equalTo(getWidth(75.f) + space);
+        }
+    }];
+    
+    [self.view layoutIfNeeded];
+    [self.photoView layoutIfNeeded];
 }
 
 @end
