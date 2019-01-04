@@ -146,7 +146,11 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     if (addressModel) {
         [_detailAddressBtn setTitle:addressModel.formattedAddress forState:UIControlStateSelected];
         [_detailAddressBtn setSelected:YES];
+        //定位地址信息存储
+        [kUserDefaults setObject:addressModel.mj_keyValues forKey:@"address"];
+        [kUserDefaults synchronize];
     }
+    
 }
 
 #pragma mark - setupUI
@@ -583,18 +587,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }
 }
 
-#pragma mark - Function
-
-- (NSString *)getAreaIdByName:(NSString *)name {
-    for (HPAreaModel *areaModel in self.areaModels) {
-        if ([areaModel.name isEqualToString:name]) {
-            return areaModel.areaId;
-        }
-    }
-    
-    return nil;
-}
-
 #pragma mark - OnClick
 
 - (void)onClickAddressbtn:(UIButton *)btn {
@@ -602,54 +594,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 }
 
 - (void)onClickReleaseBtn {
-    /*
-    if (!_canRelease) {
-        return;
-    }
-    _canRelease = NO;
-    
-    HPAddressModel *addressModel = self.param[@"address"];
-    NSString *latitude;
-    NSString *longitude;
-    NSString *address;
-    if (addressModel) {
-        latitude = [NSString stringWithFormat:@"%lf", addressModel.lat];
-        longitude = [NSString stringWithFormat:@"%lf", addressModel.lon];
-        address = addressModel.POIName;
-    }
-    
-    NSString *title = _titleField.text;
-    NSString *area = _areaField.text;
-    NSString *areaId = [self getAreaIdByName:addressModel.district];
-    NSString *industryId = self.selectedIndustryModel.pid;
-    NSString *subIndustryId = self.selectedIndustryModel.industryId;
-    NSString *rent = _priceField.text;
-    NSString *rentType = self.unitSelectTable.selectedIndex == 0 ? @"1" : @"2";
-    NSString *shareTime = [self.timePicker getTimeStr];
-    NSString *shareDays = @"";
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    for (NSDate *date in self.calendarDialogView.selectedDates) {
-        NSString *dateStr = [dateFormatter stringFromDate:date];
-        shareDays = [shareDays stringByAppendingString:dateStr];
-        if (date != self.calendarDialogView.selectedDates.lastObject) {
-            shareDays = [shareDays stringByAppendingString:@","];
-        }
-    }
-    
-    NSString *contact = _contactField.text;
-    NSString *contactMobile = _phoneNumField.text;
-    NSString *intention = _intentSpaceField.text;
-    
-    NSString *remark;
-    if ([_remarkTextView.text isEqualToString:TEXT_VIEW_PLACEHOLDER]) {
-        remark = @"";
-    }
-    else {
-        remark = _remarkTextView.text;
-    }
-    
     NSString *tag = @"";
     for (NSString *tagItem in self.tagDialogView.checkItems) {
         tag = [tag stringByAppendingString:tagItem];
@@ -658,142 +602,43 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         }
     }
     
-    NSString *type = @"1";
-    HPLoginModel *loginModel = [HPUserTool account];
-    if (!loginModel.token) {
-        [HPProgressHUD alertMessage:@"用户未登录"];
-        return;
-    }
-    
-    NSString *userId = loginModel.userInfo.userId;
-    
-    self.shareReleaseParam.title = title;
-    self.shareReleaseParam.area = area;
-    self.shareReleaseParam.areaId = areaId;
-    self.shareReleaseParam.latitude = latitude;
-    self.shareReleaseParam.longitude = longitude;
-    self.shareReleaseParam.address = address;
-    self.shareReleaseParam.industryId = industryId;
-    self.shareReleaseParam.subIndustryId = subIndustryId;
-    self.shareReleaseParam.rent = rent;
-    self.shareReleaseParam.rentType = rentType;
-    self.shareReleaseParam.shareTime = shareTime;
-    self.shareReleaseParam.shareDays = shareDays;
-    self.shareReleaseParam.contact = contact;
-    self.shareReleaseParam.contactMobile = contactMobile;
-    self.shareReleaseParam.intention = intention;
-    self.shareReleaseParam.remark = remark;
-    self.shareReleaseParam.tag = tag;
-    self.shareReleaseParam.type = type;
-    self.shareReleaseParam.userId = userId;
-    self.shareReleaseParam.isApproved = @"0";
-    
-    NSArray *photos = self.addPhotoView.photos;
-    
-    if (photos.count == 0) {
-        [HPProgressHUD alertMessage:@"请上传照片"];
-        _canRelease = YES;
-        return;
-    }
-    else if ([title isEqualToString:@""]) {
-        [HPProgressHUD alertMessage:@"请填写标题"];
-        _canRelease = YES;
-        return;
-    }
-    else if (address == nil) {
-        [HPProgressHUD alertMessage:@"请填写地址"];
-        _canRelease = YES;
-        return;
-    }
-    else if (industryId == nil) {
-        [HPProgressHUD alertMessage:@"请选择行业"];
-        _canRelease = YES;
-        return;
-    }
-    else if (subIndustryId == nil) {
-        [HPProgressHUD alertMessage:@"请选择行业"];
-        _canRelease = YES;
-        return;
-    }
-    else if ([shareDays isEqualToString:@""]) {
-        [HPProgressHUD alertMessage:@"请选择共享日期"];
-        _canRelease = YES;
-        return;
-    }
-    else if ([contact isEqualToString:@""]) {
-        [HPProgressHUD alertMessage:@"请填写联系人"];
-        _canRelease = YES;
-        return;
-    }
-    else if ([contactMobile isEqualToString:@""]) {
-        [HPProgressHUD alertMessage:@"请填写联系方式"];
-        _canRelease = YES;
-        return;
-    }
-    
-    [HPUploadImageHandle upLoadImages:photos withUrl:kBaseUrl@"/v1/file/uploadPictures" parameterName:@"files" success:^(id responseObject) {
-        if (CODE == 200) {
-            NSArray<HPPictureModel *> *pictureModels = [HPPictureModel mj_objectArrayWithKeyValuesArray:DATA];
-            for (HPPictureModel *pictureModel in pictureModels) {
-                [self.shareReleaseParam.pictureIdArr addObject:pictureModel.pictureId];
-                [self.shareReleaseParam.pictureUrlArr addObject:pictureModel.url];
-            }
-            
-            if (self.param[@"spaceId"]) {
-                [self.shareReleaseParam setSpaceId:self.param[@"spaceId"]];
-                NSDictionary *param = self.shareReleaseParam.mj_keyValues;
-                [self updateInfo:param];
-            }
-            else {
-                NSDictionary *param = self.shareReleaseParam.mj_keyValues;
-                [self releaseInfo:param];
-            }
-        }
-        else {
-            self->_canRelease = YES;
-            [HPProgressHUD alertMessage:MSG];
-        }
-    } progress:^(double progress) {
-        NSLog(@"progress: %lf", progress);
-        [HPProgressHUD alertWithProgress:progress text:@"上传图片中"];
-    } fail:^(NSError *error) {
-        self->_canRelease = YES;
-        ErrorNet
-    }];*/
-    
     if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _detailAddressBtn.currentTitle.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
-        
-        NSMutableArray *contentArray = [NSMutableArray array];
+        if (_convertTitleField.text.length) {
+            self.infoDict[@"converTitle"] = _convertTitleField.text;
+        }
+        if (_tagBtn.currentTitle.length) {
+            self.infoDict[@"storeTag"] = _tagBtn.currentTitle;
+        }
         if (_cityBtn.currentTitle.length) {
-            [contentArray addObject:_cityBtn.currentTitle];
+            self.infoDict[@"city"] = _cityBtn.currentTitle;
         }
         if (_areaBtn.currentTitle.length) {
-            [contentArray addObject:_areaBtn.currentTitle];
+            self.infoDict[@"area"] = _areaBtn.currentTitle;
         }
         if (_detailAddressBtn.currentTitle.length) {
-            [contentArray addObject:_detailAddressBtn.currentTitle];
+            self.infoDict[@"address"] = _detailAddressBtn.currentTitle;
         }
         
         if (_industryBtn.currentTitle.length) {
-            [contentArray addObject:_industryBtn.currentTitle];
+            self.infoDict[@"industry"] = _industryBtn.currentTitle;
         }
         if (_phoneNumField.text.length) {
-            [contentArray addObject:_phoneNumField.text];
+            self.infoDict[@"phone"] = _phoneNumField.text;
         }
         
         if (_contactField.text.length) {
-            [contentArray addObject:_contactField.text];
+            self.infoDict[@"contact"] = _contactField.text;
         }
         
         if (_titleField.text.length) {
-            [contentArray addObject:_titleField.text];
+            self.infoDict[@"storeName"] = _titleField.text;
         }
-        self.ratio = [NSString stringWithFormat:@"%.2f%%",contentArray.count/15.00];
+        self.ratio = [NSString stringWithFormat:@"%.2f%%",self.infoDict.allValues.count/15.00];
         self.ratioLabel.text = [NSString stringWithFormat:@"%@",self.ratio.length>0?self.ratio:@"0"];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             HPReviseReleaseInfoViewController *shareInfoVC = [HPReviseReleaseInfoViewController new];
             shareInfoVC.ratio =  self.ratioLabel.text;
-            shareInfoVC.contentArray = contentArray;
+            shareInfoVC.infoDict = self.infoDict;
             shareInfoVC.delegate = self;
             [self.navigationController pushViewController:shareInfoVC animated:YES];
         });

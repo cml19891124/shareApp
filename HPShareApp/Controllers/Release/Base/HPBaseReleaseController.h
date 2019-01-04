@@ -67,6 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) HPShareReleaseParam *shareReleaseParam;
 
 @property (nonatomic, strong) NSMutableArray *intentionArray;
+//新增 信息完整度 字典
+@property (nonatomic, strong) NSMutableDictionary *infoDict;
 
 //添加公共UI组件
 

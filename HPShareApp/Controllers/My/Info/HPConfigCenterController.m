@@ -16,6 +16,9 @@
 #import "UIButton+WebCache.h"
 #import "HPClearCacheTool.h"
 
+#import "LEEAlert.h"
+
+
 typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoPortrait = 0,
     HPConfigGotoFullName,
@@ -26,12 +29,15 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoPhoneNum,
     HPConfigGotoPassword,
     HPConfigGotoVersion,
-    HPConfigGotoCache
+    HPConfigGotoCache,
+    HPConfigGotoAddBtn
 };
 
 @interface HPConfigCenterController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate,TZImagePickerControllerDelegate>
 @property (nonatomic, strong) UIView *accountInfoPanel;
 @property (nonatomic, weak) UIImageView *portraitView;
+@property (nonatomic, strong) UIView *professDetailPanel;
+@property (nonatomic, strong) UIView *versionPanel;
 
 @property (nonatomic, weak) HPRightImageButton *fullNameGotoBtn;
 
@@ -50,6 +56,12 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 @property (nonatomic, weak) HPRightImageButton *versionGotoBtn;
 
 @property (nonatomic, weak) HPRightImageButton *cacheGotoBtn;
+
+
+/**
+ 专属顾问的添加按钮
+ */
+@property (nonatomic, strong) HPRightImageButton *addBtn;
 
 @property (nonatomic, strong) UIImagePickerController *photoPicker;
 
@@ -130,6 +142,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.height.mas_equalTo(accountInfoLabel.font.pointSize);
     }];
     
+    //账号管理
     UIView *accountInfoPanel = [[UIView alloc] init];
     [self setupShadowOfPanel:accountInfoPanel];
     [scrollView addSubview:accountInfoPanel];
@@ -141,16 +154,45 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     }];
     [self setupAccountInfoPanel:accountInfoPanel];
     
+    //专属顾问
+    UIView *professionalPanel = [[UIView alloc] init];
+    [self setupShadowOfPanel:professionalPanel];
+    [scrollView addSubview:professionalPanel];
+    [professionalPanel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.accountInfoPanel.mas_bottom).with.offset(15.f * g_rateWidth);
+        make.left.equalTo(self.accountInfoPanel);
+        make.width.mas_equalTo(345.f * g_rateWidth);
+        make.height.mas_equalTo(63.f * g_rateWidth);
+    }];
+    [self setupProfessionalPanel:professionalPanel];
+    
+    //专属顾问详情
+    UIView *professDetailPanel = [[UIView alloc] init];
+    professDetailPanel.backgroundColor = UIColor.redColor;
+    [self setupShadowOfPanel:professDetailPanel];
+    [scrollView addSubview:professDetailPanel];
+    _professDetailPanel = professDetailPanel;
+    [professDetailPanel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(professionalPanel.mas_bottom).with.offset(15.f * g_rateWidth);
+        make.left.equalTo(self.accountInfoPanel);
+        make.width.mas_equalTo(345.f * g_rateWidth);
+        make.height.mas_equalTo(0.f * g_rateWidth);
+    }];
+    [self setupProfessDetailPanel:professDetailPanel];
+    
+    //版本控制
     UIView *versionPanel = [[UIView alloc] init];
     [self setupShadowOfPanel:versionPanel];
     [scrollView addSubview:versionPanel];
+    _versionPanel = versionPanel;
     [versionPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.accountInfoPanel.mas_bottom).with.offset(15.f * g_rateWidth);
+        make.top.equalTo(professionalPanel.mas_bottom).with.offset(15.f * g_rateWidth);
         make.centerX.equalTo(scrollView);
         make.width.mas_equalTo(345.f * g_rateWidth);
     }];
     [self setupVersionPanel:versionPanel];
     
+    //切换账号-退出登录
     UIButton *switchBtn = [[UIButton alloc] init];
     [switchBtn.layer setCornerRadius:24.f * g_rateWidth];
     [switchBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
@@ -166,12 +208,89 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.bottom.equalTo(scrollView).with.offset(-26.f * g_rateWidth);
     }];
 }
+
+#pragma mark - 专属顾问view
+- (void)setupProfessionalPanel:(UIView *)panel
+{
+    UIView *professionalRow = [self addRowOfParentView:panel withHeight:63.f * g_rateWidth margin:0.f isEnd:NO];
+    UILabel *professionalLabel = [self setupTitleLabelWithTitle:@"申请专属顾问"];
+    [professionalRow addSubview:professionalLabel];
+    [professionalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(professionalRow).offset(getWidth(19.f));
+        make.centerY.equalTo(professionalRow);
+        make.height.mas_equalTo(professionalLabel.font.pointSize);
+    }];
+    
+    HPRightImageButton *addBtn = [self setupGotoBtnWithTitle:@"去添加"];
+    [addBtn setTag:HPConfigGotoAddBtn];
+    [professionalRow addSubview:addBtn];
+    _addBtn = addBtn;
+    [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(professionalRow).offset(getWidth(-17.f));
+        make.centerY.equalTo(professionalLabel);
+    }];
+}
+
+#pragma mark - 专属顾问详情view
+- (void)setupProfessDetailPanel:(UIView *)view
+{
+    UIView *professDetailRow = [self addRowOfParentView:view withHeight:70.f * g_rateWidth margin:0.f isEnd:NO];
+    UIImageView *userIcon = [UIImageView new];
+    userIcon.image = ImageNamed(@"my_business_card_default_head_image");
+    [professDetailRow addSubview:userIcon];
+    [userIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(19.f));
+        make.height.mas_equalTo(getWidth(46.f));
+        make.width.mas_equalTo(getWidth(46.f));
+        make.centerY.mas_equalTo(professDetailRow);
+    }];
+    
+    UILabel *fessionnameLabel = [UILabel new];
+    fessionnameLabel.font = kFont_Medium(15.f);
+    fessionnameLabel.textColor = COLOR_BLACK_444444;
+    fessionnameLabel.textAlignment = NSTextAlignmentLeft;
+    fessionnameLabel.text = @"周银";
+    [professDetailRow addSubview:fessionnameLabel];
+    [fessionnameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(20.f));
+        make.top.mas_equalTo(getWidth(17.f));
+        make.width.mas_equalTo(kScreenWidth/3);
+        make.height.mas_equalTo(fessionnameLabel.font.pointSize);
+    }];
+    
+    UILabel *fessionInfoLabel = [UILabel new];
+    fessionInfoLabel.font = kFont_Bold(12.f);
+    fessionInfoLabel.textColor = COLOR_GRAY_999999;
+    fessionInfoLabel.textAlignment = NSTextAlignmentLeft;
+    fessionInfoLabel.text = @"专属顾问为您提供免费咨询服务";
+    [professDetailRow addSubview:fessionInfoLabel];
+    [fessionInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(20.f));
+        make.top.mas_equalTo(getWidth(11.f));
+        make.width.mas_equalTo(kScreenWidth/3);
+        make.height.mas_equalTo(fessionnameLabel.font.pointSize);
+    }];
+    
+    UIButton *callBtn = [UIButton new];
+    [callBtn setBackgroundImage:ImageNamed(@"call") forState:UIControlStateNormal];
+    [callBtn addTarget:self action:@selector(callProfessional:) forControlEvents:UIControlEventTouchUpInside];
+    [professDetailRow addSubview:callBtn];
+    [callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(getWidth(44.f), getWidth(44.f)));
+        make.right.mas_equalTo(getWidth(-18.f));
+        make.top.mas_equalTo(getWidth(13.f));
+    }];
+}
+
+- (void)callProfessional:(UIButton *)button
+{
+    
+}
+
 #pragma mark - 切换账号
 - (void)swithAccountOfOthers:(UIButton *)button
 {
     [self switchAccount];
-//    [HPUserTool deleteAccount];
-//    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)switchAccount
@@ -213,7 +332,6 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     UIImageView *portraitView = [[UIImageView alloc] init];
     [portraitView.layer setCornerRadius:23.f];
     [portraitView.layer setMasksToBounds:YES];
-//    [portraitView setImage:[UIImage imageNamed:@"my_business_card_default_head_image"]];
     [portraitCtrl addSubview:portraitView];
     [portraitView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.top.and.bottom.equalTo(portraitCtrl);
@@ -418,7 +536,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 - (void)setupShadowOfPanel:(UIView *)view {
     [view.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
     [view.layer setShadowOffset:CGSizeMake(0.f, 4.f)];
-    [view.layer setShadowRadius:15.f];
+    [view.layer setShadowRadius:6.f];
     [view.layer setShadowOpacity:0.3f];
     [view.layer setCornerRadius:15.f];
     [view setBackgroundColor:UIColor.whiteColor];
@@ -537,6 +655,11 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
             [self pushVCByClassName:@"HPForgetPasswordController" withParam:@{@"isForget":@"1"}];
             break;
             
+        case HPConfigGotoAddBtn:
+            NSLog(@"HPConfigGotoAddBtn");
+            [self getProfessionalDetailView:ctrl];
+            break;
+            
         case HPConfigGotoVersion:
             NSLog(@"HPConfigGotoVersion");
             break;
@@ -550,6 +673,48 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
             break;
     }
 }
+
+#pragma mark - 专属顾问 有无 切换按钮
+- (void)getProfessionalDetailView:(UIControl *)ctrl
+{
+    [_addBtn setText:@"去更改"];
+    
+    // 使用一个变量接收自定义的输入框对象 以便于在其他位置调用
+    
+    __block UITextField *tf = nil;
+    
+    [LEEAlert alert].config.LeeAddTextField(^(UITextField *textField) {
+        
+        // 这里可以进行自定义的设置
+        
+        textField.placeholder = @"请输入专属顾问号";
+        
+        textField.textColor = [UIColor darkGrayColor];
+        
+        tf = textField; //赋值
+    }).LeeCancelAction(@"取消", ^{
+        
+    })
+    .LeeAction(@"确认", ^{
+        [self layoutProfessionFrame];
+    })
+    .LeeShow(); // 设置完成后 别忘记调用Show来显示
+}
+
+- (void)layoutProfessionFrame
+{
+    [self.professDetailPanel mas_updateConstraints:^(MASConstraintMaker *make) {
+//        [make.height uninstall];
+        make.height.mas_equalTo(getWidth(70.f));
+    }];
+    HPLog(@"professDetailPanel:%@",self.professDetailPanel);
+    [self.versionPanel mas_updateConstraints:^(MASConstraintMaker *make) {
+        [make.top uninstall];
+        make.top.mas_equalTo(self.professDetailPanel.mas_bottom).offset(getWidth(15.f));
+    }];
+    
+}
+
 #pragma mark - 确定清除缓存数据
 - (void)setUpAlertViewForWarning
 {

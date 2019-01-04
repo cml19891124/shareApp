@@ -163,31 +163,36 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
 
 - (void)onClickReleaseBtn {
     if (_spaceBtn.text.length && ![_spaceBtn.text isEqualToString:@"不限"]) {
-        [_contentArray addObject:_spaceBtn.text];
+        self.infoDict[@"space"] = _spaceBtn.text;
     }
     if (_shareTimeBtn.text.length&& ![_shareTimeBtn.text isEqualToString:@"不限"]) {
-        [_contentArray addObject:_shareTimeBtn.text];
+        self.infoDict[@"time"] = _shareTimeBtn.text;
     }
     if (_industryBtn.text.length&& ![_industryBtn.text isEqualToString:@"面议"]) {
-        [_contentArray addObject:_industryBtn.text];
+        self.infoDict[@"intention"] = _industryBtn.text;
     }
     
     if (_rectTypeBtn.text.length) {
-        [_contentArray addObject:_rectTypeBtn.text];
+        self.infoDict[@"rentType"] = _rectTypeBtn.text;
     }
     if (_rectBtn.text.length) {
-        [_contentArray addObject:_rectBtn.text];
+        self.infoDict[@"rentAmount"] = _rectBtn.text;
     }
     
     if (_leavesInfo.length) {
-        [_contentArray addObject:_leavesInfo];
+        self.infoDict[@"leaves"] = _leavesInfo;
     }
     
-    self.ratio = [NSString stringWithFormat:@"%.2f%%",_contentArray.count/15.00];
+    self.ratio = [NSString stringWithFormat:@"%.2f%%",self.infoDict.allValues.count/15.00];
+    if ([self.ratio isEqualToString:@"1.00%"]) {
+        self.ratio = @"100%";
+    }
     self.ratioLabel.text = [NSString stringWithFormat:@"%@",self.ratio.length>0?self.ratio:@"0"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         HPOwnnerReleaseViewController *ownnervc = [HPOwnnerReleaseViewController new];
         ownnervc.delegate = self;
+        ownnervc.infoDict = self.infoDict;
+        ownnervc.ratio = self.ratio;
         [self.navigationController pushViewController:ownnervc animated:YES];
     });
     
@@ -338,6 +343,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
     kWeakSelf(weakSelf);
     [amountItemView setRentAmountItemClickBtnBlock:^(NSString *model) {
         weakSelf.currentPrice = model;
+        [weakSelf.rectBtn setText:model];
     }];
     _amountItemView = amountItemView;
     [amountItemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -588,7 +594,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
     if (type == HPShareGotoBtnTagSpace) {
         typeArr = @[@"不限",@"小于5㎡",@"5-10㎡",@"10-20㎡",@"20㎡以上"];
     }else if (type == HPShareGotoBtnTagTimeDuring){
-        typeArr = @[@"00:00",@"01:00",@"02:00",@"03:00",@"04:00",@"05:00",@"06:00",@"07:00",@"08:00",@"09:00",@"10:00",@"11:00",@"12:00",@"13:00",@"14:00",@"15:00",@"16:00",@"17:00",@"18:00",@"19:00",@"20:00",@"21:00",@"22:00",@"23:00",@"24:00"];
+        typeArr = @[@"00:00-01:00",@"01:00-02:00",@"02:00-03:00",@"03:00-04:00",@"04:00-05:00",@"05:00-06:00",@"06:00-07:00",@"07:00-08:00",@"08:00-09:00",@"09:00-10:00",@"10:00-11:00",@"11:00-12:00",@"12:00-13:00",@"13:00-14:00",@"14:00-15:00",@"15:00-16:00",@"16:00-17:00",@"17:00-18:00",@"18:00-19:00",@"19:00-20:00",@"20:00-21:00",@"21:00-22:00",@"22:00-23:00",@"23:00-24:00"];
     }
     CDZPickerBuilder *builder = [CDZPickerBuilder new];
     builder.showMask = YES;

@@ -57,6 +57,25 @@ static NSArray<HPAreaModel *> *areaModels;
     return nil;
 }
 
++(NSString *)getIndustryIdByIndustryName:(NSString *)industryName {
+    [HPCommonData getIndustryData];
+    if (industryModels) {
+        for (HPIndustryModel *model in industryModels) {
+            if ([model.industryName isEqualToString:industryName]) {
+                return model.industryId;
+            }
+            
+            for (HPIndustryModel *subModel in model.children) {
+                if ([subModel.industryName isEqualToString:industryName]) {
+                    return subModel.industryId;
+                }
+            }
+        }
+    }
+    
+    return nil;
+}
+
 + (NSArray<HPAreaModel *> *)getAreaData {
     if (areaModels == nil) {
         [HPCommonData requestAreaData];
@@ -124,4 +143,21 @@ static NSArray<HPAreaModel *> *areaModels;
     return nil;
 }
 
++ (NSString *)getDistrictIdByAreaName:(NSString *)areaName districtName:(NSString *)districtName {
+    [HPCommonData getAreaData];
+    if (areaModels) {
+        for (HPAreaModel *model in areaModels) {
+            if ([areaName isEqualToString:model.name]) {
+                NSArray<HPDistrictModel *> *dModels = model.children;
+                for (HPDistrictModel *dModel in dModels) {
+                    if ([dModel.name isEqualToString:districtName]) {
+                        return dModel.districtId;
+                    }
+                }
+            }
+        }
+    }
+    
+    return nil;
+}
 @end

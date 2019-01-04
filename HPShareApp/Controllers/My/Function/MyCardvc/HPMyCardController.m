@@ -555,7 +555,7 @@ typedef NS_ENUM(NSInteger, HPMyCardType) {
                 [self.portraitView sd_setImageWithURL:[NSURL URLWithString:cardDetailsModel.avatarUrl] placeholderImage:ImageNamed(@"my_business_card_default_head_image")];
             }
             
-            if ([userId isEqualToString:account.userInfo.userId]) {
+            if ([userId intValue] == [account.userInfo.userId intValue]) {
                 [self.editBtn setTitle:@"编辑名片" forState:UIControlStateNormal];
                 [self.editBtn setTag:HPMyCardTypeEdit];
             }else{

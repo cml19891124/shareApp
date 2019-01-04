@@ -81,6 +81,8 @@
 		E61FE0AA21BA6F5C00555F3F /* HPHTTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0A821BA6F5C00555F3F /* HPHTTPManager.m */; };
 		E61FE0B021BA816D00555F3F /* HPUserTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0AC21BA816C00555F3F /* HPUserTool.m */; };
 		E61FE0B121BA816D00555F3F /* HPLoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0AD21BA816C00555F3F /* HPLoginModel.m */; };
+		E620646721DEFC5700E37568 /* HPInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E620646621DEFC5700E37568 /* HPInfoModel.m */; };
+		E620646D21DF81BA00E37568 /* LEEAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = E620646B21DF81BA00E37568 /* LEEAlert.m */; };
 		E622A9BC21C33989007C35BC /* YYLRefreshRequestErrorView.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9B121C33989007C35BC /* YYLRefreshRequestErrorView.m */; };
 		E622A9BD21C33989007C35BC /* YYLRefreshNoDataView.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9B221C33989007C35BC /* YYLRefreshNoDataView.m */; };
 		E622A9BE21C33989007C35BC /* UIScrollView+Refresh.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9B421C33989007C35BC /* UIScrollView+Refresh.m */; };
@@ -391,6 +393,11 @@
 		E61FE0AD21BA816C00555F3F /* HPLoginModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPLoginModel.m; sourceTree = "<group>"; };
 		E61FE0AE21BA816C00555F3F /* HPUserTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPUserTool.h; sourceTree = "<group>"; };
 		E61FE0AF21BA816C00555F3F /* HPLoginModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPLoginModel.h; sourceTree = "<group>"; };
+		E620646521DEFC5700E37568 /* HPInfoModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPInfoModel.h; sourceTree = "<group>"; };
+		E620646621DEFC5700E37568 /* HPInfoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPInfoModel.m; sourceTree = "<group>"; };
+		E620646A21DF81BA00E37568 /* LEEAlertHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEEAlertHelper.h; sourceTree = "<group>"; };
+		E620646B21DF81BA00E37568 /* LEEAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEEAlert.m; sourceTree = "<group>"; };
+		E620646C21DF81BA00E37568 /* LEEAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEEAlert.h; sourceTree = "<group>"; };
 		E622A9B121C33989007C35BC /* YYLRefreshRequestErrorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYLRefreshRequestErrorView.m; sourceTree = "<group>"; };
 		E622A9B221C33989007C35BC /* YYLRefreshNoDataView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYLRefreshNoDataView.m; sourceTree = "<group>"; };
 		E622A9B321C33989007C35BC /* YYLRefreshNoNetworkView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYLRefreshNoNetworkView.h; sourceTree = "<group>"; };
@@ -724,6 +731,7 @@
 		69165CC721BDFB4800593D25 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				E620646421DEFC3000E37568 /* Model */,
 				E692144221D4800D00ED6B5C /* View */,
 				69165CC421BDFB4100593D25 /* HPBaseReleaseController.h */,
 				69165CC521BDFB4100593D25 /* HPBaseReleaseController.m */,
@@ -1025,6 +1033,25 @@
 				E61FE0AD21BA816C00555F3F /* HPLoginModel.m */,
 			);
 			path = HPUser;
+			sourceTree = "<group>";
+		};
+		E620646421DEFC3000E37568 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E620646521DEFC5700E37568 /* HPInfoModel.h */,
+				E620646621DEFC5700E37568 /* HPInfoModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E620646921DF81BA00E37568 /* LEEAlert */ = {
+			isa = PBXGroup;
+			children = (
+				E620646A21DF81BA00E37568 /* LEEAlertHelper.h */,
+				E620646B21DF81BA00E37568 /* LEEAlert.m */,
+				E620646C21DF81BA00E37568 /* LEEAlert.h */,
+			);
+			path = LEEAlert;
 			sourceTree = "<group>";
 		};
 		E622A9AF21C33989007C35BC /* YYLrefresh */ = {
@@ -1461,6 +1488,7 @@
 		E661B0FB21A28D7F00C86CF5 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				E620646921DF81BA00E37568 /* LEEAlert */,
 				E6B4CECC21C5286E00429C11 /* SDCycleScrollView */,
 				E622A9AF21C33989007C35BC /* YYLrefresh */,
 				E61FE09A21B9F94500555F3F /* iCarousel */,
@@ -1998,6 +2026,7 @@
 				E6D75F2521AD1B3900B2067C /* HPLoginController.m in Sources */,
 				E6D75F7C21B54FDD00B2067C /* HPShareGoodViewController.m in Sources */,
 				E6D75F3E21AFDEB700B2067C /* HPRightImageButton.m in Sources */,
+				E620646D21DF81BA00E37568 /* LEEAlert.m in Sources */,
 				E661B0C7219CFF1800C86CF5 /* HPProgressHUD.m in Sources */,
 				7AAFF36821CD2F680049D175 /* HPTimeRentButton.m in Sources */,
 				E661B0CD219D1B9200C86CF5 /* HPRowPanel.m in Sources */,
@@ -2010,6 +2039,7 @@
 				E661B0AA219C1AE800C86CF5 /* HPBaseModalView.m in Sources */,
 				7A54485721C169AE001301F3 /* HPPartyCenterController.m in Sources */,
 				E67B778E21CDEEB1007AC636 /* HPRentAmountItemView.m in Sources */,
+				E620646721DEFC5700E37568 /* HPInfoModel.m in Sources */,
 				E661B0D6219D436900C86CF5 /* HPAlertSheet.m in Sources */,
 				69165CCB21BE098100593D25 /* HPAddPhotoView.m in Sources */,
 				E661B12B21A28E8500C86CF5 /* JTHorizontalCalendarView.m in Sources */,

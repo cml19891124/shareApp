@@ -19,7 +19,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     [self.view setBackgroundColor:COLOR_GRAY_F6F6F6];
     
     UIScrollView *scrollView = [[UIScrollView alloc] init];
@@ -50,9 +49,15 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
 }
 
+- (NSMutableDictionary *)infoDict
+{
+    if (!_infoDict) {
+        _infoDict = [NSMutableDictionary dictionary];
+    }
+    return _infoDict;
+}
 #pragma mark - 获取意向行业类型
 - (void)getIntentionIndustry
 {
