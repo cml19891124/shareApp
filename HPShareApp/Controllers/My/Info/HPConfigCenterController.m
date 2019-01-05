@@ -15,7 +15,7 @@
 #import "HPUploadImageHandle.h"
 #import "UIButton+WebCache.h"
 #import "HPClearCacheTool.h"
-
+#import "HPCustomerServiceModalView.h"
 #import "LEEAlert.h"
 
 
@@ -33,11 +33,12 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoAddBtn
 };
 
-@interface HPConfigCenterController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate,TZImagePickerControllerDelegate>
+@interface HPConfigCenterController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate,TZImagePickerControllerDelegate,UITextFieldDelegate>
 @property (nonatomic, strong) UIView *accountInfoPanel;
 @property (nonatomic, weak) UIImageView *portraitView;
 @property (nonatomic, strong) UIView *professDetailPanel;
 @property (nonatomic, strong) UIView *versionPanel;
+@property (nonatomic, weak) HPCustomerServiceModalView *customerServiceModalView;
 
 @property (nonatomic, weak) HPRightImageButton *fullNameGotoBtn;
 
@@ -57,11 +58,33 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 
 @property (nonatomic, weak) HPRightImageButton *cacheGotoBtn;
 
-
+@property (nonatomic, strong) MASConstraint *versionTop;
 /**
  专属顾问的添加按钮
  */
 @property (nonatomic, strong) HPRightImageButton *addBtn;
+
+
+/**
+ 顾问头像
+ */
+@property (nonatomic, strong) UIImageView *userIcon;
+
+/**
+ 顾问名称
+ */
+@property (nonatomic, strong) UILabel *fessionnameLabel;
+
+/**
+ 顾问职责
+ */
+@property (nonatomic, strong) UILabel *fessionInfoLabel;
+
+
+/**
+ 业务员id field
+ */
+@property (nonatomic, strong) UITextField *fessionField;
 
 @property (nonatomic, strong) UIImagePickerController *photoPicker;
 
@@ -88,13 +111,14 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [self setText:model.userInfo.password?@"修改":@"未设置" ofBtnWithType:HPConfigGotoPassword];
     [self setText:@"V1.1.0" ofBtnWithType:HPConfigGotoVersion];
     [self setText:cacheStr.length>0 ?cacheStr:@"16.8MB" ofBtnWithType:HPConfigGotoCache];
+    //查询绑定的业务员
+    [self queryOnlineProducters];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self setupUI];
-    
     
     kWeakSelf(weakSelf);
     HPAlertSheet *alertSheet = [[HPAlertSheet alloc] init];
@@ -176,7 +200,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.top.equalTo(professionalPanel.mas_bottom).with.offset(15.f * g_rateWidth);
         make.left.equalTo(self.accountInfoPanel);
         make.width.mas_equalTo(345.f * g_rateWidth);
-        make.height.mas_equalTo(0.f * g_rateWidth);
+        make.height.mas_equalTo(70.f * g_rateWidth);
     }];
     [self setupProfessDetailPanel:professDetailPanel];
     
@@ -186,7 +210,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [scrollView addSubview:versionPanel];
     _versionPanel = versionPanel;
     [versionPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(professionalPanel.mas_bottom).with.offset(15.f * g_rateWidth);
+        MASConstraint *versionTop = make.top.equalTo(professionalPanel.mas_bottom).with.offset(15.f * g_rateWidth);
+        self.versionTop = versionTop;
         make.centerX.equalTo(scrollView);
         make.width.mas_equalTo(345.f * g_rateWidth);
     }];
@@ -212,9 +237,10 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 专属顾问view
 - (void)setupProfessionalPanel:(UIView *)panel
 {
-    UIView *professionalRow = [self addRowOfParentView:panel withHeight:63.f * g_rateWidth margin:0.f isEnd:NO];
+    UIView *professionalRow = [self addRowOfParentView:panel withHeight:70.f * g_rateWidth margin:0.f isEnd:NO];
     UILabel *professionalLabel = [self setupTitleLabelWithTitle:@"申请专属顾问"];
     [professionalRow addSubview:professionalLabel];
+    _professDetailPanel = professionalRow;
     [professionalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(professionalRow).offset(getWidth(19.f));
         make.centerY.equalTo(professionalRow);
@@ -238,6 +264,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     UIImageView *userIcon = [UIImageView new];
     userIcon.image = ImageNamed(@"my_business_card_default_head_image");
     [professDetailRow addSubview:userIcon];
+    self.userIcon = userIcon;
     [userIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(getWidth(19.f));
         make.height.mas_equalTo(getWidth(46.f));
@@ -251,6 +278,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     fessionnameLabel.textAlignment = NSTextAlignmentLeft;
     fessionnameLabel.text = @"周银";
     [professDetailRow addSubview:fessionnameLabel];
+    self.fessionnameLabel = fessionnameLabel;
     [fessionnameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(20.f));
         make.top.mas_equalTo(getWidth(17.f));
@@ -259,15 +287,16 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     }];
     
     UILabel *fessionInfoLabel = [UILabel new];
-    fessionInfoLabel.font = kFont_Bold(12.f);
+    fessionInfoLabel.font = kFont_Medium(12.f);
     fessionInfoLabel.textColor = COLOR_GRAY_999999;
     fessionInfoLabel.textAlignment = NSTextAlignmentLeft;
     fessionInfoLabel.text = @"专属顾问为您提供免费咨询服务";
     [professDetailRow addSubview:fessionInfoLabel];
+    self.fessionInfoLabel = fessionInfoLabel;
     [fessionInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(20.f));
-        make.top.mas_equalTo(getWidth(11.f));
-        make.width.mas_equalTo(kScreenWidth/3);
+        make.top.mas_equalTo(fessionnameLabel.mas_bottom).offset(getWidth(11.f));
+        make.right.mas_equalTo(professDetailRow).offset(getWidth(-65.f));
         make.height.mas_equalTo(fessionnameLabel.font.pointSize);
     }];
     
@@ -282,9 +311,18 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     }];
 }
 
+#pragma mark - 拨打业务员电话
 - (void)callProfessional:(UIButton *)button
 {
+    if (_customerServiceModalView == nil) {
+        HPCustomerServiceModalView *customerServiceModalView = [[HPCustomerServiceModalView alloc] initWithParent:self.parentViewController.view];
+        customerServiceModalView.phone = @"0755-86713128";
+        [customerServiceModalView setPhoneString:@"0755-86713128"];
+        _customerServiceModalView = customerServiceModalView;
+    }
     
+    [_customerServiceModalView show:YES];
+    [self.parentViewController.view bringSubviewToFront:_customerServiceModalView]; 
 }
 
 #pragma mark - 切换账号
@@ -538,7 +576,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [view.layer setShadowOffset:CGSizeMake(0.f, 4.f)];
     [view.layer setShadowRadius:6.f];
     [view.layer setShadowOpacity:0.3f];
-    [view.layer setCornerRadius:15.f];
+    [view.layer setCornerRadius:6.f];
     [view setBackgroundColor:UIColor.whiteColor];
 }
 
@@ -677,11 +715,9 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 专属顾问 有无 切换按钮
 - (void)getProfessionalDetailView:(UIControl *)ctrl
 {
-    [_addBtn setText:@"去更改"];
-    
     // 使用一个变量接收自定义的输入框对象 以便于在其他位置调用
     
-    __block UITextField *tf = nil;
+    __block UITextField *fessionField = nil;
     
     [LEEAlert alert].config.LeeAddTextField(^(UITextField *textField) {
         
@@ -691,28 +727,25 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         
         textField.textColor = [UIColor darkGrayColor];
         
-        tf = textField; //赋值
+        fessionField = textField; //赋值
+        self.fessionField = fessionField;
+        self.fessionField.delegate = self;
     }).LeeCancelAction(@"取消", ^{
         
     })
     .LeeAction(@"确认", ^{
-        [self layoutProfessionFrame];
+        [self getUserToAddUserProducter];
     })
     .LeeShow(); // 设置完成后 别忘记调用Show来显示
 }
 
+#pragma mark - 更改详情顾问 约束
 - (void)layoutProfessionFrame
 {
-    [self.professDetailPanel mas_updateConstraints:^(MASConstraintMaker *make) {
-//        [make.height uninstall];
-        make.height.mas_equalTo(getWidth(70.f));
-    }];
-    HPLog(@"professDetailPanel:%@",self.professDetailPanel);
     [self.versionPanel mas_updateConstraints:^(MASConstraintMaker *make) {
-        [make.top uninstall];
+        [self.versionTop uninstall];
         make.top.mas_equalTo(self.professDetailPanel.mas_bottom).offset(getWidth(15.f));
     }];
-    
 }
 
 #pragma mark - 确定清除缓存数据
@@ -863,5 +896,70 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
     }];
+}
+
+#pragma mark - 查询绑定的业务员-----------业务员相关网络请求
+- (void)queryOnlineProducters
+{
+    HPLoginModel *account = [HPUserTool account];
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/salesman/query" isNeedToken:YES paraments:@{@"userId":account.userInfo.userId} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+#pragma mark - 进行用户绑定业务员 判断操作
+- (void)getUserToAddUserProducter
+{
+    if (_fessionField.text.length <= 4) {
+        [HPProgressHUD alertMessage:@"请输入四位业务员编码"];
+    }else{
+        [self addUserProducter];
+    }
+}
+
+#pragma mark - 用户绑定业务员
+- (void)addUserProducter
+{
+    HPLoginModel *account = [HPUserTool account];
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/salesman/addUser" paraments:@{@"staffCode":_fessionField.text,@"userId":account.userInfo.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [self.addBtn setText:@"去更改"];
+
+            [self layoutProfessionFrame];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Progress:nil Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+#pragma mark - uitextfielddelegate
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField == _fessionField) {
+        if (textField.text.length < 4) {
+            [HPProgressHUD alertMessage:@"请输入四位顾问编码"];
+        }else{
+            textField.text = [textField.text substringToIndex:textField.text.length -1];
+        }
+    }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (textField == _fessionField) {
+        if (textField.text.length >= 4) {
+            textField.text = [textField.text substringToIndex:textField.text.length -1];
+            [HPProgressHUD alertMessage:@"顾问编码不得超过四位"];
+        }
+    }
+    return YES;
 }
 @end

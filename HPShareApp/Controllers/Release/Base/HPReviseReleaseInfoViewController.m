@@ -78,7 +78,6 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
  当前选中的租赁价格
  */
 @property (nonatomic, copy) NSString *currentPrice;
-//@property (nonatomic, strong) NSMutableArray *intentionArray;
 
 @property (nonatomic, strong) UILabel *ratioLabel;
 @property (nonatomic, strong) UILabel *infoLabel;
@@ -454,8 +453,6 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
     [rentView setTag:HPShareGotoBtnTagRectType];
     [rentView addGestureRecognizer:tap];
     HPRightImageButton *rectTypeBtn = [self setupGotoBtnWithTitle:@""];
-//    [rectTypeBtn setTag:HPShareGotoBtnTagRectType];
-//    [rectTypeBtn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];
     [rentView addSubview:rectTypeBtn];
     _rectTypeBtn = rectTypeBtn;
     [_rectTypeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -498,8 +495,6 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
     [self setupTitleLabelWithText:@"备注信息" ofView:leavesView];
 
     HPRightImageButton *leavesBtn = [self setupGotoBtnWithTitle:@""];
-//    [leavesBtn setTag:HPShareGotoBtnTagLeaves];
-//    [leavesBtn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];
     [leavesView addSubview:leavesBtn];
     _leavesBtn = leavesBtn;
     [_leavesBtn mas_makeConstraints:^(MASConstraintMaker *make) {

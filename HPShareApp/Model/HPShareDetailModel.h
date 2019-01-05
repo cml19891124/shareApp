@@ -33,6 +33,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *area;
 
+
+/**
+ 面积范围
+ */
+@property (nonatomic, copy) NSString *areaRange;
+
+
 @property (nonatomic, copy) NSString *rent;
 
 @property (nonatomic, assign) NSInteger rentType;
@@ -58,7 +65,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger collected;
 
 @property (nonatomic, strong) NSArray<HPPictureModel *> *pictures;
+//纬度
+@property (nonatomic, copy) NSString *latitude;
+//经度
+@property (nonatomic, copy) NSString *longitude;
 
+
+/**
+ 租赁模式
+ */
+@property (nonatomic, copy) NSString *rentMode;
 @end
 
 NS_ASSUME_NONNULL_END
