@@ -7,13 +7,13 @@
 //
 
 #import <MAMapKit/MAMapKit.h>
-#import "CustomCalloutView.h"
+#import "XCUCustomContentView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPShareMapAnnotationView : MAAnnotationView
-@property (nonatomic, strong) CustomCalloutView *calloutView;
-
+@property (nonatomic, strong) UIView *contentView;
+@property (strong, nonatomic) XCUCustomContentView *infoView;
 @property (nonatomic, strong) UIImage *normalImage;
 
 @property (nonatomic, strong) UIImage *selectedImage;

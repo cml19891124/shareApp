@@ -22,7 +22,9 @@
 #import "HPShareMapAnnotation.h"
 #import "HPImageUtil.h"
 #import "HPShareMapAnnotationView.h"
-#import "HPCustomCalloutView.h"
+#import "XCUCallOutMapAnnotation.h"
+#import "XCUCustomContentView.h"
+#import "XCUCustomAnnotationCalloutView.h"
 
 #define kCalloutViewMargin          -8
 
@@ -37,7 +39,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 /**
  呼出框
  */
-@property (nonatomic, strong) HPCustomCalloutView *calloutView;
+@property (nonatomic, strong) XCUCustomAnnotationCalloutView *calloutView;
 @property (nonatomic, copy) NSString *getTime;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIButton *backBtn;
@@ -234,10 +236,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     center.latitude = [_model.latitude doubleValue];
     center.longitude = [_model.longitude doubleValue];
 
-    //路径规划
-//    self.mapSearch = [[AMapSearchAPI alloc] init];
-//    self.mapSearch.delegate = self;
-    
     //    iOS 去除高德地图下方的 logo 图标
     [self.mapView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
@@ -256,8 +254,8 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     //添加屏幕中心点
     [self.mapView addAnnotation:storeAnnotion];
     [self.mapView setCenterCoordinate:storeAnnotion.coordinate];
-//    self.centerPoint.title = _model.title;
-//    self.centerPoint.subtitle = _model.address;
+    
+    self.mapView.selectedAnnotations = @[storeAnnotion];
 }
 
 - (MAPointAnnotation *)centerPoint
@@ -266,12 +264,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     {
         _centerPoint = [[MAPointAnnotation alloc] init];
         _centerPoint.coordinate = self.mapView.userLocation.location.coordinate;
-//        CLLocationCoordinate2D coordinate;
-//        coordinate.longitude = [_model.longitude doubleValue];
-//        coordinate.latitude = [_model.latitude doubleValue];
-//
-//        _centerPoint.coordinate = coordinate;
-        
         _centerPoint.lockedToScreen = YES;
         _centerPoint.lockedScreenPoint = self.mapView.center;
     }
@@ -383,10 +375,10 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     return _mapSuperView;
 }
 
-- (HPCustomCalloutView *)calloutView
+- (XCUCustomAnnotationCalloutView *)calloutView
 {
     if (!_calloutView) {
-        _calloutView = [HPCustomCalloutView new];
+        _calloutView = [XCUCustomAnnotationCalloutView new];
         _calloutView.backgroundColor = COLOR_GRAY_FFFFFF;
         [_calloutView.layer setShadowColor:COLOR_GRAY_A6A6A6.CGColor];
         [_calloutView.layer setShadowOffset:CGSizeMake(0.f, 2.f)];
@@ -1399,8 +1391,10 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     
     if ([annotation isKindOfClass:HPShareMapAnnotation.class]) {
         //此时annotation就是我们calloutview的annotation
-        HPShareMapAnnotation *ann = (HPShareMapAnnotation *)annotation;
         HPShareMapAnnotationView *annotationView = [[HPShareMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
+        /*
+        HPShareMapAnnotation *ann = (HPShareMapAnnotation *)annotation;
+
         //否则创建新的calloutView
         if (!annotationView) {
             annotationView = [[HPShareMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"calloutview"] ;
@@ -1410,13 +1404,13 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
             [annotationView.contentView addSubview:cell];
             annotationView.infoView = cell;
         }
-        annotationView.centerOffset = CGPointMake(0, -80);
+        annotationView.centerOffset = CGPointMake(0, -5);
         //开始设置添加marker时的赋值
-        annotationView.infoView.deviceLable.text = [ann.locationInfo objectForKey:@"device"];
+        annotationView.infoView.deviceLable.text = @"fdgdfg";[ann.locationInfo objectForKey:@"device"];
         annotationView.infoView.adressLable.text = [ann.locationInfo objectForKey:@"adress"];
-        annotationView.infoView.timeLable.text =[ann.locationInfo objectForKey:@"time"];
+        annotationView.infoView.timeLable.text = [ann.locationInfo objectForKey:@"time"];
         [annotationView setImage:ImageNamed(@"gps_location")];
-//        annotationView.canShowCallout = YES;
+        annotationView.canShowCallout = NO;*/
         return annotationView;
     }
 
@@ -1429,6 +1423,14 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 //    [view setSelected:YES];
     // 被点击的MKAnnotationView的标题和副标题
     NSString *titleStr = view.annotation.title;
+//    HPShareMapAnnotation *annoview = mapView.selectedAnnotations[0];
+//    annoview.title = titleStr;
+//    [view.customCalloutView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.size.mas_equalTo(CGSizeMake(getWidth(335.f), getWidth(100.f)));
+//        make.top.mas_equalTo(getWidth(41.f));
+//        make.centerX.mas_equalTo(self.mapView);
+//    }];
+    
 }
 
 

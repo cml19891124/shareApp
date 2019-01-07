@@ -14,6 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPShareMapAnnotation : NSObject <MAAnnotation>
 
+@property (nonatomic) CLLocationDegrees latitude;
+@property (nonatomic) CLLocationDegrees longitude;
+
+
+@property(retain,nonatomic) NSDictionary *locationInfo;//callout吹出框要显示的各信息
 
 @property (nonatomic, strong) HPShareDetailModel *model;
 
