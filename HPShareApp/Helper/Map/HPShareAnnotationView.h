@@ -13,6 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPShareAnnotationView : MAAnnotationView
 
+@property (nonatomic, strong) UIImage *normalImage;
+
+@property (nonatomic, strong) UIImage *selectedImage;
+
+@property (nonatomic, weak) UILabel * _Nullable titleLabel;
+
 @end
 
 NS_ASSUME_NONNULL_END

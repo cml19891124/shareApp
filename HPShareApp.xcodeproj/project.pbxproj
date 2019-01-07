@@ -175,6 +175,18 @@
 		E6830E5121D20594000E0F39 /* HPMenuOpenStoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6830E5021D20594000E0F39 /* HPMenuOpenStoreView.m */; };
 		E692144121D46CB300ED6B5C /* HPOwnnerReleaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E692144021D46CB300ED6B5C /* HPOwnnerReleaseViewController.m */; };
 		E692144521D4802700ED6B5C /* HPUploadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E692144421D4802700ED6B5C /* HPUploadButton.m */; };
+		E698105621E2E28D006D8EC3 /* HPGeodeMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E698105521E2E28D006D8EC3 /* HPGeodeMapViewController.m */; };
+		E698106321E2E5E8006D8EC3 /* LineDashPolyline.m in Sources */ = {isa = PBXBuildFile; fileRef = E698105A21E2E5E8006D8EC3 /* LineDashPolyline.m */; };
+		E698106421E2E5E8006D8EC3 /* MANaviRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = E698105B21E2E5E8006D8EC3 /* MANaviRoute.m */; };
+		E698106521E2E5E8006D8EC3 /* CommonUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = E698105C21E2E5E8006D8EC3 /* CommonUtility.m */; };
+		E698106621E2E5E8006D8EC3 /* MANaviPolyline.m in Sources */ = {isa = PBXBuildFile; fileRef = E698105D21E2E5E8006D8EC3 /* MANaviPolyline.m */; };
+		E698106721E2E5E8006D8EC3 /* MANaviAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = E698105F21E2E5E8006D8EC3 /* MANaviAnnotation.m */; };
+		E698106F21E30403006D8EC3 /* HPShareMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = E698106E21E30403006D8EC3 /* HPShareMapAnnotation.m */; };
+		E698107221E319EA006D8EC3 /* HPShareMapAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = E698107121E319EA006D8EC3 /* HPShareMapAnnotationView.m */; };
+		E698108621E37AC5006D8EC3 /* XCUCustomContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = E698107F21E37AC5006D8EC3 /* XCUCustomContentView.m */; };
+		E698108721E37AC5006D8EC3 /* XCUCustomAnnotationCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = E698108021E37AC5006D8EC3 /* XCUCustomAnnotationCalloutView.m */; };
+		E698108821E37AC5006D8EC3 /* XCUCallOutMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = E698108121E37AC5006D8EC3 /* XCUCallOutMapAnnotation.m */; };
+		E698108921E37AC5006D8EC3 /* XCUCustomContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E698108421E37AC5006D8EC3 /* XCUCustomContentView.xib */; };
 		E6A8108321D700CE0048AA01 /* HPSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A8108221D700CE0048AA01 /* HPSearchBar.m */; };
 		E6B4CECB21C51A4400429C11 /* HPGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CECA21C51A4400429C11 /* HPGuideViewController.m */; };
 		E6B4CEDC21C5286F00429C11 /* SDCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED021C5286E00429C11 /* SDCycleScrollView.m */; };
@@ -185,7 +197,6 @@
 		E6B4CEE121C5286F00429C11 /* TAAnimatedDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED721C5286F00429C11 /* TAAnimatedDotView.m */; };
 		E6B4CEE221C5286F00429C11 /* TAAbstractDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED821C5286F00429C11 /* TAAbstractDotView.m */; };
 		E6B8987521D0D53900FD443B /* HPStoreLeavesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */; };
-		E6CD24E421E0D28800CE9261 /* HPCustomPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = E6CD24E321E0D28800CE9261 /* HPCustomPointAnnotation.m */; };
 		E6D75F1321A78AD300B2067C /* HPSharePersonCard.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */; };
 		E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1621A811E500B2067C /* HPWhatIsShareSpaceController.m */; };
 		E6D75F1A21ABCA7B00B2067C /* HPHowToPlayShareSpaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1921ABCA7B00B2067C /* HPHowToPlayShareSpaceController.m */; };
@@ -590,6 +601,29 @@
 		E692144021D46CB300ED6B5C /* HPOwnnerReleaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOwnnerReleaseViewController.m; sourceTree = "<group>"; };
 		E692144321D4802700ED6B5C /* HPUploadButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPUploadButton.h; sourceTree = "<group>"; };
 		E692144421D4802700ED6B5C /* HPUploadButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUploadButton.m; sourceTree = "<group>"; };
+		E698105421E2E28D006D8EC3 /* HPGeodeMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPGeodeMapViewController.h; sourceTree = "<group>"; };
+		E698105521E2E28D006D8EC3 /* HPGeodeMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPGeodeMapViewController.m; sourceTree = "<group>"; };
+		E698105921E2E5E8006D8EC3 /* MANaviAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MANaviAnnotation.h; sourceTree = "<group>"; };
+		E698105A21E2E5E8006D8EC3 /* LineDashPolyline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineDashPolyline.m; sourceTree = "<group>"; };
+		E698105B21E2E5E8006D8EC3 /* MANaviRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MANaviRoute.m; sourceTree = "<group>"; };
+		E698105C21E2E5E8006D8EC3 /* CommonUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonUtility.m; sourceTree = "<group>"; };
+		E698105D21E2E5E8006D8EC3 /* MANaviPolyline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MANaviPolyline.m; sourceTree = "<group>"; };
+		E698105E21E2E5E8006D8EC3 /* MANaviRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MANaviRoute.h; sourceTree = "<group>"; };
+		E698105F21E2E5E8006D8EC3 /* MANaviAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MANaviAnnotation.m; sourceTree = "<group>"; };
+		E698106021E2E5E8006D8EC3 /* LineDashPolyline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineDashPolyline.h; sourceTree = "<group>"; };
+		E698106121E2E5E8006D8EC3 /* MANaviPolyline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MANaviPolyline.h; sourceTree = "<group>"; };
+		E698106221E2E5E8006D8EC3 /* CommonUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonUtility.h; sourceTree = "<group>"; };
+		E698106D21E30403006D8EC3 /* HPShareMapAnnotation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareMapAnnotation.h; sourceTree = "<group>"; };
+		E698106E21E30403006D8EC3 /* HPShareMapAnnotation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareMapAnnotation.m; sourceTree = "<group>"; };
+		E698107021E319EA006D8EC3 /* HPShareMapAnnotationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareMapAnnotationView.h; sourceTree = "<group>"; };
+		E698107121E319EA006D8EC3 /* HPShareMapAnnotationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareMapAnnotationView.m; sourceTree = "<group>"; };
+		E698107F21E37AC5006D8EC3 /* XCUCustomContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCUCustomContentView.m; sourceTree = "<group>"; };
+		E698108021E37AC5006D8EC3 /* XCUCustomAnnotationCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCUCustomAnnotationCalloutView.m; sourceTree = "<group>"; };
+		E698108121E37AC5006D8EC3 /* XCUCallOutMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCUCallOutMapAnnotation.m; sourceTree = "<group>"; };
+		E698108221E37AC5006D8EC3 /* XCUCustomContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCUCustomContentView.h; sourceTree = "<group>"; };
+		E698108321E37AC5006D8EC3 /* XCUCustomAnnotationCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCUCustomAnnotationCalloutView.h; sourceTree = "<group>"; };
+		E698108421E37AC5006D8EC3 /* XCUCustomContentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XCUCustomContentView.xib; sourceTree = "<group>"; };
+		E698108521E37AC5006D8EC3 /* XCUCallOutMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCUCallOutMapAnnotation.h; sourceTree = "<group>"; };
 		E6A8108121D700CE0048AA01 /* HPSearchBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSearchBar.h; sourceTree = "<group>"; };
 		E6A8108221D700CE0048AA01 /* HPSearchBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSearchBar.m; sourceTree = "<group>"; };
 		E6B4CEC521C4DD5200429C11 /* HPShareApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HPShareApp.entitlements; sourceTree = "<group>"; };
@@ -611,8 +645,6 @@
 		E6B4CEDB21C5286F00429C11 /* TAPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAPageControl.h; sourceTree = "<group>"; };
 		E6B8987321D0D53900FD443B /* HPStoreLeavesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPStoreLeavesViewController.h; sourceTree = "<group>"; };
 		E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPStoreLeavesViewController.m; sourceTree = "<group>"; };
-		E6CD24E221E0D28800CE9261 /* HPCustomPointAnnotation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCustomPointAnnotation.h; sourceTree = "<group>"; };
-		E6CD24E321E0D28800CE9261 /* HPCustomPointAnnotation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCustomPointAnnotation.m; sourceTree = "<group>"; };
 		E6D75F1121A78AD300B2067C /* HPSharePersonCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSharePersonCard.h; sourceTree = "<group>"; };
 		E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSharePersonCard.m; sourceTree = "<group>"; };
 		E6D75F1521A811E500B2067C /* HPWhatIsShareSpaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPWhatIsShareSpaceController.h; sourceTree = "<group>"; };
@@ -801,8 +833,6 @@
 		6993AD2C21C7979C0019506C /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				6993AD2D21C797D20019506C /* HPShareAnnotationView.h */,
-				6993AD2E21C797D20019506C /* HPShareAnnotationView.m */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -810,8 +840,15 @@
 		6993AD3021C79AC90019506C /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				E698107E21E37AC5006D8EC3 /* CallOutView */,
 				6993AD3121C79B100019506C /* HPShareAnnotation.h */,
 				6993AD3221C79B100019506C /* HPShareAnnotation.m */,
+				E698106D21E30403006D8EC3 /* HPShareMapAnnotation.h */,
+				E698106E21E30403006D8EC3 /* HPShareMapAnnotation.m */,
+				6993AD2D21C797D20019506C /* HPShareAnnotationView.h */,
+				6993AD2E21C797D20019506C /* HPShareAnnotationView.m */,
+				E698107021E319EA006D8EC3 /* HPShareMapAnnotationView.h */,
+				E698107121E319EA006D8EC3 /* HPShareMapAnnotationView.m */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -1593,6 +1630,61 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		E698105721E2E5E8006D8EC3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E698105821E2E5E8006D8EC3 /* routePlanModel */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E698105821E2E5E8006D8EC3 /* routePlanModel */ = {
+			isa = PBXGroup;
+			children = (
+				E698105921E2E5E8006D8EC3 /* MANaviAnnotation.h */,
+				E698105A21E2E5E8006D8EC3 /* LineDashPolyline.m */,
+				E698105B21E2E5E8006D8EC3 /* MANaviRoute.m */,
+				E698105C21E2E5E8006D8EC3 /* CommonUtility.m */,
+				E698105D21E2E5E8006D8EC3 /* MANaviPolyline.m */,
+				E698105E21E2E5E8006D8EC3 /* MANaviRoute.h */,
+				E698105F21E2E5E8006D8EC3 /* MANaviAnnotation.m */,
+				E698106021E2E5E8006D8EC3 /* LineDashPolyline.h */,
+				E698106121E2E5E8006D8EC3 /* MANaviPolyline.h */,
+				E698106221E2E5E8006D8EC3 /* CommonUtility.h */,
+			);
+			path = routePlanModel;
+			sourceTree = "<group>";
+		};
+		E698106821E2E5F3006D8EC3 /* Con */ = {
+			isa = PBXGroup;
+			children = (
+				E698105421E2E28D006D8EC3 /* HPGeodeMapViewController.h */,
+				E698105521E2E28D006D8EC3 /* HPGeodeMapViewController.m */,
+			);
+			path = Con;
+			sourceTree = "<group>";
+		};
+		E698106921E2E5FD006D8EC3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E698107E21E37AC5006D8EC3 /* CallOutView */ = {
+			isa = PBXGroup;
+			children = (
+				E698107F21E37AC5006D8EC3 /* XCUCustomContentView.m */,
+				E698108021E37AC5006D8EC3 /* XCUCustomAnnotationCalloutView.m */,
+				E698108121E37AC5006D8EC3 /* XCUCallOutMapAnnotation.m */,
+				E698108221E37AC5006D8EC3 /* XCUCustomContentView.h */,
+				E698108321E37AC5006D8EC3 /* XCUCustomAnnotationCalloutView.h */,
+				E698108421E37AC5006D8EC3 /* XCUCustomContentView.xib */,
+				E698108521E37AC5006D8EC3 /* XCUCallOutMapAnnotation.h */,
+			);
+			path = CallOutView;
+			sourceTree = "<group>";
+		};
 		E6B4CECC21C5286E00429C11 /* SDCycleScrollView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1634,8 +1726,9 @@
 		E6CD24E121E0D26000CE9261 /* Geode */ = {
 			isa = PBXGroup;
 			children = (
-				E6CD24E221E0D28800CE9261 /* HPCustomPointAnnotation.h */,
-				E6CD24E321E0D28800CE9261 /* HPCustomPointAnnotation.m */,
+				E698106921E2E5FD006D8EC3 /* View */,
+				E698106821E2E5F3006D8EC3 /* Con */,
+				E698105721E2E5E8006D8EC3 /* Model */,
 			);
 			path = Geode;
 			sourceTree = "<group>";
@@ -1878,6 +1971,7 @@
 				E61E27A621C8D68000CD5288 /* EBBannerView.xib in Resources */,
 				E629216B219AAAB900BEF16C /* Default-568h@2x.png in Resources */,
 				E622A9C021C33989007C35BC /* RefreshTableView.bundle in Resources */,
+				E698108921E37AC5006D8EC3 /* XCUCustomContentView.xib in Resources */,
 				E629213E219AA83A00BEF16C /* Assets.xcassets in Resources */,
 				E629213C219AA83100BEF16C /* Main.storyboard in Resources */,
 				E661B12321A28E8500C86CF5 /* LICENSE in Resources */,
@@ -2028,9 +2122,11 @@
 				E6D75F4D21AFF48200B2067C /* HPBindPhoneController.m in Sources */,
 				E6292172219AB28700BEF16C /* HPGlobalVariable.m in Sources */,
 				E622A9BE21C33989007C35BC /* UIScrollView+Refresh.m in Sources */,
+				E698106F21E30403006D8EC3 /* HPShareMapAnnotation.m in Sources */,
 				E6D75F3121AE211C00B2067C /* HPForgetPasswordController.m in Sources */,
 				E629217F219ABD6D00BEF16C /* UIView + Tag.m in Sources */,
 				E6F551DB21B8FA800086094F /* HPInteractiveCell.m in Sources */,
+				E698108621E37AC5006D8EC3 /* XCUCustomContentView.m in Sources */,
 				E661B0BD219C2DF700C86CF5 /* HPLinkageSheetView.m in Sources */,
 				6979CA8121D6220700B1518C /* HPBotomPickerModalView.m in Sources */,
 				E6F551DE21B901820086094F /* HPTimeString.m in Sources */,
@@ -2047,6 +2143,7 @@
 				E661B14621A68BE300C86CF5 /* HPRoundedRectPageControl.m in Sources */,
 				E61FE0A321BA4EEC00555F3F /* HPGradientColor.m in Sources */,
 				7A54483F21BAD9B2001301F3 /* HPAreaModel.m in Sources */,
+				E698108821E37AC5006D8EC3 /* XCUCallOutMapAnnotation.m in Sources */,
 				E661B12721A28E8500C86CF5 /* JTCalendarDelegateManager.m in Sources */,
 				69165CE721C0A49A00593D25 /* HPShareAddressController.m in Sources */,
 				E661B0AA219C1AE800C86CF5 /* HPBaseModalView.m in Sources */,
@@ -2067,27 +2164,32 @@
 				6993AD3621C8BCC60019506C /* HPBrowseModel.m in Sources */,
 				E661B12F21A28E8500C86CF5 /* JTCalendarMenuView.m in Sources */,
 				E6D75F5321B0076F00B2067C /* HPFollowListCell.m in Sources */,
+				E698105621E2E28D006D8EC3 /* HPGeodeMapViewController.m in Sources */,
 				E661B0D0219D24A500C86CF5 /* HPSelectTable.m in Sources */,
 				6993AD4021CA45240019506C /* HPImageButton.m in Sources */,
 				E661B13321A2C4F500C86CF5 /* HPCalendarView.m in Sources */,
 				69165D0F21C4D77100593D25 /* HPLinkageView.m in Sources */,
 				69165CE421BFB36500593D25 /* HPPictureModel.m in Sources */,
+				E698108721E37AC5006D8EC3 /* XCUCustomAnnotationCalloutView.m in Sources */,
 				E6B4CEE221C5286F00429C11 /* TAAbstractDotView.m in Sources */,
 				E6830E5121D20594000E0F39 /* HPMenuOpenStoreView.m in Sources */,
 				E6D75F8B21B69D0D00B2067C /* HPShareMapController.m in Sources */,
 				E61CB24021C779A90076540E /* YYGestureRecognizer.m in Sources */,
+				E698106521E2E5E8006D8EC3 /* CommonUtility.m in Sources */,
+				E698106721E2E5E8006D8EC3 /* MANaviAnnotation.m in Sources */,
 				E61E278D21C8C36100CD5288 /* HPAboutUsViewController.m in Sources */,
 				E6D75F5C21B119BC00B2067C /* HPBaseShareListController.m in Sources */,
 				E6D75F3621AE250300B2067C /* HPKeepController.m in Sources */,
 				E61B5EB421CCB7F100DC8A59 /* HPJudgingLoginView.m in Sources */,
 				7A54485A21C16A48001301F3 /* HPPartyCenterModel.m in Sources */,
 				E6D75F7921B54E7900B2067C /* HPShareShopListController.m in Sources */,
-				E6CD24E421E0D28800CE9261 /* HPCustomPointAnnotation.m in Sources */,
+				E698106621E2E5E8006D8EC3 /* MANaviPolyline.m in Sources */,
 				69165D0021C355E500593D25 /* HPImagePager.m in Sources */,
 				E6B4CECB21C51A4400429C11 /* HPGuideViewController.m in Sources */,
 				69165CFD21C2625300593D25 /* HPTagView.m in Sources */,
 				E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */,
 				E6D75F4A21AFF37B00B2067C /* HPUnbindPhoneController.m in Sources */,
+				E698106421E2E5E8006D8EC3 /* MANaviRoute.m in Sources */,
 				69165D0321C3B86800593D25 /* HPShareListParam.m in Sources */,
 				E622A9CD21C376E8007C35BC /* HPlaceholdTextView.m in Sources */,
 				E61E27AB21C8D68000CD5288 /* EBBannerView+Categories.m in Sources */,
@@ -2096,6 +2198,7 @@
 				E6D75F6421B2301600B2067C /* HPCirclePageControl.m in Sources */,
 				E66F1CB521D3569000C2DEEF /* HPHotShareStoreCell.m in Sources */,
 				E661B0B3219C2B1300C86CF5 /* HPTextDialogView.m in Sources */,
+				E698106321E2E5E8006D8EC3 /* LineDashPolyline.m in Sources */,
 				E661B09A219BADB200C86CF5 /* HPInteractiveController.m in Sources */,
 				E66F1CB221D3481D00C2DEEF /* HPGamesCell.m in Sources */,
 				E61FE0B021BA816D00555F3F /* HPUserTool.m in Sources */,
@@ -2185,6 +2288,7 @@
 				E6D75F8821B68A4D00B2067C /* HPCustomerServiceModalView.m in Sources */,
 				E661B0C0219CFDEA00C86CF5 /* HPBaseTableViewCell.m in Sources */,
 				E661B0AD219C1CE100C86CF5 /* HPBaseDialogView.m in Sources */,
+				E698107221E319EA006D8EC3 /* HPShareMapAnnotationView.m in Sources */,
 				69165CF421C1FA8700593D25 /* HPShareListModel.m in Sources */,
 				E661B0A7219C0B9800C86CF5 /* HPBaseControl.m in Sources */,
 				E661B0B6219C2C0400C86CF5 /* HPCheckDialogView.m in Sources */,

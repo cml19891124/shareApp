@@ -18,12 +18,14 @@
 #import "HPTextDialogView.h"
 #import "HPShareReleaseParam.h"
 #import "HPTimeRentView.h"
+#import "Macro.h"
+#import "HPShareMapAnnotation.h"
+#import "HPImageUtil.h"
+#import "HPShareMapAnnotationView.h"
+#import "HPCustomCalloutView.h"
 
-#import <AMapFoundationKit/AMapFoundationKit.h>
-#import <AMapSearchKit/AMapSearchKit.h>
-#import <MAMapKit/MAMapKit.h>
-#import <AMapLocationKit/AMapLocationKit.h>
-#import "HPCustomPointAnnotation.h"
+#define kCalloutViewMargin          -8
+
 
 typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     HPShareDetailGotoShare = 180,
@@ -31,6 +33,11 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 
 @interface HPShareDetailController () <HPBannerViewDelegate,MAMapViewDelegate>
 
+
+/**
+ 呼出框
+ */
+@property (nonatomic, strong) HPCustomCalloutView *calloutView;
 @property (nonatomic, copy) NSString *getTime;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIButton *backBtn;
@@ -197,16 +204,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-//    [_bannerView startAutoScrollWithInterval:2.0];
-//    NSString *spaceId = self.param[@"spaceId"];
-//    if (spaceId) {
-//        [self getShareDetailInfoById:spaceId];
-//    }
-}
-
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
@@ -222,18 +219,15 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     self.mapView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [AMapServices sharedServices].enableHTTPS = YES;
     self.mapView.delegate = self;
-    MAUserLocationRepresentation *UserLocationRep = [[MAUserLocationRepresentation alloc] init];
     
-    UserLocationRep.showsAccuracyRing = NO;///精度圈是否显示，默认YES
-    [self.mapView updateUserLocationRepresentation:UserLocationRep];
     //自定义style
 //    [self.mapView setCustomMapStyleID:GaoDeStyleID];
     //默认不生效，开启自定义风格地图
     self.mapView.customMapStyleEnabled = YES;
     
     // 开启定位
-    self.mapView.showsUserLocation = YES;
-    self.mapView.userTrackingMode = MAUserTrackingModeFollow;
+    self.mapView.showsUserLocation = NO;
+    self.mapView.userTrackingMode = MAUserTrackingModeNone;
     self.mapView.zoomEnabled = YES;
     self.mapView.scrollEnabled = YES;
     CLLocationCoordinate2D center;
@@ -258,11 +252,12 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     }];
     //iOS 去除高德地图下方的 地图比例尺
     self.mapView.showsScale = NO;
-   
+    HPShareMapAnnotation *storeAnnotion = [[HPShareMapAnnotation alloc] initWithModel:_model];
     //添加屏幕中心点
-    [self.mapView addAnnotation:self.centerPoint];
-    self.centerPoint.title = _model.title;
-    self.centerPoint.subtitle = _model.address;
+    [self.mapView addAnnotation:storeAnnotion];
+    [self.mapView setCenterCoordinate:storeAnnotion.coordinate];
+//    self.centerPoint.title = _model.title;
+//    self.centerPoint.subtitle = _model.address;
 }
 
 - (MAPointAnnotation *)centerPoint
@@ -270,12 +265,12 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     if (!_centerPoint)
     {
         _centerPoint = [[MAPointAnnotation alloc] init];
-//        _centerPoint.coordinate = self.mapView.userLocation.location.coordinate;
-        CLLocationCoordinate2D coordinate;
-        coordinate.longitude = [_model.longitude doubleValue];
-        coordinate.latitude = [_model.latitude doubleValue];
-
-        _centerPoint.coordinate = coordinate;
+        _centerPoint.coordinate = self.mapView.userLocation.location.coordinate;
+//        CLLocationCoordinate2D coordinate;
+//        coordinate.longitude = [_model.longitude doubleValue];
+//        coordinate.latitude = [_model.latitude doubleValue];
+//
+//        _centerPoint.coordinate = coordinate;
         
         _centerPoint.lockedToScreen = YES;
         _centerPoint.lockedScreenPoint = self.mapView.center;
@@ -386,6 +381,20 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         _mapSuperView = [UIView new];
     }
     return _mapSuperView;
+}
+
+- (HPCustomCalloutView *)calloutView
+{
+    if (!_calloutView) {
+        _calloutView = [HPCustomCalloutView new];
+        _calloutView.backgroundColor = COLOR_GRAY_FFFFFF;
+        [_calloutView.layer setShadowColor:COLOR_GRAY_A6A6A6.CGColor];
+        [_calloutView.layer setShadowOffset:CGSizeMake(0.f, 2.f)];
+        [_calloutView.layer setShadowRadius:4.f];
+        [_calloutView.layer setShadowOpacity:1.f];
+        [_calloutView.layer setCornerRadius:2.f];
+    }
+    return _calloutView;
 }
 
 #pragma mark - 所有子视图 masonry布局
@@ -661,6 +670,9 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [view addSubview:self.shareModeView];
     [self.shareModeView addSubview:self.modeTitlelabel];
     [self.shareModeView addSubview:self.rentModeView];
+    for (HPTimeRentButton *btn in self.rentModeView.subviews) {
+        btn.userInteractionEnabled = NO;
+    }
     [view addSubview:self.rentModelLine];
     
     [view addSubview:self.storeLocationView];
@@ -778,7 +790,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [view addSubview:portrait];
     _portrait = portrait;
     [portrait mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(25.f * g_rateWidth);
+        make.left.equalTo(view).with.offset(29.f * g_rateWidth);
         make.centerY.equalTo(view);
         make.size.mas_equalTo(CGSizeMake(40.f * g_rateWidth, 40.f * g_rateWidth));
     }];
@@ -790,33 +802,38 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [phoneBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [phoneBtn setImage:[UIImage imageNamed:@"shared_shop_details_calendar_telephone"] forState:UIControlStateNormal];
     [phoneBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 6.f, 0.f, -6.f)];
-    [phoneBtn setBackgroundColor:COLOR_ORANGE_F59C40];
+    [phoneBtn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_FF531E] forState:UIControlStateNormal];
     [phoneBtn setTitle:@"电话" forState:UIControlStateNormal];
     [phoneBtn addTarget:self action:@selector(makePhoneCall:) forControlEvents:UIControlEventTouchUpInside];
+    phoneBtn.layer.cornerRadius = 2.f;
+    phoneBtn.layer.masksToBounds = YES;
     [view addSubview:phoneBtn];
     [phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.and.top.and.bottom.equalTo(view);
-        make.width.mas_equalTo(110.f * g_rateWidth);
+        make.right.mas_equalTo(view).offset(getWidth(-14.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(100.f), getWidth(40.f)));
+        make.centerY.mas_equalTo(view);
     }];
     
     UIButton *keepBtn = [[UIButton alloc] init];
     [keepBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:18.f]];
     [keepBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [keepBtn setTitleColor:COLOR_RED_912D01 forState:UIControlStateSelected];
-    [keepBtn setImage:[UIImage imageNamed:@"shared_shop_details_calendar_collection"] forState:UIControlStateNormal];
+    [keepBtn setImage:ImageNamed(@"shared_shop_details_calendar_collection") forState:UIControlStateNormal];
     [keepBtn setImage:ImageNamed(@"shared_shop_details_calendar_collection_selected") forState:UIControlStateSelected];
     [keepBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 6.f, 0.f, -6.f)];
-    [keepBtn setBackgroundColor:COLOR_RED_FE2A3B];
+    [keepBtn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_YELLOW_FFBA15] forState:UIControlStateNormal];
     [keepBtn setTitle:@"收藏" forState:UIControlStateNormal];
     [keepBtn setTitle:@"已收藏" forState:UIControlStateSelected];
     [keepBtn setTitle:@"已收藏" forState:UIControlStateSelected|UIControlStateHighlighted];
+    keepBtn.layer.cornerRadius = 2.f;
+    keepBtn.layer.masksToBounds = YES;
     [view addSubview:keepBtn];
     _keepBtn = keepBtn;
     [keepBtn addTarget:self action:@selector(addOrCancelCollection:) forControlEvents:UIControlEventTouchUpInside];
     [keepBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.and.bottom.equalTo(view);
-        make.right.equalTo(phoneBtn.mas_left);
-        make.width.mas_equalTo(110.f * g_rateWidth);
+        make.centerY.mas_equalTo(view);
+        make.right.equalTo(phoneBtn.mas_left).offset(getWidth(-12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(100.f), getWidth(40.f)));
     }];
     
     UILabel *userNameLabel = [[UILabel alloc] init];
@@ -1149,7 +1166,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         }else {
             [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n面议"]];
         }
-//        [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n不限"]];
     }
     else
         [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n不限"]];
@@ -1157,13 +1173,12 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     _areaLabel.textAlignment = NSTextAlignmentLeft;
     _areaLabel.numberOfLines = 0;
     _areaLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    
     NSMutableAttributedString *areaattr = [[NSMutableAttributedString alloc] initWithString:_areaLabel.text];
     //设置行间距
     NSMutableParagraphStyle *areaparagraphStyle = [[NSMutableParagraphStyle alloc] init];
     [areaparagraphStyle setLineSpacing:12];
     [areaattr addAttribute:NSParagraphStyleAttributeName value:areaparagraphStyle range:NSMakeRange(0,_areaLabel.text.length)];
-    
+
     //富文本
     [areaattr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(0, 4)];
     [areaattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
@@ -1234,11 +1249,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         NSArray *shareDays = [model.shareDays componentsSeparatedByString:@","];
         [_calendarView setSelectedDateStrs:shareDays];
     }
-    
-    NSArray *testArray = @[@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545372618&di=fbb49adbf37d75ac8c940efd63eaa08e&imgtype=jpg&er=1&src=http%3A%2F%2Fimg0.ph.126.net%2FgIQutohTMU2i3AkVS-6tOg%3D%3D%2F6630732414655186356.jpg",
-                           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544759503783&di=09a39857f77718ec68b74e9995c4ebfa&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fpic%2Fe%2Fe7%2Fe1f1827994.jpg%3Fdown",
-                           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544777936230&di=dc7dcbb7fc819adbc886667b4dbb0f1d&imgtype=0&src=http%3A%2F%2Fimg.79tao.com%2Fdata%2Fattachment%2Fforum%2F201804%2F14%2F001701vaash2sgdl8qchnh.jpg",
-                           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544778024308&di=400579aeb71c396c1b84f9eea507bdbd&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D2527094628%2C3273654962%26fm%3D214%26gp%3D0.jpg"];
     
     if (model.pictures && model.pictures.count > 0) {
         if (model.pictures.count > 1) {
@@ -1386,42 +1396,46 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 #pragma mark - 实际地图点
 - (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation
 {
-    //===============用户位置点
-    if ([annotation isKindOfClass:[MAUserLocation class]]) {
-        static NSString *pointReuseIdentifier = @"UserLocation";
-        MAPinAnnotationView *annotationView = (MAPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:pointReuseIdentifier];
-        
-        if (annotationView == nil)
-        {
-            annotationView = [[MAPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:pointReuseIdentifier];
-            annotationView.pinColor = MAPinAnnotationColorGreen;
-            annotationView.animatesDrop              = NO;
-            annotationView.image = [UIImage imageNamed:@"gps_location"];
-            annotationView.selected = YES;
+    
+    if ([annotation isKindOfClass:HPShareMapAnnotation.class]) {
+        //此时annotation就是我们calloutview的annotation
+        HPShareMapAnnotation *ann = (HPShareMapAnnotation *)annotation;
+        HPShareMapAnnotationView *annotationView = [[HPShareMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
+        //否则创建新的calloutView
+        if (!annotationView) {
+            annotationView = [[HPShareMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"calloutview"] ;
+            
+            XCUCustomContentView *cell = [[[NSBundle mainBundle] loadNibNamed:@"XCUCustomContentView" owner:self options:nil] objectAtIndex:0];
+            
+            [annotationView.contentView addSubview:cell];
+            annotationView.infoView = cell;
         }
-        
+        annotationView.centerOffset = CGPointMake(0, -80);
+        //开始设置添加marker时的赋值
+        annotationView.infoView.deviceLable.text = [ann.locationInfo objectForKey:@"device"];
+        annotationView.infoView.adressLable.text = [ann.locationInfo objectForKey:@"adress"];
+        annotationView.infoView.timeLable.text =[ann.locationInfo objectForKey:@"time"];
+        [annotationView setImage:ImageNamed(@"gps_location")];
+//        annotationView.canShowCallout = YES;
         return annotationView;
     }
+
     return nil;
 }
 
 #pragma mark - 点击店铺地图坐标大头针时 即点击地图marker时所触发（并显示callout）
 - (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view
 {
-    // 获得所有MKAnnotationView
-    NSArray *arr = mapView.annotations;
-    
+//    [view setSelected:YES];
     // 被点击的MKAnnotationView的标题和副标题
     NSString *titleStr = view.annotation.title;
-    NSString *subtitleStr = view.annotation.subtitle;
-
 }
-
 
 
 #pragma mark - 这个方法在点击地图任意位置，相当于隐藏callout
 -(void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view
 {
-    
+//    [view setSelected:NO];
+    [self pushVCByClassName:@"HPGeodeMapViewController" withParam:@{@"loaction":_model}];
 }
 @end
