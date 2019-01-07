@@ -4,7 +4,7 @@
 target 'HPShareApp' do
   pod 'MBProgressHUD', '~> 1.1.0'
   pod 'Masonry'
-  pod 'AMap3DMap'
+  pod 'AMap3DMap', '~> 5.1.0'
   pod 'AMapSearch'
   pod 'AMapLocation'
   pod 'MJExtension', '~> 3.0.15.1'

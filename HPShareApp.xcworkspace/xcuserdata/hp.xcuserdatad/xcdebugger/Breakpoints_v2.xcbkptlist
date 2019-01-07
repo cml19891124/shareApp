@@ -102,16 +102,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "HPShareApp/Controllers/Share/HPShareDetailController.m"
-            timestampString = "568384646.702235"
+            filePath = "HPShareApp/Helper/Map/HPShareMapAnnotation.m"
+            timestampString = "568553616.089497"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1423"
-            endingLineNumber = "1423"
-            landmarkName = "-mapView:didDeselectAnnotationView:"
+            startingLineNumber = "22"
+            endingLineNumber = "22"
+            landmarkName = "-initWithModel:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "HPShareApp/Controllers/Share/Geode/Con/HPGeodeMapViewController.m"
+            timestampString = "568553616.089559"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "114"
+            endingLineNumber = "114"
+            landmarkName = "-initMapView"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
