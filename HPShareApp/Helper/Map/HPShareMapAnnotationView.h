@@ -7,21 +7,21 @@
 //
 
 #import <MAMapKit/MAMapKit.h>
-#import "XCUCustomContentView.h"
+//#import "HPCustomAnnotationCalloutView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPShareMapAnnotationView : MAAnnotationView
-@property (nonatomic, strong) UIView *contentView;
-@property (strong, nonatomic) XCUCustomContentView *infoView;
-@property (nonatomic, strong) UIImage *normalImage;
-
-@property (nonatomic, strong) UIImage *selectedImage;
 
 @property (nonatomic, weak) UILabel * _Nullable titleLabel;
+@property (nonatomic, strong) UIView *customerCallOutView;
 
-@property (nonatomic, weak) UILabel * _Nullable subTitleLabel;
+/**
+ 展示的标题和副标题
+ */
+@property (nonatomic, strong) UILabel *title;
 
+@property (nonatomic, strong) UIImageView *loc_imageView;
 @end
 
 NS_ASSUME_NONNULL_END

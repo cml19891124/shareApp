@@ -17,7 +17,7 @@
 #import "HPClearCacheTool.h"
 #import "HPCustomerServiceModalView.h"
 #import "LEEAlert.h"
-
+#import "HPQueryproductersModel.h"
 
 typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoPortrait = 0,
@@ -38,6 +38,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 @property (nonatomic, weak) UIImageView *portraitView;
 @property (nonatomic, strong) UIView *professDetailPanel;
 @property (nonatomic, strong) UIView *versionPanel;
+@property (nonatomic, strong) HPQueryproductersModel *model;
 @property (nonatomic, weak) HPCustomerServiceModalView *customerServiceModalView;
 
 @property (nonatomic, weak) HPRightImageButton *fullNameGotoBtn;
@@ -263,6 +264,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     UIView *professDetailRow = [self addRowOfParentView:view withHeight:70.f * g_rateWidth margin:0.f isEnd:NO];
     UIImageView *userIcon = [UIImageView new];
     userIcon.image = ImageNamed(@"my_business_card_default_head_image");
+    userIcon.layer.cornerRadius = 23.f;
+    userIcon.layer.masksToBounds = YES;
     [professDetailRow addSubview:userIcon];
     self.userIcon = userIcon;
     [userIcon mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -276,7 +279,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     fessionnameLabel.font = kFont_Medium(15.f);
     fessionnameLabel.textColor = COLOR_BLACK_444444;
     fessionnameLabel.textAlignment = NSTextAlignmentLeft;
-    fessionnameLabel.text = @"周银";
+    fessionnameLabel.text = @"--";
     [professDetailRow addSubview:fessionnameLabel];
     self.fessionnameLabel = fessionnameLabel;
     [fessionnameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -316,8 +319,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 {
     if (_customerServiceModalView == nil) {
         HPCustomerServiceModalView *customerServiceModalView = [[HPCustomerServiceModalView alloc] initWithParent:self.parentViewController.view];
-        customerServiceModalView.phone = @"0755-86713128";
-        [customerServiceModalView setPhoneString:@"0755-86713128"];
+        customerServiceModalView.phone = self.model.mobile?self.model.mobile: @"0755-86713128";
+        [customerServiceModalView setPhoneString:self.model.mobile?self.model.mobile: @"0755-86713128"];
         _customerServiceModalView = customerServiceModalView;
     }
     
@@ -542,6 +545,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     }];
     
     HPRightImageButton *versionGotoBtn = [self setupGotoBtnWithTitle:kAppVersion?[NSString stringWithFormat:@"V%@",kAppVersion]:@"V1.0.0"];
+//    HPLog(@"%@",kAppVersion);
     [versionGotoBtn setTag:HPConfigGotoVersion];
     [versionRow addSubview:versionGotoBtn];
     _versionGotoBtn = versionGotoBtn;
@@ -904,7 +908,15 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPLoginModel *account = [HPUserTool account];
     [HPHTTPSever HPGETServerWithMethod:@"/v1/salesman/query" isNeedToken:YES paraments:@{@"userId":account.userInfo.userId} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
-            
+//            [self layoutProfessionFrame];
+            self.model = [HPQueryproductersModel mj_objectWithKeyValues:responseObject[@"data"]];
+            if (self.model) {
+                [self.userIcon sd_setImageWithURL:[NSURL URLWithString:self.model.avatar] placeholderImage:ImageNamed(@"my_business_card_default_head_image")];
+                self.fessionnameLabel.text = self.model.salesmanName;
+                [self layoutProfessionFrame];
+            }else{
+                [HPProgressHUD alertMessage:@"请添加业务员"];
+            }
         }else{
             [HPProgressHUD alertMessage:MSG];
         }
@@ -916,7 +928,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 进行用户绑定业务员 判断操作
 - (void)getUserToAddUserProducter
 {
-    if (_fessionField.text.length <= 4) {
+    if (_fessionField.text.length < 4) {
         [HPProgressHUD alertMessage:@"请输入四位业务员编码"];
     }else{
         [self addUserProducter];
@@ -927,10 +939,13 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 - (void)addUserProducter
 {
     HPLoginModel *account = [HPUserTool account];
-    [HPHTTPSever HPPostServerWithMethod:@"/v1/salesman/addUser" paraments:@{@"staffCode":_fessionField.text,@"userId":account.userInfo.userId} needToken:YES complete:^(id  _Nonnull responseObject) {
+    
+    NSDictionary *param = @{@"staffCode":_fessionField.text,@"userId":@([account.userInfo.userId intValue])};
+    
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/salesman/addUser" paraments:param needToken:YES complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [self.addBtn setText:@"去更改"];
-
+            [HPProgressHUD alertMessage:@"绑定成功"];
             [self layoutProfessionFrame];
         }else{
             [HPProgressHUD alertMessage:MSG];
@@ -945,9 +960,9 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 {
     if (textField == _fessionField) {
         if (textField.text.length < 4) {
-            [HPProgressHUD alertMessage:@"请输入四位顾问编码"];
+            [HPProgressHUD alertMessage:@"请输入四位业务员编码"];
         }else{
-            textField.text = [textField.text substringToIndex:textField.text.length -1];
+            textField.text = [textField.text substringToIndex:textField.text.length];
         }
     }
 }
@@ -957,7 +972,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     if (textField == _fessionField) {
         if (textField.text.length >= 4) {
             textField.text = [textField.text substringToIndex:textField.text.length -1];
-            [HPProgressHUD alertMessage:@"顾问编码不得超过四位"];
+            [HPProgressHUD alertMessage:@"业务员编码不得超过四位"];
         }
     }
     return YES;

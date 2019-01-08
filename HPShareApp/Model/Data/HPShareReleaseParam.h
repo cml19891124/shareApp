@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPShareReleaseParam : NSObject
 
+@property (nonatomic, copy) NSString *createTime;
+
 @property (nonatomic, copy) NSString *title;
 
 /**
@@ -121,6 +123,10 @@ NS_ASSUME_NONNULL_BEGIN
  店铺简称
  */
 @property (nonatomic, copy) NSString *shortName;
+
+@property (nonatomic, copy) NSString *avatarUrl;
+@property (nonatomic, assign) int collected;
+@property (nonatomic, strong) NSMutableArray *pictures;
 @end
 
 NS_ASSUME_NONNULL_END

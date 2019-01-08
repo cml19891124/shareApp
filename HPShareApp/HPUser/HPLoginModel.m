@@ -14,6 +14,9 @@
 
     HPCardInfo *cardInfo = [HPCardInfo CardInfoWithDict:dict[@"cardInfo"]];
     account.cardInfo = cardInfo;
+    
+    HPSalesman *salesman = [HPSalesman SalesmanInfoWithDict:dict[@"salesman"]];
+    account.salesman = salesman;
     return account;
 }
 
@@ -60,8 +63,6 @@
 @implementation HPCardInfo
 +(instancetype)CardInfoWithDict:(NSDictionary *)dict
 {
-//    HPCardInfo *account= [[self alloc]init];
-//    [account setValuesForKeysWithDictionary:dict];
     HPCardInfo *account = [HPCardInfo mj_objectWithKeyValues:dict];
     
     return account;
@@ -123,6 +124,45 @@
     if(self = [super init]){
         unsigned int count = 0;
         Ivar *ivarList =  class_copyIvarList(HPUserInfo.class, &count);
+        for (int i = 0; i < count; i ++) {
+            Ivar ivar = ivarList[i];
+            NSString *key = [NSString stringWithUTF8String:ivar_getName(ivar)];
+            id value = [aDecoder decodeObjectForKey:key];
+            [self setValue:value forKey:key];
+        }
+        free(ivarList);
+        
+    }
+    return self;
+}
+
+@end
+
+@implementation HPSalesman
+
++(instancetype)SalesmanInfoWithDict:(NSDictionary *)dict
+{
+    HPSalesman *account = [HPSalesman mj_objectWithKeyValues:dict];
+    return account;
+}
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    unsigned int count = 0;
+    Ivar *ivarList =  class_copyIvarList(HPSalesman.class, &count);
+    for (int i = 0; i < count; i ++) {
+        Ivar ivar = ivarList[i];
+        NSString *key = [NSString stringWithUTF8String:ivar_getName(ivar)];
+        [aCoder encodeObject:[self valueForKey:key] forKey:key];
+    }
+    free(ivarList);
+    
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if(self = [super init]){
+        unsigned int count = 0;
+        Ivar *ivarList =  class_copyIvarList(HPSalesman.class, &count);
         for (int i = 0; i < count; i ++) {
             Ivar ivar = ivarList[i];
             NSString *key = [NSString stringWithUTF8String:ivar_getName(ivar)];

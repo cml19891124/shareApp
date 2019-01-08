@@ -19,9 +19,6 @@
     if (self) {
         _model = model;
         _title = model.title;
-        if (model.address) {
-            _title = [NSString stringWithFormat:@"%@\n%@",model.title,model.address];
-        }
         _coordinate = CLLocationCoordinate2DMake(model.latitude.doubleValue, model.longitude.doubleValue);
     }
     return self;

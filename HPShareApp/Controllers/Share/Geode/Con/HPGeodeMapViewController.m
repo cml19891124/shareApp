@@ -145,7 +145,6 @@
         static NSString *pointReuseIdentifier = @"UserLocation";
         MAPinAnnotationView *annotationView = (MAPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:pointReuseIdentifier];
         [annotationView setImage:ImageNamed(@"gps_location")];
-//        annotationView.image = ImageNamed(@"gps_location");
         return annotationView;
     }
     

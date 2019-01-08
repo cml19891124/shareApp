@@ -26,6 +26,7 @@
 #import "CDZPicker.h"
 #import "HPDataHandlePickerView.h"
 #import "HPBotomPickerModalView.h"
+#import "LEEAlert.h"
 
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：入驻本店需事先准备相关产品质检材料，入店时需确认，三无产品请绕道..."
@@ -44,6 +45,11 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 @property (nonatomic, strong) UILabel *infoLabel;
 @property (nonatomic, strong) UILabel *ratioLabel;
 
+
+/**
+ 输入field
+ */
+@property (nonatomic, strong) UITextField *inputField;
 /**
  完整度/l比例
  */
@@ -477,12 +483,21 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     
     [self setupTitleLabelWithText:@"联系方式" ofView:view];
     HPLoginModel *account = [HPUserTool account];
-    UITextField *textField = [self setupTextFieldWithPlaceholder:account.userInfo.mobile?:@"" ofView:view rightTo:view];
-    [textField setKeyboardType:UIKeyboardTypeNumberPad];
-    textField.text = account.userInfo.mobile?:@"";
-    textField.textColor = COLOR_BLACK_333333;
-    textField.font = kFont_Regular(13.f);
-    textField.userInteractionEnabled = NO;//不允许交互，固定为注册登录人的手机号
+    
+    UITextField *textField;
+    if (account.salesman.userId) {//是业务员，需要输入客户/用户的手机号，代用户发布需求
+        textField = [self setupTextFieldWithPlaceholder:@"请输入用户手机号" ofView:view rightTo:view];
+
+        textField.userInteractionEnabled = YES;//允许交互，输入注册登录人的手机号
+        textField.delegate = self;
+    }else{
+        textField = [self setupTextFieldWithPlaceholder:account.userInfo.mobile?:@"请输入用户手机号" ofView:view rightTo:view];
+        [textField setKeyboardType:UIKeyboardTypeNumberPad];
+        textField.text = account.userInfo.mobile?:@"";
+        textField.textColor = COLOR_BLACK_333333;
+        textField.font = kFont_Regular(13.f);
+        textField.userInteractionEnabled = NO;//不允许交互，固定为注册登录人的手机号
+    }
     _phoneNumField = textField;
     return view;
 }
@@ -755,5 +770,66 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         
         [_industryPickerView show:YES];
     }
+}
+
+#pragma mark - textFielddelegate
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField == _phoneNumField) {
+        if (textField.text.length < 11) {
+            [HPProgressHUD alertMessage:@"请输入11位手机号"];
+        }else{
+            textField.text = [textField.text substringToIndex:textField.text.length - 1];
+        }
+    }
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+{
+    if (textField == _phoneNumField) {
+        // 使用一个变量接收自定义的输入框对象 以便于在其他位置调用
+        
+        __block UITextField *inputField = nil;
+        kWeakSelf(weakSelf);
+        [LEEAlert alert].config.LeeAddTextField(^(UITextField *textField) {
+            
+            // 这里可以进行自定义的设置
+            
+            textField.placeholder = @"请输入用户手机号";
+            
+            textField.textColor = [UIColor darkGrayColor];
+            
+            inputField = textField; //赋值
+            self.inputField = inputField;
+
+        }).LeeCancelAction(@"取消", ^{
+            
+        })
+        .LeeAction(@"确认", ^{
+
+            [weakSelf queryUserOfSalesmanByMobile];
+        })
+        .LeeShow(); // 设置完成后 别忘记调用Show来显示
+        }
+    return NO;
+
+    }
+
+}
+
+#pragma mark - 通过电话查询是否是特定业务员的客户
+- (void)queryUserOfSalesmanByMobile
+{
+    HPLoginModel *account = [HPUserTool account];
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/salesman/queryUserOfSalesmanByMobile" isNeedToken:YES paraments:@{@"mobile":self.inputField.text,@"salesmanUserId":account.salesman.userId} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            self.phoneNumField.text = self.inputField.text;
+        }else
+        {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 @end
