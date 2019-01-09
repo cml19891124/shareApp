@@ -181,6 +181,18 @@
             [lastBaseVC.param addEntriesFromDictionary:param];
         }
     }
+    else if ([lastVC isKindOfClass:UITabBarController.class]) {
+        UITabBarController *tabBarController = (UITabBarController *)lastVC;
+        
+        if ([tabBarController.selectedViewController isKindOfClass:HPBaseViewController.class]) {
+            HPBaseViewController *lastBaseVC = (HPBaseViewController *)tabBarController.selectedViewController;
+            lastBaseVC.isPop = YES;
+            
+            if (param) {
+                [lastBaseVC.param addEntriesFromDictionary:param];
+            }
+        }
+    }
     
     [self.navigationController popViewControllerAnimated:YES];
 }
