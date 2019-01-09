@@ -251,21 +251,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [self.mapView addAnnotation:storeAnnotion];
     [self.mapView setCenterCoordinate:storeAnnotion.coordinate];
     self.mapView.selectedAnnotations = @[storeAnnotion];
-//    [self.mapView addSubview:self.calloutView];
-//    _calloutView.titlelabel.text = [NSString stringWithFormat:@"%@\n%@",_model.title,_model.address];
-//    NSRange range = [_calloutView.titlelabel.text rangeOfString:_model.title];
-//    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:_calloutView.titlelabel.text];
-//    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(0, range.length)];
-//    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(range.length, _calloutView.titlelabel.text.length - range.length)];
-//    [attr addAttribute:NSFontAttributeName value:kFont_Medium(14.f) range:NSMakeRange(0, range.length)];
-//    [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(range.length, _calloutView.titlelabel.text.length - range.length)];
-//    _calloutView.titlelabel.attributedText = attr;
-//    self.mapView.selectedAnnotations = @[storeAnnotion];
-//    [_calloutView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.size.mas_equalTo(CGSizeMake(getWidth(243.f), getWidth(52.f)));
-//        make.top.mas_equalTo(self.mapView).offset(getWidth(41.f));
-//        make.centerX.mas_equalTo(self.mapView);
-//    }];
 }
 
 - (MAPointAnnotation *)centerPoint

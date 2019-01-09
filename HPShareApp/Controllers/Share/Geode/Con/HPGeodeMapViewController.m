@@ -87,9 +87,6 @@
     self.mapView.userTrackingMode = MAUserTrackingModeFollow;
     self.mapView.zoomEnabled = YES;
     self.mapView.scrollEnabled = YES;
-//    CLLocationCoordinate2D center;
-//    center.latitude = [_model.latitude doubleValue];
-//    center.longitude = [_model.longitude doubleValue];
     
     //路径规划
     self.mapSearch = [[AMapSearchAPI alloc] init];
@@ -111,13 +108,15 @@
     self.mapView.showsScale = NO;
     
     HPShareDetailModel *model = self.param[@"loaction"];
+    _model = model;
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([model.longitude doubleValue], [model.latitude doubleValue]);
+    self.destinationPoint = coordinate;
     HPShareMapAnnotation *storeAnnotion = [[HPShareMapAnnotation alloc] initWithModel:model];
     //添加店铺位置点
     [self.mapView addAnnotation:storeAnnotion];
     
     //添加屏幕中心点
-//    [self.mapView addAnnotation:self.centerPoint];
-//    [self.mapView setCenterCoordinate:self.centerPoint.coordinate];
+    [self.mapView setCenterCoordinate:storeAnnotion.coordinate];
 }
 
 - (MAPointAnnotation *)centerPoint
@@ -152,8 +151,19 @@
     if ([annotation isKindOfClass:HPShareMapAnnotation.class]) {
         HPShareMapAnnotationView *annotationView = [[HPShareMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
         [annotationView setImage:ImageNamed(@"gps_location")];
-        annotationView.canShowCallout = NO;
-        annotationView.calloutOffset = CGPointMake(0, getWidth(-100.f));
+        annotationView.canShowCallout = YES;
+//        annotationView.centerOffset = CGPointMake(0, 35);
+
+        if (_model && _model.title && _model.address) {
+            annotationView.title.text = [NSString stringWithFormat:@"%@\n%@",_model.title,_model.address];
+            NSRange range = [annotationView.title.text rangeOfString:_model.title];
+            NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:annotationView.title.text];
+            [attr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(0, range.length)];
+            [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(range.length, annotationView.title.text.length - range.length)];
+            [attr addAttribute:NSFontAttributeName value:kFont_Medium(14.f) range:NSMakeRange(0, range.length)];
+            [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(range.length, annotationView.title.text.length - range.length)];
+            annotationView.title.attributedText = attr;
+        }
         self.destinationPoint = annotation.coordinate;
 
         return annotationView;
@@ -169,7 +179,7 @@
         [self clearRoute];
         HPShareMapAnnotation *anno = (HPShareMapAnnotation *)view.annotation;
         CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(anno.longitude, anno.latitude);
-        [self routePlanWithDestination:coordinate];
+        [self routePlanWithDestination:self.destinationPoint];
         self.destinationPoint = coordinate;
     }
 }
