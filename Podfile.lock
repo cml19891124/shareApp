@@ -35,7 +35,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.2.1)
-  - AMap3DMap
+  - AMap3DMap (~> 6.3.0)
   - AMapLocation
   - AMapSearch
   - Charts
@@ -75,6 +75,6 @@ SPEC CHECKSUMS:
   SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   TZImagePickerController: bc25e933c9d970a622d052f0d4de16202bbcd863
 
-PODFILE CHECKSUM: 6433a5ae1c5ccde109d7064c0f0e60860b226412
+PODFILE CHECKSUM: ba0004ac8b8f1b13189ce90c9e9f5066a2230ae4
 
 COCOAPODS: 1.5.3
