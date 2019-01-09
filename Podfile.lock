@@ -24,6 +24,9 @@ PODS:
   - Charts (3.1.1):
     - Charts/Core (= 3.1.1)
   - Charts/Core (3.1.1)
+  - JCore (1.2.0)
+  - JPush (3.0.9):
+    - JCore (~> 1.2.0)
   - Masonry (1.1.0)
   - MBProgressHUD (1.1.0)
   - MJExtension (3.0.15.1)
@@ -39,6 +42,7 @@ DEPENDENCIES:
   - AMapLocation
   - AMapSearch
   - Charts
+  - JPush
   - Masonry
   - MBProgressHUD (~> 1.1.0)
   - MJExtension (~> 3.0.15.1)
@@ -54,6 +58,8 @@ SPEC REPOS:
     - AMapLocation
     - AMapSearch
     - Charts
+    - JCore
+    - JPush
     - Masonry
     - MBProgressHUD
     - MJExtension
@@ -68,6 +74,8 @@ SPEC CHECKSUMS:
   AMapLocation: 55116a2c8956eab7550cbb56e989aa5cdcc424e3
   AMapSearch: 3dcbf85c403a2a0fe0eda5318caabc272b31f5e1
   Charts: 90a4d61da0f6e06684c591e3bcab11940fe61736
+  JCore: b52e3dd73625eec70afd1244bb9c41038aa06087
+  JPush: 48041e8c5ad2ef9b48709eb0888af9640b36e9b0
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
@@ -75,6 +83,6 @@ SPEC CHECKSUMS:
   SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   TZImagePickerController: bc25e933c9d970a622d052f0d4de16202bbcd863
 
-PODFILE CHECKSUM: ba0004ac8b8f1b13189ce90c9e9f5066a2230ae4
+PODFILE CHECKSUM: 6558ea9b9cb524d23d2e4def6295a458d6ea9f8c
 
 COCOAPODS: 1.5.3

@@ -2474,7 +2474,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"\"/Users/hp/Desktop/Xcode/HPShareApp/Pods/JCore\"",
+					"\"/Users/hp/Desktop/Xcode/HPShareApp/Pods/JPush\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hepaicn.HPShareApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2498,7 +2501,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"\"/Users/hp/Desktop/Xcode/HPShareApp/Pods/JCore\"",
+					"\"/Users/hp/Desktop/Xcode/HPShareApp/Pods/JPush\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hepaicn.HPShareApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;

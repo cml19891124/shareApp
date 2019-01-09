@@ -12,6 +12,7 @@ target 'HPShareApp' do
   pod 'AFNetworking', '~> 3.2.1'
   pod 'MJRefresh', '~> 3.1.15.3'
   pod 'SDWebImage', '~> 4.4.1'
+  pod 'JPush'
   use_frameworks!
   pod 'Charts'
 
