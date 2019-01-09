@@ -327,7 +327,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }];
     
     HPStoreItemButton *addBtn = [[HPStoreItemButton alloc] init];
-    [addBtn setTitle:@"品牌连锁、百年老店、街角旺铺" forState:UIControlStateNormal];
+    [addBtn setTitle:@"" forState:UIControlStateNormal];
     [addBtn setImage:ImageNamed(@"customizing_business_cards_add_to") forState:UIControlStateNormal];
     [addBtn addTarget:self action:@selector(onClickTagBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:addBtn];
@@ -487,7 +487,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     UITextField *textField;
     if (account.salesman.userId) {//是业务员，需要输入客户/用户的手机号，代用户发布需求
         textField = [self setupTextFieldWithPlaceholder:@"请输入用户手机号" ofView:view rightTo:view];
-
         textField.userInteractionEnabled = YES;//允许交互，输入注册登录人的手机号
         textField.delegate = self;
     }else{
@@ -756,7 +755,8 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
             HPBotomPickerModalView *industryPickerView = [[HPBotomPickerModalView alloc] initWithData:data];
             [industryPickerView setConfirmCallBack:^(NSInteger parentIndex, NSInteger childIndex, NSObject *model) {
                 HPIndustryModel *industryModel = (HPIndustryModel *)model;
-                NSString *industryName = [HPCommonData getIndustryNameById:industryModel.industryId];
+                NSString *industryName = [HPCommonData getIndustryNameById:industryModel.pid];
+
                 NSLog(@"Pick industryTitle: %@-%@", industryName, industryModel.industryName);
                 NSString *industryTitle = [NSString stringWithFormat:@"%@-%@", industryName, industryModel.industryName];
                 CGFloat industryW = BoundWithSize(industryTitle, kScreenWidth, 13.f).size.width + 15;
@@ -810,8 +810,10 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
             [weakSelf queryUserOfSalesmanByMobile];
         })
         .LeeShow(); // 设置完成后 别忘记调用Show来显示
+        return NO;
+
         }
-    return NO;
+    return YES;
 
     }
 

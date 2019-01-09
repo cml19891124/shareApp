@@ -83,7 +83,7 @@
     self.mapView.customMapStyleEnabled = YES;
     
     // 开启定位
-    self.mapView.showsUserLocation = YES;
+    self.mapView.showsUserLocation = NO;
     self.mapView.userTrackingMode = MAUserTrackingModeFollow;
     self.mapView.zoomEnabled = YES;
     self.mapView.scrollEnabled = YES;
@@ -145,14 +145,19 @@
         static NSString *pointReuseIdentifier = @"UserLocation";
         MAPinAnnotationView *annotationView = (MAPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:pointReuseIdentifier];
         [annotationView setImage:ImageNamed(@"gps_location")];
+        annotationView.canShowCallout = NO;
         return annotationView;
     }
     
-//    if ([annotation isKindOfClass:HPShareMapAnnotation.class]) {
-//        HPShareMapAnnotationView *annotationView = [[HPShareMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
-//        [annotationView setImage:ImageNamed(@"gps_location")];
-//        return annotationView;
-//    }
+    if ([annotation isKindOfClass:HPShareMapAnnotation.class]) {
+        HPShareMapAnnotationView *annotationView = [[HPShareMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
+        [annotationView setImage:ImageNamed(@"gps_location")];
+        annotationView.canShowCallout = NO;
+        annotationView.calloutOffset = CGPointMake(0, getWidth(-100.f));
+        self.destinationPoint = annotation.coordinate;
+
+        return annotationView;
+    }
     
     return nil;
 }
@@ -160,9 +165,12 @@
 - (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view {
     [view setSelected:YES];
     if ([view isKindOfClass:HPShareMapAnnotationView.class]) {
-//        HPShareMapAnnotationView *shareAnnotation = (HPShareMapAnnotationView *)view.annotation;
-        [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
-        [self.mapView setZoomLevel:18.f animated:YES];
+        //路径规划
+        [self clearRoute];
+        HPShareMapAnnotation *anno = (HPShareMapAnnotation *)view.annotation;
+        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(anno.longitude, anno.latitude);
+        [self routePlanWithDestination:coordinate];
+        self.destinationPoint = coordinate;
     }
 }
 

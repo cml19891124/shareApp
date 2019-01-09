@@ -102,6 +102,7 @@
     
     if (childrenArray && [childrenArray isKindOfClass:NSArray.class] &&childIndex < childrenArray.count && childIndex >= 0) {
         return childrenArray[childIndex];
+//        return _models[parentIndex];
     }
     else
         return nil;

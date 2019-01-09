@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *industryName;
 
+/**
+ 父行业
+ */
 @property (nonatomic, copy) NSString *pid;
 
 @property (nonatomic, strong) NSArray *children;

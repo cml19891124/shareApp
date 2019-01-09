@@ -11,7 +11,7 @@
 #import "Macro.h"
 #import "HPMainTabBarController.h"
 #import <AMapFoundationKit/AMapFoundationKit.h>
-#import "AppDelegate+Config.h"
+#import "AppDelegate+JPush.h"
 #import <UserNotifications/UserNotifications.h>
 #import "HPTextDialogView.h"
 #import "HPGuideViewController.h"
@@ -90,7 +90,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [AppDelegate setUpConfig];
+    //极光
+    [AppDelegate setUpJPushConfigWithOptions:launchOptions];
     
     [self updateAppVersionInfo];
     [HPGlobalVariable initVariable];

@@ -98,7 +98,7 @@
 		E622A9C021C33989007C35BC /* RefreshTableView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E622A9BA21C33989007C35BC /* RefreshTableView.bundle */; };
 		E622A9C121C33989007C35BC /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = E622A9BB21C33989007C35BC /* .gitkeep */; };
 		E622A9C421C34E1C007C35BC /* HPClearCacheTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9C321C34E1C007C35BC /* HPClearCacheTool.m */; };
-		E622A9C721C358DA007C35BC /* AppDelegate+Config.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9C621C358DA007C35BC /* AppDelegate+Config.m */; };
+		E622A9C721C358DA007C35BC /* AppDelegate+JPush.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9C621C358DA007C35BC /* AppDelegate+JPush.m */; };
 		E622A9CD21C376E8007C35BC /* HPlaceholdTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9CC21C376E8007C35BC /* HPlaceholdTextView.m */; };
 		E622A9D021C3A6B3007C35BC /* HPCardDetailsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9CF21C3A6B3007C35BC /* HPCardDetailsModel.m */; };
 		E6292136219AA83000BEF16C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292135219AA83000BEF16C /* AppDelegate.m */; };
@@ -228,6 +228,18 @@
 		E6D75F8521B65AAD00B2067C /* HPFeedbackController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F8421B65AAD00B2067C /* HPFeedbackController.m */; };
 		E6D75F8821B68A4D00B2067C /* HPCustomerServiceModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F8721B68A4D00B2067C /* HPCustomerServiceModalView.m */; };
 		E6D75F8B21B69D0D00B2067C /* HPShareMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F8A21B69D0D00B2067C /* HPShareMapController.m */; };
+		E6F14A2921E5CEE100631005 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A2821E5CEE100631005 /* CFNetwork.framework */; };
+		E6F14A2B21E5CEED00631005 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A2A21E5CEED00631005 /* CoreFoundation.framework */; };
+		E6F14A2D21E5CEFA00631005 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A2C21E5CEFA00631005 /* CoreTelephony.framework */; };
+		E6F14A2F21E5CF0500631005 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A2E21E5CF0500631005 /* SystemConfiguration.framework */; };
+		E6F14A3121E5CF1000631005 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A3021E5CF1000631005 /* CoreGraphics.framework */; };
+		E6F14A3321E5CF1900631005 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A3221E5CF1900631005 /* Foundation.framework */; };
+		E6F14A3521E5CF2100631005 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A3421E5CF2100631005 /* UIKit.framework */; };
+		E6F14A3721E5CF2A00631005 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A3621E5CF2A00631005 /* Security.framework */; };
+		E6F14A3921E5CF3800631005 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A3821E5CF3800631005 /* libz.tbd */; };
+		E6F14A3B21E5CF4100631005 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A3A21E5CF4100631005 /* AdSupport.framework */; };
+		E6F14A3D21E5CF4C00631005 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A3C21E5CF4C00631005 /* UserNotifications.framework */; };
+		E6F14A3F21E5CF5800631005 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A3E21E5CF5800631005 /* libresolv.tbd */; };
 		E6F551D821B8C9480086094F /* HPValidatePhone.m in Sources */ = {isa = PBXBuildFile; fileRef = E6F551D721B8C9480086094F /* HPValidatePhone.m */; };
 		E6F551DB21B8FA800086094F /* HPInteractiveCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6F551DA21B8FA800086094F /* HPInteractiveCell.m */; };
 		E6F551DE21B901820086094F /* HPTimeString.m in Sources */ = {isa = PBXBuildFile; fileRef = E6F551DD21B901820086094F /* HPTimeString.m */; };
@@ -436,8 +448,8 @@
 		E622A9BB21C33989007C35BC /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		E622A9C221C34E1C007C35BC /* HPClearCacheTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPClearCacheTool.h; sourceTree = "<group>"; };
 		E622A9C321C34E1C007C35BC /* HPClearCacheTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPClearCacheTool.m; sourceTree = "<group>"; };
-		E622A9C521C358DA007C35BC /* AppDelegate+Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+Config.h"; sourceTree = "<group>"; };
-		E622A9C621C358DA007C35BC /* AppDelegate+Config.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+Config.m"; sourceTree = "<group>"; };
+		E622A9C521C358DA007C35BC /* AppDelegate+JPush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+JPush.h"; sourceTree = "<group>"; };
+		E622A9C621C358DA007C35BC /* AppDelegate+JPush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+JPush.m"; sourceTree = "<group>"; };
 		E622A9CB21C376E8007C35BC /* HPlaceholdTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPlaceholdTextView.h; sourceTree = "<group>"; };
 		E622A9CC21C376E8007C35BC /* HPlaceholdTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPlaceholdTextView.m; sourceTree = "<group>"; };
 		E622A9CE21C3A6B3007C35BC /* HPCardDetailsModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCardDetailsModel.h; sourceTree = "<group>"; };
@@ -706,6 +718,18 @@
 		E6D75F8721B68A4D00B2067C /* HPCustomerServiceModalView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCustomerServiceModalView.m; sourceTree = "<group>"; };
 		E6D75F8921B69D0D00B2067C /* HPShareMapController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareMapController.h; sourceTree = "<group>"; };
 		E6D75F8A21B69D0D00B2067C /* HPShareMapController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareMapController.m; sourceTree = "<group>"; };
+		E6F14A2821E5CEE100631005 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		E6F14A2A21E5CEED00631005 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		E6F14A2C21E5CEFA00631005 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		E6F14A2E21E5CF0500631005 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		E6F14A3021E5CF1000631005 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		E6F14A3221E5CF1900631005 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		E6F14A3421E5CF2100631005 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		E6F14A3621E5CF2A00631005 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		E6F14A3821E5CF3800631005 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		E6F14A3A21E5CF4100631005 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		E6F14A3C21E5CF4C00631005 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		E6F14A3E21E5CF5800631005 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		E6F551D621B8C9480086094F /* HPValidatePhone.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPValidatePhone.h; sourceTree = "<group>"; };
 		E6F551D721B8C9480086094F /* HPValidatePhone.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPValidatePhone.m; sourceTree = "<group>"; };
 		E6F551D921B8FA800086094F /* HPInteractiveCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPInteractiveCell.h; sourceTree = "<group>"; };
@@ -721,6 +745,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6F14A3F21E5CF5800631005 /* libresolv.tbd in Frameworks */,
+				E6F14A3D21E5CF4C00631005 /* UserNotifications.framework in Frameworks */,
+				E6F14A3B21E5CF4100631005 /* AdSupport.framework in Frameworks */,
+				E6F14A3921E5CF3800631005 /* libz.tbd in Frameworks */,
+				E6F14A3721E5CF2A00631005 /* Security.framework in Frameworks */,
+				E6F14A3521E5CF2100631005 /* UIKit.framework in Frameworks */,
+				E6F14A3321E5CF1900631005 /* Foundation.framework in Frameworks */,
+				E6F14A3121E5CF1000631005 /* CoreGraphics.framework in Frameworks */,
+				E6F14A2F21E5CF0500631005 /* SystemConfiguration.framework in Frameworks */,
+				E6F14A2D21E5CEFA00631005 /* CoreTelephony.framework in Frameworks */,
+				E6F14A2B21E5CEED00631005 /* CoreFoundation.framework in Frameworks */,
+				E6F14A2921E5CEE100631005 /* CFNetwork.framework in Frameworks */,
 				CAA2DAE424EC650C0D26D3DA /* Pods_HPShareApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -936,6 +972,18 @@
 		D29D226676E10B1AF5705590 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6F14A3E21E5CF5800631005 /* libresolv.tbd */,
+				E6F14A3C21E5CF4C00631005 /* UserNotifications.framework */,
+				E6F14A3A21E5CF4100631005 /* AdSupport.framework */,
+				E6F14A3821E5CF3800631005 /* libz.tbd */,
+				E6F14A3621E5CF2A00631005 /* Security.framework */,
+				E6F14A3421E5CF2100631005 /* UIKit.framework */,
+				E6F14A3221E5CF1900631005 /* Foundation.framework */,
+				E6F14A3021E5CF1000631005 /* CoreGraphics.framework */,
+				E6F14A2E21E5CF0500631005 /* SystemConfiguration.framework */,
+				E6F14A2C21E5CEFA00631005 /* CoreTelephony.framework */,
+				E6F14A2A21E5CEED00631005 /* CoreFoundation.framework */,
+				E6F14A2821E5CEE100631005 /* CFNetwork.framework */,
 				7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */,
 				C508ECCC8CC2C9D9701839BE /* Pods_HPShareAppTests.framework */,
 				AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */,
@@ -1202,8 +1250,8 @@
 				E6292166219AA99D00BEF16C /* Supporting Files */,
 				E6292134219AA83000BEF16C /* AppDelegate.h */,
 				E6292135219AA83000BEF16C /* AppDelegate.m */,
-				E622A9C521C358DA007C35BC /* AppDelegate+Config.h */,
-				E622A9C621C358DA007C35BC /* AppDelegate+Config.m */,
+				E622A9C521C358DA007C35BC /* AppDelegate+JPush.h */,
+				E622A9C621C358DA007C35BC /* AppDelegate+JPush.m */,
 			);
 			path = HPShareApp;
 			sourceTree = "<group>";
@@ -2252,7 +2300,7 @@
 				E661B0F7219FEBDC00C86CF5 /* HPShareDetailController.m in Sources */,
 				69165CF721C221C000593D25 /* HPCommonData.m in Sources */,
 				7A54489E21C6304C001301F3 /* HPCardHeaderView.m in Sources */,
-				E622A9C721C358DA007C35BC /* AppDelegate+Config.m in Sources */,
+				E622A9C721C358DA007C35BC /* AppDelegate+JPush.m in Sources */,
 				E6A8108321D700CE0048AA01 /* HPSearchBar.m in Sources */,
 				E61E27A321C8D68000CD5288 /* EBBannerView.m in Sources */,
 				E692144521D4802700ED6B5C /* HPUploadButton.m in Sources */,

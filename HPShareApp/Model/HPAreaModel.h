@@ -19,6 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface HPDistrictModel : NSObject <NSCopying>
+
+/**
+ 区域id
+ */
 @property (nonatomic, copy) NSString *areaId;
 @property (nonatomic, copy) NSString *createTime;
 @property (nonatomic, copy) NSString *deleteTime;
