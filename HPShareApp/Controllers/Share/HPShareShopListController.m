@@ -129,7 +129,7 @@
     }];
     
     UIView *headerMaskView = [[UIView alloc] init];
-    [headerMaskView setBackgroundColor:COLOR_RED_FF3C5E];
+    [headerMaskView setBackgroundColor:COLOR_RED_EA0000];
     [headerMaskView setAlpha:0.f];
     [headerView addSubview:headerMaskView];
     _headerMaskView = headerMaskView;

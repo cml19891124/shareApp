@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *areaId;
 
+@property (nonatomic, copy) NSString *areaIds; //多个区域筛选，英文逗号拼接，如1,3
+
 @property (nonatomic, copy) NSString *districtId; //街道筛选，属于区下面的
 
 @property (nonatomic, copy) NSString *industryId; //行业筛选，一级行业

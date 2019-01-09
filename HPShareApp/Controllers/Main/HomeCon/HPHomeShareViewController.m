@@ -13,6 +13,9 @@
 #import "HPHotShareStoreCell.h"
 #import "HPShareListCell.h"
 #import "HPSearchBar.h"
+#import "HPShareListParam.h"
+#import "HPCommonData.h"
+
 #define slideRatio fabs(y/71.0f)
 
 typedef NS_ENUM(NSInteger, HPDisplaycellIndexpath) {
@@ -20,16 +23,16 @@ typedef NS_ENUM(NSInteger, HPDisplaycellIndexpath) {
 };
 
 @interface HPHomeShareViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>
+
 @property (nonatomic, strong) HPMenuOpenStoreView *openView;
+
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) HPShareListModel *model;
+
+@property (nonatomic, strong) HPShareListParam *shareListParam;
+
 @property (nonatomic, strong) NSMutableArray *dataArray;
 
 @property (nonatomic, strong) UILabel *appNameLabel;
-/**
- 每次请求的页码数，自增长
- */
-@property (nonatomic, copy) NSString *page;
 
 @property (nonatomic, assign) BOOL isExpaned;
 
@@ -51,86 +54,6 @@ static NSString *gamesItemCell = @"gamesItemCell";
 static NSString *hotShareStoreCell = @"hotShareStoreCell";
 static NSString *shareListCell = @"shareListCell";
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
-    self.navigationController.navigationBar.translucent = NO;
-    _dataArray = [NSMutableArray array];
-    [self getShareListData];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    CGPoint cityPoint = [self.view convertPoint:self.openView.cityBtn.center fromView:self.openView];
-    CGPoint searchPoint = self.headerView.center;
-    CGFloat deltaY = (searchPoint.y - cityPoint.y)/g_rateWidth;
-//    HPLog(@"deltaY : %f", deltaY);
-}
-
-#pragma mark - 共享发布数据
-
-- (void)getShareListData {
-    NSString *areaId = nil;
-    NSString *districtId = nil; //街道筛选，属于区下面的
-    NSString *industryId = nil; //行业筛选，一级行业
-    NSString *subIndustryId = nil; //行业筛选，二级行业
-    NSString *page = @"0";
-    _page = page;
-    NSString *pageSize = @"20";
-    NSString *createTimeOrderType = @"0"; //发布时间排序，1升序，0降序
-    NSString *rentOrderType = @"0"; //租金排序排序，1升序，0降序
-    NSString *type = nil; //类型筛选，1业主， 2创客
-    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
-    HPLoginModel *account = [HPUserTool account];
-    param[@"areaId"] = areaId;
-    param[@"districtId"] = districtId;
-    param[@"industryId"] = industryId;
-    param[@"subIndustryId"] = subIndustryId;
-    param[@"page"] = _page;
-    param[@"pageSize"] = pageSize;
-    param[@"createTimeOrderType"] = createTimeOrderType;
-    param[@"rentOrderType"] = rentOrderType;
-    param[@"type"] = type;
-    param[@"userId"] = account.userInfo.userId;
-    kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:YES paraments:param complete:^(id  _Nonnull responseObject) {
-        [self.dataArray removeAllObjects];
-        weakSelf.dataArray = [HPShareListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
-        if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
-            /*UIImage *image = ImageNamed(@"waiting");
-            UIImageView *waitingView = [[UIImageView alloc] init];
-            waitingView.image = image;
-            [self.tableView addSubview:waitingView];
-            [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(-70.f * g_rateWidth);
-                make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
-                make.centerX.mas_equalTo(self.tableView);
-            }];
-            
-            UILabel *waitingLabel = [[UILabel alloc] init];
-            waitingLabel.text = @"共享发布孤单很久了，快去逛逛吧！";
-            waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
-            waitingLabel.textColor = COLOR_GRAY_BBBBBB;
-            waitingLabel.textAlignment = NSTextAlignmentCenter;
-            [self.tableView addSubview:waitingLabel];
-
-            [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.mas_equalTo(self.tableView);
-                make.top.mas_equalTo(waitingView.mas_top).offset(158.f * g_rateWidth);
-                make.width.mas_equalTo(kScreenWidth);
-            }];*/
-        }
-        if ([weakSelf.dataArray count] < 10) {
-            [self.tableView.mj_footer endRefreshingWithNoMoreData];
-        }
-        [self.tableView reloadData];
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
-    }];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view addSubview:self.openView];
@@ -139,11 +62,18 @@ static NSString *shareListCell = @"shareListCell";
     [self.view insertSubview:self.tableView aboveSubview:self.openView];
     [self.view addSubview:[self createHeaderView]];
     [self.headerView addSubview:self.searchBar];
+    
+    _dataArray = [NSMutableArray array];
+    
+    _shareListParam = [HPShareListParam new];
+    _shareListParam.pageSize = 10;
+    _shareListParam.page = 1;
+    _shareListParam.createTimeOrderType = @"0";
+    
+    _shareListParam.areaIds = [NSString stringWithFormat:@"9,7,1"]; //宝安，龙华，南山
+    
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
-        
-        NSInteger page = [self.page integerValue];
-        self.page = [NSString stringWithFormat:@"%ld",page ++];
-        [self getShareListData];
+        [self getShareListDataReload:NO];
     }];
     
     [self setUpSubviewsFrame];
@@ -157,6 +87,94 @@ static NSString *shareListCell = @"shareListCell";
         _tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
         
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    self.navigationController.navigationBar.translucent = NO;
+    
+    if (self.isPop) {
+        self.isPop = NO;
+    }
+    else {
+        [self getShareListDataReload:YES];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+//    CGPoint cityPoint = [self.view convertPoint:self.openView.cityBtn.center fromView:self.openView];
+//    CGPoint searchPoint = self.headerView.center;
+//    CGFloat deltaY = (searchPoint.y - cityPoint.y)/g_rateWidth;
+//    HPLog(@"deltaY : %f", deltaY);
+}
+
+#pragma mark - 共享发布数据
+
+- (void)getShareListDataReload:(BOOL)isReload {
+    
+    if (isReload) {
+        _shareListParam.page = 1;
+    }
+    
+    NSMutableDictionary *param = _shareListParam.mj_keyValues;
+    kWeakSelf(weakSelf);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:NO paraments:param complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            NSArray *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
+            if (models) {
+                if (isReload) {
+                    [weakSelf.dataArray removeAllObjects];
+                }
+                
+                [weakSelf.dataArray addObjectsFromArray:models];
+            }
+            
+            if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
+                /*UIImage *image = ImageNamed(@"waiting");
+                 UIImageView *waitingView = [[UIImageView alloc] init];
+                 waitingView.image = image;
+                 [self.tableView addSubview:waitingView];
+                 [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                 make.bottom.mas_equalTo(-70.f * g_rateWidth);
+                 make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
+                 make.centerX.mas_equalTo(self.tableView);
+                 }];
+                 
+                 UILabel *waitingLabel = [[UILabel alloc] init];
+                 waitingLabel.text = @"共享发布孤单很久了，快去逛逛吧！";
+                 waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
+                 waitingLabel.textColor = COLOR_GRAY_BBBBBB;
+                 waitingLabel.textAlignment = NSTextAlignmentCenter;
+                 [self.tableView addSubview:waitingLabel];
+                 
+                 [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                 make.centerX.mas_equalTo(self.tableView);
+                 make.top.mas_equalTo(waitingView.mas_top).offset(158.f * g_rateWidth);
+                 make.width.mas_equalTo(kScreenWidth);
+                 }];*/
+            }
+            
+            if (models.count < 10) {
+                [weakSelf.tableView.mj_footer endRefreshingWithNoMoreData];
+            }
+            else {
+                [weakSelf.tableView.mj_footer endRefreshing];
+                weakSelf.shareListParam.page ++;
+            }
+            
+            [weakSelf.tableView reloadData];
+        }
+        else {
+            [HPProgressHUD alertMessage:MSG];
+        }
+        
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 - (void)setUpSubviewsFrame
@@ -241,8 +259,7 @@ static NSString *shareListCell = @"shareListCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 3) {
-//        return _dataArray.count;
-        return 3;
+        return _dataArray.count;
     }
     return 1.f;
 }
@@ -361,9 +378,10 @@ static NSString *shareListCell = @"shareListCell";
 - (HPShareListCell *)setUpShareListCell:(UITableView *)tableView withIndexpath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 3) {
-        HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:shareListCell];
-//        HPShareListModel *model = _dataArray[indexPath.row];
-//        cell.model = model;
+        HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:shareListCell forIndexPath:indexPath];
+        HPShareListModel *model = _dataArray[indexPath.row];
+        cell.model = model;
+        cell.backgroundColor = UIColor.whiteColor;
         
         return cell;
     }
@@ -373,7 +391,7 @@ static NSString *shareListCell = @"shareListCell";
 {
     switch (indexPath.section) {
         case 0:
-            return getWidth(356.f);
+            return getWidth(336.f);
             break;
         case 1:
             return getWidth(165.f);
@@ -393,7 +411,10 @@ static NSString *shareListCell = @"shareListCell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 3) {
-        HPLog(@"sharelist");
+        HPShareListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if (cell) {
+            [self pushVCByClassName:@"HPShareDetailController" withParam:@{@"model":cell.model}];
+        }
     }
 }
 

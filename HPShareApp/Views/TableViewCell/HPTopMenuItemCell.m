@@ -55,7 +55,7 @@
     [self.iCarousel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(self);
         make.top.mas_equalTo(getWidth(10.f));
-        make.height.mas_equalTo(getWidth(150.f));
+        make.height.mas_equalTo(getWidth(120.f));
     }];
     
     [_pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -87,7 +87,7 @@
         [_iCarousel setPageSpace:getWidth(15.f)];//space + width = 每次滑动到距离
         [_iCarousel setPageMarginLeft:getWidth(25.f)];//距离屏幕左边的宽度
         [_iCarousel setPageWidth:getWidth(325.f)];
-        [_iCarousel setPageItemSize:CGSizeMake(getWidth(325.f), getWidth(150.f))];//轮播里面卡片控件的大小。默认与width相等
+        [_iCarousel setPageItemSize:CGSizeMake(getWidth(325.f), getWidth(120.f))];//轮播里面卡片控件的大小。默认与width相等
         [_iCarousel setBannerViewDelegate:self];
         [_iCarousel startAutoScrollWithInterval:2];
         _iCarousel.backgroundColor = [[UIColor clearColor] colorWithAlphaComponent:0.001];

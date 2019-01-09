@@ -73,6 +73,10 @@
     }];
 }
 
+- (void)onTapModalOutSide {
+    [self show:NO];
+}
+
 - (void)selectCellAtIndex:(NSInteger)index {
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
     [_tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionMiddle];
