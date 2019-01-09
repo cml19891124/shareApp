@@ -289,13 +289,17 @@ static NSString *shareListCell = @"shareListCell";
 {
     HPTopMenuItemCell *cell = [tableView dequeueReusableCellWithIdentifier:topMenuItemCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    HPLoginModel *account = [HPUserTool account];
+    
 //    kWeakSelf(weakSlef);
     [cell setClickMenuItemBlock:^(NSInteger HPHomeShareMenuItem) {
         switch (HPHomeShareMenuItem) {
             case HPHome_page_store_sharing:
-                HPLog(@"HPHome_page_store_sharing");
-                [self pushVCByClassName:@"HPShareShopListController"];
-
+                if (!account.token) {
+                    [HPProgressHUD alertMessage:@"请前往登录"];
+                }else{
+                    [self pushVCByClassName:@"HPShareShopListController"];
+                }
                 break;
             case HPHome_page_lobby_sharing:
                 HPLog(@"HPHome_page_lobby_sharing");

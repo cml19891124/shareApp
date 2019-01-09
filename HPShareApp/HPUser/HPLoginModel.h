@@ -1,12 +1,12 @@
 
 
 #import <Foundation/Foundation.h>
-@class HPCardInfo,HPUserInfo;
+@class HPCardInfo,HPUserInfo,HPSalesman;
 @interface HPLoginModel : NSObject<NSCoding>
 
 @property (nonatomic, copy) NSString *token;
 
-@property (nonatomic, copy) NSString *salesman;
+@property (nonatomic, strong) HPSalesman *salesman;
 
 @property (nonatomic, strong) HPCardInfo *cardInfo;
 
@@ -39,5 +39,21 @@
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *userId;
 +(instancetype)UserInfoWithDict:(NSDictionary *)dict;
+
+@end
+
+
+@interface HPSalesman : NSObject<NSCoding>
+@property (nonatomic, copy) NSString *createTime;
+@property (nonatomic, copy) NSString *updateTime;
+@property (nonatomic, copy) NSString *deleteTime;
+@property (nonatomic, copy) NSString *salesmanId;
+@property (nonatomic, copy) NSString *userId;
+@property (nonatomic, copy) NSString *staffCode;
+@property (nonatomic, copy) NSString *salesmanName;
+@property (nonatomic, copy) NSString *mobile;
+@property (nonatomic, copy) NSString *avatar;
+
++(instancetype)SalesmanInfoWithDict:(NSDictionary *)dict;
 
 @end

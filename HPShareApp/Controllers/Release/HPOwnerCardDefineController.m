@@ -26,6 +26,7 @@
 #import "CDZPicker.h"
 #import "HPDataHandlePickerView.h"
 #import "HPBotomPickerModalView.h"
+#import "LEEAlert.h"
 
 #define PANEL_SPACE 10.f
 #define TEXT_VIEW_PLACEHOLDER @"请输入您的需求，例：入驻本店需事先准备相关产品质检材料，入店时需确认，三无产品请绕道..."
@@ -44,6 +45,11 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 @property (nonatomic, strong) UILabel *infoLabel;
 @property (nonatomic, strong) UILabel *ratioLabel;
 
+
+/**
+ 输入field
+ */
+@property (nonatomic, strong) UITextField *inputField;
 /**
  完整度/l比例
  */
@@ -86,6 +92,11 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
  */
 @property (nonatomic, strong) UIButton *industryBtn;
 
+
+/**
+ 地址按钮
+ */
+@property (strong, nonatomic) UIButton *detailAddressBtn;
 /**
  生成标题field
  */
@@ -139,9 +150,13 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     _streetDic = [NSMutableDictionary dictionary];
     HPAddressModel *addressModel = self.param[@"address"];
     if (addressModel) {
-        [_addressBtn setTitle:addressModel.POIName forState:UIControlStateSelected];
-        [_addressBtn setSelected:YES];
+        [_detailAddressBtn setTitle:addressModel.formattedAddress forState:UIControlStateSelected];
+        [_detailAddressBtn setSelected:YES];
+        //定位地址信息存储
+        [kUserDefaults setObject:addressModel.mj_keyValues forKey:@"address"];
+        [kUserDefaults synchronize];
     }
+    
 }
 
 #pragma mark - setupUI
@@ -255,8 +270,8 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }
     else if (index == 2) {
         [panel addRowView:[self setupAreaRowView]];
-        [panel addRowView:[self setupPriceRowView]];
-        [panel addRowView:[self setupShareTimeRowView]];
+        [panel addRowView:[self setupDetailAddressRowView]];
+        [panel addRowView:[self setupManagerIndustryRowView]];
         UIView *lastPanel = view.subviews[index - 1];
         [panel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.width.equalTo(view);
@@ -286,48 +301,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }
 }
 
-- (UIView *)setupPhotoRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    HPAlignCenterButton *uploadBtn = [[HPAlignCenterButton alloc] initWithImage:[UIImage imageNamed:@"shop_transfer_upload"]];
-    [uploadBtn setTextFont:[UIFont fontWithName:FONT_BOLD size:14.f]];
-    [uploadBtn setTextColor:COLOR_RED_FF3C5E];
-    [uploadBtn setText:@"上传图片"];
-    [uploadBtn addTarget:self action:@selector(onClickUploadBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:uploadBtn];
-    [uploadBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(view);
-        make.top.equalTo(view).with.offset(43.f * g_rateWidth);
-        make.size.mas_equalTo(CGSizeMake(55.f, 72.f));
-    }];
-    
-    UILabel *descLabel = [[UILabel alloc] init];
-    [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
-    [descLabel setTextColor:COLOR_GRAY_CCCCCC];
-    [descLabel setText:@"上传共享空间照片，让匹配更高效。"];
-    [view addSubview:descLabel];
-    [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(view);
-        make.top.equalTo(uploadBtn.mas_bottom).with.offset(12.f * g_rateWidth);
-        make.height.mas_equalTo(12.f);
-    }];
-    
-    HPAddPhotoView *addPhotoView = [[HPAddPhotoView alloc] init];
-    [addPhotoView setMaxNum:4];
-    kWeakSelf(weakSelf);
-    [addPhotoView setAddBtnCallBack:^{
-        [weakSelf.alertSheet show:YES];
-    }];
-    [view addSubview:addPhotoView];
-    self.addPhotoView = addPhotoView;
-    [addPhotoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(view);
-    }];
-    [addPhotoView setHidden:YES];
-    
-    return view;
-}
-
+#pragma mark - 店铺简称
 - (UIView *)setupStoreNameRowView {
     UIView *view = [[UIView alloc] init];
     
@@ -337,84 +311,12 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     return view;
 }
 
-- (UIView *)setupSpaceAddressRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    [self setupTitleLabelWithText:@"店铺地址" ofView:view];
-    UIImageView *downIcon = [self setupDownIconOfView:view];
-    
-    UIButton *valueBtn = [[UIButton alloc] init];
-    [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-    [valueBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
-    [valueBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-    [valueBtn setTitle:@"请输入店铺或空间地址" forState:UIControlStateNormal];
-    [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(onClickAddressbtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:valueBtn];
-    _addressBtn = valueBtn;
-    [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
-        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
-    
-    
-    return view;
-}
-
-- (UIView *)setupTradeRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    [self setupTitleLabelWithText:@"经营行业" ofView:view];
-    UIImageView *downIcon = [self setupDownIconOfView:view];
-    
-    UIButton *valueBtn = [[UIButton alloc] init];
-    [valueBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-    [valueBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
-    [valueBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [valueBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-    [valueBtn setTitle:@"请选择" forState:UIControlStateNormal];
-    [valueBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [valueBtn addTarget:self action:@selector(onClickTradeBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:valueBtn];
-    _tradeBtn = valueBtn;
-    [valueBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
-        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
-    
-    return view;
-}
-
-- (UIView *)setupcCertificationRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    [self setupTitleLabelWithText:@"资格认证" ofView:view];
-    
-    UIButton *certificationBtn = [[UIButton alloc] init];
-    [certificationBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:14.f]];
-    [certificationBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
-    [certificationBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
-    [certificationBtn setTitle:@"认证" forState:UIControlStateNormal];
-    [certificationBtn setImage:[UIImage imageNamed:@"select_the_arrow"] forState:UIControlStateNormal];
-    [certificationBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, 27.f, 0.f, -27.f)];
-    [certificationBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -30.f, 0.f, 30.f)];
-    [view addSubview:certificationBtn];
-    [certificationBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(view).with.offset(-20.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
-    
-    return view;
-}
 #pragma mark - 店铺标签
 - (UIView *)setupStoreTagRowView {
     UIView *view = [[UIView alloc] init];
     
     UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:kFont_Bold(15.f)];
+    [titleLabel setFont:kFont_Medium(15.f)];
     [titleLabel setTextColor:COLOR_BLACK_333333];
     [titleLabel setText:@"店铺标签"];
     [view addSubview:titleLabel];
@@ -456,7 +358,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [cityBtn setTitle:@"深圳市" forState:UIControlStateNormal];
     [cityBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
     [cityBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-//    [cityBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
     cityBtn.tag = HPSelectItemIndexCity;
     [view addSubview:cityBtn];
     _cityBtn = cityBtn;
@@ -485,7 +386,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     return view;
 }
 #pragma mark -详细地址
-- (UIView *)setupPriceRowView {
+- (UIView *)setupDetailAddressRowView {
     UIView *view = [[UIView alloc] init];
     UIButton *starBtn = [UIButton new];
     [starBtn setTitle:@"*" forState:UIControlStateNormal];
@@ -497,16 +398,35 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }];
     [self setupTitleLabelWithText:@"详细地址" ofView:view];
 
-    UITextField *textField = [self setupTextFieldWithPlaceholder:@"请填写店铺详细地址" ofView:view rightTo:view];
-//    [textField setKeyboardType:UIKeyboardTypeDecimalPad];
-    textField.textColor = COLOR_BLACK_333333;
-    textField.font = kFont_Regular(13.f);
-    _addressField = textField;
+    UIImageView *downIcon = [self setupDownIconOfView:view];
+
+    UIButton *addressBtn = [[UIButton alloc] init];
+    [addressBtn.titleLabel setFont:kFont_Regular(13.f)];
+    [addressBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+    [addressBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+    [addressBtn setTitle:@"请选择" forState:UIControlStateNormal];
+    addressBtn.tag = HPSelectItemIndexAddress;
+    [addressBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    [addressBtn addTarget:self action:@selector(callDetailAddressVc:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:addressBtn];
+    _detailAddressBtn = addressBtn;
+    [addressBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
+        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
+        make.centerY.equalTo(view);
+    }];
     
     return view;
 }
 
-- (UIView *)setupShareTimeRowView {
+#pragma mark - 详细地址vc
+- (void)callDetailAddressVc:(UIButton *)button
+{
+    [self pushVCByClassName:@"HPShareAddressController"];
+}
+
+#pragma mark - 经营行业
+- (UIView *)setupManagerIndustryRowView {
     UIView *view = [[UIView alloc] init];
     UIButton *starBtn = [UIButton new];
     [starBtn setTitle:@"*" forState:UIControlStateNormal];
@@ -539,50 +459,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     return view;
 }
 
-- (UIView *)setupShareDateRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    [self setupTitleLabelWithText:@"共享排期" ofView:view];
-    
-    UIButton *calendarBtn = [[UIButton alloc] init];
-    [calendarBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:14.f]];
-    [calendarBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    [calendarBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
-    [calendarBtn setTitle:@"请选择" forState:UIControlStateNormal];
-    [calendarBtn setImage:[UIImage imageNamed:@"customizing_business_calendar"] forState:UIControlStateNormal];
-    [calendarBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    [calendarBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -15.f, 0.f, 15.f)];
-    [calendarBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, getWidth(233.f)-15.f, 0.f, -(getWidth(233.f)-15.f))];
-    [calendarBtn addTarget:self action:@selector(onClickCalendarBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:calendarBtn];
-    _shareDateBtn = calendarBtn;
-    [calendarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
-        make.centerY.equalTo(view);
-        make.right.equalTo(view).with.offset(-20.f * g_rateWidth);
-    }];
-    
-    return view;
-}
-
-- (UIView *)setupIntentTradeRowView {
-    UIView *view = [[UIView alloc] init];
-    
-    UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
-    [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:@"意向行业/产品"];
-    [view addSubview:titleLabel];
-    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(21.f * g_rateWidth);
-        make.centerY.equalTo(view);
-    }];
-    
-    _intentSpaceField = [self setupTextFieldWithPlaceholder:@"请填写" ofView:view rightTo:view];
-    
-    return view;
-}
-
+#pragma mark - 联系人
 - (UIView *)setupContactRowView {
     UIView *view = [[UIView alloc] init];
     [self setupTitleLabelWithText:@"联系人" ofView:view];
@@ -592,6 +469,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     return view;
 }
 
+#pragma mark - 联系方式
 - (UIView *)setupPhoneNumRowView {
     UIView *view = [[UIView alloc] init];
     UIButton *starBtn = [UIButton new];
@@ -605,16 +483,26 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     
     [self setupTitleLabelWithText:@"联系方式" ofView:view];
     HPLoginModel *account = [HPUserTool account];
-    UITextField *textField = [self setupTextFieldWithPlaceholder:account.userInfo.mobile?:@"" ofView:view rightTo:view];
-    [textField setKeyboardType:UIKeyboardTypeNumberPad];
-    textField.text = account.userInfo.mobile?:@"";
-    textField.textColor = COLOR_BLACK_333333;
-    textField.font = kFont_Regular(13.f);
-    textField.userInteractionEnabled = NO;//不允许交互，固定为注册登录人的手机号
+    
+    UITextField *textField;
+    if (account.salesman.userId) {//是业务员，需要输入客户/用户的手机号，代用户发布需求
+        textField = [self setupTextFieldWithPlaceholder:@"请输入用户手机号" ofView:view rightTo:view];
+
+        textField.userInteractionEnabled = YES;//允许交互，输入注册登录人的手机号
+        textField.delegate = self;
+    }else{
+        textField = [self setupTextFieldWithPlaceholder:account.userInfo.mobile?:@"请输入用户手机号" ofView:view rightTo:view];
+        [textField setKeyboardType:UIKeyboardTypeNumberPad];
+        textField.text = account.userInfo.mobile?:@"";
+        textField.textColor = COLOR_BLACK_333333;
+        textField.font = kFont_Regular(13.f);
+        textField.userInteractionEnabled = NO;//不允许交互，固定为注册登录人的手机号
+    }
     _phoneNumField = textField;
     return view;
 }
 
+#pragma mark - 生成
 - (UIView *)setupRemarkRowView {
     UIView *view = [[UIView alloc] init];
     UIButton *starBtn = [UIButton new];
@@ -655,7 +543,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 #pragma mark - 生成按钮事件
 - (void)convertShareTitle:(UIButton *)button
 {
-    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _addressField.text.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
+    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _detailAddressBtn.currentTitle.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
         button.selected = !button.selected;
         if (button.selected) {
             [button setTitle:@"清空" forState:UIControlStateNormal];
@@ -714,18 +602,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }
 }
 
-#pragma mark - Function
-
-- (NSString *)getAreaIdByName:(NSString *)name {
-    for (HPAreaModel *areaModel in self.areaModels) {
-        if ([areaModel.name isEqualToString:name]) {
-            return areaModel.areaId;
-        }
-    }
-    
-    return nil;
-}
-
 #pragma mark - OnClick
 
 - (void)onClickAddressbtn:(UIButton *)btn {
@@ -733,54 +609,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 }
 
 - (void)onClickReleaseBtn {
-    /*
-    if (!_canRelease) {
-        return;
-    }
-    _canRelease = NO;
-    
-    HPAddressModel *addressModel = self.param[@"address"];
-    NSString *latitude;
-    NSString *longitude;
-    NSString *address;
-    if (addressModel) {
-        latitude = [NSString stringWithFormat:@"%lf", addressModel.lat];
-        longitude = [NSString stringWithFormat:@"%lf", addressModel.lon];
-        address = addressModel.POIName;
-    }
-    
-    NSString *title = _titleField.text;
-    NSString *area = _areaField.text;
-    NSString *areaId = [self getAreaIdByName:addressModel.district];
-    NSString *industryId = self.selectedIndustryModel.pid;
-    NSString *subIndustryId = self.selectedIndustryModel.industryId;
-    NSString *rent = _priceField.text;
-    NSString *rentType = self.unitSelectTable.selectedIndex == 0 ? @"1" : @"2";
-    NSString *shareTime = [self.timePicker getTimeStr];
-    NSString *shareDays = @"";
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    for (NSDate *date in self.calendarDialogView.selectedDates) {
-        NSString *dateStr = [dateFormatter stringFromDate:date];
-        shareDays = [shareDays stringByAppendingString:dateStr];
-        if (date != self.calendarDialogView.selectedDates.lastObject) {
-            shareDays = [shareDays stringByAppendingString:@","];
-        }
-    }
-    
-    NSString *contact = _contactField.text;
-    NSString *contactMobile = _phoneNumField.text;
-    NSString *intention = _intentSpaceField.text;
-    
-    NSString *remark;
-    if ([_remarkTextView.text isEqualToString:TEXT_VIEW_PLACEHOLDER]) {
-        remark = @"";
-    }
-    else {
-        remark = _remarkTextView.text;
-    }
-    
     NSString *tag = @"";
     for (NSString *tagItem in self.tagDialogView.checkItems) {
         tag = [tag stringByAppendingString:tagItem];
@@ -789,142 +617,47 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         }
     }
     
-    NSString *type = @"1";
-    HPLoginModel *loginModel = [HPUserTool account];
-    if (!loginModel.token) {
-        [HPProgressHUD alertMessage:@"用户未登录"];
-        return;
-    }
-    
-    NSString *userId = loginModel.userInfo.userId;
-    
-    self.shareReleaseParam.title = title;
-    self.shareReleaseParam.area = area;
-    self.shareReleaseParam.areaId = areaId;
-    self.shareReleaseParam.latitude = latitude;
-    self.shareReleaseParam.longitude = longitude;
-    self.shareReleaseParam.address = address;
-    self.shareReleaseParam.industryId = industryId;
-    self.shareReleaseParam.subIndustryId = subIndustryId;
-    self.shareReleaseParam.rent = rent;
-    self.shareReleaseParam.rentType = rentType;
-    self.shareReleaseParam.shareTime = shareTime;
-    self.shareReleaseParam.shareDays = shareDays;
-    self.shareReleaseParam.contact = contact;
-    self.shareReleaseParam.contactMobile = contactMobile;
-    self.shareReleaseParam.intention = intention;
-    self.shareReleaseParam.remark = remark;
-    self.shareReleaseParam.tag = tag;
-    self.shareReleaseParam.type = type;
-    self.shareReleaseParam.userId = userId;
-    self.shareReleaseParam.isApproved = @"0";
-    
-    NSArray *photos = self.addPhotoView.photos;
-    
-    if (photos.count == 0) {
-        [HPProgressHUD alertMessage:@"请上传照片"];
-        _canRelease = YES;
-        return;
-    }
-    else if ([title isEqualToString:@""]) {
-        [HPProgressHUD alertMessage:@"请填写标题"];
-        _canRelease = YES;
-        return;
-    }
-    else if (address == nil) {
-        [HPProgressHUD alertMessage:@"请填写地址"];
-        _canRelease = YES;
-        return;
-    }
-    else if (industryId == nil) {
-        [HPProgressHUD alertMessage:@"请选择行业"];
-        _canRelease = YES;
-        return;
-    }
-    else if (subIndustryId == nil) {
-        [HPProgressHUD alertMessage:@"请选择行业"];
-        _canRelease = YES;
-        return;
-    }
-    else if ([shareDays isEqualToString:@""]) {
-        [HPProgressHUD alertMessage:@"请选择共享日期"];
-        _canRelease = YES;
-        return;
-    }
-    else if ([contact isEqualToString:@""]) {
-        [HPProgressHUD alertMessage:@"请填写联系人"];
-        _canRelease = YES;
-        return;
-    }
-    else if ([contactMobile isEqualToString:@""]) {
-        [HPProgressHUD alertMessage:@"请填写联系方式"];
-        _canRelease = YES;
-        return;
-    }
-    
-    [HPUploadImageHandle upLoadImages:photos withUrl:kBaseUrl@"/v1/file/uploadPictures" parameterName:@"files" success:^(id responseObject) {
-        if (CODE == 200) {
-            NSArray<HPPictureModel *> *pictureModels = [HPPictureModel mj_objectArrayWithKeyValuesArray:DATA];
-            for (HPPictureModel *pictureModel in pictureModels) {
-                [self.shareReleaseParam.pictureIdArr addObject:pictureModel.pictureId];
-                [self.shareReleaseParam.pictureUrlArr addObject:pictureModel.url];
-            }
-            
-            if (self.param[@"spaceId"]) {
-                [self.shareReleaseParam setSpaceId:self.param[@"spaceId"]];
-                NSDictionary *param = self.shareReleaseParam.mj_keyValues;
-                [self updateInfo:param];
-            }
-            else {
-                NSDictionary *param = self.shareReleaseParam.mj_keyValues;
-                [self releaseInfo:param];
-            }
+    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _detailAddressBtn.currentTitle.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
+        if (_convertTitleField.text.length) {
+            self.infoDict[@"converTitle"] = _convertTitleField.text;
         }
-        else {
-            self->_canRelease = YES;
-            [HPProgressHUD alertMessage:MSG];
+        if (_tagBtn.currentTitle.length) {
+            self.infoDict[@"storeTag"] = _tagBtn.currentTitle;
         }
-    } progress:^(double progress) {
-        NSLog(@"progress: %lf", progress);
-        [HPProgressHUD alertWithProgress:progress text:@"上传图片中"];
-    } fail:^(NSError *error) {
-        self->_canRelease = YES;
-        ErrorNet
-    }];*/
-    
-    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _addressField.text.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
-        
-        NSMutableArray *contentArray = [NSMutableArray array];
         if (_cityBtn.currentTitle.length) {
-            [contentArray addObject:_cityBtn.currentTitle];
+            self.infoDict[@"city"] = _cityBtn.currentTitle;
         }
         if (_areaBtn.currentTitle.length) {
-            [contentArray addObject:_areaBtn.currentTitle];
+            self.infoDict[@"area"] = _areaBtn.currentTitle;
         }
-        if (_addressField.text.length) {
-            [contentArray addObject:_addressField.text];
+        if (_detailAddressBtn.currentTitle.length) {
+            self.infoDict[@"address"] = _detailAddressBtn.currentTitle;
         }
         
         if (_industryBtn.currentTitle.length) {
-            [contentArray addObject:_industryBtn.currentTitle];
+            self.infoDict[@"industry"] = _industryBtn.currentTitle;
         }
         if (_phoneNumField.text.length) {
-            [contentArray addObject:_phoneNumField.text];
+            self.infoDict[@"phone"] = _phoneNumField.text;
         }
         
         if (_contactField.text.length) {
-            [contentArray addObject:_contactField.text];
+            self.infoDict[@"contact"] = _contactField.text;
         }
         
         if (_titleField.text.length) {
-            [contentArray addObject:_titleField.text];
+            self.infoDict[@"storeName"] = _titleField.text;
         }
-        self.ratio = [NSString stringWithFormat:@"%.2f%%",contentArray.count/15.00];
+        self.ratio = [NSString stringWithFormat:@"%.2f%%",self.infoDict.allValues.count/15.00];
         self.ratioLabel.text = [NSString stringWithFormat:@"%@",self.ratio.length>0?self.ratio:@"0"];
-
-        HPReviseReleaseInfoViewController *shareInfoVC = [HPReviseReleaseInfoViewController new];
-        shareInfoVC.delegate = self;
-        [self.navigationController pushViewController:shareInfoVC animated:YES];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            HPReviseReleaseInfoViewController *shareInfoVC = [HPReviseReleaseInfoViewController new];
+            shareInfoVC.ratio =  self.ratioLabel.text;
+            shareInfoVC.infoDict = self.infoDict;
+            shareInfoVC.delegate = self;
+            [self.navigationController pushViewController:shareInfoVC animated:YES];
+        });
+        
 //        [self pushVCByClassName:@"HPReviseReleaseInfoViewController"];
     }else{//弹框提示
         HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];
@@ -969,7 +702,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 #pragma mark - 点击叫出pickerview
 - (void)callPickerViewWithDataSource:(UIButton *)button
 {
-        [self setUpPickerView:button.tag];
+    [self setUpPickerView:button.tag];
 }
 
 - (void)setUpPickerView:(HPSelectItemIndex)selectItemIndex
@@ -1037,5 +770,66 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         
         [_industryPickerView show:YES];
     }
+}
+
+#pragma mark - textFielddelegate
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField == _phoneNumField) {
+        if (textField.text.length < 11) {
+            [HPProgressHUD alertMessage:@"请输入11位手机号"];
+        }else{
+            textField.text = [textField.text substringToIndex:textField.text.length - 1];
+        }
+    }
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+{
+    if (textField == _phoneNumField) {
+        // 使用一个变量接收自定义的输入框对象 以便于在其他位置调用
+        
+        __block UITextField *inputField = nil;
+        kWeakSelf(weakSelf);
+        [LEEAlert alert].config.LeeAddTextField(^(UITextField *textField) {
+            
+            // 这里可以进行自定义的设置
+            
+            textField.placeholder = @"请输入用户手机号";
+            
+            textField.textColor = [UIColor darkGrayColor];
+            
+            inputField = textField; //赋值
+            self.inputField = inputField;
+
+        }).LeeCancelAction(@"取消", ^{
+            
+        })
+        .LeeAction(@"确认", ^{
+
+            [weakSelf queryUserOfSalesmanByMobile];
+        })
+        .LeeShow(); // 设置完成后 别忘记调用Show来显示
+        }
+    return NO;
+
+    }
+
+}
+
+#pragma mark - 通过电话查询是否是特定业务员的客户
+- (void)queryUserOfSalesmanByMobile
+{
+    HPLoginModel *account = [HPUserTool account];
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/salesman/queryUserOfSalesmanByMobile" isNeedToken:YES paraments:@{@"mobile":self.inputField.text,@"salesmanUserId":account.salesman.userId} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            self.phoneNumField.text = self.inputField.text;
+        }else
+        {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 @end

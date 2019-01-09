@@ -17,6 +17,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPReviseReleaseInfoViewController : HPBaseReleaseController
 @property (nonatomic, weak) id<HPShareSpaceInfoDelegate> delegate;
+
+/**
+ 完整度/l比例
+ */
+@property (nonatomic, copy) NSString *ratio;
+/**
+ 信息数组
+ */
+@property (nonatomic, strong) NSMutableArray *contentArray;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -9,19 +9,49 @@
 #import "HPOwnnerReleaseViewController.h"
 #import "HPUploadButton.h"
 #import "HPImageUtil.h"
-
+#import "HPAddressModel.h"
 #import "HPAlertSheet.h"
 #import "TZImagePickerController.h"
 #import "HPAddPhotoView.h"
 #import "HPUploadImageHandle.h"
+#import "HPTextDialogView.h"
+#import "HPInfoModel.h"
+
 typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
     HPReleaseImageBtnIndexFace = 150,
     HPReleaseImageBtnIndexStoreInside,
     HPReleaseImageBtnIndexFreeSpace,
     HPReleaseImageBtnIndexFreeeSpaceMore,
-    HPReleaseImageBtnIndexAdd
+    HPReleaseImageBtnIndexFreeSpaceZeroInRowOne,
+    HPReleaseImageBtnIndexFreeSpaceOneInRowOne,
+    HPReleaseImageBtnIndexFreeSpaceTwoInRowOne,
+    HPReleaseImageBtnIndexFreeSpaceThreeInRowOne
+};
+
+typedef NS_ENUM(NSInteger, HPDeleteImageBtnIndex) {
+    HPDeleteImageBtnIndexFace = 160,
+    HPDeleteImageBtnIndexStoreInside,
+    HPDeleteImageBtnIndexFreeSpace,
+    HPDeleteImageBtnIndexFreeeSpaceMore,
+    HPDeleteImageBtnIndexFreeSpaceZeroInRowOne,
+    HPDeleteImageBtnIndexFreeSpaceOneInRowOne,
+    HPDeleteImageBtnIndexFreeSpaceTwoInRowOne,
+    HPDeleteImageBtnIndexFreeSpaceThreeInRowOne
 };
 @interface HPOwnnerReleaseViewController ()
+
+/**
+ 是否是第一次点击选择图片，否就需要交换元素，是就需要把后续来的图片插入倒数第二的位置
+ */
+@property (nonatomic, assign) BOOL isFirst;
+
+
+/**
+ 是封面
+ */
+@property (nonatomic, assign) BOOL isFace;
+@property (nonatomic, weak) HPTextDialogView *textDialogView;
+
 @property (nonatomic, strong) UIView *navTilteView;
 
 /**
@@ -44,12 +74,24 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
  */
 @property (nonatomic, strong) UILabel *uploadNumLabel;
 
+/**
+ 图片数组视图
+ */
+@property (nonatomic, strong) UIView *photoView;
+
 @property (nonatomic, strong) UIButton *starBtn;
 
 /**
  选中的图片来源按钮索引
  */
 @property (nonatomic, assign) HPReleaseImageBtnIndex selectedPhotoBtnIndex;
+
+
+/**
+ 拍照图片按钮
+ */
+@property (nonatomic, strong) HPUploadButton *btn;
+
 /**
  备注提示label
  */
@@ -104,9 +146,11 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     _photoArray = [NSMutableArray array];
+    
     UIView *navTilteView = [self setupNavigationBarWithTitle:@"发布"];
     self.view.backgroundColor = COLOR_GRAY_F6F6F6;
-    self.uploadTextArray = @[@"封面",@"店铺内部",@"闲置空间",@"闲置空间",@""];
+    self.uploadTextArray = @[@""];//@[@"封面",@"店铺内部",@"闲置空间",@"闲置空间",@""];
+    [self.photoArray addObjectsFromArray:self.uploadTextArray];
     _navTilteView = navTilteView;
     [self setUpPhotosSubviews];
     [self setUpReleaseSubVeiws];
@@ -130,6 +174,7 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
     [self.uploadView addSubview:self.uploadLabel];
     [self.uploadView addSubview:self.uploadNumLabel];
     [self.uploadView addSubview:self.uploadLine];
+    [self.uploadView addSubview:self.photoView];
     [self setUpUploadButton];
     [self.uploadView addSubview:self.starBtn];
     [self.uploadView addSubview:self.leavesLabel];
@@ -151,15 +196,27 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
     [self.bottomView addSubview:self.releaseBtn];
 }
 
+#pragma mark - 创建照片按钮
 - (void)setUpUploadButton
 {
-    for (int i = 0; i < self.uploadTextArray.count; i++) {
+    [_photoView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    for (int i = 0; i < self.photoArray.count; i++) {
         CGFloat row = i/4;
         CGFloat col = i%4;
         CGFloat btnY = getWidth(15.f) + getWidth(75.f) *row;
         HPUploadButton *btn = [HPUploadButton new];
         [btn setImage:ImageNamed(@"shop_transfer_upload") forState:UIControlStateNormal];
-        [btn setTitle:self.uploadTextArray[i] forState:UIControlStateNormal];
+        
+        if ([self.photoArray[i] isKindOfClass:UIImage.class]) {
+            [btn setImage:ImageNamed(@"") forState:UIControlStateNormal];
+            [btn setBackgroundImage:self.photoArray[i] forState:UIControlStateNormal];
+        }else if ([self.photoArray[i] isKindOfClass:NSString.class]){
+
+            [btn setImage:ImageNamed(self.photoArray[i]) forState:UIControlStateNormal];
+        }
+        if (i == self.photoArray.count-1 && self.photoArray.count == 1) {
+            [btn setImage:ImageNamed(@"shop_transfer_upload") forState:UIControlStateNormal];
+        }
         [btn setTitleColor:COLOR_GRAY_999999 forState:UIControlStateNormal];
         btn.backgroundColor = COLOR_GRAY_F2F2F2;
         btn.layer.cornerRadius = 2.f;
@@ -167,9 +224,14 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
         btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         btn.titleLabel.font = kFont_Medium(11.f);
         btn.tag = 150 + i;
-
-        [btn addTarget:self action:@selector(makePhotosSheetCilck:) forControlEvents:UIControlEventTouchUpInside];
-        [self.uploadView addSubview:btn];
+        //点击后设置当前图片为店铺封面
+        [btn addTarget:self action:@selector(setCurrentImageAsFaceImage:) forControlEvents:UIControlEventTouchUpInside];
+        [self.photoView addSubview:btn];
+        self.btn = btn;
+        if (i == 0 && self.photoArray.count != 1) {
+            btn.faceLabel.hidden = NO;
+        }
+        
         CGFloat space = (kScreenWidth - getWidth(75.f) * 4 - getWidth(45.f))/3;
         [btn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo((getWidth(75.f) + space)*col + getWidth(20.f));
@@ -177,8 +239,131 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
             make.width.mas_equalTo(getWidth(75.f));
             make.height.mas_equalTo(getWidth(65.f));
         }];
+        
+        UIButton *deleteBtn = [UIButton new];
+        deleteBtn.layer.cornerRadius = getWidth(7.5f);
+        deleteBtn.layer.masksToBounds = YES;
+        [deleteBtn setBackgroundImage:ImageNamed(@"shop_transfer_cancel") forState:UIControlStateNormal];
+        deleteBtn.tag = 160 + i;
+        [deleteBtn addTarget:self action:@selector(clickToDeletephoto:) forControlEvents:UIControlEventTouchUpInside];
+        [self.photoView addSubview:deleteBtn];
+
+        if (i == self.photoArray.count - 1) {
+            deleteBtn.hidden = YES;
+            [btn addTarget:self action:@selector(clickedCameraBtnToAddImages:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        
+        [deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo((getWidth(75.f) + space)*col + getWidth(67.5f) + getWidth(20.f));
+            make.top.mas_equalTo(self.photoView).offset(getWidth(15.f) + getWidth(-7.5f) + (space + getWidth(65.f)) * row);
+            make.width.mas_equalTo(getWidth(15.f));
+            make.height.mas_equalTo(getWidth(15.f));
+        }];
     }
 }
+
+
+#pragma mark - 点击图片按钮-只有非店铺封面的按钮才可以点击设置为店铺封面
+- (void)setCurrentImageAsFaceImage:(UIButton *)button
+{
+    if (self.photoArray.count > 1 && button.tag != HPReleaseImageBtnIndexFace && button.tag != 150 + self.photoArray.count - 1) {
+        if (_textDialogView == nil) {
+            HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
+            [textDialogView setText:@"是否设置为店铺封面？"];
+            [textDialogView setModalTop:279.f * g_rateHeight];
+            [textDialogView setCanecelBtnTitle:@"取消"];
+            [textDialogView setConfirmBtnTitle:@"确认"];
+            _textDialogView = textDialogView;
+        }
+        [_textDialogView setConfirmCallback:^{
+            [self.photoView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+            //获取封面图片
+            UIImage *faceImage = self.photoArray[0];
+            //用点击的按钮图片替换当前第一个元素的封面图片
+            [self.photoArray replaceObjectAtIndex:0 withObject:self.photoArray[button.tag - 150]];
+            //移除当前位置的图片
+            [self.photoArray removeObjectAtIndex:button.tag - 150];
+            //
+            [self.photoArray insertObject:faceImage atIndex:button.tag - 150];
+            [self setUpUploadButton];
+            
+            [self.view layoutIfNeeded];
+            [self.photoView layoutIfNeeded];
+        }];
+        [_textDialogView show:YES];
+    }
+
+}
+
+/**
+ @param image 图片参数 可为 本地图片 可为 拍照图片
+ */
+- (UIButton *)creatButtonWithImage:(UIImage *)image With:(int)tag
+{
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn setBackgroundImage:image forState:UIControlStateNormal];
+    btn.tag = tag;
+    [btn addTarget:self action:@selector(replaceObject:) forControlEvents:UIControlEventTouchUpInside];
+    
+    return btn;
+}
+static int selectBtn_tag = -1;
+- (void)replaceObject:(UIButton *)button
+{
+    selectBtn_tag = (int)button.tag;
+    [self makePhotosSheetClick:button];
+}
+
+#pragma mark - 添加图片按钮的点击事件
+- (void)clickedCameraBtnToAddImages:(UIButton *)button
+{
+    [self makePhotosSheetClick:button];
+}
+
+
+/**
+ 删除图片
+ */
+- (void)clickToDeletephoto:(UIButton *)button
+{
+    if (_textDialogView == nil) {
+        HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
+        [textDialogView setText:@"是否删除图片？"];
+        [textDialogView setModalTop:279.f * g_rateHeight];
+        [textDialogView setCanecelBtnTitle:@"取消"];
+        [textDialogView setConfirmBtnTitle:@"删除"];
+        _textDialogView = textDialogView;
+    }
+    kWeakSelf(weakSelf);
+    __strong typeof(&*weakSelf) strongSelf = weakSelf;
+    [_textDialogView setConfirmCallback:^{
+        // 此处加入点击确认后的操作
+        if (button.tag == HPDeleteImageBtnIndexFace) {
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFace - 160];
+        }else if(button.tag == HPDeleteImageBtnIndexStoreInside){
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexStoreInside - 160];
+        }else if(button.tag == HPDeleteImageBtnIndexFreeSpace){
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeSpace - 160];
+        }else if(button.tag == HPDeleteImageBtnIndexFreeeSpaceMore){
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeeSpaceMore - 160];
+        }else if(button.tag == HPDeleteImageBtnIndexFreeSpaceZeroInRowOne){
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeSpaceZeroInRowOne - 160];
+        }else if(button.tag == HPDeleteImageBtnIndexFreeSpaceOneInRowOne){
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeSpaceOneInRowOne - 160];
+        }else if(button.tag == HPDeleteImageBtnIndexFreeSpaceTwoInRowOne){
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeSpaceTwoInRowOne - 160];
+        }else if(button.tag == HPDeleteImageBtnIndexFreeSpaceThreeInRowOne){
+            [self.photoArray removeObjectAtIndex:HPDeleteImageBtnIndexFreeSpaceThreeInRowOne - 160];
+        }
+        [strongSelf setUpUploadButton];
+        [strongSelf.photoView layoutIfNeeded];
+        [strongSelf.view layoutIfNeeded];
+    }];
+    
+    [_textDialogView show:YES];
+    
+}
+
 - (UIView *)uploadView{
     if (!_uploadView) {
         _uploadView = [UIView new];
@@ -216,6 +401,14 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
     return _uploadLine;
 }
 
+- (UIView *)photoView
+{
+    if (!_photoView) {
+        _photoView = [UIView new];
+        
+    }
+    return _photoView;
+}
 - (UILabel *)uploadNumLabel
 {
     if (!_uploadNumLabel) {
@@ -401,13 +594,235 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
 - (void)onClickReleaseBtn:(UIButton *)button
 {
     
+    HPLoginModel *loginModel = [HPUserTool account];
+    if (!loginModel.token) {
+        [HPProgressHUD alertMessage:@"用户未登录"];
+        return;
+    }
+    
+    NSString *userId = loginModel.userInfo.userId;
+    //获取定位信息
+    HPAddressModel *addressModel = [HPAddressModel mj_objectWithKeyValues:[kUserDefaults objectForKey:@"address"]];
+    NSString *latitude;
+    NSString *longitude;
+    NSString *address;
+    if (addressModel) {
+        latitude = [NSString stringWithFormat:@"%lf", addressModel.lat];
+        longitude = [NSString stringWithFormat:@"%lf", addressModel.lon];
+        address = addressModel.POIName;
+    }
+    self.shareReleaseParam.latitude = latitude;
+    self.shareReleaseParam.longitude = longitude;
+    HPInfoModel *model = [HPInfoModel mj_objectWithKeyValues:self.infoDict];
+    self.shareReleaseParam.title = model.converTitle;
+    self.shareReleaseParam.shortName = model.storeName;
+
+    NSString *areaRange = @"";
+    if ([model.space containsString:@"不限"]) {
+        areaRange = @"1";
+    }else if ([model.space containsString:@"5㎡"]) {
+        areaRange = @"2";
+    }else if ([model.space containsString:@"10㎡"]) {
+        areaRange = @"3";
+    }else if ([model.space containsString:@"20㎡"]) {
+        areaRange = @"4";
+    }else if ([model.space containsString:@"以上"]) {
+        areaRange = @"5";
+    }
+    self.shareReleaseParam.area = @"0";
+    self.shareReleaseParam.areaRange = areaRange;
+    NSArray *areaArr = [model.area componentsSeparatedByString:@"-"];
+    self.shareReleaseParam.areaId = [self getAreaIdByName:areaArr.firstObject];
+    self.shareReleaseParam.districtId = [self getAreaIdByName:areaArr.lastObject];
+    NSArray *industryNameArray = [model.industry componentsSeparatedByString:@"-"];
+    self.shareReleaseParam.industryId = [HPCommonData getIndustryIdByIndustryName:industryNameArray.firstObject];
+    self.shareReleaseParam.subIndustryId = [HPCommonData getIndustryIdByIndustryName:industryNameArray.lastObject];
+    
+    NSString *rentAmount = @"";
+    if ([model.rentType containsString:@"元/小时"]) {
+        NSRange range = [model.rentType rangeOfString:@"元/小时"];
+        rentAmount = [model.rentType substringToIndex:range.location - 1];
+    }else if ([model.rentType containsString:@"元/天"]){
+        NSRange range = [model.rentType rangeOfString:@"元/天"];
+        rentAmount = [model.rentType substringToIndex:range.location - 1];
+    }else if ([model.rentType containsString:@"元/月"]){
+        NSRange range = [model.rentType rangeOfString:@"元/月"];
+        rentAmount = [model.rentType substringToIndex:range.location - 1];
+    }else if ([model.rentType containsString:@"元/年"]){
+        NSRange range = [model.rentType rangeOfString:@"元/年"];
+        rentAmount = [model.rentType substringToIndex:range.location - 1];
+    }
+    self.shareReleaseParam.rent = rentAmount;
+    
+    NSString *rentType = @"";
+    if ([model.rentType containsString:@"小时"]) {
+        rentType = @"1";
+    }else if ([model.rentType containsString:@"天"]){
+        rentType = @"2";
+    }else if ([model.rentType containsString:@"月"]){
+        rentType = @"3";
+    }else if ([model.rentType containsString:@"年"]){
+        rentType = @"4";
+    }
+    self.shareReleaseParam.rentType = rentType;
+    self.shareReleaseParam.shareTime = model.time;
+    self.shareReleaseParam.contact = model.contact;
+    self.shareReleaseParam.contactMobile = model.phone;
+    self.shareReleaseParam.intention = model.intention;
+    self.shareReleaseParam.remark = model.leaves;
+    self.shareReleaseParam.userId = userId;
+    self.shareReleaseParam.isApproved = @"0";
+    self.shareReleaseParam.completeDegree = [self.ratio substringToIndex:self.ratio.length - 1];
+    self.shareReleaseParam.address = model.address;
+    self.shareReleaseParam.salesmanUserId = loginModel.salesman.userId?:@"";
+    self.shareReleaseParam.type = @"1";
+    self.shareReleaseParam.tag = model.storeTag;
+    NSString *rentMode = @"";
+    if ([model.rentType containsString:@"小时"]) {
+        rentMode = @"1";
+    }else if ([model.rentType containsString:@"天"]){
+        rentMode = @"2";
+    }else if ([model.rentType containsString:@"月"]){
+        rentMode = @"3";
+    }else if ([model.rentType containsString:@"年"]){
+        rentMode = @"4";
+    }
+    self.shareReleaseParam.rentMode = rentMode;
+
+//    NSString *tag = @"";
+//    for (NSString *tagItem in self.tagDialogView.checkItems) {
+//        tag = [tag stringByAppendingString:tagItem];
+//        if (tagItem != self.tagDialogView.checkItems.lastObject) {
+//            tag = [tag stringByAppendingString:@","];
+//        }
+//    }
+    
+    if (self.photoArray.count <= 1) {
+        [HPProgressHUD alertMessage:@"至少上传一张照片"];
+        return;
+    }
+    else if (!self.shareReleaseParam.title.length) {
+        [HPProgressHUD alertMessage:@"请填写标题"];
+        return;
+    }
+    else if (!self.shareReleaseParam.address.length) {
+        [HPProgressHUD alertMessage:@"请填写地址"];
+        return;
+    }
+    else if (!self.shareReleaseParam.industryId.length) {
+        [HPProgressHUD alertMessage:@"请选择行业"];
+        return;
+    }
+    else if (!self.shareReleaseParam.subIndustryId.length) {
+        [HPProgressHUD alertMessage:@"请选择行业"];
+        return;
+    }
+//    else if (!self.shareReleaseParam.contact.length) {
+//        [HPProgressHUD alertMessage:@"请填写联系人"];
+//        return;
+//    }
+    else if (self.shareReleaseParam.contactMobile.length != 11) {
+        [HPProgressHUD alertMessage:@"请填写联系方式"];
+        return;
+    }
+    NSMutableArray *uploadArray = [NSMutableArray array];
+    for (id imagestr in self.photoArray) {
+        if ([imagestr isKindOfClass:UIImage.class]) {
+            [uploadArray addObject:imagestr];
+        }
+    }
+    NSString *url = [NSString stringWithFormat:@"%@%@",kBaseUrl,@"/v1/file/uploadPictures"];
+    [HPUploadImageHandle upLoadImages:uploadArray withUrl:url parameterName:@"files" success:^(id responseObject) {
+        if (CODE == 200) {
+            NSArray<HPPictureModel *> *pictureModels = [HPPictureModel mj_objectArrayWithKeyValuesArray:DATA];
+            for (HPPictureModel *pictureModel in pictureModels) {
+                [self.shareReleaseParam.pictureIdArr addObject:pictureModel.pictureId];
+                [self.shareReleaseParam.pictureUrlArr addObject:pictureModel.url];
+            }
+            
+            if (self.param[@"spaceId"]) {
+                [self.shareReleaseParam setSpaceId:self.param[@"spaceId"]];
+                NSDictionary *param = self.shareReleaseParam.mj_keyValues;
+                [self updateInfo:param];
+            }
+            else {
+                NSDictionary *param = self.shareReleaseParam.mj_keyValues;
+                [self releaseInfo:param];
+            }
+        }
+        else {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } progress:^(double progress) {
+        NSLog(@"progress: %lf", progress);
+        [HPProgressHUD alertWithProgress:progress text:@"上传图片中"];
+    } fail:^(NSError *error) {
+        ErrorNet
+    }];
 }
+
+#pragma mark - 上传修改信息
+- (void)updateInfo:(NSDictionary *)param {
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/space/update" paraments:param needToken:YES complete:^(id  _Nonnull responseObject) {
+        
+        if (CODE == 200) {
+            [HPProgressHUD alertWithFinishText:@"修改成功"];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                NSNumber *index = self.param[@"index"];
+                [self popWithParam:@{@"update":self.shareReleaseParam, @"index":index}];
+            });
+        }
+        else {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Progress:^(double progress) {
+        [HPProgressHUD alertWithProgress:progress text:@"上传信息中"];
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+#pragma mark - 上传发布信息
+- (void)releaseInfo:(NSDictionary *)param {
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/space/post" paraments:param needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertWithFinishText:@"发布成功"];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController popViewControllerAnimated:YES];
+            });
+        }
+        else {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Progress:^(double progress) {
+        [HPProgressHUD alertWithProgress:progress text:@"上传信息中"];
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+
+#pragma mark - 获取area_Id
+
+- (NSString *)getAreaIdByName:(NSString *)name {
+    for (HPAreaModel *areaModel in self.areaModels) {
+        if ([areaModel.name isEqualToString:name]) {
+            return areaModel.areaId;
+        }
+    }
+    
+    return nil;
+}
+
+#pragma mark - masonry 布局
 - (void)setUpReleaseSubVeiws
 {
     [self.uploadView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.navTilteView.mas_bottom);
-        make.height.mas_equalTo(getWidth(256.f));
+        make.bottom.mas_equalTo(self.leavesLabel.mas_bottom).offset(getWidth(20.f));
     }];
     
     [self.uploadLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -430,15 +845,27 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
         make.height.mas_equalTo(0.5f);
     }];
     
+    CGFloat space = (kScreenWidth - getWidth(75.f) * 4 - getWidth(45.f))/3;
+
+    [self.photoView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.uploadView);
+        make.top.mas_equalTo(self.uploadLine.mas_bottom);
+        if (self.photoArray.count > 4) {
+            make.height.mas_equalTo(getWidth(75.f) * 2 + space);
+        }else{
+            make.height.mas_equalTo(getWidth(75.f) + space);
+        }
+    }];
+    
     [_starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(getWidth(20.f));
         make.size.mas_equalTo(CGSizeMake(getWidth(9), getWidth(8)));
-        make.top.mas_equalTo(self.uploadLine.mas_bottom).offset(getWidth(165.f));
+        make.top.mas_equalTo(self.photoView.mas_bottom).offset(getWidth(10.f));
     }];
     
     [self.leavesLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.uploadView).offset(getWidth(33.f));
-        make.top.mas_equalTo(self.uploadLine.mas_bottom).offset(getWidth(169.f));
+        make.top.mas_equalTo(self.photoView.mas_bottom).offset(getWidth(14.f));
         make.width.mas_equalTo(getWidth(kScreenWidth - 66.f));
         make.height.mas_equalTo(self.leavesLabel.font.pointSize);
     }];
@@ -511,24 +938,29 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view).offset(-g_bottomSafeAreaHeight);
+        make.bottom.mas_equalTo(self.view).offset(0);
         make.height.mas_equalTo(getWidth(85.f) + g_bottomSafeAreaHeight);
     }];
     
     [self.releaseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(getWidth(335.f), getWidth(45.f)));
-        make.center.mas_equalTo(self.bottomView);
+        make.top.mas_equalTo(getWidth(22.f));
+        make.centerX.mas_equalTo(self.bottomView);
     }];
 }
 
 #pragma mark - 获取相机或相册图片按钮点击事件
-- (void)makePhotosSheetCilck:(UIButton *)button
+- (void)makePhotosSheetClick:(UIButton *)button
 {
     self.selectedPhotoBtnIndex = button.tag;
-
-    [self.alertSheet show:YES];
+    if (self.photoArray.count == 8) {
+        [HPProgressHUD alertMessage:@"最多上传8张图片"];
+    }else{
+        [self.alertSheet show:YES];
+    }
 }
 
+#pragma mark - 进入相册或拍照
 - (void)onClickAlbumOrPhotoSheetWithTag:(NSInteger)tag {
     if (tag == 0) {
         if (self.photoPicker == nil) {
@@ -562,71 +994,90 @@ typedef NS_ENUM(NSInteger, HPReleaseImageBtnIndex) {
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
     UIImage *photo = info[UIImagePickerControllerOriginalImage];
-    [self setPhotosAboveSheet:self.selectedPhotoBtnIndex andphoto:photo];
+
+    if(selectBtn_tag >= 0 && (selectBtn_tag != (_photoArray.count - 1))){
+        [_photoArray replaceObjectAtIndex:selectBtn_tag withObject:photo];
+        selectBtn_tag = -1;
+    }else{
+        if (_photoArray.count == 1) { // 添加图片
+            
+            [_photoArray insertObject:photo atIndex:0];
+            
+        } else {
+            
+            [_photoArray insertObject:photo atIndex:0];
+        }
+    }
+    
+    [self.view layoutIfNeeded];
+    [self.photoView layoutIfNeeded];
+    
+    [_photoView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+
+    [self setUpUploadButton];
+    
+    
+    if (self.photoArray.count >= 9) {//数量达到
+        [self.photoArray removeLastObject];
+    }
+    self.uploadNumLabel.text = [NSString stringWithFormat:@"%ld/8",self.photoArray.count];
+    [self setUpUploadButton];
+    CGFloat space = (kScreenWidth - getWidth(75.f) * 4 - getWidth(45.f))/3;
+    
+    [self.photoView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.uploadView);
+        make.top.mas_equalTo(self.uploadLine.mas_bottom);
+        if (self.photoArray.count > 4) {
+            make.height.mas_equalTo(getWidth(75.f) * 2 + space);
+        }else{
+            make.height.mas_equalTo(getWidth(75.f) + space);
+        }
+    }];
+    
+    [self.view layoutIfNeeded];
+    [self.photoView layoutIfNeeded];
+
     [self dismissViewControllerAnimated:self.photoPicker completion:nil];
-//    [self uploadLocalImageGetAvatarUrl];
 }
 
-#pragma mark -获取来的图片进行btn赋值设置
-- (void)setPhotosAboveSheet:(HPReleaseImageBtnIndex)btnIndex andphoto:(UIImage *)photo
-{
-    NSString *photoKey = [NSString stringWithFormat:@"%ld",btnIndex];
-    NSMutableDictionary *photoDic = [NSMutableDictionary dictionary];
-    photoDic[photoKey] = photo;
-    if (![self.photoArray containsObject:photoDic]) {
-        [self.photoArray addObject:photoDic];
-    }else{
-        [self.photoArray removeObject:photoDic];
-    }
-    self.uploadNumLabel.text = [NSString stringWithFormat:@"%ld/8",self.photoArray.count];;
-    UIButton *photoBtn = [self.view viewWithTag:btnIndex];
-    [photoBtn setImage:ImageNamed(@"") forState:UIControlStateNormal];
-    [photoBtn setTitle:@"" forState:UIControlStateNormal];
-    switch (self.selectedPhotoBtnIndex) {
-        case HPReleaseImageBtnIndexFace:
-            [photoBtn setBackgroundImage:photo forState:UIControlStateNormal];
-            break;
-        case HPReleaseImageBtnIndexStoreInside:
-            [photoBtn setBackgroundImage:photo forState:UIControlStateNormal];
-            
-            break;
-        case HPReleaseImageBtnIndexFreeSpace:
-            [photoBtn setBackgroundImage:photo forState:UIControlStateNormal];
-            
-            break;
-        case HPReleaseImageBtnIndexFreeeSpaceMore:
-            [photoBtn setBackgroundImage:photo forState:UIControlStateNormal];
-            
-            break;
-        default:
-           
-            break;
-    }
-}
 #pragma mark - TZImagePickerControllerDelegate
 
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-    picker.allowCrop = YES;
-    UIImage *photo = photos[0];
-    [self setPhotosAboveSheet:self.selectedPhotoBtnIndex andphoto:photo];
-
-//    [self uploadLocalImageGetAvatarUrl];
+    
+    if (!_isFirst) {//默认否 交换元素
+        picker.allowCrop = YES;
+        _isFirst = YES;
+        [_photoView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        [self.photoArray addObjectsFromArray:photos];
+        //移除第一个
+        [self.photoArray removeObjectAtIndex:0];
+        //将默认图片 插入最后一位
+        [self.photoArray insertObject:@"shop_transfer_upload" atIndex:self.photoArray.count];
+        
+    }else{//获取到的图片依次插入倒数第二
+        for (int i = 0; i < photos.count; i++) {
+            [self.photoArray insertObject:photos[i] atIndex:self.photoArray.count - 1];
+        }
+    }
+    if (self.photoArray.count >= 9) {//数量达到
+        [self.photoArray removeLastObject];
+    }
+    self.uploadNumLabel.text = [NSString stringWithFormat:@"%ld/8",self.photoArray.count - 1];
+    [self setUpUploadButton];
+    CGFloat space = (kScreenWidth - getWidth(75.f) * 4 - getWidth(45.f))/3;
+    
+    [self.photoView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.uploadView);
+        make.top.mas_equalTo(self.uploadLine.mas_bottom);
+        if (self.photoArray.count > 4) {
+            make.height.mas_equalTo(getWidth(75.f) * 2 + space);
+        }else{
+            make.height.mas_equalTo(getWidth(75.f) + space);
+        }
+    }];
+    
+    [self.view layoutIfNeeded];
+    [self.photoView layoutIfNeeded];
 }
-
-#pragma  mark - 上传一张图片
-//- (void)uploadLocalImageGetAvatarUrl
-//{
-//    NSString *url = [NSString stringWithFormat:@"%@/v1/file/uploadPicture",kBaseUrl];//放上传图片的网址
-//    NSString *historyTime = [HPTimeString getNowTimeTimestamp];
-//    [HPUploadImageHandle sendPOSTWithUrl:url withLocalImage:_photo isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
-//        NSString *url = [data[@"data"]firstObject][@"url"]?:@"";
-//        if (url) {
-//            [self onClickChangeUpdateUser:url];
-//        }
-//    } fail:^(NSError *error) {
-//        ErrorNet
-//    }];
-//
-//}
 
 @end

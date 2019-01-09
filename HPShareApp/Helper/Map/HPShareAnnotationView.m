@@ -13,12 +13,6 @@
 
 @interface HPShareAnnotationView ()
 
-@property (nonatomic, strong) UIImage *normalImage;
-
-@property (nonatomic, strong) UIImage *selectedImage;
-
-@property (nonatomic, weak) UILabel *titleLabel;
-
 @end
 
 @implementation HPShareAnnotationView

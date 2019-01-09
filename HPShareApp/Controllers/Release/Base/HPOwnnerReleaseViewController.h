@@ -20,6 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPOwnnerReleaseViewController : HPBaseReleaseController
 @property (nonatomic, weak) id<HPReleasePhotoDelegate> delegate;
+/**
+ ratio
+ */
+@property (nonatomic, copy) NSString *ratio;
 @end
 
 NS_ASSUME_NONNULL_END

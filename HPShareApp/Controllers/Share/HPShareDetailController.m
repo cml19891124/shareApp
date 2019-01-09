@@ -17,23 +17,114 @@
 #import "HPCustomerServiceModalView.h"
 #import "HPTextDialogView.h"
 #import "HPShareReleaseParam.h"
+#import "HPTimeRentView.h"
+#import "Macro.h"
+#import "HPShareMapAnnotation.h"
+#import "HPImageUtil.h"
+#import "HPShareMapAnnotationView.h"
+#import "HPCustomAnnotationCalloutView.h"
 
-@interface HPShareDetailController () <HPBannerViewDelegate>
+typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
+    HPShareDetailGotoShare = 180,
+};
 
+@interface HPShareDetailController () <HPBannerViewDelegate,MAMapViewDelegate>
+
+
+/**
+ 呼出框
+ */
+@property (nonatomic, strong) HPCustomAnnotationCalloutView *calloutView;
+@property (nonatomic, copy) NSString *getTime;
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) UIButton *backBtn;
 @property (nonatomic, weak) HPBannerView *bannerView;
 
 @property (nonatomic, weak) HPPageControl *pageControl;
-
+@property (nonatomic, strong) UIView *titleRegion;
+@property (nonatomic, strong) UIView *infoRegion;
 @property (nonatomic, weak) UILabel *titleLabel;
 
+/**
+ 分享按钮
+ */
+@property (nonatomic, strong) UIButton *shareBtn;
 @property (nonatomic, strong) NSMutableArray *tagItems;
 
-@property (nonatomic, weak) UILabel *releaseTimeLabel;
+@property (nonatomic, strong) UILabel *addressLabel;
+@property (nonatomic, strong) UILabel *tradeLabel;
+/**
+ share信息下line
+ */
+@property (nonatomic, strong) UIView *shareInfoLine;
 
-@property (nonatomic, weak) UILabel *addressLabel;
 
-@property (nonatomic, weak) UILabel *tradeLabel;
+/**
+ 基本信息view
+ */
+@property (nonatomic, strong) UIView *baseinfoRegion;
 
+/**
+ 基本信息下line
+ */
+@property (nonatomic, strong) UIView *baseInfoLine;
+
+/**
+ shareMode信息下line
+ */
+@property (nonatomic, strong) UIView *rentModelLine;
+
+
+/**
+ 共享模式view
+ */
+@property (nonatomic, strong) UIView *shareModeView;
+/**
+ 基本信息标题
+ */
+@property (nonatomic, strong) UILabel *baseTitleLabel;
+
+@property (nonatomic, strong) UILabel *releaseTimeLabel;
+
+@property (nonatomic, strong) UILabel *industryLabel;
+
+/**
+ 合作意向
+ */
+@property (nonatomic, strong) UILabel *intentionLabel;
+
+
+/**
+ 共享出租模式
+ */
+@property (nonatomic, strong) HPTimeRentView *rentModeView;
+
+
+/**
+ 共享模式标题
+ */
+@property (nonatomic, strong) UILabel *modeTitlelabel;
+
+
+/**
+ 店铺位置
+ */
+@property (nonatomic, strong) UIView *storeLocationView;
+
+/**
+ 店铺标题
+ */
+@property (nonatomic, strong) UILabel *storeTitleLabel;
+
+
+/**
+ 店铺地图
+ */
+@property (nonatomic, strong) UIView *mapSuperView;
+
+/**
+ 共享时段
+ */
 @property (nonatomic, weak) UILabel *shareTimeLabel;
 
 @property (nonatomic, weak) UILabel *areaLabel;
@@ -52,6 +143,7 @@
 
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
 
+@property (nonatomic, strong) HPShareDetailModel *model;
 /**
  共享租金
  */
@@ -64,6 +156,15 @@
 @property (nonatomic, weak) HPCustomerServiceModalView *customerServiceModalView;
 
 @property (nonatomic, weak) UIButton *keepBtn;
+@property (nonatomic, strong) MAMapView *mapView;
+
+/**
+ 地图中心点--店铺在地图中的位置
+ */
+@property (nonatomic, strong) MAPointAnnotation *centerPoint;
+
+@property (strong, nonatomic) AMapLocationManager * locationManager;//定位用
+
 
 @end
 
@@ -85,7 +186,11 @@
         [self getShareDetailInfoById:spaceId];
         [self addHistory:spaceId];
     }
-
+    
+    //初始化所有子控件
+//    [self initShareSubviews];
+    //详情所有子视图 masonry布局
+    [self setShareDetailSubviewsFrame];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -96,31 +201,321 @@
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-//    [_bannerView startAutoScrollWithInterval:2.0];
-//    NSString *spaceId = self.param[@"spaceId"];
-//    if (spaceId) {
-//        [self getShareDetailInfoById:spaceId];
-//    }
-}
-
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
     [_bannerView stopAutoScroll];
 }
 
-/*
-#pragma mark - Navigation
+#pragma mark - 初始化地图
+- (void)initMapView{
+    //初始化地图
+    self.mapView = [[MAMapView alloc] initWithFrame:self.mapSuperView.bounds];
+    [self.mapView setZoomLevel:17 animated:YES];
+    [self.mapSuperView addSubview:self.mapView];
+    self.mapView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [AMapServices sharedServices].enableHTTPS = YES;
+    self.mapView.delegate = self;
+    
+    //自定义style
+//    [self.mapView setCustomMapStyleID:GaoDeStyleID];
+    //默认不生效，开启自定义风格地图
+    self.mapView.customMapStyleEnabled = YES;
+    
+    // 开启定位
+    self.mapView.showsUserLocation = NO;
+    self.mapView.userTrackingMode = MAUserTrackingModeNone;
+    self.mapView.zoomEnabled = YES;
+    self.mapView.scrollEnabled = YES;
+    CLLocationCoordinate2D center;
+    center.latitude = [_model.latitude doubleValue];
+    center.longitude = [_model.longitude doubleValue];
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    //    iOS 去除高德地图下方的 logo 图标
+    [self.mapView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if ([obj isKindOfClass:[UIImageView class]]) {
+            
+            UIImageView * logoM = obj;
+            
+            logoM.layer.contents = (__bridge id)[UIImage imageNamed:@""].CGImage;
+            
+        }
+        
+    }];
+    //iOS 去除高德地图下方的 地图比例尺
+    self.mapView.showsScale = NO;
+    HPShareMapAnnotation *storeAnnotion = [[HPShareMapAnnotation alloc] initWithModel:_model];
+    
+    //添加屏幕中心点
+    [self.mapView addAnnotation:storeAnnotion];
+    [self.mapView setCenterCoordinate:storeAnnotion.coordinate];
+    self.mapView.selectedAnnotations = @[storeAnnotion];
+//    [self.mapView addSubview:self.calloutView];
+//    _calloutView.titlelabel.text = [NSString stringWithFormat:@"%@\n%@",_model.title,_model.address];
+//    NSRange range = [_calloutView.titlelabel.text rangeOfString:_model.title];
+//    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:_calloutView.titlelabel.text];
+//    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(0, range.length)];
+//    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(range.length, _calloutView.titlelabel.text.length - range.length)];
+//    [attr addAttribute:NSFontAttributeName value:kFont_Medium(14.f) range:NSMakeRange(0, range.length)];
+//    [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(range.length, _calloutView.titlelabel.text.length - range.length)];
+//    _calloutView.titlelabel.attributedText = attr;
+//    self.mapView.selectedAnnotations = @[storeAnnotion];
+//    [_calloutView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.size.mas_equalTo(CGSizeMake(getWidth(243.f), getWidth(52.f)));
+//        make.top.mas_equalTo(self.mapView).offset(getWidth(41.f));
+//        make.centerX.mas_equalTo(self.mapView);
+//    }];
 }
-*/
+
+- (MAPointAnnotation *)centerPoint
+{
+    if (!_centerPoint)
+    {
+        _centerPoint = [[MAPointAnnotation alloc] init];
+        _centerPoint.coordinate = self.mapView.userLocation.location.coordinate;
+        _centerPoint.lockedToScreen = YES;
+        _centerPoint.lockedScreenPoint = self.mapView.center;
+    }
+    return _centerPoint;
+}
+
+#pragma mark - 初始化所有子控件 ------------
+- (UIView *)shareInfoLine
+{
+    if (!_shareInfoLine) {
+        _shareInfoLine = [UIView new];
+        _shareInfoLine.backgroundColor = COLOR_GRAY_F8F8F8;
+    }
+    return _shareInfoLine;
+}
+
+- (UIView *)baseInfoLine
+{
+    if (!_baseInfoLine) {
+        _baseInfoLine = [UIView new];
+        _baseInfoLine.backgroundColor = COLOR_GRAY_F8F8F8;
+    }
+    return _baseInfoLine;
+}
+
+- (UIView *)rentModelLine
+{
+    if (!_rentModelLine) {
+        _rentModelLine = [UIView new];
+        _rentModelLine.backgroundColor = COLOR_GRAY_F8F8F8;
+    }
+    return _rentModelLine;
+}
+
+- (UIView *)baseinfoRegion
+{
+    if (!_baseinfoRegion) {
+        _baseinfoRegion = [UIView new];
+    }
+    return _baseinfoRegion;
+}
+
+- (UILabel *)baseTitleLabel
+{
+    if (!_baseTitleLabel) {
+        _baseTitleLabel = [UILabel new];
+        _baseTitleLabel.text = @"基本信息";
+        _baseTitleLabel.textColor = COLOR_BLACK_333333;
+        _baseTitleLabel.textAlignment = NSTextAlignmentLeft;
+        _baseTitleLabel.font = kFont_Medium(16.f);
+    }
+    return _baseTitleLabel;
+}
+
+- (HPTimeRentView *)rentModeView
+{
+    if (!_rentModeView) {
+        _rentModeView = [HPTimeRentView new];
+    }
+    return _rentModeView;
+}
+
+- (UIView *)shareModeView
+{
+    if (!_shareModeView) {
+        _shareModeView = [UIView new];
+        
+    }
+    return _shareModeView;
+}
+
+- (UILabel *)modeTitlelabel
+{
+    if (!_modeTitlelabel) {
+        _modeTitlelabel = [UILabel new];
+        _modeTitlelabel.text = @"共享模式";
+        _modeTitlelabel.textColor = COLOR_BLACK_333333;
+        _modeTitlelabel.textAlignment = NSTextAlignmentLeft;
+        _modeTitlelabel.font = kFont_Medium(16.f);
+    }
+    return _modeTitlelabel;
+}
+
+- (UIView *)storeLocationView
+{
+    if (!_storeLocationView) {
+        _storeLocationView = [UIView new];
+    }
+    return _storeLocationView;
+}
+
+- (UILabel *)storeTitleLabel
+{
+    if (!_storeTitleLabel) {
+        _storeTitleLabel = [UILabel new];
+        _storeTitleLabel.text = @"店铺位置";
+        _storeTitleLabel.textColor = COLOR_BLACK_333333;
+        _storeTitleLabel.textAlignment = NSTextAlignmentLeft;
+        _storeTitleLabel.font = kFont_Medium(16.f);
+    }
+    return _storeTitleLabel;
+}
+
+- (UIView *)mapSuperView
+{
+    if (!_mapSuperView) {
+        _mapSuperView = [UIView new];
+    }
+    return _mapSuperView;
+}
+
+- (HPCustomAnnotationCalloutView *)calloutView
+{
+    if (!_calloutView) {
+        _calloutView = [HPCustomAnnotationCalloutView new];
+        _calloutView.backgroundColor = COLOR_GRAY_FFFFFF;
+        [_calloutView.layer setShadowColor:COLOR_GRAY_A6A6A6.CGColor];
+        [_calloutView.layer setShadowOffset:CGSizeMake(0.f, 2.f)];
+        [_calloutView.layer setShadowRadius:4.f];
+        [_calloutView.layer setShadowOpacity:1.f];
+        [_calloutView.layer setCornerRadius:2.f];
+    }
+    return _calloutView;
+}
+
+#pragma mark - 所有子视图 masonry布局
+- (void)setShareDetailSubviewsFrame
+{
+    [self.bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.scrollView);
+        make.left.and.width.equalTo(self.scrollView);
+        make.height.mas_equalTo(210.f * g_rateWidth);
+    }];
+    
+    [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.scrollView);
+        make.left.equalTo(self.scrollView);
+        make.width.mas_equalTo(44.f);
+        make.height.mas_equalTo(44.f);
+    }];
+    
+    [self.pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.scrollView);
+        make.bottom.equalTo(self.bannerView);
+    }];
+    
+    [self.titleRegion mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.width.equalTo(self.scrollView);
+        make.top.equalTo(self.bannerView.mas_bottom);
+        make.height.mas_equalTo(getWidth(636.f));
+    }];
+    
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.titleRegion).with.offset(getWidth(21.f));
+        make.top.equalTo(self.titleRegion).with.offset(20.f * g_rateWidth);
+        make.height.mas_equalTo(self.titleLabel.font.pointSize);
+    }];
+    
+    [self.shareBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(getWidth(16.f), getWidth(18.f)));
+        make.right.mas_equalTo(getWidth(-15.f));
+        make.top.mas_equalTo(self.bannerView.mas_bottom).offset(getWidth(30.f));;
+    }];
+    
+    [self.infoRegion mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.titleRegion.mas_bottom).offset(getWidth(27.f));
+        make.left.right.mas_equalTo(self.titleRegion);
+        make.height.mas_equalTo(getWidth(76.f));
+    }];
+    
+    [self.shareInfoLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(getWidth(335.f), getWidth(1.f)));
+        make.centerX.mas_equalTo(self.titleRegion);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(getWidth(120.f));
+    }];
+    
+    [self.baseinfoRegion mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(getWidth(141.f));
+        make.left.right.mas_equalTo(self.titleRegion);
+        make.top.mas_equalTo(self.shareInfoLine.mas_bottom);
+    }];
+    
+    [self.baseTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(21.f));
+        make.top.mas_equalTo(self.shareInfoLine.mas_bottom).offset(getWidth(15.f));
+        make.width.mas_equalTo(kScreenWidth/2);
+        make.height.mas_equalTo(self.baseTitleLabel.font.pointSize);
+    }];
+    
+    [self.baseInfoLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(getWidth(335.f), getWidth(1.f)));
+        make.centerX.mas_equalTo(self.titleRegion);
+        make.top.mas_equalTo(self.shareInfoLine.mas_bottom).offset(getWidth(141.f));
+    }];
+    
+    //共享模式 父视图
+    [self.shareModeView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.titleRegion);
+        make.top.mas_equalTo(self.baseInfoLine.mas_bottom);
+        make.height.mas_equalTo(getWidth(120.f));
+    }];
+    
+    [self.modeTitlelabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(21.f));
+        make.top.mas_equalTo(self.baseInfoLine.mas_bottom).offset(getWidth(15.f));
+        make.height.mas_equalTo(self.modeTitlelabel.font.pointSize);
+    }];
+    
+    //共享模式 子视图
+    [self.rentModeView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.shareModeView);
+        make.top.mas_equalTo(self.modeTitlelabel.mas_bottom).offset(getWidth(19.f));;
+    }];
+    
+    [self.rentModelLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(getWidth(335.f), getWidth(1.f)));
+        make.centerX.mas_equalTo(self.titleRegion);
+        make.top.mas_equalTo(self.baseInfoLine.mas_bottom).offset(getWidth(120.f));
+    }];
+    
+    [self.storeLocationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.titleRegion);
+        make.height.mas_equalTo(getWidth(215.f));
+    }];
+    
+    [self.storeTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(21.f));
+        make.top.mas_equalTo(self.rentModelLine.mas_bottom).offset(getWidth(15.f));
+        make.height.mas_equalTo(self.storeTitleLabel.font.pointSize);
+    }];
+    
+    [self.mapSuperView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(20.f));
+        make.top.mas_equalTo(self.storeTitleLabel.mas_bottom).offset(getWidth(15.f));
+        make.right.mas_equalTo(getWidth(-20.f));
+        make.bottom.mas_equalTo(getWidth(-20.f));
+    }];
+    
+    [self.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.mapSuperView);
+    }];
+}
 
 #pragma mark - SetupUI
 
@@ -131,14 +526,14 @@
     [scrollView setBackgroundColor:COLOR_WHITE_FAF9FE];
     scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:scrollView];
+    _scrollView = scrollView;
     [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 60.f * g_rateWidth, 0));
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(navView.mas_bottom);
         make.bottom.mas_equalTo(self.view.mas_bottom);
-
     }];
     
+    //轮播图
     HPBannerView *bannerView = [[HPBannerView alloc] init];
     [bannerView setBannerViewDelegate:self];
     [bannerView setImages:@[[UIImage imageNamed:@"shared_shop_details_background"]]];
@@ -146,80 +541,33 @@
     [bannerView setShowImagePagerEnabled:YES];
     [scrollView addSubview:bannerView];
     _bannerView = bannerView;
-    [bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(scrollView);
-        make.left.and.width.equalTo(scrollView);
-        make.height.mas_equalTo(230.f * g_rateWidth);
-    }];
-    
-//    UIImageView *backIcon = [[UIImageView alloc] init];
-//    [backIcon setImage:[UIImage imageNamed:@"icon_back"]];
-//    [scrollView addSubview:backIcon];
-//    [backIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(scrollView).with.offset(25.f * g_rateWidth);
-//        make.top.equalTo(scrollView).with.offset(13.f);
-//    }];
     
     UIButton *backBtn = [[UIButton alloc] init];
-//    [backBtn addTarget:self action:@selector(onClickBackBtn) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:backBtn];
-    [backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(scrollView);
-        make.left.equalTo(scrollView);
-        make.width.mas_equalTo(44.f);
-        make.height.mas_equalTo(44.f);
-    }];
+    self.backBtn = backBtn;
     
     HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleCircle];
     [pageControl setNumberOfPages:0];
-//    [pageControl setCurrentPage:0];
     [scrollView addSubview:pageControl];
     _pageControl = pageControl;
-    [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(scrollView);
-        make.bottom.equalTo(bannerView);
-    }];
     
+    //标题view
     UIView *titleRegion = [[UIView alloc] init];
     [titleRegion setBackgroundColor:UIColor.whiteColor];
     [scrollView addSubview:titleRegion];
-    [titleRegion mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.equalTo(scrollView);
-        make.top.equalTo(bannerView.mas_bottom);
-        make.height.mas_equalTo(127.f * g_rateWidth);
-    }];
+    _titleRegion = titleRegion;
     [self setupTitleRegion:titleRegion];
-    
-    UIView *infoRegion = [[UIView alloc] init];
-    [infoRegion setBackgroundColor:UIColor.whiteColor];
-    [scrollView addSubview:infoRegion];
-    [infoRegion mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.equalTo(scrollView);
-        make.top.equalTo(titleRegion.mas_bottom).with.offset(15.f * g_rateWidth);
-        make.height.mas_equalTo(185.f * g_rateWidth);
-    }];
-    [self setupInfoRegion:infoRegion];
-    
-    UIView *shareDateRegion = [[UIView alloc] init];
-    [shareDateRegion setBackgroundColor:UIColor.whiteColor];
-    [scrollView addSubview:shareDateRegion];
-    [shareDateRegion mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.equalTo(scrollView);
-        make.top.equalTo(infoRegion.mas_bottom).with.offset(15.f * g_rateWidth);
-        make.height.mas_equalTo(360.f * g_rateWidth);
-    }];
-    [self setupShareDateRegion:shareDateRegion];
     
     UIView *remarkRegion = [[UIView alloc] init];
     [remarkRegion setBackgroundColor:UIColor.whiteColor];
     [scrollView addSubview:remarkRegion];
     [remarkRegion mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(scrollView);
-        make.top.equalTo(shareDateRegion.mas_bottom).with.offset(15.f * g_rateWidth);
+        make.top.equalTo(self.titleRegion.mas_bottom).with.offset(15.f * g_rateWidth);
         make.bottom.equalTo(scrollView).with.offset(-getWidth(80.f));
     }];
     [self setupRemarkRegion:remarkRegion];
-    
+
     UIView *contactRegion = [[UIView alloc] init];
     [contactRegion setBackgroundColor:UIColor.whiteColor];
     [contactRegion.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
@@ -238,7 +586,7 @@
     else {
         [contactRegion setHidden:NO];
     }
-    
+
     UIView *editRegion = [[UIView alloc] init];
     [editRegion setBackgroundColor:UIColor.whiteColor];
     [editRegion.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
@@ -251,7 +599,7 @@
         make.bottom.equalTo(self.view);
     }];
     [self setupEditRegion:editRegion];
-    
+
     if (self.param[@"index"]) {
         [editRegion setHidden:NO];
     }
@@ -273,17 +621,13 @@
     }
 }
 
+#pragma mark  - 标题和tag 信息
 - (void)setupTitleRegion:(UIView *)view {
     UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:19.f]];
+    [titleLabel setFont:kFont_Medium(22.f)];
     [titleLabel setTextColor:COLOR_BLACK_333333];
-    [self.view addSubview:titleLabel];
+    [view addSubview:titleLabel];
     _titleLabel = titleLabel;
-    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(26.f * g_rateWidth);
-        make.top.equalTo(view).with.offset(20.f * g_rateWidth);
-        make.height.mas_equalTo(titleLabel.font.pointSize);
-    }];
     
     for (int i = 0; i < 3; i ++) {
         HPTagView *tagView = [[HPTagView alloc] init];
@@ -304,240 +648,114 @@
         [_tagItems addObject:tagView];
     }
     
-    UILabel *releaseTimeDescLabel = [[UILabel alloc] init];
-    [releaseTimeDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:11.f]];
-    [releaseTimeDescLabel setTextColor:COLOR_YELLOW_FFAF47];
-    [releaseTimeDescLabel setText:@"发布时间"];
-    [view addSubview:releaseTimeDescLabel];
-    [releaseTimeDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(view).with.offset(27.f * g_rateWidth);
-        make.right.equalTo(view).with.offset(-26.f * g_rateWidth);
-        make.height.mas_equalTo(releaseTimeDescLabel.font.pointSize);
-    }];
+    UIButton *shareBtn = [UIButton new];
+    [shareBtn setBackgroundImage:ImageNamed(@"detail_share") forState:UIControlStateNormal];
+    shareBtn.tag = HPShareDetailGotoShare;
+    [shareBtn addTarget:self action:@selector(clickShareInfoGoto:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:shareBtn];
+    _shareBtn = shareBtn;
     
-    UIImageView *clockIcon = [[UIImageView alloc] init];
-    [clockIcon setImage:[UIImage imageNamed:@"shared_shop_details_time"]];
-    [view addSubview:clockIcon];
-    [clockIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(releaseTimeDescLabel);
-        make.right.equalTo(releaseTimeDescLabel.mas_left).with.offset(-4.f);
-    }];
+    //共享子控件
+    [self setupShareInfoView:view];
     
-    UILabel *releaseTimeLabel = [[UILabel alloc] init];
-    [releaseTimeLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
-    [releaseTimeLabel setTextColor:COLOR_GRAY_999999];
-    [view addSubview:releaseTimeLabel];
-    _releaseTimeLabel = releaseTimeLabel;
-    [releaseTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(releaseTimeDescLabel);
-        make.top.equalTo(releaseTimeDescLabel.mas_bottom).with.offset(14.f * g_rateWidth);
-        make.height.mas_equalTo(releaseTimeLabel.font.pointSize);
-    }];
+    [view addSubview:self.shareInfoLine];
+    [view addSubview:self.baseinfoRegion];
+    //基本信息标题
+    [self.baseinfoRegion addSubview:self.baseTitleLabel];
+    //基本信息子控件
+    [self setupBaseInfoRegion:view];
     
-    UIView *line = [[UIView alloc] init];
-    [line setBackgroundColor:COLOR_GRAY_F8F8F8];
-    [view addSubview:line];
-    [line mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(view);
-        make.top.equalTo(((UIView *)self.tagItems[0]).mas_bottom).with.offset(15.f * g_rateWidth);
-        make.size.mas_equalTo(CGSizeMake(325.f * g_rateWidth, 1.f));
-    }];
+    [view addSubview:self.shareInfoLine];
+    [view addSubview:self.baseInfoLine];
+
+    //出租模式
+    [view addSubview:self.shareModeView];
+    [self.shareModeView addSubview:self.modeTitlelabel];
+    [self.shareModeView addSubview:self.rentModeView];
+    for (HPTimeRentButton *btn in self.rentModeView.subviews) {
+        btn.userInteractionEnabled = NO;
+    }
+    [view addSubview:self.rentModelLine];
     
-    UIImageView *addressIcon = [[UIImageView alloc] init];
-    [addressIcon setImage:[UIImage imageNamed:@"shared_shop_details_address"]];
-    [view addSubview:addressIcon];
-    [addressIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(line);
-        make.top.equalTo(line.mas_bottom).with.offset(14.f * g_rateWidth);
-    }];
-    
-    UILabel *addressLabel = [[UILabel alloc] init];
-    [addressLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
-    [addressLabel setTextColor:COLOR_BLACK_666666];
-    [view addSubview:addressLabel];
-    _addressLabel = addressLabel;
-    [addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(addressIcon.mas_right).with.offset(12.f);
-        make.centerY.equalTo(addressIcon);
-    }];
+    [view addSubview:self.storeLocationView];
+    [view addSubview:self.storeTitleLabel];
+    [view addSubview:self.mapSuperView];
+    [self.mapSuperView addSubview:self.mapView];
 }
 
-- (void)setupInfoRegion:(UIView *)view {
-    UIView *verticalLine = [[UIView alloc] init];
-    [verticalLine setBackgroundColor:COLOR_GRAY_F7F7F7];
-    [view addSubview:verticalLine];
-    [verticalLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(194.f * g_rateWidth);
-        make.top.and.bottom.equalTo(view);
-        make.width.mas_equalTo(1.f);
-    }];
-    
-    UIView *leftView = [[UIView alloc] init];
-    [view addSubview:leftView];
-    [leftView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.top.and.bottom.equalTo(view);
-        make.right.equalTo(verticalLine.mas_left);
-    }];
-    
-    UIView *horizontalLine = [[UIView alloc] init];
-    [horizontalLine setBackgroundColor:COLOR_GRAY_F7F7F7];
-    [view addSubview:horizontalLine];
-    [horizontalLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(verticalLine.mas_right);
-        make.centerY.equalTo(view);
-        make.right.equalTo(view);
-        make.height.mas_equalTo(1.f);
-    }];
-    
-    UIView *rightUpView = [[UIView alloc] init];
-    [view addSubview:rightUpView];
-    [rightUpView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(verticalLine.mas_right);
-        make.top.and.right.equalTo(view);
-        make.bottom.equalTo(horizontalLine.mas_top);
-    }];
-    
-    UIView *rightDownView = [[UIView alloc] init];
-    [view addSubview:rightDownView];
-    [rightDownView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.and.bottom.equalTo(view);
-        make.left.equalTo(verticalLine.mas_right);
-        make.top.equalTo(horizontalLine.mas_bottom);
-    }];
-    
-    UILabel *tradeDescLabel = [[UILabel alloc] init];
-    [tradeDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
-    [tradeDescLabel setTextColor:COLOR_GRAY_999999];
-    [tradeDescLabel setText:@"经营行业"];
-    [leftView addSubview:tradeDescLabel];
-    [tradeDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(leftView);
-        make.top.equalTo(leftView).with.offset(26.f * g_rateWidth);
-        make.height.mas_equalTo(tradeDescLabel.font.pointSize);
-    }];
-    
-    UILabel *tradeLabel = [[UILabel alloc] init];
-    [tradeLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [tradeLabel setTextColor:COLOR_RED_FF3C5E];
-    [leftView addSubview:tradeLabel];
-    _tradeLabel = tradeLabel;
-    [tradeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(tradeDescLabel.mas_bottom).with.offset(15.f * g_rateWidth);
-        make.centerX.equalTo(tradeDescLabel);
-        make.height.mas_equalTo(tradeLabel.font.pointSize);
-    }];
-    
-    UILabel *shareTimeDescLabel = [[UILabel alloc] init];
-    [shareTimeDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
-    [shareTimeDescLabel setTextColor:COLOR_GRAY_999999];
-    [shareTimeDescLabel setText:@"共享时段"];
-    [leftView addSubview:shareTimeDescLabel];
-    [shareTimeDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(leftView);
-        make.top.equalTo(horizontalLine.mas_bottom).with.offset(28.f * g_rateWidth);
-        make.height.mas_equalTo(shareTimeDescLabel.font.pointSize);
-    }];
-    
-    UILabel *shareTimeLabel = [[UILabel alloc] init];
-    [shareTimeLabel setFont:[UIFont fontWithName:FONT_BOLD size:17.f]];
-    [shareTimeLabel setTextColor:COLOR_RED_FF3C5E];
-    [leftView addSubview:shareTimeLabel];
-    _shareTimeLabel = shareTimeLabel;
-    [shareTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(shareTimeDescLabel);
-        make.top.equalTo(shareTimeDescLabel.mas_bottom).with.offset(14.f * g_rateWidth);
-        make.height.mas_equalTo(shareTimeLabel.font.pointSize);
-    }];
-    
-    UILabel *areaDescLabel = [[UILabel alloc] init];
-    [areaDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
-    [areaDescLabel setTextColor:COLOR_GRAY_999999];
-    [areaDescLabel setText:@"共享面积"];
-    [rightUpView addSubview:areaDescLabel];
-    _areaDescLabel = areaDescLabel;
-    [areaDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(rightUpView);
-        make.top.equalTo(rightUpView).with.offset(27.f * g_rateWidth);
-        make.height.mas_equalTo(areaDescLabel.font.pointSize);
-    }];
-    
-    UILabel *areaLabel = [[UILabel alloc] init];
-    [areaLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
-    [areaLabel setTextColor:COLOR_RED_FF3C5E];
-    [rightUpView addSubview:areaLabel];
-    _areaLabel = areaLabel;
-    [areaLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(areaDescLabel);
-        make.top.equalTo(areaDescLabel.mas_bottom).with.offset(13.f * g_rateWidth);
-        make.height.mas_equalTo(areaLabel.font.pointSize);
-    }];
-    
-    UILabel *priceDescLabel = [[UILabel alloc] init];
-    [priceDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:12.f]];
-    [priceDescLabel setTextColor:COLOR_GRAY_999999];
-    [priceDescLabel setText:@"共享租金"];
-    [rightDownView addSubview:priceDescLabel];
-    _priceDescLabel = priceDescLabel;
-    [priceDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(rightDownView).with.offset(27.f * g_rateWidth);
-        make.centerX.equalTo(rightDownView);
-        make.height.mas_equalTo(priceDescLabel.font.pointSize);
-    }];
-    
-    UIView *centerView = [[UIView alloc] init];
-    [rightDownView addSubview:centerView];
-    [centerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(priceDescLabel.mas_bottom).with.offset(12.f);
-        make.centerX.equalTo(rightDownView);
-        make.height.mas_equalTo(17.f);
-    }];
-    
-    UILabel *priceUnitLabel = [[UILabel alloc] init];
-    [priceUnitLabel setFont:[UIFont fontWithName:FONT_BOLD size:15.f]];
-    [priceUnitLabel setTextColor:COLOR_RED_FF3C5E];
-    [priceUnitLabel setText:@"/天"];
-    [centerView addSubview:priceUnitLabel];
-    _priceUnitLabel = priceUnitLabel;
-    [priceUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(centerView);
-        make.centerY.equalTo(centerView);
-    }];
-    
-    UILabel *priceLabel = [[UILabel alloc] init];
-    [priceLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:17.f]];
-    [priceLabel setTextColor:COLOR_RED_FF3C5E];
-    [centerView addSubview:priceLabel];
-    _priceLabel = priceLabel;
-    [priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(centerView);
-        make.left.equalTo(centerView);
-        make.right.equalTo(priceUnitLabel.mas_left);
-    }];
+#pragma mark - 共享信息UI
+- (void)setupShareInfoView:(UIView *)view
+{
+    NSArray *shareInfoArr = @[@"共享租金\n-元/天",@"共享面积\n不限",@"共享时段\n--"];
+    for (int i = 0; i < shareInfoArr.count; i++) {
+        UILabel *infoLabel = [UILabel new];
+        infoLabel.textAlignment = NSTextAlignmentLeft;
+        infoLabel.text = shareInfoArr[i];
+        infoLabel.numberOfLines = 0;
+        infoLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        NSString *info = shareInfoArr[i];
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:info];
+        //设置行间距
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        [paragraphStyle setLineSpacing:12];
+        [attr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,info.length)];
+        
+        //富文本
+        [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(0, 4)];
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+        [attr addAttribute:NSFontAttributeName value:kFont_Medium(17.f) range:NSMakeRange(4, info.length - 4)];
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, info.length - 4)];
+        infoLabel.attributedText = attr;
+        if (i == 0) {
+            self.priceLabel = infoLabel;
+        }else if (i == 1){
+            self.areaLabel = infoLabel;
+        }else if (i == 2){
+            self.shareTimeLabel = infoLabel;
+        }
+        [view addSubview:infoLabel];
+        [infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(getWidth(51.f));
+            make.left.mas_equalTo(getWidth(20.f) + i * (kScreenWidth/3));
+            make.height.mas_equalTo(getWidth(60.f));
+        }];
+    }
 }
 
-- (void)setupShareDateRegion:(UIView *)view {
-    UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
-    [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:@"共享排期"];
-    [view addSubview:titleLabel];
-    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(26.f * g_rateWidth);
-        make.top.equalTo(view).with.offset(20.f * g_rateWidth);
-        make.height.mas_equalTo(titleLabel.font.pointSize);
-    }];
-    
-    HPCalendarView *calendarView = [[HPCalendarView alloc] init];
-    [view addSubview:calendarView];
-    _calendarView = calendarView;
-    [calendarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(titleLabel);
-        make.width.mas_equalTo(325.f * g_rateWidth);
-        make.top.equalTo(titleLabel.mas_bottom).with.offset(22.f * g_rateWidth);
-        make.bottom.equalTo(view).with.offset(-27.f * g_rateWidth);
-    }];
+#pragma mark - shareInfo view
+- (void)setupBaseInfoRegion:(UIView *)view
+{
+    NSArray *shareArr = @[@"发布时间  --",@"经营行业  --",@"合作意向  --",];
+    for (int i = 0; i < shareArr.count; i++) {
+        UILabel *sharelabel = [UILabel new];
+        sharelabel.text = shareArr[i];
+        sharelabel.textAlignment = NSTextAlignmentLeft;
+        sharelabel.numberOfLines = 0;
+        sharelabel.lineBreakMode = NSLineBreakByWordWrapping;
+        NSString *info = shareArr[i];
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:info];
+        
+        //富文本
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(4, info.length - 4)];
+        sharelabel.attributedText = attr;
+        if (i == 0) {
+            _releaseTimeLabel = sharelabel;
+        }else if (i == 1){
+            _industryLabel = sharelabel;
+        }else if (i == 2){
+            _intentionLabel = sharelabel;
+        }
+        [view addSubview:sharelabel];
+        [sharelabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.baseTitleLabel.mas_bottom).offset(getWidth(15.f) + i * (getWidth(15.f) + sharelabel.font.pointSize));
+            make.left.mas_equalTo(getWidth(20.f));
+            make.height.mas_equalTo(sharelabel.font.pointSize);
+        }];
+    }
 }
 
+#pragma mark - 备注信息view
 - (void)setupRemarkRegion:(UIView *)view {
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
@@ -564,6 +782,7 @@
     }];
 }
 
+#pragma mark - 底部联系人 view
 - (void)setupContactRegion:(UIView *)view {
     UIImageView *portrait = [[UIImageView alloc] init];
     [portrait.layer setMasksToBounds:YES];
@@ -573,7 +792,7 @@
     [view addSubview:portrait];
     _portrait = portrait;
     [portrait mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view).with.offset(25.f * g_rateWidth);
+        make.left.equalTo(view).with.offset(29.f * g_rateWidth);
         make.centerY.equalTo(view);
         make.size.mas_equalTo(CGSizeMake(40.f * g_rateWidth, 40.f * g_rateWidth));
     }];
@@ -585,33 +804,38 @@
     [phoneBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [phoneBtn setImage:[UIImage imageNamed:@"shared_shop_details_calendar_telephone"] forState:UIControlStateNormal];
     [phoneBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 6.f, 0.f, -6.f)];
-    [phoneBtn setBackgroundColor:COLOR_ORANGE_F59C40];
+    [phoneBtn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_FF531E] forState:UIControlStateNormal];
     [phoneBtn setTitle:@"电话" forState:UIControlStateNormal];
     [phoneBtn addTarget:self action:@selector(makePhoneCall:) forControlEvents:UIControlEventTouchUpInside];
+    phoneBtn.layer.cornerRadius = 2.f;
+    phoneBtn.layer.masksToBounds = YES;
     [view addSubview:phoneBtn];
     [phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.and.top.and.bottom.equalTo(view);
-        make.width.mas_equalTo(110.f * g_rateWidth);
+        make.right.mas_equalTo(view).offset(getWidth(-14.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(100.f), getWidth(40.f)));
+        make.centerY.mas_equalTo(view);
     }];
     
     UIButton *keepBtn = [[UIButton alloc] init];
     [keepBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:18.f]];
     [keepBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [keepBtn setTitleColor:COLOR_RED_912D01 forState:UIControlStateSelected];
-    [keepBtn setImage:[UIImage imageNamed:@"shared_shop_details_calendar_collection"] forState:UIControlStateNormal];
+    [keepBtn setImage:ImageNamed(@"shared_shop_details_calendar_collection") forState:UIControlStateNormal];
     [keepBtn setImage:ImageNamed(@"shared_shop_details_calendar_collection_selected") forState:UIControlStateSelected];
     [keepBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 6.f, 0.f, -6.f)];
-    [keepBtn setBackgroundColor:COLOR_RED_FE2A3B];
+    [keepBtn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_YELLOW_FFBA15] forState:UIControlStateNormal];
     [keepBtn setTitle:@"收藏" forState:UIControlStateNormal];
     [keepBtn setTitle:@"已收藏" forState:UIControlStateSelected];
     [keepBtn setTitle:@"已收藏" forState:UIControlStateSelected|UIControlStateHighlighted];
+    keepBtn.layer.cornerRadius = 2.f;
+    keepBtn.layer.masksToBounds = YES;
     [view addSubview:keepBtn];
     _keepBtn = keepBtn;
     [keepBtn addTarget:self action:@selector(addOrCancelCollection:) forControlEvents:UIControlEventTouchUpInside];
     [keepBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.and.bottom.equalTo(view);
-        make.right.equalTo(phoneBtn.mas_left);
-        make.width.mas_equalTo(110.f * g_rateWidth);
+        make.centerY.mas_equalTo(view);
+        make.right.equalTo(phoneBtn.mas_left).offset(getWidth(-12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(100.f), getWidth(40.f)));
     }];
     
     UILabel *userNameLabel = [[UILabel alloc] init];
@@ -842,54 +1066,155 @@
 
 - (void)loadData:(HPShareDetailModel *)model {
     [_titleLabel setText:model.title];
-    
+    //初始化地图
+    _model = model;
+    [self initMapView];
+
+    //店铺标签
     if (model.tag) {
         NSArray *tags = [model.tag componentsSeparatedByString:@","];
         [self setTag:tags];
     }
+    NSString *timedate = [model.createTime componentsSeparatedByString:@" "].firstObject;
+    NSString *getTime = [timedate stringByReplacingOccurrencesOfString:@"-" withString:@"."];
+    self.getTime = getTime;
+    [_releaseTimeLabel setText:[NSString stringWithFormat:@"发布时间  %@",getTime]];
+    _releaseTimeLabel.textAlignment = NSTextAlignmentLeft;
+    _releaseTimeLabel.numberOfLines = 0;
+    _releaseTimeLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    NSMutableAttributedString *releaseattr = [[NSMutableAttributedString alloc] initWithString:_releaseTimeLabel.text];
     
-    [_releaseTimeLabel setText:[model.createTime componentsSeparatedByString:@" "][0]];
-    
-    if (model.type == 1) {//业主
-        [_addressLabel setText:[NSString stringWithFormat:@"店铺地址:%@",model.address]];
-        [_priceDescLabel setText:@"共享租金"];
-        [_areaDescLabel setText:@"共享面积"];
-
-    }
-    else if (model.type == 2) { //创客
-        NSString *areaName = [HPCommonData getAreaNameById:model.areaId];
-        NSString *districeName = [HPCommonData getDistrictNameByAreaId:model.areaId districtId:model.districtId];
-        [_addressLabel setText:[NSString stringWithFormat:@"期望区域:%@-%@", areaName, districeName]];
-        [_priceDescLabel setText:@"期望租金"];
-        [_areaDescLabel setText:@"期望面积"];
-
-    }
+    //富文本
+    [releaseattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+    [releaseattr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(4, _releaseTimeLabel.text.length - 4)];
+    _releaseTimeLabel.attributedText = releaseattr;
     
     NSString *industry = [HPCommonData getIndustryNameById:model.industryId];
     NSString *subIndustry = [HPCommonData getIndustryNameById:model.subIndustryId];
-    [_tradeLabel setText:[NSString stringWithFormat:@"%@·%@", industry, subIndustry]];
+    [_industryLabel setText:[NSString stringWithFormat:@"经营行业  %@·%@", industry, subIndustry]];
+    
+    _industryLabel.textAlignment = NSTextAlignmentLeft;
+    _industryLabel.numberOfLines = 0;
+    _industryLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    NSMutableAttributedString *industryLabelattr = [[NSMutableAttributedString alloc] initWithString:_industryLabel.text];
+    
+    //富文本
+    [industryLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+    [industryLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(4, _industryLabel.text.length - 4)];
+    _industryLabel.attributedText = industryLabelattr;
+    
+    if (model.intention && ![model.intention isEqualToString:@""]) {
+        NSString *intention = [HPCommonData getIndustryNameById:model.industryId];
+        NSString *subIntention = [HPCommonData getIndustryNameById:model.subIndustryId];
+        [_intentionLabel setText:[NSString stringWithFormat:@"合作意向  %@·%@", intention, subIntention]];
+    }else{
+        [_intentionLabel setText:[NSString stringWithFormat:@"合作意向  面议"]];
+    }
+    
+    _intentionLabel.textAlignment = NSTextAlignmentLeft;
+    _intentionLabel.numberOfLines = 0;
+    _intentionLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    NSMutableAttributedString *intentionLabelattr = [[NSMutableAttributedString alloc] initWithString:_intentionLabel.text];
+    
+    //富文本
+    [intentionLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+    [intentionLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(4, _intentionLabel.text.length - 4)];
+    _intentionLabel.attributedText = intentionLabelattr;
     
     if (model.shareTime && ![model.shareTime isEqualToString:@""]) {
-        [_shareTimeLabel setText:model.shareTime];
+        [_shareTimeLabel setText:[NSString stringWithFormat:@"共享时段\n%@",model.shareTime]];
     }
     else {
-        [_shareTimeLabel setText:@"面议"];
+        [_shareTimeLabel setText:[NSString stringWithFormat:@"共享时段\n不限"]];
     }
     
-    if (model.area && ![model.area isEqualToString:@"0"]) {
-        [_areaLabel setText:[NSString stringWithFormat:@"%@ ㎡", model.area]];
+    _shareTimeLabel.textAlignment = NSTextAlignmentLeft;
+    _shareTimeLabel.numberOfLines = 0;
+    _shareTimeLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    NSMutableAttributedString *shareTimeattr = [[NSMutableAttributedString alloc] initWithString:_shareTimeLabel.text];
+    //设置行间距
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setLineSpacing:12];
+    [shareTimeattr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,_shareTimeLabel.text.length)];
+    
+    //富文本
+    [shareTimeattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+    [shareTimeattr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, _shareTimeLabel.text.length - 4)];
+    _shareTimeLabel.attributedText = shareTimeattr;
+    
+    if (model.area && [model.area isEqualToString:@"0"]) {
+        if ([model.areaRange intValue] == 1) {
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n %@",@"不限"]];
+        }else if ([model.areaRange intValue] == 2){
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n%@",@"小于5㎡"]];
+        }else if ([model.areaRange intValue] == 3){
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n%@",@"5-10㎡"]];
+        }else if ([model.areaRange intValue] == 4){
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n%@",@"10-20㎡"]];
+        }else if ([model.areaRange intValue] == 5){
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n%@",@"20㎡以上"]];
+        }else {
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n面议"]];
+        }
     }
     else
-        [_areaLabel setText:@"面议"];
+        [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n不限"]];
+
+        _areaLabel.textAlignment = NSTextAlignmentLeft;
+        _areaLabel.numberOfLines = 0;
+        _areaLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        NSMutableAttributedString *areaattr = [[NSMutableAttributedString alloc] initWithString:_areaLabel.text];
+        //设置行间距
+        NSMutableParagraphStyle *areaparagraphStyle = [[NSMutableParagraphStyle alloc] init];
+        [areaparagraphStyle setLineSpacing:12];
+        [areaattr addAttribute:NSParagraphStyleAttributeName value:areaparagraphStyle range:NSMakeRange(0,_areaLabel.text.length)];
+
+        //富文本
+        [areaattr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(0, 4)];
+        [areaattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+        [areaattr addAttribute:NSFontAttributeName value:kFont_Medium(17.f) range:NSMakeRange(4, _areaLabel.text.length - 4)];
+        [areaattr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, _areaLabel.text.length - 4)];
+        _areaLabel.attributedText = areaattr;
+
+    if (model.rent && ![model.rent isEqualToString:@"1"]) {
+        if (model.rentType == 1) {
+            [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/小时"]];
+        }else if (model.rentType == 2){
+            [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/天"]];
+        }else if (model.rentType == 3){
+            [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/月"]];
+        }else if (model.rentType == 4){
+            [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/年"]];
+        }else {
+            [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n面议"]];
+        }
+        
+        _priceLabel.textAlignment = NSTextAlignmentLeft;
+        _priceLabel.numberOfLines = 0;
+        _priceLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:_priceLabel.text];
+        //设置行间距
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        [paragraphStyle setLineSpacing:12];
+        [attr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,_priceLabel.text.length)];
+        
+        //富文本
+        [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(0, 4)];
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+        [attr addAttribute:NSFontAttributeName value:kFont_Medium(17.f) range:NSMakeRange(4, _priceLabel.text.length - 4)];
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, _priceLabel.text.length - 4)];
+        _priceLabel.attributedText = attr;
+
+    }
     
-    if (model.rent && ![model.rent isEqualToString:@"0"]) {
-        [_priceLabel setText:model.rent];
-        [_priceUnitLabel setText:model.rentType == 1 ? @"元/小时":@"元/天"];
-    }
-    else {
-        [_priceLabel setText:@"面议"];
-        [_priceUnitLabel setHidden:YES];
-    }
+    if (model.rentMode && ![model.rentMode isEqualToString:@""]) {
+        for (int i = 0; i < self.rentModeView.subviews.count;i++) {
+            HPTimeRentButton *NObtn = self.rentModeView.subviews[i];
+            NObtn.userInteractionEnabled = NO;
+            HPTimeRentButton *btn = self.rentModeView.subviews[[model.rentMode intValue] - 1];
+            btn.selected = YES;
+        }
     
     if (!model.remark || [model.remark isEqualToString:@""]) {
         [_remarkLabel setText:@"用户很懒，什么也没有填写～"];
@@ -915,11 +1240,6 @@
         [_calendarView setSelectedDateStrs:shareDays];
     }
     
-    NSArray *testArray = @[@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545372618&di=fbb49adbf37d75ac8c940efd63eaa08e&imgtype=jpg&er=1&src=http%3A%2F%2Fimg0.ph.126.net%2FgIQutohTMU2i3AkVS-6tOg%3D%3D%2F6630732414655186356.jpg",
-                           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544759503783&di=09a39857f77718ec68b74e9995c4ebfa&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fpic%2Fe%2Fe7%2Fe1f1827994.jpg%3Fdown",
-                           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544777936230&di=dc7dcbb7fc819adbc886667b4dbb0f1d&imgtype=0&src=http%3A%2F%2Fimg.79tao.com%2Fdata%2Fattachment%2Fforum%2F201804%2F14%2F001701vaash2sgdl8qchnh.jpg",
-                           @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544778024308&di=400579aeb71c396c1b84f9eea507bdbd&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D2527094628%2C3273654962%26fm%3D214%26gp%3D0.jpg"];
-    
     if (model.pictures && model.pictures.count > 0) {
         if (model.pictures.count > 1) {
             [_pageControl setNumberOfPages:model.pictures.count];
@@ -941,6 +1261,7 @@
             [_bannerView startAutoScrollWithInterval:2.0];
         }
     }
+    }
 }
 
 - (void)updateData {
@@ -948,94 +1269,244 @@
         return;
     }
     
-    HPShareReleaseParam *param = self.param[@"update"];
+    HPShareReleaseParam *model = self.param[@"update"];
     
-    [_titleLabel setText:param.title];
-    
-    if (param.tag) {
-        NSArray *tags = [param.tag componentsSeparatedByString:@","];
+    //店铺标签
+    if (model.tag) {
+        NSArray *tags = [model.tag componentsSeparatedByString:@","];
         [self setTag:tags];
     }
+    NSString *timedate = [model.createTime componentsSeparatedByString:@" "].firstObject;
+    NSString *getTime = [timedate stringByReplacingOccurrencesOfString:@"-" withString:@"."];
+    self.getTime = getTime;
+    [_releaseTimeLabel setText:[NSString stringWithFormat:@"发布时间  %@",getTime]];
+    _releaseTimeLabel.textAlignment = NSTextAlignmentLeft;
+    _releaseTimeLabel.numberOfLines = 0;
+    _releaseTimeLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    NSMutableAttributedString *releaseattr = [[NSMutableAttributedString alloc] initWithString:_releaseTimeLabel.text];
     
-    if ([param.type isEqualToString:@"1"]) {//业主
-        [_addressLabel setText:[NSString stringWithFormat:@"店铺地址:%@",param.address]];
-        [_priceDescLabel setText:@"共享租金"];
-        [_areaDescLabel setText:@"共享面积"];
-        
+    //富文本
+    [releaseattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+    [releaseattr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(4, _releaseTimeLabel.text.length - 4)];
+    _releaseTimeLabel.attributedText = releaseattr;
+    
+    NSString *industry = [HPCommonData getIndustryNameById:model.industryId];
+    NSString *subIndustry = [HPCommonData getIndustryNameById:model.subIndustryId];
+    [_industryLabel setText:[NSString stringWithFormat:@"经营行业  %@·%@", industry, subIndustry]];
+    
+    _industryLabel.textAlignment = NSTextAlignmentLeft;
+    _industryLabel.numberOfLines = 0;
+    _industryLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    NSMutableAttributedString *industryLabelattr = [[NSMutableAttributedString alloc] initWithString:_industryLabel.text];
+    
+    //富文本
+    [industryLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+    [industryLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(4, _industryLabel.text.length - 4)];
+    _industryLabel.attributedText = industryLabelattr;
+    
+    if (model.intention && ![model.intention isEqualToString:@""]) {
+        NSString *intention = [HPCommonData getIndustryNameById:model.industryId];
+        NSString *subIntention = [HPCommonData getIndustryNameById:model.subIndustryId];
+        [_intentionLabel setText:[NSString stringWithFormat:@"合作意向  %@·%@", intention, subIntention]];
+    }else{
+        [_intentionLabel setText:[NSString stringWithFormat:@"合作意向  面议"]];
     }
-    else if ([param.type isEqualToString:@"2"]) { //创客
-        NSString *areaName = [HPCommonData getAreaNameById:param.areaId];
-        NSString *districeName = [HPCommonData getDistrictNameByAreaId:param.areaId districtId:param.districtId];
-        [_addressLabel setText:[NSString stringWithFormat:@"期望区域:%@-%@", areaName, districeName]];
-        [_priceDescLabel setText:@"期望租金"];
-        [_areaDescLabel setText:@"期望面积"];
-        
-    }
     
-    NSString *industry = [HPCommonData getIndustryNameById:param.industryId];
-    NSString *subIndustry = [HPCommonData getIndustryNameById:param.subIndustryId];
-    [_tradeLabel setText:[NSString stringWithFormat:@"%@·%@", industry, subIndustry]];
+    _intentionLabel.textAlignment = NSTextAlignmentLeft;
+    _intentionLabel.numberOfLines = 0;
+    _intentionLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    NSMutableAttributedString *intentionLabelattr = [[NSMutableAttributedString alloc] initWithString:_intentionLabel.text];
     
-    if (param.shareTime && ![param.shareTime isEqualToString:@""]) {
-        [_shareTimeLabel setText:param.shareTime];
+    //富文本
+    [intentionLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+    [intentionLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(4, _intentionLabel.text.length - 4)];
+    _intentionLabel.attributedText = intentionLabelattr;
+    
+    if (model.shareTime && ![model.shareTime isEqualToString:@""]) {
+        [_shareTimeLabel setText:[NSString stringWithFormat:@"共享时段\n%@",model.shareTime]];
     }
     else {
-        [_shareTimeLabel setText:@"面议"];
+        [_shareTimeLabel setText:[NSString stringWithFormat:@"共享时段\n不限"]];
     }
     
-    if (param.area && ![param.area isEqualToString:@"0"]) {
-        [_areaLabel setText:[NSString stringWithFormat:@"%@ ㎡", param.area]];
+    _shareTimeLabel.textAlignment = NSTextAlignmentLeft;
+    _shareTimeLabel.numberOfLines = 0;
+    _shareTimeLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    NSMutableAttributedString *shareTimeattr = [[NSMutableAttributedString alloc] initWithString:_shareTimeLabel.text];
+    //设置行间距
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setLineSpacing:12];
+    [shareTimeattr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,_shareTimeLabel.text.length)];
+    
+    //富文本
+    [shareTimeattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+    [shareTimeattr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, _shareTimeLabel.text.length - 4)];
+    _shareTimeLabel.attributedText = shareTimeattr;
+    
+    if (model.area && [model.area isEqualToString:@"0"]) {
+        if ([model.areaRange intValue] == 1) {
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n %@",@"不限"]];
+        }else if ([model.areaRange intValue] == 2){
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n%@",@"小于5㎡"]];
+        }else if ([model.areaRange intValue] == 3){
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n%@",@"5-10㎡"]];
+        }else if ([model.areaRange intValue] == 4){
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n%@",@"10-20㎡"]];
+        }else if ([model.areaRange intValue] == 5){
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n%@",@"20㎡以上"]];
+        }else {
+            [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n面议"]];
+        }
     }
     else
-        [_areaLabel setText:@"面议"];
+        [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n不限"]];
     
-    if (param.rent && ![param.rent isEqualToString:@"0"]) {
-        [_priceLabel setText:param.rent];
-        [_priceUnitLabel setText:[param.rentType isEqualToString:@"1"] ? @"元/小时":@"元/天"];
-    }
-    else {
-        [_priceLabel setText:@"面议"];
-        [_priceUnitLabel setHidden:YES];
-    }
+    _areaLabel.textAlignment = NSTextAlignmentLeft;
+    _areaLabel.numberOfLines = 0;
+    _areaLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    NSMutableAttributedString *areaattr = [[NSMutableAttributedString alloc] initWithString:_areaLabel.text];
+    //设置行间距
+    NSMutableParagraphStyle *areaparagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [areaparagraphStyle setLineSpacing:12];
+    [areaattr addAttribute:NSParagraphStyleAttributeName value:areaparagraphStyle range:NSMakeRange(0,_areaLabel.text.length)];
     
-    if (!param.remark || [param.remark isEqualToString:@""]) {
-        [_remarkLabel setText:@"用户很懒，什么也没有填写～"];
-    }
-    else {
-        [_remarkLabel setText:param.remark];
-    }
+    //富文本
+    [areaattr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(0, 4)];
+    [areaattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+    [areaattr addAttribute:NSFontAttributeName value:kFont_Medium(17.f) range:NSMakeRange(4, _areaLabel.text.length - 4)];
+    [areaattr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, _areaLabel.text.length - 4)];
+    _areaLabel.attributedText = areaattr;
     
-    [_userNameLabel setText:param.contact];
-    
-    if (param.shareDays) {
-        NSArray *shareDays = [param.shareDays componentsSeparatedByString:@","];
-        [_calendarView setSelectedDateStrs:shareDays];
-    }
-    
-    if (param.pictureIdArr && param.pictureIdArr.count > 0) {
-        if (param.pictureIdArr.count > 1) {
-            [_pageControl setNumberOfPages:param.pictureIdArr.count];
-            [_pageControl setCurrentPage:0];
-        }
-        else {
-            [_pageControl setHidden:YES];
+    if (model.rent && ![model.rent isEqualToString:@"1"]) {
+        if ([model.rentType intValue] == 1) {
+            [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/小时"]];
+        }else if ([model.rentType intValue] == 2){
+            [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/天"]];
+        }else if ([model.rentType intValue] == 3){
+            [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/月"]];
+        }else if ([model.rentType intValue] == 4){
+            [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/年"]];
+        }else {
+            [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n面议"]];
         }
         
-        NSMutableArray *array = [[NSMutableArray alloc] init];
-        for (NSString *pictureUrl in param.pictureUrlArr) {
-            UIImageView *imageView = [[UIImageView alloc] init];
-            [imageView sd_setImageWithURL:[NSURL URLWithString:pictureUrl] placeholderImage:ImageNamed(@"shared_shop_details_background")];
-            [array addObject:imageView];
+        _priceLabel.textAlignment = NSTextAlignmentLeft;
+        _priceLabel.numberOfLines = 0;
+        _priceLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:_priceLabel.text];
+        //设置行间距
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        [paragraphStyle setLineSpacing:12];
+        [attr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,_priceLabel.text.length)];
+        
+        //富文本
+        [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(0, 4)];
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+        [attr addAttribute:NSFontAttributeName value:kFont_Medium(17.f) range:NSMakeRange(4, _priceLabel.text.length - 4)];
+        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, _priceLabel.text.length - 4)];
+        _priceLabel.attributedText = attr;
+        
+    }
+    
+    if (model.rentMode && ![model.rentMode isEqualToString:@""]) {
+        for (int i = 0; i < self.rentModeView.subviews.count;i++) {
+            HPTimeRentButton *NObtn = self.rentModeView.subviews[i];
+            NObtn.userInteractionEnabled = NO;
+            HPTimeRentButton *btn = self.rentModeView.subviews[[model.rentMode intValue] - 1];
+            btn.selected = YES;
         }
-
-        [_bannerView setImageViews:array];
-        if (param.pictureUrlArr.count > 1) {
-            [_bannerView startAutoScrollWithInterval:2.0];
+        
+        if (!model.remark || [model.remark isEqualToString:@""]) {
+            [_remarkLabel setText:@"用户很懒，什么也没有填写～"];
         }
         else {
-            [_bannerView stopAutoScroll];
+            [_remarkLabel setText:model.remark];
+        }
+        
+        if (model.avatarUrl) {
+            [_portrait sd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholderImage:[UIImage imageNamed:@"shared_shop_details_head_portrait"]];
+        }
+        
+        [_userNameLabel setText:model.contact];
+        
+        if (model.collected == 1) {
+            [_keepBtn setSelected:YES];
+        }
+        else
+            [_keepBtn setSelected:NO];
+        
+        if (model.shareDays) {
+            NSArray *shareDays = [model.shareDays componentsSeparatedByString:@","];
+            [_calendarView setSelectedDateStrs:shareDays];
+        }
+        
+        if (model.pictures && model.pictures.count > 0) {
+            if (model.pictures.count > 1) {
+                [_pageControl setNumberOfPages:model.pictures.count];
+                [_pageControl setCurrentPage:0];
+            }
+            else {
+                [_pageControl setHidden:YES];
+            }
+            
+            NSMutableArray *array = [[NSMutableArray alloc] init];
+            for (HPPictureModel *picModel in model.pictures) {
+                UIImageView *imageView = [[UIImageView alloc] init];
+                [imageView sd_setImageWithURL:[NSURL URLWithString:picModel.url] placeholderImage:ImageNamed(@"shared_shop_details_background")];
+                [array addObject:imageView];
+            }
+            
+            [_bannerView setImageViews:array];
+            if (model.pictures.count > 1) {
+                [_bannerView startAutoScrollWithInterval:2.0];
+            }
         }
     }
 }
 
+#pragma mark - clickShareInfoGoto 点击事件
+- (void)clickShareInfoGoto:(UIButton *)button
+{
+    
+}
+
+#pragma mark - 实际地图点
+- (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation
+{
+    
+    if ([annotation isKindOfClass:HPShareMapAnnotation.class]) {
+        HPShareMapAnnotationView *annotationView = [[HPShareMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
+        annotationView.centerOffset = CGPointMake(0, 35);
+        [annotationView setImage:ImageNamed(@"gps_location")];
+        annotationView.canShowCallout = YES;
+        if (_model && _model.title && _model.address) {
+            annotationView.title.text = [NSString stringWithFormat:@"%@\n%@",_model.title,_model.address];
+            NSRange range = [annotationView.title.text rangeOfString:_model.title];
+            NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:annotationView.title.text];
+            [attr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(0, range.length)];
+            [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(range.length, annotationView.title.text.length - range.length)];
+            [attr addAttribute:NSFontAttributeName value:kFont_Medium(14.f) range:NSMakeRange(0, range.length)];
+            [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(range.length, annotationView.title.text.length - range.length)];
+            annotationView.title.attributedText = attr;
+        }
+        return annotationView;
+    }
+
+    return nil;
+}
+
+#pragma mark - 点击店铺地图坐标大头针时 即点击地图marker时所触发（并显示callout）
+- (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view
+{
+    [view setSelected:YES];
+}
+
+
+#pragma mark - 这个方法在点击地图任意位置，相当于隐藏callout
+-(void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view
+{
+    [view setSelected:NO];
+    [self pushVCByClassName:@"HPGeodeMapViewController" withParam:@{@"loaction":_model}];
+}
 @end

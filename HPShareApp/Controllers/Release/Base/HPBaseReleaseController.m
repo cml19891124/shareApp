@@ -7,6 +7,8 @@
 //
 
 #import "HPBaseReleaseController.h"
+#import "HPIntentionListModel.h"
+#import "HPRightImageButton.h"
 
 @interface HPBaseReleaseController () <UIGestureRecognizerDelegate>
 
@@ -17,7 +19,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     [self.view setBackgroundColor:COLOR_GRAY_F6F6F6];
     
     UIScrollView *scrollView = [[UIScrollView alloc] init];
@@ -40,21 +41,37 @@
     if (self.param[@"spaceId"]) {
         [self getShareDetailInfoById:self.param[@"spaceId"]];
     }
+    
+    _intentionArray = [NSMutableArray array];
+    // 获取意向行业类型
+    [self getIntentionIndustry];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (NSMutableDictionary *)infoDict
+{
+    if (!_infoDict) {
+        _infoDict = [NSMutableDictionary dictionary];
+    }
+    return _infoDict;
 }
-*/
+#pragma mark - 获取意向行业类型
+- (void)getIntentionIndustry
+{
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/intentionIndustry/list" isNeedToken:YES paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            self.intentionArray = [HPIntentionListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
 
 #pragma mark - setupCommonUI
 
@@ -184,6 +201,14 @@
     }
     
     [self.tagDialogView show:YES];
+}
+
+- (void)onClickGetIndustryTagBtn:(UIButton *)btn {
+    if (self.tagIntentionView == nil) {
+        [self initTagDialogViewWithIntentionIndustryBtn:btn];
+    }
+    
+    [self.tagIntentionView show:YES];
 }
 
 - (void)onClickTimeBtn:(UIButton *)btn {
@@ -324,6 +349,43 @@
     }];
     
     self.tagDialogView = tagDialogView;
+}
+
+#pragma mark - 意向行业
+- (void)initTagDialogViewWithIntentionIndustryBtn:(HPRightImageButton *)btn{
+    NSMutableArray *items = [NSMutableArray array];
+    for (int i = 0; i < _intentionArray.count; i++) {
+        HPIntentionListModel *model = self.intentionArray[i];
+        [items addObject:model.industryName];
+    }
+    HPTagDialogView *tagDialogView = [[HPTagDialogView alloc] initWithItems:items];
+    [tagDialogView setModalTop:150.f * g_rateHeight];
+    [tagDialogView setModalSize:CGSizeMake(300.f * g_rateWidth, 343.f * g_rateWidth)];
+    [tagDialogView setMaxCheckNum:3];
+    __weak typeof(tagDialogView) weakTagDialogView = tagDialogView;
+    [tagDialogView setConfirmCallback:^{
+        NSArray *checkItems = weakTagDialogView.checkItems;
+        NSString *title = @"";
+        
+        for (int i = 0; i < checkItems.count; i ++) {
+            title = [title stringByAppendingString:checkItems[i]];
+            
+            if (i != checkItems.count - 1) {
+                title = [title stringByAppendingString:@"，"];
+            }
+        }
+        
+        if (![title isEqualToString:@""]) {
+//            [btn setTitle:title forState:UIControlStateSelected];
+            [btn setText:title];
+            [btn setSelected:YES];
+        }
+        else {
+            [btn setSelected:NO];
+        }
+    }];
+    
+    self.tagIntentionView = tagDialogView;
 }
 
 - (void)initTimePickerWithBtn:(UIButton *)btn {

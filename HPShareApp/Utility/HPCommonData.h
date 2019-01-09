@@ -21,6 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(NSString *)getIndustryNameById:(NSString *)industryId;
 
+/**
+ 根据name 获取id
+ */
++(NSString *)getIndustryIdByIndustryName:(NSString *)industryName;
+
 + (NSArray<HPAreaModel *> *)getAreaData;
 
 + (NSString *)getAreaNameById:(NSString *)areaId;
@@ -29,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)getDistrictNameByAreaId:(NSString *)areaId districtId:(NSString *)districtId;
 
++ (NSString *)getDistrictIdByAreaName:(NSString *)areaName districtName:(NSString *)districtName;
 @end
 
 NS_ASSUME_NONNULL_END

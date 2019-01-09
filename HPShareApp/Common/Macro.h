@@ -36,6 +36,8 @@
 #define COLOR_RED_EA0000 [UIColor colorWithHexString:@"#EA0000"]
 #define COLOR_BLACK_000000 [UIColor colorWithHexString:@"#000000"]
 #define COLOR_RED_FF0000 [UIColor colorWithHexString:@"#FF0000"]
+#define COLOR_YELLOW_FFBA15 [UIColor colorWithHexString:@"#FFBA15"]
+#define COLOR_RED_FF531E    [UIColor colorWithHexString:@"#FF531E"]
 
 #define COLOR_RED_FF3455 [UIColor colorWithHexString:@"#FF3455"]
 #define COLOR_RED_FF9B5E [UIColor colorWithHexString:@"#FF9B5E"]
@@ -116,6 +118,7 @@
 #define COLOR_GRAY_CDCDCD [UIColor colorWithHexString:@"#CDCDCD"]
 #define COLOR_GRAY_A5B9CE [UIColor colorWithHexString:@"#A5B9CE"]
 #define COLOR_GRAY_DAA6A6 [UIColor colorWithHexString:@"#DAA6A6"]
+#define COLOR_GRAY_A6A6A6 [UIColor colorWithHexString:@"#A6A6A6"]
 #define COLOR_GRAY_BBBBBB [UIColor colorWithHexString:@"#BBBBBB"]
 #define COLOR_GRAY_B2B2B2 [UIColor colorWithHexString:@"#B2B2B2"]
 #define COLOR_GRAY_BCC1CF [UIColor colorWithHexString:@"#BCC1CF"]
@@ -139,14 +142,15 @@
 /* 平方-中号 */
 #define kFont_Medium(font)  [UIFont fontWithName:@"PingFangSC-Medium"size:font]
 /* 平方-粗体 */
-#define kFont_Bold(font)  [UIFont fontWithName:@"PingFangSC-Bold"size:font]
+#define kFont_Bold(font)  [UIFont fontWithName:@"PingFangSC-Semibold"size:font]
 #define kFont_Regular(font)  [UIFont fontWithName:@"PingFangSC-Regular"size:font]
-#define kFont_Heavy(font)  [UIFont fontWithName:@"PingFangSC-Heavy"size:font]
+#define kFont_Heavy(font)  [UIFont fontWithName:@"PingFangSC-Semibold"size:font]
 #define kRect(x, y, w, h)   CGRectMake(x, y, w, h)
 //#define kBaseUrl  @"https://inner.hepaicn.com"
 //#define kBaseUrl  @"https://app.hepaicn.com"
 #define kBaseUrl  @"http://192.168.0.104:8083"//测试
-//#define kBaseUrl  @"http://192.168.0.147:8083"//胜光
+//#define kBaseUrl  @"http://192.168.0.60:8083"//罗
+//#define kBaseUrl  @"http://192.168.0.148:8083"//胜光
 
 #define BoundWithSize(str,width,font)   ([str boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:font]} context:nil])
 //APP版本号
@@ -163,7 +167,6 @@
 #define ErrorNet                 [HPProgressHUD alertMessage:@"网络错误"];
 //弱引用/强引用
 #define kWeakSelf(weakSelf)  __weak __typeof(&*self) weakSelf = self;
-#define kStrongSelf(weakSelf) __strong typeof(&*weakSelf) strongSelf = weakSelf;
 
 //字符串是否为空
 #define kStringIsEmpty(str) ([str isKindOfClass:[NSNull class]] || str == nil || [str length] < 1 ? YES : NO )
@@ -188,6 +191,13 @@
 #import "YYLRefreshNoDataView.h"
 #import "UIScrollView+Refresh.h"
 #import "HPTimeString.h"
+//高德地图相关
+#import <AMapFoundationKit/AMapFoundationKit.h>
+#import <AMapSearchKit/AMapSearchKit.h>
+#import <MAMapKit/MAMapKit.h>
+#import <AMapLocationKit/AMapLocationKit.h>
+#import <AMapSearchKit/AMapSearchKit.h>
+
 //自定义打印语句
 #ifdef DEBUG
 # define HPLog(fmt, ...) NSLog((@"[文件名:%s]\n" "[函数名:%s]\n" "[行号:%d] \n" fmt), __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);
