@@ -38,9 +38,13 @@
     }];
     
     [self.customCalloutView setFrame:CGRectMake(0.f, 0.f, getWidth(243.f), getWidth(60.f))];
+    self.customCalloutView.center = CGPointMake(self.center.x + getWidth(10.f), getWidth(-35.f));
     [self.loc_imageView setFrame:CGRectMake(0.f, 0.f, getWidth(243.f), getWidth(70.f))];
     
-    self.calloutOffset = CGPointMake(0.f, -getWidth(5.f));
+}
+
+- (void)setCallOutOffset:(CGPoint)callOutOffset{
+    self.calloutOffset = callOutOffset;
 }
 
 - (void)setupUI {
@@ -100,7 +104,6 @@
 {
     if (!_customerCallOutView) {
         _customerCallOutView = [UIView new];
-//        _customerCallOutView.backgroundColor = COLOR_GRAY_FFFFFF;
     }
     return _customerCallOutView;
 }

@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *title;
 
 @property (nonatomic, strong) UIImageView *loc_imageView;
+
+@property (nonatomic) CGPoint callOutOffset;
 @end
 
 NS_ASSUME_NONNULL_END

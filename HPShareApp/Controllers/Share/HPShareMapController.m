@@ -57,20 +57,6 @@
     [self requestLocationIfNeedData:YES];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 - (void)setupUI {
     UIView *navigationView = [self setupNavigationBarWithTitle:@"共享地图"];
     
@@ -445,8 +431,8 @@
         [self.tableView reloadData];
         [self.mapView removeAnnotations:self.mapView.annotations];
         NSArray *annotations = [HPShareAnnotation annotationArrayWithModels:models];
-        [self.mapView addAnnotations:annotations];
-        [self.mapView showAnnotations:self.mapView.annotations animated:YES];
+//        [self.mapView addAnnotations:annotations];
+//        [self.mapView showAnnotations:self.mapView.annotations animated:YES];
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
     }];

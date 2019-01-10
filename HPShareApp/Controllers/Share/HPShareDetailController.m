@@ -22,7 +22,6 @@
 #import "HPShareMapAnnotation.h"
 #import "HPImageUtil.h"
 #import "HPShareMapAnnotationView.h"
-#import "HPCustomAnnotationCalloutView.h"
 
 typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     HPShareDetailGotoShare = 180,
@@ -30,11 +29,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 
 @interface HPShareDetailController () <HPBannerViewDelegate,MAMapViewDelegate>
 
-
-/**
- 呼出框
- */
-@property (nonatomic, strong) HPCustomAnnotationCalloutView *calloutView;
 @property (nonatomic, copy) NSString *getTime;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIButton *backBtn;
@@ -368,20 +362,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         _mapSuperView = [UIView new];
     }
     return _mapSuperView;
-}
-
-- (HPCustomAnnotationCalloutView *)calloutView
-{
-    if (!_calloutView) {
-        _calloutView = [HPCustomAnnotationCalloutView new];
-        _calloutView.backgroundColor = COLOR_GRAY_FFFFFF;
-        [_calloutView.layer setShadowColor:COLOR_GRAY_A6A6A6.CGColor];
-        [_calloutView.layer setShadowOffset:CGSizeMake(0.f, 2.f)];
-        [_calloutView.layer setShadowRadius:4.f];
-        [_calloutView.layer setShadowOpacity:1.f];
-        [_calloutView.layer setCornerRadius:2.f];
-    }
-    return _calloutView;
 }
 
 #pragma mark - 所有子视图 masonry布局
@@ -1463,6 +1443,8 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     if ([annotation isKindOfClass:HPShareMapAnnotation.class]) {
         HPShareMapAnnotationView *annotationView = [[HPShareMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
         annotationView.centerOffset = CGPointMake(0, 35);
+        annotationView.calloutOffset = CGPointMake(0.f, -getWidth(5.f));
+
         [annotationView setImage:ImageNamed(@"gps_location")];
         annotationView.canShowCallout = YES;
         if (_model && _model.title && _model.address) {
