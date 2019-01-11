@@ -17,14 +17,6 @@
 
 @implementation HPShareAnnotationView
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
-
 - (id)initWithAnnotation:(id<MAAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
     if (self) {
@@ -34,8 +26,8 @@
 }
 
 - (void)setupUI {
-    UIImage *normalImage = [HPImageUtil getRectangleByStrokeColor:UIColor.whiteColor fillColor:UIColor.whiteColor borderWidth:0.f cornerRadius:16.f inRect:CGRectMake(0.f, 0.f, 167.f, 37.f)];
-    UIImage *selectedImage = [HPImageUtil getRectangleByStrokeColor:COLOR_RED_FF3559 fillColor:COLOR_RED_FF3559 borderWidth:0.f cornerRadius:16.f inRect:CGRectMake(0.f, 0.f, 167.f, 37.f)];
+    UIImage *normalImage = ImageNamed(@"hasStoreAnnotation");//[HPImageUtil getRectangleByStrokeColor:UIColor.whiteColor fillColor:UIColor.whiteColor borderWidth:0.f cornerRadius:16.f inRect:CGRectMake(0.f, 0.f, 167.f, 37.f)];
+    UIImage *selectedImage = ImageNamed(@"hasStoreAnnotation_selected");//[HPImageUtil getRectangleByStrokeColor:COLOR_RED_FF3559 fillColor:COLOR_RED_FF3559 borderWidth:0.f cornerRadius:16.f inRect:CGRectMake(0.f, 0.f, 167.f, 37.f)];
     
     _normalImage = normalImage;
     _selectedImage = selectedImage;

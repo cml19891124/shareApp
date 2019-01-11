@@ -14,11 +14,19 @@
 #import "HPShareListCell.h"
 #import "HPShareListParam.h"
 #import "HPShareAnnotationView.h"
+#import "HPShareMapAnnotationView.h"
+
 #import "HPCommonData.h"
+#import "ClusterAnnotation.h"
+#import "HPShareAnnotation.h"
+//四叉树
+#import "CoordinateQuadTree.h"
+#import "ClusterAnnotationView.h"
+
 
 #define CELL_ID @"HPShareListCell"
 
-@interface HPShareMapController () <UITableViewDelegate, UITableViewDataSource, MAMapViewDelegate, AMapSearchDelegate>
+@interface HPShareMapController () <UITableViewDelegate, UITableViewDataSource, MAMapViewDelegate, AMapSearchDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) MAMapView *mapView;
 
@@ -39,6 +47,23 @@
 @property (nonatomic, weak) UILabel *locationLabel;
 
 @property (nonatomic, weak) UILabel *countLabel;
+
+
+/**
+ 店铺标注数组
+ */
+@property (nonatomic,strong) NSMutableArray *annoArray;
+
+@property (nonatomic, strong) ClusterAnnotation *pointAnnotation;
+@property (nonatomic, strong) NSArray *annotations;
+
+/**
+ 四叉树对象
+ */
+@property (nonatomic, strong) CoordinateQuadTree *coordinateQuadTree;
+@property (nonatomic, assign) BOOL shouldRegionChangeReCalculate;
+
+@property(nonatomic,strong) ClusterAnnotation * selectedNetPointModel;//选中店铺模型
 
 @end
 
@@ -293,8 +318,31 @@
 }
 
 - (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation {
-    if ([annotation isKindOfClass:HPShareAnnotation.class]) {
-        HPShareAnnotationView *annotationView = [[HPShareAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
+    HPLog(@"title:%@",annotation.title);
+    if ([annotation isKindOfClass:ClusterAnnotation.class]) {
+        ClusterAnnotationView *annotationView = [[ClusterAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
+        
+        [annotationView setImage:ImageNamed(@"hasStoreAnnotation")];
+        UITapGestureRecognizer *pan = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(recognizer:)];
+        pan.delegate = self;
+        [annotationView addGestureRecognizer:pan];
+        
+        return annotationView;
+    }
+    //===============用户位置点
+    else if ([annotation isKindOfClass:[MAUserLocation class]]) {
+        static NSString *pointReuseIdentifier = @"UserLocation";
+        MAPinAnnotationView *annotationView = (MAPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:pointReuseIdentifier];
+        annotationView.canShowCallout = NO;
+        return annotationView;
+    }else{//地图上其他位置点--->清除
+        static NSString *reuserIdentifier = @"reuserIdentifier";
+        MAAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:reuserIdentifier];
+        if ([annotation isKindOfClass:[MAPointAnnotation class]]) {
+            if (!annotationView) {
+                annotationView = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuserIdentifier];
+            }
+        }
         return annotationView;
     }
     
@@ -304,12 +352,14 @@
 - (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view {
     [view setSelected:YES];
     if ([view isKindOfClass:HPShareAnnotationView.class]) {
-        HPShareAnnotation *shareAnnotation = (HPShareAnnotation *)view.annotation;
+        ClusterAnnotation *shareAnnotation = (ClusterAnnotation *)view.annotation;
+        
         [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
         [self.mapView setZoomLevel:18.f animated:YES];
         [self showDataView:YES];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:shareAnnotation.index inSection:0];
         [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
     }
 }
 
@@ -430,12 +480,167 @@
         [self setCount:self.dataArray.count];
         [self.tableView reloadData];
         [self.mapView removeAnnotations:self.mapView.annotations];
-        NSArray *annotations = [HPShareAnnotation annotationArrayWithModels:models];
+        self.annotations = [HPShareAnnotation annotationArrayWithModels:models];
 //        [self.mapView addAnnotations:annotations];
 //        [self.mapView showAnnotations:self.mapView.annotations animated:YES];
+        [self  creatAnnotation];
+        if (self.annotations.count != 0) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                /* 建立四叉树. */
+                //if (self.coordinateQuadTree == nil) {
+                self.coordinateQuadTree = [[CoordinateQuadTree alloc] init];
+                //}
+                [self.coordinateQuadTree buildTreeWithPOIs:self.annotations];
+                self.shouldRegionChangeReCalculate = YES;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self addAnnotationsToMapView:self.mapView];
+                });
+            });
+        }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
     }];
 }
 
+#pragma mark -- 创建店铺标注
+- (void)creatAnnotation {
+    self.annoArray = [NSMutableArray array];
+    for (int i = 0; i < self.annotations.count; i++) {
+        //创建大头针对象
+        HPShareAnnotation *model = self.annotations[i];
+        _pointAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:model.coordinate count:self.annotations.count];
+        _pointAnnotation.title = model.title;
+//        _pointAnnotation.pois = [NSMutableArray arrayWithObject:model];
+        [self.annoArray addObject:_pointAnnotation];
+    }
+    [self.mapView addAnnotations:self.annoArray];
+}
+
+#pragma mark - 标注聚合方法
+- (void)addAnnotationsToMapView:(MAMapView *)mapView
+{
+    if (self.coordinateQuadTree.root != nil || self.shouldRegionChangeReCalculate == YES)
+    {
+        //        NSLog(@"tree is not ready.");
+        /* 根据当前zoomLevel和zoomScale 进行annotation聚合. */
+        double zoomScale = self.mapView.bounds.size.width / self.mapView.visibleMapRect.size.width;
+        NSArray *annotations = [self.coordinateQuadTree clusteredAnnotationsWithinMapRect:mapView.visibleMapRect
+                                                                            withZoomScale:zoomScale
+                                                                             andZoomLevel:self.mapView.zoomLevel];
+        /* 更新annotation. */
+        [self updateMapViewAnnotationsWithAnnotations:annotations];
+    }
+}
+
+// 更新annotation
+- (void)updateMapViewAnnotationsWithAnnotations:(NSArray *)annotations
+{
+    if(annotations.count == 0){
+        return;
+    }
+    
+    //判断是否是已经选中的标注，设置选中状态，更新标注图片状态
+    NSMutableArray * currentAnnotationArray = [NSMutableArray arrayWithArray:self.mapView.annotations];
+    BOOL flag = YES;
+    
+    for(int i=0;i<currentAnnotationArray.count;i++){
+        
+        id  anno = currentAnnotationArray[i];
+        if([anno isKindOfClass:[ClusterAnnotation class]]){
+            
+            ClusterAnnotation * cluAn = (ClusterAnnotation *)anno;
+            
+            ClusterAnnotation  *  netPointModel = currentAnnotationArray[i];//cluAn.pois[0];
+            
+            if([netPointModel.model.spaceId isEqualToString:self.selectedNetPointModel.model.spaceId]){
+                netPointModel.selected = YES;
+                [self.mapView removeAnnotation:cluAn];
+                [self.mapView addAnnotation:cluAn];
+                flag  = NO;
+            }else{
+                if(netPointModel.selected){//上一次选中的网点
+                    netPointModel.selected = NO;
+                    [self.mapView removeAnnotation:cluAn];
+                    [self.mapView addAnnotation:cluAn];
+                    flag  = NO;
+                }
+                
+                //保证必有一个网点更新，一次来调用代理方法
+                if(flag){
+                    [self.mapView removeAnnotation:cluAn];
+                    [self.mapView addAnnotation:cluAn];
+                    flag  = NO;
+                }
+            }
+        }
+        
+    }
+    
+    /* 用户滑动时，保留仍然可用的标注，去除屏幕外标注，添加新增区域的标注 */
+    NSMutableSet *before = [NSMutableSet setWithArray:self.mapView.annotations];
+    [before removeObject:[self.mapView userLocation]];
+    NSSet *after = [NSSet setWithArray:annotations];
+    
+    /* 保留仍然位于屏幕内的annotation. */
+    NSMutableSet *toKeep = [NSMutableSet setWithSet:before];
+    [toKeep intersectSet:after];
+    
+    /* 需要添加的annotation. */
+    NSMutableSet *toAdd = [NSMutableSet setWithSet:after];
+    [toAdd minusSet:toKeep];
+    
+    /* 删除位于屏幕外的annotation. */
+    NSMutableSet *toRemove = [NSMutableSet setWithSet:before];
+    [toRemove minusSet:after];
+    
+    /* 更新. */
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self.mapView addAnnotations:[toAdd allObjects]];
+        [self.mapView removeAnnotations:[toRemove allObjects]];
+        
+    });
+}
+
+#pragma  mark - 点击店铺标注事件
+
+- (void)recognizer:(UIPanGestureRecognizer *)ger {
+    HPShareAnnotationView *view = (HPShareAnnotationView *)ger.view;
+    if ([view.annotation isKindOfClass:[MAUserLocation class]]) {//用户位置点
+        
+    } else {
+        ClusterAnnotation *annotation = (ClusterAnnotation *)view.annotation;
+        if (annotation.count == 1) {
+            //非聚合网点
+            ClusterAnnotation * model = annotation;
+            if(self.selectedNetPointModel != model){
+                [self setupSelectNetPointWithModel:model];
+            }
+            
+        } else {
+            for (int i = 0; i < annotation.count; i++) {
+                ClusterAnnotation * model = annotation;
+                if(self.selectedNetPointModel != model){
+                    [self setupSelectNetPointWithModel:model];
+                }
+            }
+            
+            //点击聚合网点 地图缩放
+            [self.mapView setRegion:MACoordinateRegionMake(annotation.coordinate, MACoordinateSpanMake(self.mapView.region.span.latitudeDelta/2, self.mapView.region.span.longitudeDelta/2)) animated:YES];
+        }
+    }
+}
+
+#pragma mark - 传入店铺标注模型，设置地图选中此网点效果，包括路径规划等
+- (void)setupSelectNetPointWithModel:(ClusterAnnotation *)annotation{
+    
+    if(!annotation){
+        return;
+    }
+    
+    annotation.selected = YES;
+    self.selectedNetPointModel = annotation;
+    [self.mapView addAnnotation:annotation];
+    [self addAnnotationsToMapView:self.mapView];
+}
 @end

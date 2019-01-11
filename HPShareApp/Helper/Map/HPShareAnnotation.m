@@ -21,7 +21,7 @@
     self = [super init];
     if (self) {
         _model = model;
-        _title = model.title;
+//        _title = @"1";
         _coordinate = CLLocationCoordinate2DMake(model.latitude.doubleValue, model.longitude.doubleValue);
     }
     return self;
@@ -40,7 +40,7 @@
 }
 
 + (NSArray *)annotationArrayWithModels:(NSArray<HPShareListModel *> *)models {
-    NSMutableArray *array = [[NSMutableArray alloc] init];
+    NSMutableArray *storesArray = [[NSMutableArray alloc] init];
     for (int i = 0; i < models.count; i++) {
         HPShareListModel *model = models[i];
         
@@ -49,10 +49,11 @@
         }
         HPShareAnnotation *annotation = [[HPShareAnnotation alloc] initWithModel:model];
         [annotation setIndex:i];
-        [array addObject:annotation];
+        [storesArray addObject:annotation];
     }
-    return array;
+    return storesArray;
 }
+
 
 @end
 

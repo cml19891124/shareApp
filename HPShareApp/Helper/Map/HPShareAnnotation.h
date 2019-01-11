@@ -18,6 +18,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) NSInteger index;
 
+
+/**
+ 店铺是否选中状态
+ */
+@property (nonatomic, assign) BOOL selected;
+
 - (instancetype)initWithModel:(HPShareListModel *)model;
 
 + (NSArray *)annotationArrayWithModels:(NSArray<HPShareListModel *> *)models;

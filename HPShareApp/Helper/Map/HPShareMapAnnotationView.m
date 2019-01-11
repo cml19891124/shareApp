@@ -88,14 +88,7 @@
 - (MACustomCalloutView *)calloutView
 {
     if (!_callOutView) {
-        
         _callOutView = [[MACustomCalloutView alloc] initWithCustomView:self.customerCallOutView];
-//        _callOutView.backgroundColor = COLOR_GRAY_FFFFFF;
-//        [_callOutView.layer setShadowColor:COLOR_GRAY_A6A6A6.CGColor];
-//        [_callOutView.layer setShadowOffset:CGSizeMake(0.f, 2.f)];
-//        [_callOutView.layer setShadowRadius:4.f];
-//        [_callOutView.layer setShadowOpacity:1.f];
-//        [_callOutView.layer setCornerRadius:2.f];
     }
     return _callOutView;
 }
