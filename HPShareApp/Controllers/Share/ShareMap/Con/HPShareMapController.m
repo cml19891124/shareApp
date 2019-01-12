@@ -311,68 +311,6 @@
     }];
 }
 
-#pragma mark - MAMapViewDelegate
-
-- (void)mapView:(MAMapView *)mapView didSingleTappedAtCoordinate:(CLLocationCoordinate2D)coordinate {
-    [self showDataView:NO];
-}
-
-- (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation {
-    HPLog(@"title:%@",annotation.title);
-    if ([annotation isKindOfClass:ClusterAnnotation.class]) {
-        ClusterAnnotationView *annotationView = [[ClusterAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
-        
-        [annotationView setImage:ImageNamed(@"hasStoreAnnotation")];
-        UITapGestureRecognizer *pan = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(recognizer:)];
-        pan.delegate = self;
-        [annotationView addGestureRecognizer:pan];
-        
-        return annotationView;
-    }
-    //===============用户位置点
-    else if ([annotation isKindOfClass:[MAUserLocation class]]) {
-        static NSString *pointReuseIdentifier = @"UserLocation";
-        MAPinAnnotationView *annotationView = (MAPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:pointReuseIdentifier];
-        annotationView.canShowCallout = NO;
-        return annotationView;
-    }else{//地图上其他位置点--->清除
-        static NSString *reuserIdentifier = @"reuserIdentifier";
-        MAAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:reuserIdentifier];
-        if ([annotation isKindOfClass:[MAPointAnnotation class]]) {
-            if (!annotationView) {
-                annotationView = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuserIdentifier];
-            }
-        }
-        return annotationView;
-    }
-    
-    return nil;
-}
-
-- (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view {
-    [view setSelected:YES];
-    if ([view isKindOfClass:HPShareAnnotationView.class]) {
-        ClusterAnnotation *shareAnnotation = (ClusterAnnotation *)view.annotation;
-        
-        [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
-        [self.mapView setZoomLevel:18.f animated:YES];
-        [self showDataView:YES];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:shareAnnotation.index inSection:0];
-        [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-        
-    }
-}
-
-- (void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view {
-    [view setSelected:NO];
-}
-
-- (void)mapView:(MAMapView *)mapView mapDidMoveByUser:(BOOL)wasUserAction {
-    if (wasUserAction) {
-        [self seachReGeocodeWithCoord:mapView.centerCoordinate];
-    }
-}
-
 #pragma mark - AMapSearchAPI
 
 - (void)configSearchAPI {
@@ -482,14 +420,13 @@
         [self.mapView removeAnnotations:self.mapView.annotations];
         self.annotations = [HPShareAnnotation annotationArrayWithModels:models];
 //        [self.mapView addAnnotations:annotations];
-//        [self.mapView showAnnotations:self.mapView.annotations animated:YES];
-        [self  creatAnnotation];
+        [self creatAnnotation];
         if (self.annotations.count != 0) {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 /* 建立四叉树. */
-                //if (self.coordinateQuadTree == nil) {
+                if (self.coordinateQuadTree == nil) {
                 self.coordinateQuadTree = [[CoordinateQuadTree alloc] init];
-                //}
+                }
                 [self.coordinateQuadTree buildTreeWithPOIs:self.annotations];
                 self.shouldRegionChangeReCalculate = YES;
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -502,18 +439,100 @@
     }];
 }
 
+#pragma mark - MAMapViewDelegate
+
+- (void)mapView:(MAMapView *)mapView didSingleTappedAtCoordinate:(CLLocationCoordinate2D)coordinate {
+    [self showDataView:NO];
+}
+
+- (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation {
+    HPLog(@"title:%@",annotation.title);
+    if ([annotation isKindOfClass:ClusterAnnotation.class]) {
+        ClusterAnnotationView *annotationView = [[ClusterAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
+        annotationView.annotation = annotation;
+        
+        srand((unsigned)time(0)); //不加这句每次产生的随机数不变
+        int i = rand() % 5;
+        annotationView.count = i;
+//        [annotationView.countLabel.text = [NSString stringWithFormat:@"%@",@(i)];
+
+        [annotationView setImage:ImageNamed(@"hasStoreAnnotation")];
+        UITapGestureRecognizer *pan = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(recognizer:)];
+        pan.delegate = self;
+        [annotationView addGestureRecognizer:pan];
+        
+        return annotationView;
+    }
+    //===============用户位置点
+    else if ([annotation isKindOfClass:[MAUserLocation class]]) {
+        static NSString *pointReuseIdentifier = @"UserLocation";
+        MAPinAnnotationView *annotationView = (MAPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:pointReuseIdentifier];
+        annotationView.canShowCallout = NO;
+        return annotationView;
+    }else{//地图上其他位置点--->清除
+        static NSString *reuserIdentifier = @"reuserIdentifier";
+        MAAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:reuserIdentifier];
+        if ([annotation isKindOfClass:[MAPointAnnotation class]]) {
+            if (!annotationView) {
+                annotationView = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuserIdentifier];
+            }
+        }
+        return annotationView;
+    }
+    
+    return nil;
+}
+
+- (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view {
+    [view setSelected:YES];
+    if ([view isKindOfClass:HPShareAnnotationView.class]) {
+        ClusterAnnotation *shareAnnotation = (ClusterAnnotation *)view.annotation;
+        
+        [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
+        [self.mapView setZoomLevel:18.f animated:YES];
+        [self showDataView:YES];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:shareAnnotation.index inSection:0];
+        [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
+    }
+}
+
+- (void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view {
+    [view setSelected:NO];
+}
+
+- (void)mapView:(MAMapView *)mapView mapDidMoveByUser:(BOOL)wasUserAction {
+    //    if (wasUserAction) {
+    //        [self seachReGeocodeWithCoord:mapView.centerCoordinate];
+    //    }
+}
+
+/*
+ 在mapView显示区域改变时，需要重算并更新annotations。
+ */
+- (void)mapView:(MAMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    /* mapView区域变化时重算annotation. */
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self addAnnotationsToMapView:self.mapView];
+    });
+}
+
+
 #pragma mark -- 创建店铺标注
 - (void)creatAnnotation {
     self.annoArray = [NSMutableArray array];
     for (int i = 0; i < self.annotations.count; i++) {
         //创建大头针对象
         HPShareAnnotation *model = self.annotations[i];
-        _pointAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:model.coordinate count:self.annotations.count];
+        _pointAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:model.coordinate count:1];
+        _pointAnnotation.pois = model;
         _pointAnnotation.title = model.title;
-//        _pointAnnotation.pois = [NSMutableArray arrayWithObject:model];
         [self.annoArray addObject:_pointAnnotation];
     }
     [self.mapView addAnnotations:self.annoArray];
+    [self.mapView showAnnotations:self.mapView.annotations animated:YES];
+
 }
 
 #pragma mark - 标注聚合方法
@@ -532,7 +551,7 @@
     }
 }
 
-// 更新annotation
+// 更新annotation 对比mapView里已有的annotations，吐故纳新
 - (void)updateMapViewAnnotationsWithAnnotations:(NSArray *)annotations
 {
     if(annotations.count == 0){
@@ -643,4 +662,34 @@
     [self.mapView addAnnotation:annotation];
     [self addAnnotationsToMapView:self.mapView];
 }
+
+- (void)mapView:(MAMapView *)mapView didAddAnnotationViews:(NSArray *)views
+{
+    /* 为新添的annotationView添加弹出动画. */
+    for (UIView *view in views)
+    {
+        [self addBounceAnnimationToView:view];
+    }
+}
+
+/* annotation弹出的动画. */
+- (void)addBounceAnnimationToView:(UIView *)view
+{
+    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+    
+    bounceAnimation.values = @[@(0.05), @(1.1), @(0.9), @(1)];
+    bounceAnimation.duration = 0.6;
+    
+    NSMutableArray *timingFunctions = [[NSMutableArray alloc] initWithCapacity:bounceAnimation.values.count];
+    for (NSUInteger i = 0; i < bounceAnimation.values.count; i++)
+    {
+        [timingFunctions addObject:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    }
+    [bounceAnimation setTimingFunctions:timingFunctions.copy];
+    
+    bounceAnimation.removedOnCompletion = NO;
+    
+    [view.layer addAnimation:bounceAnimation forKey:@"bounce"];
+}
+
 @end

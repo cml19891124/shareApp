@@ -9,13 +9,19 @@
 #import <Foundation/Foundation.h>
 #import <MAMapKit/MAMapKit.h>
 #import "ClusterAnnotation.h"
+#import "Masonry.h"
+#import "HPGlobalVariable.h"
+#import "Macro.h"
 
 @interface ClusterAnnotationView : MAAnnotationView
 
 @property (nonatomic, assign) NSUInteger count;
 
+@property (nonatomic, strong) UILabel *countLabel;
+
 @property (nonatomic, assign) NSUInteger carNum;//可用车数量
 
+@property (nonatomic, strong) UIImageView * distanceImageView;
 /**
  距离 
  */
@@ -25,6 +31,6 @@
  */
 @property(nonatomic,assign) CLLocationCoordinate2D userLocation;
 
-@property (nonatomic, strong) ClusterAnnotation *annotation;
+@property (nonatomic, strong) ClusterAnnotation *storeAnnotation;
 
 @end

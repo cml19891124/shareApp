@@ -21,7 +21,7 @@
     self = [super init];
     if (self) {
         _model = model;
-//        _title = @"1";
+        _title = model.title;
         _coordinate = CLLocationCoordinate2DMake(model.latitude.doubleValue, model.longitude.doubleValue);
     }
     return self;

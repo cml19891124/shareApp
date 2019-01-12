@@ -18,7 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) NSInteger index;
 
-
+/**
+ 每次请求的店铺
+ */
+@property (nonatomic, assign) NSInteger *count;
 /**
  店铺是否选中状态
  */

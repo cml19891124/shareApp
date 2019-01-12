@@ -138,7 +138,7 @@ BoundingBox quadTreeNodeDataArrayForPOIs(QuadTreeNodeData *dataArray, NSArray * 
             {
                 CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(totalX, totalY);
                 ClusterAnnotation *annotation = [[ClusterAnnotation alloc] initWithCoordinate:coordinate count:count];
-//                annotation.pois = pois;
+                annotation.pois = pois;
                 HPShareAnnotation * shareAnnotation = [pois lastObject];
                 annotation.title = shareAnnotation.title;
 //                annotation.type  = poi.type;

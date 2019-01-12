@@ -16,7 +16,7 @@
     self = [super init];
     if (self) {
         _model = model;
-        _title = [NSString stringWithFormat:@"%ld",self.count];
+        _title = model.title;
         _coordinate = CLLocationCoordinate2DMake(model.latitude.doubleValue, model.longitude.doubleValue);
     }
     return self;
@@ -41,17 +41,9 @@
     {
         _coordinate = coordinate;
         _count = count;
-        _title = [NSString stringWithFormat:@"%ld",self.count];
         _pois  = [NSMutableArray arrayWithCapacity:0];
     }
     return self;
 }
 
--(void)setSelected:(BOOL)selected
-{
-    _selected = selected;
-    if (selected) {
-        
-    }
-}
 @end
