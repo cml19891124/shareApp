@@ -55,6 +55,7 @@
 		7AAFF3BA21E390D80049D175 /* HPShareMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAFF3AC21E390D70049D175 /* HPShareMapAnnotation.m */; };
 		7AAFF3BB21E390D80049D175 /* HPShareMapAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAFF3AE21E390D80049D175 /* HPShareMapAnnotationView.m */; };
 		7AAFF3BC21E390D80049D175 /* HPShareAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAFF3AF21E390D80049D175 /* HPShareAnnotationView.m */; };
+		7AAFF3C521EA3ACF0049D175 /* HPIdeaDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAFF3C421EA3ACF0049D175 /* HPIdeaDetailViewController.m */; };
 		CAA2DAE424EC650C0D26D3DA /* Pods_HPShareApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */; };
 		DB490D1FA8BCD64C224C403A /* Pods_HPShareAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */; };
 		E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E611563B219AC8D7003A29C5 /* HPBaseViewController.m */; };
@@ -375,6 +376,8 @@
 		7AAFF3AF21E390D80049D175 /* HPShareAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPShareAnnotationView.m; sourceTree = "<group>"; };
 		7AAFF3B021E390D80049D175 /* HPShareMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPShareMapAnnotation.h; sourceTree = "<group>"; };
 		7AAFF3B921E390D80049D175 /* HPShareMapAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPShareMapAnnotationView.h; sourceTree = "<group>"; };
+		7AAFF3C321EA3ACF0049D175 /* HPIdeaDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaDetailViewController.h; sourceTree = "<group>"; };
+		7AAFF3C421EA3ACF0049D175 /* HPIdeaDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaDetailViewController.m; sourceTree = "<group>"; };
 		7DCB2200CA6644BA989BC924 /* Pods_HPShareApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE3EB4F3F036C8D209E93CCE /* Pods_HPShareAppUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPShareAppUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4F1B350A3EBD7380C3F015D /* Pods-HPShareApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPShareApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1720,6 +1723,8 @@
 			children = (
 				E661B095219BAD5000C86CF5 /* HPIdeaController.h */,
 				E661B096219BAD5000C86CF5 /* HPIdeaController.m */,
+				7AAFF3C321EA3ACF0049D175 /* HPIdeaDetailViewController.h */,
+				7AAFF3C421EA3ACF0049D175 /* HPIdeaDetailViewController.m */,
 			);
 			path = IdeaCon;
 			sourceTree = "<group>";
@@ -2377,6 +2382,7 @@
 				E622A9BF21C33989007C35BC /* YYLRefreshNoNetworkView.m in Sources */,
 				E6B4CEDF21C5286F00429C11 /* TADotView.m in Sources */,
 				69165CC621BDFB4100593D25 /* HPBaseReleaseController.m in Sources */,
+				7AAFF3C521EA3ACF0049D175 /* HPIdeaDetailViewController.m in Sources */,
 				69165D0B21C4AC5D00593D25 /* HPSortSelectModalView.m in Sources */,
 				7A54485D21C16BF3001301F3 /* HPPartyCenterCell.m in Sources */,
 				E661B12821A28E8500C86CF5 /* JTCalendarManager.m in Sources */,

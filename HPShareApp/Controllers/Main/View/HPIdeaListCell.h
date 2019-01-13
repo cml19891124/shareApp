@@ -8,7 +8,7 @@
 
 #import "HPBaseTableViewCell.h"
 #import "HPIdeaListModel.h"
-
+typedef void (^TodayIntroduceBlcok)(NSString *currtitle);
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPIdeaListCell : HPBaseTableViewCell
@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) HPIdeaListModel *model;
 
 @property (nonatomic, strong) UIButton *readBtn;
+
+@property (nonatomic, copy) TodayIntroduceBlcok todayIntroduceBlcok;
 @end
 
 NS_ASSUME_NONNULL_END

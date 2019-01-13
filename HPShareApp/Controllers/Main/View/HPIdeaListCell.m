@@ -44,6 +44,16 @@
     
 }
 
+- (UIImageView *)ideaImageview
+{
+    if (!_ideaImageview) {
+        _ideaImageview = [UIImageView new];
+        _ideaImageview.image = ImageNamed(@"");
+        _ideaImageview.backgroundColor = COLOR_RED_EA0000;
+    }
+    return _ideaImageview;
+}
+
 - (UILabel *)ideaTitle
 {
     if (!_ideaTitle) {
@@ -76,6 +86,10 @@
         _readBtn.backgroundColor = COLOR_RED_FFE6E2;
         _readBtn.layer.cornerRadius = 2.f;
         _readBtn.layer.masksToBounds = YES;
+        _readBtn.titleLabel.font = kFont_Regular(9.f);
+        [_readBtn addTarget:self action:@selector(todayIntroduce:) forControlEvents:UIControlEventTouchUpInside];
+        _readBtn.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+        _readBtn.contentHorizontalAlignment = UIControlContentVerticalAlignmentCenter;
     }
     return _readBtn;
 }
@@ -98,7 +112,7 @@
     
     [self.readBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.ideaImageview.mas_left).offset(getWidth(-23.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(50.f), getWidth(9.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(50.f), getWidth(12.f)));
         make.bottom.mas_equalTo(getWidth(-20.f));
     }];
     
@@ -116,5 +130,12 @@
     [self.ideaImageview sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:ImageNamed(@"")];
     self.ideaTitle.text = model.title;
     self.ideaSubtitle.text = [NSString stringWithFormat:@"2小时前.%@次阅读",model.readingQuantity];
+}
+
+- (void)todayIntroduce:(UIButton *)button
+{
+    if (self.todayIntroduceBlcok) {
+        self.todayIntroduceBlcok(button.currentTitle);
+    }
 }
 @end

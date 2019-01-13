@@ -152,7 +152,7 @@ static NSString *headerCell = @"headerCell";
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.separatorStyle = UITableViewCellAccessoryNone;
+//        _tableView.separatorStyle = UITableViewCellAccessoryNone;
         _tableView.backgroundColor = [[UIColor clearColor] colorWithAlphaComponent:0.001];;
         [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:ideaCell];
         
@@ -224,7 +224,7 @@ static NSString *headerCell = @"headerCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 1) {
-        return _dataArray.count;
+        return 3.f;//_dataArray.count;
     }
     return 1.f;
 }
@@ -260,7 +260,7 @@ static NSString *headerCell = @"headerCell";
 {
     HPIdeaListCell *cell = [tableView dequeueReusableCellWithIdentifier:ideaListCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    HPIdeaListModel *model = self.dataArray[indexPath.row];
+    HPIdeaListModel *model;// = self.dataArray[indexPath.row];
     cell.model = model;
     return cell;
 }
@@ -285,12 +285,22 @@ static NSString *headerCell = @"headerCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    HPIdeaListModel *model = self.dataArray[indexPath.row];
-    if (indexPath.section == 3) {
+    HPIdeaListModel *model;// = self.dataArray[indexPath.row];
+    if (indexPath.section == 1) {
         HPIdeaListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         if (cell) {
-            [self pushVCByClassName:@"HPIdeaListController" withParam:@{@"model":model}];
+            [self pushVCByClassName:@"HPIdeaDetailViewController" withParam:@{@"model":@7}];
         }
     }
+}
+
+
+#pragma mark - 取消下拉  允许上拉
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGPoint offset = self.tableView.contentOffset;
+    if (offset.y <= 0) {
+        offset.y = 0;
+    }
+    self.tableView.contentOffset = offset;
 }
 @end
