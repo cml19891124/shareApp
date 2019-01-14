@@ -34,13 +34,10 @@ static NSString *headerCell = @"headerCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    self.dataArray = [NSMutableArray array];
     
     _shareListParam = [HPShareListParam new];
     _shareListParam.pageSize = 10;
     _shareListParam.page = 1;
-    _shareListParam.createTimeOrderType = @"0";
 
     [self setupUI];
     [self setupUISubviewsMasonry];
@@ -55,6 +52,8 @@ static NSString *headerCell = @"headerCell";
         self.isPop = NO;
     }
     else {
+    self.dataArray = [NSMutableArray array];
+
         //获取文章列表
         [self getRichList:YES];
     }
@@ -71,7 +70,7 @@ static NSString *headerCell = @"headerCell";
     
     NSMutableDictionary *param = _shareListParam.mj_keyValues;
     kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/rich/list" isNeedToken:NO paraments:param complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/rich/list" isNeedToken:YES paraments:param complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             NSArray *models = [HPIdeaListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
             if (models) {
@@ -152,7 +151,7 @@ static NSString *headerCell = @"headerCell";
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-//        _tableView.separatorStyle = UITableViewCellAccessoryNone;
+
         _tableView.backgroundColor = [[UIColor clearColor] colorWithAlphaComponent:0.001];;
         [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:ideaCell];
         
@@ -224,7 +223,7 @@ static NSString *headerCell = @"headerCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 1) {
-        return 3.f;//_dataArray.count;
+        return _dataArray.count;
     }
     return 1.f;
 }
@@ -236,7 +235,7 @@ static NSString *headerCell = @"headerCell";
             return [self setUpHeaderCell:tableView];
             break;
         case 1:
-            return [self setUpMergerStoreCell:tableView withIndexPath:indexPath];
+            return [self setUpIdeaListCell:tableView withIndexPath:indexPath];
             
             break;
         default:
@@ -250,17 +249,21 @@ static NSString *headerCell = @"headerCell";
 {
     HPHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:headerCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    HPLoginModel *account = [HPUserTool account];
-    
+//    HPLoginModel *account = [HPUserTool account];
+    [cell setHeaderClickBlock:^(NSInteger ideaIndex) {
+        if (ideaIndex == 0) {
+            [self pushVCByClassName:@"HPWhatIsShareSpaceController"];
+        }
+    }];
     return cell;
 }
 
 #pragma mark - 合店专区
-- (HPIdeaListCell *)setUpMergerStoreCell:(UITableView *)tableView withIndexPath:(NSIndexPath *)indexPath
+- (HPIdeaListCell *)setUpIdeaListCell:(UITableView *)tableView withIndexPath:(NSIndexPath *)indexPath
 {
     HPIdeaListCell *cell = [tableView dequeueReusableCellWithIdentifier:ideaListCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    HPIdeaListModel *model;// = self.dataArray[indexPath.row];
+    HPIdeaListModel *model = self.dataArray[indexPath.row];
     cell.model = model;
     return cell;
 }
@@ -285,11 +288,11 @@ static NSString *headerCell = @"headerCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    HPIdeaListModel *model;// = self.dataArray[indexPath.row];
+    HPIdeaListModel *model = self.dataArray[indexPath.row];
     if (indexPath.section == 1) {
         HPIdeaListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         if (cell) {
-            [self pushVCByClassName:@"HPIdeaDetailViewController" withParam:@{@"model":@7}];
+            [self pushVCByClassName:@"HPIdeaDetailViewController" withParam:@{@"model":model?:@1}];
         }
     }
 }

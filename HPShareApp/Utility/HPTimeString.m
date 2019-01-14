@@ -7,6 +7,7 @@
 //
 
 #import "HPTimeString.h"
+#import "Macro.h"
 
 @implementation HPTimeString
 //获取当前的时间
@@ -80,7 +81,7 @@
 
 //获取当前时间戳  （以毫秒为单位）
 
-+(NSString *)getNowTimeTimestamp3{
++(NSString *)getNowTimeTimestamp:(NSString *)timeStr{
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
     
@@ -88,7 +89,7 @@
     
     [formatter setTimeStyle:NSDateFormatterShortStyle];
     
-    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss SSS"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+    [formatter setDateFormat:@"yyyy-MM-dd hh:mm:ss SSS"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
     
     //设置时区,这个对于时间的处理有时很重要
     
@@ -96,11 +97,15 @@
     
     [formatter setTimeZone:timeZone];
     
-    NSDate *datenow = [NSDate date];//现在时间,你可以输出来看下是什么格式
+    NSString *dateStr = timeStr;
     
-    NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[datenow timeIntervalSince1970]*1000];
+//    dateFormatter.dateFormat=@"yyyy-mm-dd "//后面的hh:mm:ss不写可以吗?答案不写不可以
     
-    return timeSp;
+    HPLog(@"%@",[formatter dateFromString:dateStr]);//现在时间,你可以输出来看下是什么格式
+    
+//    NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[dateStr timeIntervalSince1970]*1000];
+    
+    return dateStr;
     
 }
 
@@ -109,6 +114,7 @@
     //首先，我们设置一下时间格式：
     
     NSDateFormatter *format = [[NSDateFormatter alloc] init];
+    
     [format setDateFormat:@"YYYY年MM月dd日"];
     NSDateFormatter *fo = [[NSDateFormatter alloc] init];
     [fo setDateFormat:@"HH:mm"];
@@ -130,6 +136,7 @@
     //获取昨天
     NSDate *yesterdayDate = [NSDate dateWithTimeIntervalSinceNow:-(24*60*60)];
     NSString *yesterday = [format stringFromDate:yesterdayDate];
+    
     //然后对比返回数据即可：
 
     if ([createDate isEqualToString:today]) {
@@ -142,6 +149,48 @@
         return [NSString stringWithFormat:@"%@ %@",createDate,hoursandSec];
     }
 
+}
+
++ (NSString *)getPassTimeSometimeWithHorFormatter:(NSDate *)date
+{
+    //首先，我们设置一下时间格式：
+    
+    NSDateFormatter *format = [[NSDateFormatter alloc] init];
+    
+    [format setDateFormat:@"YYYY-MM-dd"];
+    NSDateFormatter *fo = [[NSDateFormatter alloc] init];
+    [fo setDateFormat:@"HH:mm"];
+    [format setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0*3600]];
+    [fo setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0*3600]];
+    
+    //获取传过来的时间的时分
+    NSString *hoursandSec = [fo stringFromDate:date];
+    
+    //获取传过来的时间的date
+    NSString *createDate = [format stringFromDate:date];
+    //然后获取今天和昨天的年月日：
+    
+    
+    //获取今天
+    NSDate *nowDate = [NSDate date];
+    NSString *today = [format stringFromDate:nowDate];
+    
+    //获取昨天
+    NSDate *yesterdayDate = [NSDate dateWithTimeIntervalSinceNow:-(24*60*60)];
+    NSString *yesterday = [format stringFromDate:yesterdayDate];
+    
+    //然后对比返回数据即可：
+    
+    if ([createDate isEqualToString:today]) {
+        return [NSString stringWithFormat:@"今天%@",hoursandSec];
+    }else if ([createDate isEqualToString:yesterday])
+    {
+        return [NSString stringWithFormat:@"昨天%@",hoursandSec];
+    }else
+    {
+        return [NSString stringWithFormat:@"%@ %@",createDate,hoursandSec];
+    }
+    
 }
 
 
@@ -213,5 +262,40 @@
     NSLog(@"localDate = %@",localDate);
 
     return localDate;
+}
+
+
+
+
++(NSString *)date2StringWithDate:(NSDate *)date pattern:(NSString *)pattern{
+    if(!date){
+        return @"";
+    }
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    formatter.dateFormat = pattern;
+    return  [formatter stringFromDate:date];
+    
+}
++(NSDate *)string2DateWithString:(NSString *)strDate pattern:(NSString *)pattern{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    formatter.dateFormat = PATTERN_STANDARD19H;
+    return  [formatter dateFromString:strDate];
+}
++(NSString *)getCurrentTimeWithPattern:(NSString *)pattern{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    formatter.dateFormat = pattern;
+    formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:8 * 3600];
+    return  [formatter stringFromDate:[NSDate date]];
+    
+}
++(NSString *)getCurrentTime{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    formatter.dateFormat = @"HH:mm";
+    formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:8 * 3600];
+    return  [formatter stringFromDate:[NSDate date]];
+}
++(NSString *)getBeforeDateWithM:(double)m{
+    NSDate *date = [NSDate dateWithTimeIntervalSinceNow:m];
+    return [self date2StringWithDate:date pattern:PATTERN_STANDARD10H];;
 }
 @end

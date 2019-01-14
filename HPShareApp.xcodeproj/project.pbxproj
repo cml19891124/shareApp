@@ -186,6 +186,7 @@
 		E68C856A21E9EC2B00AF259C /* HPHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C856921E9EC2B00AF259C /* HPHeaderCell.m */; };
 		E68C856D21E9ED9400AF259C /* HPIdeaListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C856C21E9ED9400AF259C /* HPIdeaListCell.m */; };
 		E68C857121E9EDFB00AF259C /* HPIdeaListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C857021E9EDFB00AF259C /* HPIdeaListModel.m */; };
+		E68D07C921EC2D26007558CC /* HPIdeaDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E68D07C821EC2D26007558CC /* HPIdeaDetailModel.m */; };
 		E692144121D46CB300ED6B5C /* HPOwnnerReleaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E692144021D46CB300ED6B5C /* HPOwnnerReleaseViewController.m */; };
 		E692144521D4802700ED6B5C /* HPUploadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E692144421D4802700ED6B5C /* HPUploadButton.m */; };
 		E693E90421E8331E0063797A /* ClusterAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = E693E8FC21E8331E0063797A /* ClusterAnnotation.m */; };
@@ -642,6 +643,8 @@
 		E68C856C21E9ED9400AF259C /* HPIdeaListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaListCell.m; sourceTree = "<group>"; };
 		E68C856F21E9EDFB00AF259C /* HPIdeaListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaListModel.h; sourceTree = "<group>"; };
 		E68C857021E9EDFB00AF259C /* HPIdeaListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaListModel.m; sourceTree = "<group>"; };
+		E68D07C721EC2D26007558CC /* HPIdeaDetailModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaDetailModel.h; sourceTree = "<group>"; };
+		E68D07C821EC2D26007558CC /* HPIdeaDetailModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaDetailModel.m; sourceTree = "<group>"; };
 		E692143F21D46CB300ED6B5C /* HPOwnnerReleaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOwnnerReleaseViewController.h; sourceTree = "<group>"; };
 		E692144021D46CB300ED6B5C /* HPOwnnerReleaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOwnnerReleaseViewController.m; sourceTree = "<group>"; };
 		E692144321D4802700ED6B5C /* HPUploadButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPUploadButton.h; sourceTree = "<group>"; };
@@ -1745,6 +1748,8 @@
 			children = (
 				E68C856F21E9EDFB00AF259C /* HPIdeaListModel.h */,
 				E68C857021E9EDFB00AF259C /* HPIdeaListModel.m */,
+				E68D07C721EC2D26007558CC /* HPIdeaDetailModel.h */,
+				E68D07C821EC2D26007558CC /* HPIdeaDetailModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2312,6 +2317,7 @@
 				69165CFD21C2625300593D25 /* HPTagView.m in Sources */,
 				E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */,
 				E6D75F4A21AFF37B00B2067C /* HPUnbindPhoneController.m in Sources */,
+				E68D07C921EC2D26007558CC /* HPIdeaDetailModel.m in Sources */,
 				69165D0321C3B86800593D25 /* HPShareListParam.m in Sources */,
 				E622A9CD21C376E8007C35BC /* HPlaceholdTextView.m in Sources */,
 				E61E27AB21C8D68000CD5288 /* EBBannerView+Categories.m in Sources */,

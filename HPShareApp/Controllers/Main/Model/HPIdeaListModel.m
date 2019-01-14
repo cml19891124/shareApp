@@ -11,7 +11,7 @@
 
 @implementation HPIdeaListModel
 
-+ (NSDictionary *)mj
++ (NSDictionary *)mj_objectClassInArray
 {
     return @{@"pictures":HPIdeaPicturesModel.class};
 }

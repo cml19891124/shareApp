@@ -418,7 +418,7 @@
         [self setCount:self.dataArray.count];
         [self.tableView reloadData];
         [self.mapView removeAnnotations:self.mapView.annotations];
-        self.annotations = [HPShareAnnotation annotationArrayWithModels:models];
+        self.annotations = [ClusterAnnotation annotationArrayWithModels:models];
 //        [self.mapView addAnnotations:annotations];
         [self creatAnnotation];
         if (self.annotations.count != 0) {
@@ -450,12 +450,8 @@
     if ([annotation isKindOfClass:ClusterAnnotation.class]) {
         ClusterAnnotationView *annotationView = [[ClusterAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
         annotationView.annotation = annotation;
-        
-        srand((unsigned)time(0)); //不加这句每次产生的随机数不变
-        int i = rand() % 5;
-        annotationView.count = i;
-//        [annotationView.countLabel.text = [NSString stringWithFormat:@"%@",@(i)];
-
+        ClusterAnnotation * clusterAnnotation = (ClusterAnnotation *)annotation;
+        annotationView.count = clusterAnnotation.count;
         [annotationView setImage:ImageNamed(@"hasStoreAnnotation")];
         UITapGestureRecognizer *pan = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(recognizer:)];
         pan.delegate = self;
@@ -522,15 +518,21 @@
 #pragma mark -- 创建店铺标注
 - (void)creatAnnotation {
     self.annoArray = [NSMutableArray array];
-    for (int i = 0; i < self.annotations.count; i++) {
+    for (int i = 0; i < self.dataArray.count; i++) {
         //创建大头针对象
-        HPShareAnnotation *model = self.annotations[i];
-        _pointAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:model.coordinate count:1];
-        _pointAnnotation.pois = model;
+//        HPShareAnnotation *model = self.annotations[i];
+        HPShareListModel *model = self.dataArray[i];
+        _pointAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:CLLocationCoordinate2DMake(model.latitude, model.longitude) count:self.annotations.count];
+
+        int i = rand() % 5;
+        _pointAnnotation.count = i ;
+        _pointAnnotation.pois = [NSMutableArray arrayWithObject:model];;
         _pointAnnotation.title = model.title;
         [self.annoArray addObject:_pointAnnotation];
+
     }
     [self.mapView addAnnotations:self.annoArray];
+
     [self.mapView showAnnotations:self.mapView.annotations animated:YES];
 
 }

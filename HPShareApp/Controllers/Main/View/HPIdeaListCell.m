@@ -7,6 +7,7 @@
 //
 
 #import "HPIdeaListCell.h"
+#import "HPTimeString.h"
 
 @implementation HPIdeaListCell
 
@@ -49,7 +50,6 @@
     if (!_ideaImageview) {
         _ideaImageview = [UIImageView new];
         _ideaImageview.image = ImageNamed(@"");
-        _ideaImageview.backgroundColor = COLOR_RED_EA0000;
     }
     return _ideaImageview;
 }
@@ -61,6 +61,9 @@
         _ideaTitle.textColor = COLOR_BLACK_333333;
         _ideaTitle.font = kFont_Medium(16.f);
         _ideaTitle.textAlignment = NSTextAlignmentLeft;
+        //高度自适应，前提不设置宽度，高度自适应
+        [_ideaTitle setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+        _ideaTitle.numberOfLines = 0;
     }
     return _ideaTitle;
 }
@@ -107,7 +110,6 @@
         make.left.mas_equalTo(getWidth(20.f));
         make.top.mas_equalTo(getWidth(21.f));
         make.right.mas_equalTo(self.ideaImageview.mas_left).offset(getWidth(-5.f));
-        make.height.mas_equalTo(self.ideaTitle.font.pointSize);
     }];
     
     [self.readBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -118,7 +120,7 @@
     
     [self.ideaSubtitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.ideaTitle);
-        make.right.mas_equalTo(self.readBtn.mas_left).offset(getWidth(-46.f));
+        make.right.mas_equalTo(self.readBtn.mas_left).offset(getWidth(-5.f));
         make.bottom.mas_equalTo(getWidth(-21.f));
         make.height.mas_equalTo(self.ideaSubtitle.font.pointSize);
     }];
@@ -127,9 +129,34 @@
 - (void)setModel:(HPIdeaListModel *)model
 {
     _model = model;
-    [self.ideaImageview sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:ImageNamed(@"")];
+    NSArray *pics = model.pictures;
+    if (pics.count && pics) {
+        HPIdeaPicturesModel *picturesUrl = pics[0];
+        [self.ideaImageview sd_setImageWithURL:[NSURL URLWithString:picturesUrl.pictureUrl] placeholderImage:ImageNamed(@"example_space")];
+    }
+    
+    self.ideaTitle.numberOfLines = 0;
+    self.ideaTitle.lineBreakMode = NSLineBreakByWordWrapping;
     self.ideaTitle.text = model.title;
-    self.ideaSubtitle.text = [NSString stringWithFormat:@"2小时前.%@次阅读",model.readingQuantity];
+    
+    NSDate *currentDataTime = (NSDate *)[HPTimeString string2DateWithString:model.createTime pattern:@""];
+    NSString *getFo = [HPTimeString getPassTimeSometimeWithHorFormatter:currentDataTime];
+    NSArray *yesterdayBeforArr = [getFo componentsSeparatedByString:@" "];
+    NSString *yesterdayStr = yesterdayBeforArr.firstObject;
+    if ([getFo containsString:@"今天"]) {
+        self.readBtn.hidden = NO;
+        self.ideaSubtitle.text = [NSString stringWithFormat:@"%@ . %@次阅读",[getFo substringFromIndex:2],model.readingQuantity];
+
+    }else if ([getFo containsString:@"昨天"]) {
+        self.readBtn.hidden = NO;
+        self.ideaSubtitle.text = [NSString stringWithFormat:@"%@ . %@次阅读",[getFo substringFromIndex:2],model.readingQuantity];
+        
+    }else{
+        
+        self.readBtn.hidden = YES;
+        self.ideaSubtitle.text = [NSString stringWithFormat:@"%@ . %@次阅读",yesterdayStr,model.readingQuantity];
+
+    }
 }
 
 - (void)todayIntroduce:(UIButton *)button

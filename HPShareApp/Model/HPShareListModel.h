@@ -36,8 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *userId;
 @property (nonatomic, copy) NSString *areaId;
 @property (nonatomic, copy) NSString *districtId;
-@property (nonatomic, copy) NSString *longitude;
-@property (nonatomic, copy) NSString *latitude;
+@property (nonatomic, assign) double longitude;
+@property (nonatomic, assign) double latitude;
 @property (nonatomic, copy) NSString *deleteUserId;
 @property (nonatomic, strong) HPPictureModel *picture;
 

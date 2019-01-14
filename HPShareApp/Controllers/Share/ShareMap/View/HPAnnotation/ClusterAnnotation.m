@@ -17,7 +17,7 @@
     if (self) {
         _model = model;
         _title = model.title;
-        _coordinate = CLLocationCoordinate2DMake(model.latitude.doubleValue, model.longitude.doubleValue);
+        _coordinate = CLLocationCoordinate2DMake(model.latitude, model.longitude);
     }
     return self;
 }
@@ -46,4 +46,18 @@
     return self;
 }
 
++ (NSArray *)annotationArrayWithModels:(NSArray<HPShareListModel *> *)models {
+    NSMutableArray *storesArray = [[NSMutableArray alloc] init];
+    for (int i = 0; i < models.count; i++) {
+        HPShareListModel *model = models[i];
+        
+        if (model.latitude || model.longitude) {
+            continue;
+        }
+        ClusterAnnotation *annotation = [[ClusterAnnotation alloc] initWithModel:model];
+        [annotation setIndex:i];
+        [storesArray addObject:annotation];
+    }
+    return storesArray;
+}
 @end

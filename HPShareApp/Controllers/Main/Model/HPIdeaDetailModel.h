@@ -1,26 +1,26 @@
 //
-//  HPIdeaListModel.h
+//  HPIdeaDetailModel.h
 //  HPShareApp
 //
-//  Created by HP on 2019/1/12.
+//  Created by HP on 2019/1/14.
 //  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-
+@class HPShareArticlePictures;
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPIdeaListModel : NSObject
-
+@interface HPIdeaDetailModel : NSObject
 @property (nonatomic, copy) NSString *articleId;
+@property (nonatomic, copy) NSString *context;
 @property (nonatomic, copy) NSString *createTime;
-@property (nonatomic, strong) NSArray *pictures;
+@property (nonatomic, copy) NSString *deleteTime;
 @property (nonatomic, copy) NSString *readingQuantity;
-@property (nonatomic, copy) NSString *title;
+@property (nonatomic, strong) NSArray *shareArticlePictures;
+
 @end
 
-
-@interface HPIdeaPicturesModel : NSObject
+@interface HPshareArticlePictures : NSObject
 
 @property (nonatomic, copy) NSString *articleId;
 @property (nonatomic, copy) NSString *createTime;

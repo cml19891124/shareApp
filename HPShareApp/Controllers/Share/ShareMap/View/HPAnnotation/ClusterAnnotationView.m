@@ -116,6 +116,7 @@ CGFloat ScaledValueForValue(CGFloat value)
         }
         
     }else{//聚合网点标注
+        self.image = [UIImage imageNamed:@"hasStoreAnnotation"];
 
     }
     self.countLabel.text = [NSString stringWithFormat:@"%ld",count];

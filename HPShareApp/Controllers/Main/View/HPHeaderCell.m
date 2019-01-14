@@ -49,7 +49,7 @@
 {
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self);
-        make.bottom.mas_equalTo(getWidth(-97.f));
+        make.bottom.mas_equalTo(getWidth(-116.f));
     }];
     
     [self.whatIsShareSpace mas_makeConstraints:^(MASConstraintMaker *make) {

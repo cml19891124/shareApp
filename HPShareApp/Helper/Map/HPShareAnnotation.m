@@ -22,7 +22,7 @@
     if (self) {
         _model = model;
         _title = model.title;
-        _coordinate = CLLocationCoordinate2DMake(model.latitude.doubleValue, model.longitude.doubleValue);
+        _coordinate = CLLocationCoordinate2DMake(model.latitude, model.longitude);
     }
     return self;
 }
@@ -44,7 +44,7 @@
     for (int i = 0; i < models.count; i++) {
         HPShareListModel *model = models[i];
         
-        if (model.latitude == nil || model.longitude == nil) {
+        if (!model.latitude|| !model.longitude) {
             continue;
         }
         HPShareAnnotation *annotation = [[HPShareAnnotation alloc] initWithModel:model];
