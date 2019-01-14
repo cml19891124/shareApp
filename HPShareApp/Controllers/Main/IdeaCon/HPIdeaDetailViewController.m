@@ -61,7 +61,7 @@
     [HPHTTPSever HPGETServerWithMethod:@"/v1/rich/queryDetail" isNeedToken:YES paraments:@{@"articleId":model.articleId} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             self.model = [HPIdeaDetailModel mj_objectWithKeyValues:responseObject[@"data"]];
-            NSString *context = [NSString stringWithFormat:@"<head><style>img{width:%f !important;height:auto}</style></head>%@",kScreenWidth/3,self.model.context];
+            NSString *context = [NSString stringWithFormat:@"<head><style>img{width:%f !important;height:auto;}</style></head>%@",kScreenWidth/3,self.model.context];
             NSMutableAttributedString * attrStr = [[NSMutableAttributedString alloc]
                                                    initWithData:[context dataUsingEncoding:
                                                                  NSUnicodeStringEncoding]
@@ -92,10 +92,11 @@
         _contentView.textColor = COLOR_BLACK_333333;
         _contentView.font = kFont_Medium(16.f);
         _contentView.editable = NO;
-        _contentView.textAlignment = NSTextAlignmentCenter;
+        [_contentView setTextAlignment: NSTextAlignmentCenter];
         //高度自适应，前提不设置宽度，高度自适应
         [_contentView setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-        
+        _contentView.dataDetectorTypes = UIDataDetectorTypeLink;
+
     }
     return _contentView;
 }

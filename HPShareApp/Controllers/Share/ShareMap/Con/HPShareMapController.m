@@ -450,9 +450,8 @@
     if ([annotation isKindOfClass:ClusterAnnotation.class]) {
         ClusterAnnotationView *annotationView = [[ClusterAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
         annotationView.annotation = annotation;
-        ClusterAnnotation * clusterAnnotation = (ClusterAnnotation *)annotation;
-        annotationView.count = clusterAnnotation.count;
-        [annotationView setImage:ImageNamed(@"hasStoreAnnotation")];
+        int i = rand() % 5;
+        annotationView.count = i;
         UITapGestureRecognizer *pan = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(recognizer:)];
         pan.delegate = self;
         [annotationView addGestureRecognizer:pan];
@@ -520,12 +519,10 @@
     self.annoArray = [NSMutableArray array];
     for (int i = 0; i < self.dataArray.count; i++) {
         //创建大头针对象
-//        HPShareAnnotation *model = self.annotations[i];
         HPShareListModel *model = self.dataArray[i];
         _pointAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:CLLocationCoordinate2DMake(model.latitude, model.longitude) count:self.annotations.count];
 
-        int i = rand() % 5;
-        _pointAnnotation.count = i ;
+//        _pointAnnotation.count = i ;
         _pointAnnotation.pois = [NSMutableArray arrayWithObject:model];;
         _pointAnnotation.title = model.title;
         [self.annoArray addObject:_pointAnnotation];

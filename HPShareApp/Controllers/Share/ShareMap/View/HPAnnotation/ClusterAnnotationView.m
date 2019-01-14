@@ -106,6 +106,8 @@ CGFloat ScaledValueForValue(CGFloat value)
 {
     _count = count;
     if (_count <= 0) {
+        self.image = [UIImage imageNamed:@"noStoreAnnotation"];
+
         return;
     }
     if(_count == 1){//非聚合网点标注
@@ -116,7 +118,7 @@ CGFloat ScaledValueForValue(CGFloat value)
         }
         
     }else{//聚合网点标注
-        self.image = [UIImage imageNamed:@"hasStoreAnnotation"];
+        self.image = [UIImage imageNamed:@"hasStoreAnnotation_selected"];
 
     }
     self.countLabel.text = [NSString stringWithFormat:@"%ld",count];
