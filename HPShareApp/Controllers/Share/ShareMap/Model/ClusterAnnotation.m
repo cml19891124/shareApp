@@ -41,23 +41,9 @@
     {
         _coordinate = coordinate;
         _count = count;
-        _pois  = [NSMutableArray arrayWithCapacity:0];
+        _pois  = [NSMutableArray arrayWithCapacity:count];
     }
     return self;
 }
 
-+ (NSArray *)annotationArrayWithModels:(NSArray<HPShareListModel *> *)models {
-    NSMutableArray *storesArray = [[NSMutableArray alloc] init];
-    for (int i = 0; i < models.count; i++) {
-        HPShareListModel *model = models[i];
-        
-        if (model.latitude || model.longitude) {
-            continue;
-        }
-        ClusterAnnotation *annotation = [[ClusterAnnotation alloc] initWithModel:model];
-        [annotation setIndex:i];
-        [storesArray addObject:annotation];
-    }
-    return storesArray;
-}
 @end

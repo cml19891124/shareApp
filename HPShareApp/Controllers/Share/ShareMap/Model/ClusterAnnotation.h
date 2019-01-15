@@ -24,5 +24,4 @@
 
 - (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate count:(NSInteger)count;
 
-+ (NSArray *)annotationArrayWithModels:(NSArray<HPShareListModel *> *)models;
 @end

@@ -10,8 +10,8 @@
 #import <AMapSearchKit/AMapCommonObj.h>
 #import "CoordinateQuadTree.h"
 #import "ClusterAnnotation.h"
-#import "HPShareAnnotation.h"
-QuadTreeNodeData QuadTreeNodeDataForAMapPOI(HPShareAnnotation* poi)
+#import "ClusterAnnotation.h"
+QuadTreeNodeData QuadTreeNodeDataForAMapPOI(ClusterAnnotation* poi)
 {
     return QuadTreeNodeDataMake(poi.coordinate.latitude, poi.coordinate.longitude, (__bridge_retained void *)(poi));
 }
@@ -57,11 +57,11 @@ float CellSizeForZoomLevel(double zoomLevel)
 BoundingBox quadTreeNodeDataArrayForPOIs(QuadTreeNodeData *dataArray, NSArray * pois)
 {
     if (pois.count != 0) {
-        CLLocationDegrees minX = ((HPShareAnnotation *)pois[0]).coordinate.latitude;
-        CLLocationDegrees maxX = ((HPShareAnnotation *)pois[0]).coordinate.latitude;
+        CLLocationDegrees minX = ((ClusterAnnotation *)pois[0]).coordinate.latitude;
+        CLLocationDegrees maxX = ((ClusterAnnotation *)pois[0]).coordinate.latitude;
         
-        CLLocationDegrees minY = ((HPShareAnnotation *)pois[0]).coordinate.longitude;
-        CLLocationDegrees maxY = ((HPShareAnnotation *)pois[0]).coordinate.longitude;
+        CLLocationDegrees minY = ((ClusterAnnotation *)pois[0]).coordinate.longitude;
+        CLLocationDegrees maxY = ((ClusterAnnotation *)pois[0]).coordinate.longitude;
         for (NSInteger i = 0; i < [pois count]; i++)
         {
             dataArray[i] = QuadTreeNodeDataForAMapPOI(pois[i]);
@@ -129,7 +129,7 @@ BoundingBox quadTreeNodeDataArrayForPOIs(QuadTreeNodeData *dataArray, NSArray * 
                                           totalY += data.y;
                                           count++;
                                           
-                                          [pois addObject:(__bridge HPShareAnnotation *)data.data];
+                                          [pois addObject:(__bridge ClusterAnnotation *)data.data];
                                           
                                       });
             
@@ -137,10 +137,10 @@ BoundingBox quadTreeNodeDataArrayForPOIs(QuadTreeNodeData *dataArray, NSArray * 
             if (count == 1)
             {
                 CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(totalX, totalY);
-                ClusterAnnotation *annotation = [[ClusterAnnotation alloc] initWithCoordinate:coordinate count:count];
-                annotation.pois = pois;
-                HPShareAnnotation * shareAnnotation = [pois lastObject];
-                annotation.title = shareAnnotation.title;
+                ClusterAnnotation *clusterAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:coordinate count:count];
+                clusterAnnotation.pois = pois;
+                ClusterAnnotation * annotation = [pois lastObject];
+                annotation.title = annotation.title;
 //                annotation.type  = poi.type;
 ////                annotation.numb = poi.numb;
                 [clusteredAnnotations addObject:annotation];

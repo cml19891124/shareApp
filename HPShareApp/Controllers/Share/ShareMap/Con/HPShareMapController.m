@@ -23,12 +23,19 @@
 #import "CoordinateQuadTree.h"
 #import "ClusterAnnotationView.h"
 
+#import "CustomCalloutView.h"
+
+#define kCalloutViewMargin  -12
+#define Button_Height       70.0
 
 #define CELL_ID @"HPShareListCell"
 
-@interface HPShareMapController () <UITableViewDelegate, UITableViewDataSource, MAMapViewDelegate, AMapSearchDelegate,UIGestureRecognizerDelegate>
+@interface HPShareMapController () <UITableViewDelegate, UITableViewDataSource, MAMapViewDelegate, AMapSearchDelegate,UIGestureRecognizerDelegate,CustomCalloutViewTapDelegate>
 
 @property (nonatomic, weak) MAMapView *mapView;
+
+@property (nonatomic, strong) CustomCalloutView *customCalloutView;
+
 
 @property (nonatomic, strong) AMapLocationManager *locationManager;
 
@@ -63,11 +70,31 @@
 @property (nonatomic, strong) CoordinateQuadTree *coordinateQuadTree;
 @property (nonatomic, assign) BOOL shouldRegionChangeReCalculate;
 
-@property(nonatomic,strong) ClusterAnnotation * selectedNetPointModel;//选中店铺模型
+@property (nonatomic,strong) HPShareListModel * selectedPoiModel;//选中店铺模型
 
+@property (nonatomic, strong) NSMutableArray *selectedPoiArray;
 @end
 
 @implementation HPShareMapController
+
+- (CustomCalloutView *)customCalloutView
+{
+    if (!_customCalloutView) {
+        _customCalloutView = [CustomCalloutView new];
+    }
+    return _customCalloutView;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if (self.isPop) {//从详情列表页返回时重新加载地图数据，避免返回时地图空空如也
+        [self getShareListData:_shareListParam reload:YES];
+    }else{
+
+    }
+
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -75,7 +102,7 @@
     [AMapServices sharedServices].enableHTTPS = YES;
     _dataArray = [[NSMutableArray alloc] init];
     _shareListParam = [HPShareListParam new];
-    
+    _selectedPoiArray = [NSMutableArray array];
     [self configLocationManager];
     [self configSearchAPI];
     [self setupUI];
@@ -88,8 +115,9 @@
     MAMapView *mapView = [[MAMapView alloc] init];
     mapView.showsUserLocation = YES;
     mapView.userTrackingMode = MAUserTrackingModeFollow;
-    mapView.zoomLevel = 15.f;
+    mapView.zoomLevel = 18.f;
     [mapView setDelegate:self];
+
     [self.view addSubview:mapView];
     _mapView = mapView;
     [mapView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -418,22 +446,10 @@
         [self setCount:self.dataArray.count];
         [self.tableView reloadData];
         [self.mapView removeAnnotations:self.mapView.annotations];
-        self.annotations = [ClusterAnnotation annotationArrayWithModels:models];
+        
 //        [self.mapView addAnnotations:annotations];
         [self creatAnnotation];
-        if (self.annotations.count != 0) {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                /* 建立四叉树. */
-                if (self.coordinateQuadTree == nil) {
-                self.coordinateQuadTree = [[CoordinateQuadTree alloc] init];
-                }
-                [self.coordinateQuadTree buildTreeWithPOIs:self.annotations];
-                self.shouldRegionChangeReCalculate = YES;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self addAnnotationsToMapView:self.mapView];
-                });
-            });
-        }
+        
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
     }];
@@ -449,9 +465,15 @@
     HPLog(@"title:%@",annotation.title);
     if ([annotation isKindOfClass:ClusterAnnotation.class]) {
         ClusterAnnotationView *annotationView = [[ClusterAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
+        
+        /* 设置annotationView的属性. */
         annotationView.annotation = annotation;
-        int i = rand() % 5;
-        annotationView.count = i;
+        annotationView.count = [(ClusterAnnotation *)annotation count];
+        
+        /* 不弹出原生annotation */
+        annotationView.canShowCallout = NO;
+//        int i = rand() % 5;
+//        annotationView.count = 1;
         UITapGestureRecognizer *pan = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(recognizer:)];
         pan.delegate = self;
         [annotationView addGestureRecognizer:pan];
@@ -479,21 +501,38 @@
 }
 
 - (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view {
-    [view setSelected:YES];
-    if ([view isKindOfClass:HPShareAnnotationView.class]) {
-        ClusterAnnotation *shareAnnotation = (ClusterAnnotation *)view.annotation;
-        
+
+        ClusterAnnotation *annotation = (ClusterAnnotation *)view.annotation;
+    
+    HPShareListModel *model = annotation.pois[0];
+    for (HPShareListModel *poi in annotation.pois)
+    {
+        [self.selectedPoiArray addObject:poi];
+    }
+    
+    [self.customCalloutView setPoiArray:self.selectedPoiArray];
+    self.customCalloutView.delegate = self;
+    
+    // 调整位置
+    //            self.customCalloutView.center = CGPointMake(kScreenWidth/2, kScreenHeight/2 - kCalloutViewMargin);
+    [self.mapView setCenterCoordinate:CLLocationCoordinate2DMake(model.longitude, model.latitude) animated:YES];
+    self.customCalloutView.center = self.mapView.center;
+    view.calloutOffset = CGPointMake(0, kCalloutViewMargin);
+    [view addSubview:self.customCalloutView];
+    
         [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
         [self.mapView setZoomLevel:18.f animated:YES];
         [self showDataView:YES];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:shareAnnotation.index inSection:0];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:annotation.index inSection:0];
         [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-        
-    }
 }
 
 - (void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view {
-    [view setSelected:NO];
+//    [view setSelected:NO];
+    
+    [self.selectedPoiArray removeAllObjects];
+    [self.customCalloutView dismissCalloutView];
+    self.customCalloutView.delegate = nil;
 }
 
 - (void)mapView:(MAMapView *)mapView mapDidMoveByUser:(BOOL)wasUserAction {
@@ -517,17 +556,32 @@
 #pragma mark -- 创建店铺标注
 - (void)creatAnnotation {
     self.annoArray = [NSMutableArray array];
+    
     for (int i = 0; i < self.dataArray.count; i++) {
         //创建大头针对象
         HPShareListModel *model = self.dataArray[i];
-        _pointAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:CLLocationCoordinate2DMake(model.latitude, model.longitude) count:self.annotations.count];
-
-//        _pointAnnotation.count = i ;
+        _pointAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:CLLocationCoordinate2DMake(model.latitude, model.longitude) count:0];
         _pointAnnotation.pois = [NSMutableArray arrayWithObject:model];;
         _pointAnnotation.title = model.title;
         [self.annoArray addObject:_pointAnnotation];
 
     }
+    
+    if (self.annoArray.count != 0) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            /* 建立四叉树. */
+            
+            self.coordinateQuadTree = [[CoordinateQuadTree alloc] init];
+            
+            [self.coordinateQuadTree buildTreeWithPOIs:self.annoArray];
+            self.shouldRegionChangeReCalculate = YES;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //点聚合
+                [self addAnnotationsToMapView:self.mapView];
+            });
+        });
+    }
+    
     [self.mapView addAnnotations:self.annoArray];
 
     [self.mapView showAnnotations:self.mapView.annotations animated:YES];
@@ -555,43 +609,6 @@
 {
     if(annotations.count == 0){
         return;
-    }
-    
-    //判断是否是已经选中的标注，设置选中状态，更新标注图片状态
-    NSMutableArray * currentAnnotationArray = [NSMutableArray arrayWithArray:self.mapView.annotations];
-    BOOL flag = YES;
-    
-    for(int i=0;i<currentAnnotationArray.count;i++){
-        
-        id  anno = currentAnnotationArray[i];
-        if([anno isKindOfClass:[ClusterAnnotation class]]){
-            
-            ClusterAnnotation * cluAn = (ClusterAnnotation *)anno;
-            
-            ClusterAnnotation  *  netPointModel = currentAnnotationArray[i];//cluAn.pois[0];
-            
-            if([netPointModel.model.spaceId isEqualToString:self.selectedNetPointModel.model.spaceId]){
-                netPointModel.selected = YES;
-                [self.mapView removeAnnotation:cluAn];
-                [self.mapView addAnnotation:cluAn];
-                flag  = NO;
-            }else{
-                if(netPointModel.selected){//上一次选中的网点
-                    netPointModel.selected = NO;
-                    [self.mapView removeAnnotation:cluAn];
-                    [self.mapView addAnnotation:cluAn];
-                    flag  = NO;
-                }
-                
-                //保证必有一个网点更新，一次来调用代理方法
-                if(flag){
-                    [self.mapView removeAnnotation:cluAn];
-                    [self.mapView addAnnotation:cluAn];
-                    flag  = NO;
-                }
-            }
-        }
-        
     }
     
     /* 用户滑动时，保留仍然可用的标注，去除屏幕外标注，添加新增区域的标注 */
@@ -623,25 +640,44 @@
 #pragma  mark - 点击店铺标注事件
 
 - (void)recognizer:(UIPanGestureRecognizer *)ger {
-    HPShareAnnotationView *view = (HPShareAnnotationView *)ger.view;
+    ClusterAnnotationView *view = (ClusterAnnotationView *)ger.view;
     if ([view.annotation isKindOfClass:[MAUserLocation class]]) {//用户位置点
         
     } else {
         ClusterAnnotation *annotation = (ClusterAnnotation *)view.annotation;
-        if (annotation.count == 1) {
+        if (annotation.count <= 1) {//pois数组里只有一个元素，所以下面可以直接取第一个元素
             //非聚合网点
-            ClusterAnnotation * model = annotation;
-            if(self.selectedNetPointModel != model){
+            HPShareListModel * model = annotation.pois[0];
+            if(self.selectedPoiModel != model){
                 [self setupSelectNetPointWithModel:model];
             }
             
+            [self.selectedPoiArray addObject:model];
+            
+            [self.customCalloutView setPoiArray:self.selectedPoiArray];
+            self.customCalloutView.delegate = self;
+            
+            // 调整位置
+            self.customCalloutView.center = CGPointMake(kScreenWidth/2, kScreenHeight/2 - kCalloutViewMargin);
+//            [self.mapView setCenterCoordinate:CLLocationCoordinate2DMake(model.longitude, model.latitude) animated:YES];
+            self.customCalloutView.center = self.mapView.center;
+            view.calloutOffset = CGPointMake(0, kCalloutViewMargin);
+            [view addSubview:self.customCalloutView];
+            
         } else {
-            for (int i = 0; i < annotation.count; i++) {
-                ClusterAnnotation * model = annotation;
-                if(self.selectedNetPointModel != model){
-                    [self setupSelectNetPointWithModel:model];
-                }
-            }
+            
+//            for (HPShareListModel *poi in annotation.pois)
+//            {
+//                [self.selectedPoiArray addObject:poi];
+//            }
+//            
+//            [self.customCalloutView setPoiArray:self.selectedPoiArray];
+//            self.customCalloutView.delegate = self;
+//            
+//            // 调整位置
+//            self.customCalloutView.center = self.mapView.center;
+//            view.calloutOffset = CGPointMake(0, kCalloutViewMargin);
+//            [view addSubview:self.customCalloutView];
             
             //点击聚合网点 地图缩放
             [self.mapView setRegion:MACoordinateRegionMake(annotation.coordinate, MACoordinateSpanMake(self.mapView.region.span.latitudeDelta/2, self.mapView.region.span.longitudeDelta/2)) animated:YES];
@@ -649,17 +685,20 @@
     }
 }
 
-#pragma mark - 传入店铺标注模型，设置地图选中此网点效果，包括路径规划等
-- (void)setupSelectNetPointWithModel:(ClusterAnnotation *)annotation{
+#pragma mark - 传入店铺标注模型，设置地图选中此点效果，包括路径规划等
+- (void)setupSelectNetPointWithModel:(HPShareListModel *)model{
     
-    if(!annotation){
+    if(!model){
         return;
     }
     
-    annotation.selected = YES;
-    self.selectedNetPointModel = annotation;
-    [self.mapView addAnnotation:annotation];
-    [self addAnnotationsToMapView:self.mapView];
+    model.selected = YES;
+    self.selectedPoiModel = model;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //点聚合
+        [self addAnnotationsToMapView:self.mapView];
+    });
+
 }
 
 - (void)mapView:(MAMapView *)mapView didAddAnnotationViews:(NSArray *)views
@@ -689,6 +728,12 @@
     bounceAnimation.removedOnCompletion = NO;
     
     [view.layer addAnimation:bounceAnimation forKey:@"bounce"];
+}
+
+#pragma mark - 呼出框代理事件
+- (void)didDetailButtonTapped:(NSInteger)index {
+    HPShareListModel *poi = self.selectedPoiArray[index];
+    [self pushVCByClassName:@"HPPoiDetailViewController" withParam:@{@"poi":poi}];
 }
 
 @end

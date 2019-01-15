@@ -38,22 +38,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HPShareApp/Controllers/Share/ShareMap/Con/HPShareMapController.m"
-            timestampString = "569161448.277519"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "418"
-            endingLineNumber = "418"
-            landmarkName = "-getShareListData:reload:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -73,40 +57,8 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "HPShareApp/Controllers/Share/ShareMap/Con/HPShareMapController.m"
-            timestampString = "569161448.278016"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "531"
-            endingLineNumber = "531"
-            landmarkName = "-creatAnnotation"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HPShareApp/Controllers/Share/ShareMap/Con/HPShareMapController.m"
-            timestampString = "569161448.278338"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "401"
-            endingLineNumber = "401"
-            landmarkName = "-getShareListData:reload:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/Share/ShareMap/View/HPAnnotation/ClusterAnnotation.m"
-            timestampString = "569161448.278617"
+            timestampString = "569227155.746895"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "43"
@@ -122,12 +74,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/Share/ShareMap/Con/HPShareMapController.m"
-            timestampString = "569161448.2786781"
+            timestampString = "569240242.751848"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "534"
-            endingLineNumber = "534"
-            landmarkName = "-creatAnnotation"
+            startingLineNumber = "682"
+            endingLineNumber = "682"
+            landmarkName = "-recognizer:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -138,12 +90,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/Share/ShareMap/Con/HPShareMapController.m"
-            timestampString = "569161448.278944"
+            timestampString = "569240242.752182"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "450"
-            endingLineNumber = "450"
-            landmarkName = "-mapView:viewForAnnotation:"
+            startingLineNumber = "643"
+            endingLineNumber = "643"
+            landmarkName = "-recognizer:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "HPShareApp/Controllers/Share/ShareMap/Con/HPShareMapController.m"
+            timestampString = "569240242.752398"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "504"
+            endingLineNumber = "504"
+            landmarkName = "-mapView:didSelectAnnotationView:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

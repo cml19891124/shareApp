@@ -32,7 +32,6 @@
         //获取本地版本号
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-//        NSString *build = [infoDictionary objectForKey:@"CFBundleVersion"];
         NSString *newVersion = [NSString stringWithFormat:@"%@", version];
         NSArray *currentVersionArr = [newVersion componentsSeparatedByString:@"."];
         NSString *currentVersion =@"";
@@ -113,48 +112,6 @@
     }
     return YES;
 }
-/*
-#pragma mark - UNUserNotificationCenterDelegate
-//iOS10新增：处理前台收到通知的代理方法
-
--(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler API_AVAILABLE(ios(10.0)){
-    
-    NSDictionary * userInfo = notification.request.content.userInfo;
-    
-    if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {//应用处于前台时的远程推送接受
-        
-    } else {//应用处于前台时的本地推送接受
-            
-        completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge);//
-            
-    }
-    
-}
-//- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler API_AVAILABLE(ios(10.0)){
-//    
-//    if (@available(iOS 10.0, *)) {
-//        
-//        UNNotificationContent *content = response.notification.request.content;
-//        
-//        // 如果在上面的通知方法中设置了一些，可以在这里打印额外信息的内容，就做到监听，也就可以根据额外信息，做出相应的判断
-//        
-//        NSData *data = [content.userInfo objectForKey:@"userInfo"];
-//        
-//        NSString *type = [content.userInfo objectForKey:@"type"];
-//        
-//        NSUInteger c = [type integerValue];
-//        
-//        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//        
-////        [app processNotificationData:c data:data];
-//        
-//        } else {
-//            
-//            // Fallback on earlier versions
-//            
-//        }
-//    
-//}*/
 
 - (void)configureAMapKey {
     if ([AMAP_KEY length] == 0)
