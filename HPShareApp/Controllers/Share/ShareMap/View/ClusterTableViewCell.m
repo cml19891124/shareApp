@@ -23,7 +23,7 @@
         UIImage *tappedImage = [self createImageWithColor:[UIColor colorWithWhite:0.667 alpha:0.3] andSize:self.tapBtn.frame.size];
         [self.tapBtn setBackgroundImage:tappedImage forState:UIControlStateHighlighted];
     
-        [self addSubview:self.tapBtn];
+        [self.contentView addSubview:self.tapBtn];
     }
     
     return self;

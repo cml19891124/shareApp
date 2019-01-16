@@ -15,6 +15,7 @@
 #import "HPSearchBar.h"
 #import "HPShareListParam.h"
 #import "HPCommonData.h"
+#import "HPHomeBannerModel.h"
 
 #define slideRatio fabs(y/71.0f)
 
@@ -35,6 +36,8 @@ typedef NS_ENUM(NSInteger, HPDisplaycellIndexpath) {
 @property (nonatomic, strong) UILabel *appNameLabel;
 
 @property (nonatomic, assign) BOOL isExpaned;
+
+@property (strong, nonatomic) NSMutableArray *bannerImageArr;
 
 /**
  searchBar 所属父视图
@@ -94,7 +97,7 @@ static NSString *shareListCell = @"shareListCell";
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     self.navigationController.navigationBar.translucent = NO;
-    
+    self.bannerImageArr = [NSMutableArray array];
     if (self.isPop) {
         self.isPop = NO;
     }
@@ -203,7 +206,6 @@ static NSString *shareListCell = @"shareListCell";
 
 -(UIView *)createHeaderView {
     self.headerView = [[UIView alloc] init];
-//    self.headerView.backgroundColor = [UIColor redColor];
     return  self.headerView;
     
 }
@@ -290,7 +292,6 @@ static NSString *shareListCell = @"shareListCell";
     HPTopMenuItemCell *cell = [tableView dequeueReusableCellWithIdentifier:topMenuItemCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     HPLoginModel *account = [HPUserTool account];
-    
 //    kWeakSelf(weakSlef);
     [cell setClickMenuItemBlock:^(NSInteger HPHomeShareMenuItem) {
         switch (HPHomeShareMenuItem) {

@@ -127,6 +127,27 @@ CGFloat ScaledValueForValue(CGFloat value)
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
-    
+    [super setSelected:selected animated:animated];
+}
+
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+{
+    NSArray *subViews = self.subviews;
+    if ([subViews count] > 1)
+    {
+        for (UIView *aSubView in subViews)
+        {
+            if ([aSubView pointInside:[self convertPoint:point toView:aSubView] withEvent:event])
+            {
+                return YES;
+            }
+        }
+    }
+    if (point.x > 0 && point.x < self.frame.size.width && point.y > 0 && point.y < self.frame.size.height)
+    {
+        return YES;
+    }
+    return NO;
 }
 @end

@@ -16,6 +16,7 @@
 #import "HPTextDialogView.h"
 #import "HPGuideViewController.h"
 #import "HPCommonData.h"
+#import "Bugly/Bugly.h"
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate>
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
@@ -92,6 +93,7 @@
     //极光
     [AppDelegate setUpJPushConfigWithOptions:launchOptions];
     
+     [Bugly startWithAppId:kAppleId];
     [self updateAppVersionInfo];
     [HPGlobalVariable initVariable];
     [HPCommonData getAreaData];

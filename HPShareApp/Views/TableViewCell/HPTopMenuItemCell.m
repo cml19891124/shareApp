@@ -8,6 +8,7 @@
 
 #import "HPTopMenuItemCell.h"
 #import "HPMenuCellbutton.h"
+#import "HPHomeBannerModel.h"
 
 @implementation HPTopMenuItemCell
 
@@ -25,14 +26,15 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        NSArray *bannerImageArr = @[ImageNamed(@"home_page_banner"),ImageNamed(@"home_page_banner"),ImageNamed(@"home_page_banner")];
         self.bannerImageArr = [NSMutableArray array];
-        [self.bannerImageArr addObjectsFromArray:bannerImageArr];
-        [self setUpTopMenuSubviews];
-        [self setUpCellSubviewsFrame];
+//        [self.bannerImageArr addObjectsFromArray:bannerImageArr];
+        [self getHomeBannerDataList];
+        
+
     }
     return self;
 }
+
 
 - (void)setUpTopMenuSubviews
 {
@@ -45,12 +47,6 @@
 
 - (void)setUpCellSubviewsFrame
 {
-    
-//    [self.bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.size.mas_equalTo(CGSizeMake(getWidth(325.f), getWidth(150.f)));
-//        make.centerX.mas_equalTo(self);
-//        make.top.mas_equalTo(getWidth(10.f));
-//    }];
     
     [self.iCarousel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(self);
@@ -82,7 +78,19 @@
 {
     if (!_iCarousel) {
         _iCarousel = [[HPBannerView alloc] init];
-        [_iCarousel setImages:self.bannerImageArr];
+        if (self.bannerImageArr && self.bannerImageArr.count) {
+            if (self.bannerImageArr.count == 1) {
+                [_iCarousel pauseAutoScroll];
+            }
+            [_iCarousel setImages:self.bannerImageArr];
+
+        }else{
+            NSArray *bannerImageArr = @[ImageNamed(@"home_page_banner"),ImageNamed(@"home_page_banner"),ImageNamed(@"home_page_banner")];
+
+            [_iCarousel setImages:bannerImageArr];
+
+        }
+        
         [_iCarousel setImageContentMode:UIViewContentModeScaleToFill];
         [_iCarousel setPageSpace:getWidth(15.f)];//space + width = 每次滑动到距离
         [_iCarousel setPageMarginLeft:getWidth(25.f)];//距离屏幕左边的宽度
@@ -104,6 +112,20 @@
     }
     return _pageControl;
 }
+
+-(UIImage *) getImageFromURL:(NSString *)fileURL
+{
+    
+    UIImage * result;
+    
+    NSData * data = [NSData dataWithContentsOfURL:[NSURL URLWithString:fileURL]];
+    
+    result = [UIImage imageWithData:data];
+    
+    return result;
+    
+}
+
 - (void)setUpMenuButtonViews
 {
     NSArray *menuImageArr = @[@"home_page_store_ sharing",@"home_page_lobby_ sharing",@"home_page_other_sharing",@"home_page_map",@"home_page_stock_purchase",@"home_page_shelf_rental",@"home_page_used_shelves",@"home_page_new_store_opens"];
@@ -137,6 +159,45 @@
 
 - (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
     [_pageControl setCurrentPage:index];
+}
+
+
+
+- (void)getHomeBannerDataList
+{
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/banner/list" isNeedToken:YES paraments:@{@"size":@(5)} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            NSArray *bannerImageArr = [HPHomeBannerModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+            for (int i = 0;i < bannerImageArr.count;i++) {
+                HPHomeBannerModel *model = bannerImageArr[i];
+                if ([model.imgUrl containsString:@"http"]) {
+                    UIImage *image = [self getImageFromURL:model.imgUrl];
+                    if (image) {
+                        [self.bannerImageArr addObject:image];
+                    }else{
+                        [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
+                    }
+
+                }else{//用本地图片 替换并填充
+                    [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
+
+                }
+                if (self.bannerImageArr.count <= 1) {//用本地图片填充两张
+                    [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
+                    [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
+
+                }
+            }
+            
+            [self setUpTopMenuSubviews];
+            [self setUpCellSubviewsFrame];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+    
 }
 
 @end

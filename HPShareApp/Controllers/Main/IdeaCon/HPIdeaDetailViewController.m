@@ -29,13 +29,14 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = COLOR_GRAY_FFFFFF;
     _navTitleView = [self setupNavigationBarWithTitle:@"文章详情"];
+    
+    [self setUpSubviewsUI];
+    [self setUpSubviewsUIMasonry];
+    
     [HPProgressHUD alertWithLoadingText:@"加载数据中..."];
 
     //获取文章详情信息
     [self richQueryDetailInfo];
-    
-    [self setUpSubviewsUI];
-    [self setUpSubviewsUIMasonry];
 
 }
 
@@ -70,11 +71,30 @@
                                                                  NSHTMLTextDocumentType
                                                              }
                                                    documentAttributes:nil error:nil];
-//            HPLog(@"员额还给你-----:%@",self.model.context);
             
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.alignment = NSTextAlignmentCenter;
+            [attrStr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attrStr.length)];
+            
+            [attrStr enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, attrStr.length) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(id  _Nullable value, NSRange range, BOOL * _Nonnull stop) {
+                if (value && [value isKindOfClass:[NSTextAttachment class]]) {
+                    NSTextAttachment *textAttachment = value;
+                    CGFloat width = CGRectGetWidth(textAttachment.bounds);
+                    CGFloat height = CGRectGetHeight(textAttachment.bounds);
+                    if (width > kScreenWidth) {// 大于屏幕宽度时，缩小bounds宽度，高度
+                        height = (kScreenWidth - 20) / width * height;
+                        width = kScreenWidth - 20;
+                        textAttachment.bounds = CGRectMake((kScreenWidth - width)/2, 0, width, height);
+                    }
+                    
+                }
+            }];
+            
+//            HPLog(@"员额还给你-----:%@",self.model.context);
 //            HPLog(@"string-----:%@",attrStr.string);
 
             self.contentView.attributedText = attrStr;
+            
             [HPProgressHUD alertWithFinishText:@"加载完成"];
         }else{
             [HPProgressHUD alertMessage:MSG];

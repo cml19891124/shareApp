@@ -292,6 +292,7 @@ static NSString *headerCell = @"headerCell";
     if (indexPath.section == 1) {
         HPIdeaListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         if (cell) {
+
             [self pushVCByClassName:@"HPIdeaDetailViewController" withParam:@{@"model":model?:@1}];
         }
     }

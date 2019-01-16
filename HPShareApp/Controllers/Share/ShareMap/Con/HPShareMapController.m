@@ -35,6 +35,7 @@
 @property (nonatomic, weak) MAMapView *mapView;
 
 @property (nonatomic, strong) CustomCalloutView *customCalloutView;
+@property (nonatomic, strong) MAPointAnnotation *centerPoint;
 
 
 @property (nonatomic, strong) AMapLocationManager *locationManager;
@@ -81,6 +82,7 @@
 {
     if (!_customCalloutView) {
         _customCalloutView = [CustomCalloutView new];
+        _customCalloutView.delegate = self;
     }
     return _customCalloutView;
 }
@@ -109,15 +111,37 @@
     [self requestLocationIfNeedData:YES];
 }
 
+
+- (MAPointAnnotation *)centerPoint
+{
+    if (!_centerPoint)
+    {
+        _centerPoint = [[MAPointAnnotation alloc] init];
+        _centerPoint.coordinate = self.mapView.userLocation.location.coordinate;
+        _centerPoint.lockedToScreen = YES;
+        _centerPoint.lockedScreenPoint = CGPointMake(kScreenWidth * 0.5, (kScreenHeight - g_statusBarHeight - 44.f) * 0.5);
+    }
+    return _centerPoint;
+}
+
 - (void)setupUI {
     UIView *navigationView = [self setupNavigationBarWithTitle:@"共享地图"];
     
     MAMapView *mapView = [[MAMapView alloc] init];
     mapView.showsUserLocation = YES;
     mapView.userTrackingMode = MAUserTrackingModeFollow;
-    mapView.zoomLevel = 18.f;
-    [mapView setDelegate:self];
+//    double zoomScale = self.mapView.bounds.size.width / self.mapView.visibleMapRect.size.width;
 
+    mapView.zoomLevel = 15.f;
+    [mapView setDelegate:self];
+    
+    MAUserLocationRepresentation *UserLocationRep = [[MAUserLocationRepresentation alloc] init];
+    UserLocationRep.showsAccuracyRing = NO;///精度圈是否显示，默认YES
+    [mapView updateUserLocationRepresentation:UserLocationRep];
+
+    //添加屏幕中心点
+    [mapView addAnnotation:self.centerPoint];
+    
     [self.view addSubview:mapView];
     _mapView = mapView;
     [mapView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -474,6 +498,7 @@
         annotationView.canShowCallout = NO;
 //        int i = rand() % 5;
 //        annotationView.count = 1;
+        
         UITapGestureRecognizer *pan = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(recognizer:)];
         pan.delegate = self;
         [annotationView addGestureRecognizer:pan];
@@ -501,34 +526,18 @@
 }
 
 - (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view {
+//    [view setSelected:YES];
 
-        ClusterAnnotation *annotation = (ClusterAnnotation *)view.annotation;
+    ClusterAnnotation *annotation = (ClusterAnnotation *)view.annotation;
+    [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
+    [self.mapView setZoomLevel:18.f animated:YES];
+    [self showDataView:YES];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:annotation.index inSection:0];
+    [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
-    HPShareListModel *model = annotation.pois[0];
-    for (HPShareListModel *poi in annotation.pois)
-    {
-        [self.selectedPoiArray addObject:poi];
-    }
-    
-    [self.customCalloutView setPoiArray:self.selectedPoiArray];
-    self.customCalloutView.delegate = self;
-    
-    // 调整位置
-    //            self.customCalloutView.center = CGPointMake(kScreenWidth/2, kScreenHeight/2 - kCalloutViewMargin);
-    [self.mapView setCenterCoordinate:CLLocationCoordinate2DMake(model.longitude, model.latitude) animated:YES];
-    self.customCalloutView.center = self.mapView.center;
-    view.calloutOffset = CGPointMake(0, kCalloutViewMargin);
-    [view addSubview:self.customCalloutView];
-    
-        [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
-        [self.mapView setZoomLevel:18.f animated:YES];
-        [self showDataView:YES];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:annotation.index inSection:0];
-        [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 - (void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view {
-//    [view setSelected:NO];
     
     [self.selectedPoiArray removeAllObjects];
     [self.customCalloutView dismissCalloutView];
@@ -552,6 +561,11 @@
     });
 }
 
+- (void)mapView:(MAMapView *)mapView mapDidZoomByUser:(BOOL)wasUserAction
+{
+//    [self.mapView setMinZoomLevel:10];
+//    [self.mapView setMaxZoomLevel:16];
+}
 
 #pragma mark -- 创建店铺标注
 - (void)creatAnnotation {
@@ -640,7 +654,11 @@
 #pragma  mark - 点击店铺标注事件
 
 - (void)recognizer:(UIPanGestureRecognizer *)ger {
+    
+    self.customCalloutView = [[CustomCalloutView alloc] init];
+    
     ClusterAnnotationView *view = (ClusterAnnotationView *)ger.view;
+    [view setSelected:YES];
     if ([view.annotation isKindOfClass:[MAUserLocation class]]) {//用户位置点
         
     } else {
@@ -652,33 +670,33 @@
                 [self setupSelectNetPointWithModel:model];
             }
             
-            [self.selectedPoiArray addObject:model];
-            
+            for (HPShareListModel *poi in annotation.pois)
+            {
+                [self.selectedPoiArray addObject:poi];
+            }
             [self.customCalloutView setPoiArray:self.selectedPoiArray];
-            self.customCalloutView.delegate = self;
             
             // 调整位置
-            self.customCalloutView.center = CGPointMake(kScreenWidth/2, kScreenHeight/2 - kCalloutViewMargin);
-//            [self.mapView setCenterCoordinate:CLLocationCoordinate2DMake(model.longitude, model.latitude) animated:YES];
-            self.customCalloutView.center = self.mapView.center;
-            view.calloutOffset = CGPointMake(0, kCalloutViewMargin);
+            self.customCalloutView.center = CGPointMake(CGRectGetMidX(view.bounds), -CGRectGetMidY(self.customCalloutView.bounds) - CGRectGetMidY(view.bounds) - kCalloutViewMargin);
+            self.customCalloutView.delegate = self;
+            
             [view addSubview:self.customCalloutView];
             
         } else {
             
-//            for (HPShareListModel *poi in annotation.pois)
-//            {
-//                [self.selectedPoiArray addObject:poi];
-//            }
-//            
-//            [self.customCalloutView setPoiArray:self.selectedPoiArray];
-//            self.customCalloutView.delegate = self;
-//            
-//            // 调整位置
-//            self.customCalloutView.center = self.mapView.center;
-//            view.calloutOffset = CGPointMake(0, kCalloutViewMargin);
-//            [view addSubview:self.customCalloutView];
+            for (ClusterAnnotation *poi in annotation.pois)
+            {
+                [self.selectedPoiArray addObjectsFromArray:poi.pois];
+            }
             
+            [self.customCalloutView setPoiArray:self.selectedPoiArray];
+            self.customCalloutView.delegate = self;
+            ClusterAnnotation *annotation = (ClusterAnnotation *)view.annotation;
+            [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
+            // 调整位置
+            self.customCalloutView.center = CGPointMake(CGRectGetMidX(view.bounds), -CGRectGetMidY(self.customCalloutView.bounds) - CGRectGetMidY(view.bounds) - kCalloutViewMargin);
+            view.userInteractionEnabled = YES;
+            [view addSubview:self.customCalloutView];
             //点击聚合网点 地图缩放
             [self.mapView setRegion:MACoordinateRegionMake(annotation.coordinate, MACoordinateSpanMake(self.mapView.region.span.latitudeDelta/2, self.mapView.region.span.longitudeDelta/2)) animated:YES];
         }

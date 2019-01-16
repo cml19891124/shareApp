@@ -9,6 +9,7 @@
 #import "CustomCalloutView.h"
 #import "ClusterTableViewCell.h"
 #import "HPShareListModel.h"
+#import "ClusterAnnotation.h"
 
 const NSInteger kArrorHeight = 10;
 const NSInteger kCornerRadius = 6;
@@ -73,17 +74,12 @@ const NSInteger kCellHeight = 44;
                                            reuseIdentifier:identifier];
     }
 
-    HPShareListModel *poi = [self.poiArray objectAtIndex:indexPath.row];
-    cell.textLabel.text = poi.contact;
-    cell.detailTextLabel.text = poi.address;
-    
-//    [cell.tapBtn addTarget:self action:@selector(detailBtnTap:) forControlEvents:UIControlEventTouchUpInside];
-    
+    HPShareListModel *model = [self.poiArray objectAtIndex:indexPath.row];
+    cell.textLabel.text = model.contact;
+    cell.detailTextLabel.text = model.address;
     cell.tapBtn.tag = indexPath.row;
-    
-    if ([self.delegate respondsToSelector:@selector(didDetailButtonTapped:)]) {
-        [self.delegate didDetailButtonTapped:indexPath.row];
-    }
+    cell.tapBtn.userInteractionEnabled = YES;
+    [cell.tapBtn addTarget:self action:@selector(detailBtnTap:) forControlEvents:UIControlEventTouchUpInside];
     
     return cell;
 }
@@ -104,7 +100,7 @@ const NSInteger kCellHeight = 44;
 {
     [self drawInContext:UIGraphicsGetCurrentContext()];
     
-    self.layer.shadowColor = [[UIColor blackColor] CGColor];
+    self.layer.shadowColor = [COLOR_GRAY_999999 CGColor];
     self.layer.shadowOpacity = 1.0;
     self.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
 }

@@ -73,13 +73,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "HPShareApp/Controllers/Share/ShareMap/Con/HPShareMapController.m"
-            timestampString = "569240242.751848"
+            filePath = "HPShareApp/Views/TableViewCell/HPTopMenuItemCell.m"
+            timestampString = "569327064.161464"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "682"
-            endingLineNumber = "682"
-            landmarkName = "-recognizer:"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
+            landmarkName = "-iCarousel"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -90,27 +90,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/Share/ShareMap/Con/HPShareMapController.m"
-            timestampString = "569240242.752182"
+            timestampString = "569330288.3299119"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "643"
-            endingLineNumber = "643"
-            landmarkName = "-recognizer:"
+            startingLineNumber = "540"
+            endingLineNumber = "540"
+            landmarkName = "-mapView:didDeselectAnnotationView:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/Share/ShareMap/Con/HPShareMapController.m"
-            timestampString = "569240242.752398"
+            timestampString = "569330288.330223"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "504"
-            endingLineNumber = "504"
+            startingLineNumber = "529"
+            endingLineNumber = "529"
             landmarkName = "-mapView:didSelectAnnotationView:"
             landmarkType = "7">
          </BreakpointContent>

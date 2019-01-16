@@ -13,6 +13,7 @@ target 'HPShareApp' do
   pod 'MJRefresh', '~> 3.1.15.3'
   pod 'SDWebImage', '~> 4.4.1'
   pod 'JPush'
+  pod 'Bugly', '~> 2.5.0'
   use_frameworks!
   pod 'Charts'
 

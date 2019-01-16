@@ -21,6 +21,7 @@ PODS:
     - AMapFoundation (~> 1.4)
   - AMapSearch (6.1.1):
     - AMapFoundation (~> 1.4)
+  - Bugly (2.5.0)
   - Charts (3.1.1):
     - Charts/Core (= 3.1.1)
   - Charts/Core (3.1.1)
@@ -41,6 +42,7 @@ DEPENDENCIES:
   - AMap3DMap (~> 6.3.0)
   - AMapLocation
   - AMapSearch
+  - Bugly (~> 2.5.0)
   - Charts
   - JPush
   - Masonry
@@ -57,6 +59,7 @@ SPEC REPOS:
     - AMapFoundation
     - AMapLocation
     - AMapSearch
+    - Bugly
     - Charts
     - JCore
     - JPush
@@ -73,6 +76,7 @@ SPEC CHECKSUMS:
   AMapFoundation: 58f883c80754c659cf626deb3150936bfe8f1772
   AMapLocation: 55116a2c8956eab7550cbb56e989aa5cdcc424e3
   AMapSearch: 3dcbf85c403a2a0fe0eda5318caabc272b31f5e1
+  Bugly: 3ca9f255c01025582df26f9222893b383c7e4b4e
   Charts: 90a4d61da0f6e06684c591e3bcab11940fe61736
   JCore: b52e3dd73625eec70afd1244bb9c41038aa06087
   JPush: 48041e8c5ad2ef9b48709eb0888af9640b36e9b0
@@ -83,6 +87,6 @@ SPEC CHECKSUMS:
   SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   TZImagePickerController: bc25e933c9d970a622d052f0d4de16202bbcd863
 
-PODFILE CHECKSUM: 6558ea9b9cb524d23d2e4def6295a458d6ea9f8c
+PODFILE CHECKSUM: c2336a6164ee1949d76826e2fdba801aa4309402
 
 COCOAPODS: 1.5.3

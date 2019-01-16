@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HPBaseTableViewCell.h"
 
-@interface ClusterTableViewCell : UITableViewCell
+@interface ClusterTableViewCell : HPBaseTableViewCell
 
 @property (strong, nonatomic)  UIButton *tapBtn;
 

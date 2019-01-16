@@ -120,6 +120,7 @@
 		E629218A219AC19D00BEF16C /* HPMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292189219AC19D00BEF16C /* HPMainTabBarController.m */; };
 		E62C84D121C20CBA00D7DFB3 /* HPSignInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = E62C84D021C20CBA00D7DFB3 /* HPSignInfoController.m */; };
 		E62C84D421C28F1D00D7DFB3 /* HPInviteSBGiftsController.m in Sources */ = {isa = PBXBuildFile; fileRef = E62C84D321C28F1D00D7DFB3 /* HPInviteSBGiftsController.m */; };
+		E63C73F421EED2D7003D35E0 /* HPHomeBannerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E63C73F321EED2D7003D35E0 /* HPHomeBannerModel.m */; };
 		E64B727321D24DAC00DCA29A /* HPMenuCellbutton.m in Sources */ = {isa = PBXBuildFile; fileRef = E64B727221D24DAC00DCA29A /* HPMenuCellbutton.m */; };
 		E654C7DE21BFE58E0066C506 /* HPFansListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CDD21BFA0ED00593D25 /* HPFansListModel.m */; };
 		E654C7DF21BFE6160066C506 /* HPCollectListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CDB21BFA0ED00593D25 /* HPCollectListModel.m */; };
@@ -511,6 +512,8 @@
 		E636359021BFA105002F11DC /* HPPersonCenterModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPPersonCenterModel.m; sourceTree = "<group>"; };
 		E636359121BFA105002F11DC /* HPFansListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPFansListModel.m; sourceTree = "<group>"; };
 		E636359221BFA105002F11DC /* HPCollectListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPCollectListModel.m; sourceTree = "<group>"; };
+		E63C73F221EED2D7003D35E0 /* HPHomeBannerModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHomeBannerModel.h; sourceTree = "<group>"; };
+		E63C73F321EED2D7003D35E0 /* HPHomeBannerModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHomeBannerModel.m; sourceTree = "<group>"; };
 		E64B727121D24DAC00DCA29A /* HPMenuCellbutton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPMenuCellbutton.h; sourceTree = "<group>"; };
 		E64B727221D24DAC00DCA29A /* HPMenuCellbutton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPMenuCellbutton.m; sourceTree = "<group>"; };
 		E654C7DC21BFD6460066C506 /* HPMyCardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPMyCardController.m; sourceTree = "<group>"; };
@@ -1759,6 +1762,8 @@
 				E68C857021E9EDFB00AF259C /* HPIdeaListModel.m */,
 				E68D07C721EC2D26007558CC /* HPIdeaDetailModel.h */,
 				E68D07C821EC2D26007558CC /* HPIdeaDetailModel.m */,
+				E63C73F221EED2D7003D35E0 /* HPHomeBannerModel.h */,
+				E63C73F321EED2D7003D35E0 /* HPHomeBannerModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1833,12 +1838,12 @@
 		E6B4CECC21C5286E00429C11 /* SDCycleScrollView */ = {
 			isa = PBXGroup;
 			children = (
-				E6B4CECD21C5286E00429C11 /* UIView+SDExtension.h */,
 				E6B4CECE21C5286E00429C11 /* SDCycleScrollView.h */,
-				E6B4CECF21C5286E00429C11 /* SDCollectionViewCell.h */,
 				E6B4CED021C5286E00429C11 /* SDCycleScrollView.m */,
-				E6B4CED121C5286F00429C11 /* UIView+SDExtension.m */,
+				E6B4CECF21C5286E00429C11 /* SDCollectionViewCell.h */,
 				E6B4CED221C5286F00429C11 /* SDCollectionViewCell.m */,
+				E6B4CECD21C5286E00429C11 /* UIView+SDExtension.h */,
+				E6B4CED121C5286F00429C11 /* UIView+SDExtension.m */,
 				E6B4CED321C5286F00429C11 /* PageControl */,
 			);
 			path = SDCycleScrollView;
@@ -2449,6 +2454,7 @@
 				E6F551E121B911DF0086094F /* HPInterActiveModel.m in Sources */,
 				E61E27A421C8D68000CD5288 /* EBBannerViewMaker.m in Sources */,
 				E68C856D21E9ED9400AF259C /* HPIdeaListCell.m in Sources */,
+				E63C73F421EED2D7003D35E0 /* HPHomeBannerModel.m in Sources */,
 				E6B8987521D0D53900FD443B /* HPStoreLeavesViewController.m in Sources */,
 				E6D75F8521B65AAD00B2067C /* HPFeedbackController.m in Sources */,
 				E61E27AD21C8D68000CD5288 /* EBBannerViewController.m in Sources */,

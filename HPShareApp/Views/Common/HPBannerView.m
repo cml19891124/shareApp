@@ -63,6 +63,7 @@
 
 - (void)setImages:(NSArray *)images {
     _images = [NSMutableArray arrayWithArray:images];
+    
 }
 
 - (void)setImageViews:(NSArray *)imageViews {
