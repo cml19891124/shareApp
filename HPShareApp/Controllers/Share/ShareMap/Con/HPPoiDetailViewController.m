@@ -33,7 +33,7 @@
         switch (indexPath.row)
         {
             case 0 : title = @"店铺/用户全局唯一ID";    break;
-            case 1 : title = @"用户名称";            break;
+            case 1 : title = @"店铺名称";            break;
 //            case 2 : title = @"兴趣点类型";       break;
             case 2 : title = @"经纬度";          break;
             case 3 : title = @"地址";            break;
@@ -78,7 +78,7 @@
         switch (indexPath.row)
         {
             case 0 : subTitle = self.poi.userId;                       break;
-            case 1 : subTitle = self.poi.contact;                      break;
+            case 1 : subTitle = self.poi.title;                      break;
 //            case 2 : subTitle = [@(self.poi.type) stringValue];                      break;
             case 2 : subTitle = [NSString stringWithFormat:@"%.2lf,%.2lf",self.poi.longitude,self.poi.latitude];    break;
             case 3 : subTitle = self.poi.address;                   break;

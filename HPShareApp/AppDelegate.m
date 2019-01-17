@@ -16,6 +16,9 @@
 #import "HPTextDialogView.h"
 #import "HPGuideViewController.h"
 #import "HPCommonData.h"
+#import "HPCommonBannerData.h"
+#import "HPHomeBannerModel.h"
+#import "HPSingleton.h"
 #import "Bugly/Bugly.h"
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate>
@@ -24,6 +27,7 @@
 @end
 
 @implementation AppDelegate
+
 #pragma mark - 检测版本更新信息
 - (void)updateAppVersionInfo
 {
@@ -93,7 +97,8 @@
     //极光
     [AppDelegate setUpJPushConfigWithOptions:launchOptions];
     
-     [Bugly startWithAppId:kAppleId];
+    [Bugly startWithAppId:kAppleId];
+    
     [self updateAppVersionInfo];
     [HPGlobalVariable initVariable];
     [HPCommonData getAreaData];

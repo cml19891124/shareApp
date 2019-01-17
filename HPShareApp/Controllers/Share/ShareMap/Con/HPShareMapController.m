@@ -37,7 +37,7 @@
 @property (nonatomic, strong) CustomCalloutView *customCalloutView;
 @property (nonatomic, strong) MAPointAnnotation *centerPoint;
 
-
+@property (nonatomic, strong) UILabel *TipsLab;
 @property (nonatomic, strong) AMapLocationManager *locationManager;
 
 @property (nonatomic, strong) AMapSearchAPI *searchAPI;
@@ -91,7 +91,7 @@
 {
     [super viewWillAppear:animated];
     if (self.isPop) {//从详情列表页返回时重新加载地图数据，避免返回时地图空空如也
-        [self getShareListData:_shareListParam reload:YES];
+//        [self getShareListData:_shareListParam reload:YES];
     }else{
 
     }
@@ -130,19 +130,40 @@
     MAMapView *mapView = [[MAMapView alloc] init];
     mapView.showsUserLocation = YES;
     mapView.userTrackingMode = MAUserTrackingModeFollow;
-//    double zoomScale = self.mapView.bounds.size.width / self.mapView.visibleMapRect.size.width;
-
-    mapView.zoomLevel = 15.f;
+    mapView.zoomLevel = 18.f;
     [mapView setDelegate:self];
-    
+    //地图需要v4.5.0及以上版本才必须要打开此选项（v4.5.0以下版本，需要手动配置info.plist）
+    [AMapServices sharedServices].enableHTTPS = YES;
+
     MAUserLocationRepresentation *UserLocationRep = [[MAUserLocationRepresentation alloc] init];
     UserLocationRep.showsAccuracyRing = NO;///精度圈是否显示，默认YES
     [mapView updateUserLocationRepresentation:UserLocationRep];
-
+    //设置定位距离
+    mapView.distanceFilter = 5.0f;
     //添加屏幕中心点
     [mapView addAnnotation:self.centerPoint];
     
     [self.view addSubview:mapView];
+    
+//    _TipsLab = [UILabel new];
+//    _TipsLab.backgroundColor = COLOR_GRAY_FFFFFF;
+//    _TipsLab.layer.cornerRadius = 4.f;
+//    _TipsLab.layer.masksToBounds = YES;
+//    _TipsLab.numberOfLines = 0;
+//    [_TipsLab setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+//
+//    NSString *str=@"提示：如果定位不准，\n请拖动地图，标记出准确的店铺位置，才能更快找到";
+//    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:str];
+//    [string addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(10,17)];
+//    _TipsLab.attributedText=string;
+//    [mapView addSubview:_TipsLab];
+//    [mapView bringSubviewToFront:_TipsLab];
+//    [_TipsLab mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.width.mas_equalTo(getWidth(335.f));
+//        make.top.mas_equalTo(15.f);
+//        make.centerX.mas_equalTo(mapView);
+//    }];
+    
     _mapView = mapView;
     [mapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(navigationView.mas_bottom);
@@ -438,7 +459,7 @@
 
 - (void)onClickLocateBtn {
     [self.mapView setCenterCoordinate:self.mapView.userLocation.coordinate animated:YES];
-    [self.mapView setZoomLevel:15.f animated:YES];
+    [self.mapView setZoomLevel:18.f animated:YES];
 }
 
 #pragma mark - NetWork
@@ -499,9 +520,9 @@
 //        int i = rand() % 5;
 //        annotationView.count = 1;
         
-        UITapGestureRecognizer *pan = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(recognizer:)];
-        pan.delegate = self;
-        [annotationView addGestureRecognizer:pan];
+//        UITapGestureRecognizer *pan = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(recognizer:)];
+//        pan.delegate = self;
+//        [annotationView addGestureRecognizer:pan];
         
         return annotationView;
     }
@@ -526,19 +547,20 @@
 }
 
 - (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view {
-//    [view setSelected:YES];
+    [view setSelected:YES];
 
     ClusterAnnotation *annotation = (ClusterAnnotation *)view.annotation;
     [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
     [self.mapView setZoomLevel:18.f animated:YES];
-    [self showDataView:YES];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:annotation.index inSection:0];
-    [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
+//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:annotation.index inSection:0];
+//    [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    
+    [self recognizer:view];
 }
 
 - (void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view {
-    
+    [view setSelected:NO];
     [self.selectedPoiArray removeAllObjects];
     [self.customCalloutView dismissCalloutView];
     self.customCalloutView.delegate = nil;
@@ -561,11 +583,6 @@
     });
 }
 
-- (void)mapView:(MAMapView *)mapView mapDidZoomByUser:(BOOL)wasUserAction
-{
-//    [self.mapView setMinZoomLevel:10];
-//    [self.mapView setMaxZoomLevel:16];
-}
 
 #pragma mark -- 创建店铺标注
 - (void)creatAnnotation {
@@ -578,7 +595,6 @@
         _pointAnnotation.pois = [NSMutableArray arrayWithObject:model];;
         _pointAnnotation.title = model.title;
         [self.annoArray addObject:_pointAnnotation];
-
     }
     
     if (self.annoArray.count != 0) {
@@ -598,7 +614,7 @@
     
     [self.mapView addAnnotations:self.annoArray];
 
-    [self.mapView showAnnotations:self.mapView.annotations animated:YES];
+//    [self.mapView showAnnotations:self.mapView.annotations animated:YES];//---这行代码会导致定图定位到h非洲
 
 }
 
@@ -610,6 +626,7 @@
         //        NSLog(@"tree is not ready.");
         /* 根据当前zoomLevel和zoomScale 进行annotation聚合. */
         double zoomScale = self.mapView.bounds.size.width / self.mapView.visibleMapRect.size.width;
+        
         NSArray *annotations = [self.coordinateQuadTree clusteredAnnotationsWithinMapRect:mapView.visibleMapRect
                                                                             withZoomScale:zoomScale
                                                                              andZoomLevel:self.mapView.zoomLevel];
@@ -653,11 +670,8 @@
 
 #pragma  mark - 点击店铺标注事件
 
-- (void)recognizer:(UIPanGestureRecognizer *)ger {
+- (void)recognizer:(MAAnnotationView *)view {
     
-    self.customCalloutView = [[CustomCalloutView alloc] init];
-    
-    ClusterAnnotationView *view = (ClusterAnnotationView *)ger.view;
     [view setSelected:YES];
     if ([view.annotation isKindOfClass:[MAUserLocation class]]) {//用户位置点
         
@@ -678,7 +692,6 @@
             
             // 调整位置
             self.customCalloutView.center = CGPointMake(CGRectGetMidX(view.bounds), -CGRectGetMidY(self.customCalloutView.bounds) - CGRectGetMidY(view.bounds) - kCalloutViewMargin);
-            self.customCalloutView.delegate = self;
             
             [view addSubview:self.customCalloutView];
             
@@ -690,13 +703,16 @@
             }
             
             [self.customCalloutView setPoiArray:self.selectedPoiArray];
-            self.customCalloutView.delegate = self;
+
             ClusterAnnotation *annotation = (ClusterAnnotation *)view.annotation;
             [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
             // 调整位置
-            self.customCalloutView.center = CGPointMake(CGRectGetMidX(view.bounds), -CGRectGetMidY(self.customCalloutView.bounds) - CGRectGetMidY(view.bounds) - kCalloutViewMargin);
-            view.userInteractionEnabled = YES;
+            self.customCalloutView.center = CGPointMake(CGRectGetMidX(view.bounds), -CGRectGetMidY(self.customCalloutView.bounds) - CGRectGetMidY(view.bounds) - 2 * kCalloutViewMargin);
+            
             [view addSubview:self.customCalloutView];
+            
+//            [self.mapView deselectAnnotation:annotation animated:YES];//设置为非选中状态
+            
             //点击聚合网点 地图缩放
             [self.mapView setRegion:MACoordinateRegionMake(annotation.coordinate, MACoordinateSpanMake(self.mapView.region.span.latitudeDelta/2, self.mapView.region.span.longitudeDelta/2)) animated:YES];
         }
@@ -722,10 +738,10 @@
 - (void)mapView:(MAMapView *)mapView didAddAnnotationViews:(NSArray *)views
 {
     /* 为新添的annotationView添加弹出动画. */
-    for (UIView *view in views)
-    {
-        [self addBounceAnnimationToView:view];
-    }
+//    for (UIView *view in views)
+//    {
+//        [self addBounceAnnimationToView:view];
+//    }
 }
 
 /* annotation弹出的动画. */

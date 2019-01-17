@@ -75,7 +75,7 @@ const NSInteger kCellHeight = 44;
     }
 
     HPShareListModel *model = [self.poiArray objectAtIndex:indexPath.row];
-    cell.textLabel.text = model.contact;
+    cell.textLabel.text = model.title;
     cell.detailTextLabel.text = model.address;
     cell.tapBtn.tag = indexPath.row;
     cell.tapBtn.userInteractionEnabled = YES;

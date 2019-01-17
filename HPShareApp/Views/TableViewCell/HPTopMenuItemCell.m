@@ -9,6 +9,8 @@
 #import "HPTopMenuItemCell.h"
 #import "HPMenuCellbutton.h"
 #import "HPHomeBannerModel.h"
+#import "HPCommonBannerData.h"
+#import "HPSingleton.h"
 
 @implementation HPTopMenuItemCell
 
@@ -27,9 +29,8 @@
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.bannerImageArr = [NSMutableArray array];
-//        [self.bannerImageArr addObjectsFromArray:bannerImageArr];
+
         [self getHomeBannerDataList];
-        
 
     }
     return self;
@@ -79,9 +80,6 @@
     if (!_iCarousel) {
         _iCarousel = [[HPBannerView alloc] init];
         if (self.bannerImageArr && self.bannerImageArr.count) {
-            if (self.bannerImageArr.count == 1) {
-                [_iCarousel pauseAutoScroll];
-            }
             [_iCarousel setImages:self.bannerImageArr];
 
         }else{
@@ -141,7 +139,7 @@
         [self addSubview:menuBtn];
         CGFloat margin = (kScreenWidth - getWidth(52.f) * 4 - getWidth(26.f) * 2)/3;
         [menuBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            MASConstraint *leftContraint = make.left.mas_equalTo(getWidth(26.f) + (getWidth(52.f) + margin) * col);
+            make.left.mas_equalTo(getWidth(26.f) + (getWidth(52.f) + margin) * col);
             make.top.mas_equalTo(self.iCarousel.mas_bottom).offset(getWidth(25.f) + (getWidth(77.f) + getWidth(21.f)) * row);
             make.size.mas_equalTo(CGSizeMake(getWidth(52.f), getWidth(77.f)));
         }];

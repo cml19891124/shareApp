@@ -10,7 +10,8 @@
 #import <AMapSearchKit/AMapCommonObj.h>
 #import "CoordinateQuadTree.h"
 #import "ClusterAnnotation.h"
-#import "ClusterAnnotation.h"
+#import "Macro.h"
+
 QuadTreeNodeData QuadTreeNodeDataForAMapPOI(ClusterAnnotation* poi)
 {
     return QuadTreeNodeDataMake(poi.coordinate.latitude, poi.coordinate.longitude, (__bridge_retained void *)(poi));
@@ -33,7 +34,7 @@ BoundingBox BoundingBoxForMapRect(MAMapRect mapRect)
 float CellSizeForZoomLevel(double zoomLevel)
 {
     /*zoomLevel越大，cellSize越小. */
-    NSLog(@"zoomLevel: %f",zoomLevel);
+    HPLog(@"zoomLevel: %f",zoomLevel);
     if (zoomLevel < 13.0)
     {
         return 64;

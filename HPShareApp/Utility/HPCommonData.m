@@ -28,7 +28,7 @@ static NSArray<HPAreaModel *> *areaModels;
 }
 
 + (void)requestIndustryData {
-    NSLog(@"**********requestIndustryData************");
+    HPLog(@"**********requestIndustryData************");
     [HPHTTPSever HPGETServerWithMethod:@"/v1/industry/listWithChildren" isNeedToken:NO paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             industryModels = [HPIndustryModel mj_objectArrayWithKeyValuesArray:DATA];
