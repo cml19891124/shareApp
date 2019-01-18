@@ -10,6 +10,8 @@
 #import "HPBannerView.h"
 #import "HPPageControl.h"
 #import "HPPageControlFactory.h"
+#import "HPHomeBannerModel.h"
+
 
 typedef NS_ENUM(NSInteger, HPHomeShareMenuItem) {
     HPHome_page_store_sharing = 50,
@@ -23,6 +25,7 @@ typedef NS_ENUM(NSInteger, HPHomeShareMenuItem) {
 };
 typedef void (^SelectItemInICarouselBlock)(NSString * _Nullable model);
 typedef void (^ClickMenuItemBlock)(NSInteger HPHomeShareMenuItem);
+typedef void (^BannerClickTypeBlock)(HPHomeBannerModel *model);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,6 +38,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) HPBannerView *iCarousel;
 @property (nonatomic, strong) HPPageControl *pageControl;
 @property (strong, nonatomic) NSMutableArray *bannerImageArr;
+
+@property (strong, nonatomic) NSMutableArray *bannerModelsArr;
+
+
+@property (nonatomic, copy) BannerClickTypeBlock bannerClickTypeBlock;
 @end
 
 NS_ASSUME_NONNULL_END

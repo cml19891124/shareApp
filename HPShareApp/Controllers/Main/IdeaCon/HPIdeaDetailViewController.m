@@ -59,7 +59,7 @@
 {
     HPIdeaListModel *model = self.param[@"model"];
     self.titleLabel.text = model.title;
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/rich/queryDetail" isNeedToken:YES paraments:@{@"articleId":model.articleId} complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/rich/queryDetail" isNeedToken:YES paraments:@{@"articleId":model.articleId?model.articleId:@"1"} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             self.model = [HPIdeaDetailModel mj_objectWithKeyValues:responseObject[@"data"]];
             NSString *context = [NSString stringWithFormat:@"<head><style>img{width:%f !important;height:auto;}</style></head>%@",kScreenWidth/3,self.model.context];

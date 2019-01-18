@@ -43,6 +43,8 @@
 	<string>合店站需要在应用期间获取您的位置，用于发布共享信息</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>合店站需要访问您的相册，用于上传照片</string>
+	<key>NSContactsUsageDescription</key>
+	<string>合店站需要访问您的通讯录</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

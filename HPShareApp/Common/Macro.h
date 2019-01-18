@@ -9,7 +9,7 @@
 #ifndef Macro_h
 #define Macro_h
 
-#define JPushAppKey @"e9ab740a789860714d7a511a"
+#define JPushAppKey @"fe7e1f4e51fda593af68b71e"
 /**
  全局宏定义。
  */

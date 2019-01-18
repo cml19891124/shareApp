@@ -21,7 +21,7 @@
 #import "HPSingleton.h"
 #import "Bugly/Bugly.h"
 
-@interface AppDelegate ()<UNUserNotificationCenterDelegate>
+@interface AppDelegate ()<UNUserNotificationCenterDelegate,JPUSHRegisterDelegate>
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
 
 @end
@@ -95,7 +95,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     //极光
-    [AppDelegate setUpJPushConfigWithOptions:launchOptions];
+    [AppDelegate setUpJPushAndMessageConfigWithOptions:launchOptions];
     
     [Bugly startWithAppId:kAppleId];
     

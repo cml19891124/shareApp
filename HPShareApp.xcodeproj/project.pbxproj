@@ -120,6 +120,18 @@
 		E629218A219AC19D00BEF16C /* HPMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292189219AC19D00BEF16C /* HPMainTabBarController.m */; };
 		E62C84D121C20CBA00D7DFB3 /* HPSignInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = E62C84D021C20CBA00D7DFB3 /* HPSignInfoController.m */; };
 		E62C84D421C28F1D00D7DFB3 /* HPInviteSBGiftsController.m in Sources */ = {isa = PBXBuildFile; fileRef = E62C84D321C28F1D00D7DFB3 /* HPInviteSBGiftsController.m */; };
+		E633525B21F17A7C00999BE7 /* HPProvinceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E633525921F17A7B00999BE7 /* HPProvinceModel.m */; };
+		E633529D21F1C99300999BE7 /* HPContactsInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E633528621F1C99300999BE7 /* HPContactsInfoCell.m */; };
+		E633529E21F1C99300999BE7 /* HPContactsInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E633528721F1C99300999BE7 /* HPContactsInfoCell.xib */; };
+		E633529F21F1C99300999BE7 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = E633528B21F1C99300999BE7 /* Aspects.m */; };
+		E63352A021F1C99300999BE7 /* YXTableViewIndexView.m in Sources */ = {isa = PBXBuildFile; fileRef = E633528E21F1C99300999BE7 /* YXTableViewIndexView.m */; };
+		E63352A121F1C99300999BE7 /* YXTableViewIndexView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E633528F21F1C99300999BE7 /* YXTableViewIndexView.xib */; };
+		E63352A221F1C99300999BE7 /* UITableView+ZYXIndexTip.m in Sources */ = {isa = PBXBuildFile; fileRef = E633529021F1C99300999BE7 /* UITableView+ZYXIndexTip.m */; };
+		E63352A321F1C99300999BE7 /* PPGetAddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = E633529321F1C99300999BE7 /* PPGetAddressBook.m */; };
+		E63352A421F1C99300999BE7 /* PPPersonModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E633529421F1C99300999BE7 /* PPPersonModel.m */; };
+		E63352A521F1C99300999BE7 /* HPAddressBookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E633529521F1C99300999BE7 /* HPAddressBookViewController.m */; };
+		E63352A621F1C99300999BE7 /* HPAddressBookViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E633529721F1C99300999BE7 /* HPAddressBookViewController.xib */; };
+		E63352A721F1C99300999BE7 /* PPAddressBookHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = E633529C21F1C99300999BE7 /* PPAddressBookHandle.m */; };
 		E63C73F421EED2D7003D35E0 /* HPHomeBannerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E63C73F321EED2D7003D35E0 /* HPHomeBannerModel.m */; };
 		E64B727321D24DAC00DCA29A /* HPMenuCellbutton.m in Sources */ = {isa = PBXBuildFile; fileRef = E64B727221D24DAC00DCA29A /* HPMenuCellbutton.m */; };
 		E654C7DE21BFE58E0066C506 /* HPFansListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CDD21BFA0ED00593D25 /* HPFansListModel.m */; };
@@ -508,6 +520,28 @@
 		E62C84D021C20CBA00D7DFB3 /* HPSignInfoController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSignInfoController.m; sourceTree = "<group>"; };
 		E62C84D221C28F1D00D7DFB3 /* HPInviteSBGiftsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPInviteSBGiftsController.h; sourceTree = "<group>"; };
 		E62C84D321C28F1D00D7DFB3 /* HPInviteSBGiftsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPInviteSBGiftsController.m; sourceTree = "<group>"; };
+		E633525921F17A7B00999BE7 /* HPProvinceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPProvinceModel.m; sourceTree = "<group>"; };
+		E633525A21F17A7C00999BE7 /* HPProvinceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPProvinceModel.h; sourceTree = "<group>"; };
+		E633528621F1C99300999BE7 /* HPContactsInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPContactsInfoCell.m; sourceTree = "<group>"; };
+		E633528721F1C99300999BE7 /* HPContactsInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HPContactsInfoCell.xib; sourceTree = "<group>"; };
+		E633528821F1C99300999BE7 /* HPContactsInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPContactsInfoCell.h; sourceTree = "<group>"; };
+		E633528A21F1C99300999BE7 /* Aspects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Aspects.h; sourceTree = "<group>"; };
+		E633528B21F1C99300999BE7 /* Aspects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Aspects.m; sourceTree = "<group>"; };
+		E633528D21F1C99300999BE7 /* UITableView+ZYXIndexTip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+ZYXIndexTip.h"; sourceTree = "<group>"; };
+		E633528E21F1C99300999BE7 /* YXTableViewIndexView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YXTableViewIndexView.m; sourceTree = "<group>"; };
+		E633528F21F1C99300999BE7 /* YXTableViewIndexView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YXTableViewIndexView.xib; sourceTree = "<group>"; };
+		E633529021F1C99300999BE7 /* UITableView+ZYXIndexTip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+ZYXIndexTip.m"; sourceTree = "<group>"; };
+		E633529121F1C99300999BE7 /* YXTableViewIndexView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YXTableViewIndexView.h; sourceTree = "<group>"; };
+		E633529321F1C99300999BE7 /* PPGetAddressBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPGetAddressBook.m; sourceTree = "<group>"; };
+		E633529421F1C99300999BE7 /* PPPersonModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPPersonModel.m; sourceTree = "<group>"; };
+		E633529521F1C99300999BE7 /* HPAddressBookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPAddressBookViewController.m; sourceTree = "<group>"; };
+		E633529621F1C99300999BE7 /* PPAddressBookHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPAddressBookHandle.h; sourceTree = "<group>"; };
+		E633529721F1C99300999BE7 /* HPAddressBookViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HPAddressBookViewController.xib; sourceTree = "<group>"; };
+		E633529821F1C99300999BE7 /* PPSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPSingleton.h; sourceTree = "<group>"; };
+		E633529921F1C99300999BE7 /* PPGetAddressBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPGetAddressBook.h; sourceTree = "<group>"; };
+		E633529A21F1C99300999BE7 /* HPAddressBookViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPAddressBookViewController.h; sourceTree = "<group>"; };
+		E633529B21F1C99300999BE7 /* PPPersonModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPPersonModel.h; sourceTree = "<group>"; };
+		E633529C21F1C99300999BE7 /* PPAddressBookHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPAddressBookHandle.m; sourceTree = "<group>"; };
 		E636357C21BF8937002F11DC /* HPPersonCenterModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPPersonCenterModel.m; sourceTree = "<group>"; };
 		E636357F21BF8BBA002F11DC /* HPFansListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPFansListModel.m; sourceTree = "<group>"; };
 		E636358221BF96F0002F11DC /* HPCollectListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCollectListModel.m; sourceTree = "<group>"; };
@@ -1121,6 +1155,7 @@
 		E61F710121C12EDB00932708 /* IM */ = {
 			isa = PBXGroup;
 			children = (
+				E633528421F1C97C00999BE7 /* AddressBook */,
 				E61F710721C1303500932708 /* Model */,
 				E61F710621C1302900932708 /* View */,
 				E61F710521C1301C00932708 /* Con */,
@@ -1438,6 +1473,65 @@
 				69165CC821BE094700593D25 /* Release */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		E633528421F1C97C00999BE7 /* AddressBook */ = {
+			isa = PBXGroup;
+			children = (
+				E633529221F1C99300999BE7 /* PPGetAddressBook */,
+				E633528521F1C99300999BE7 /* View */,
+			);
+			path = AddressBook;
+			sourceTree = "<group>";
+		};
+		E633528521F1C99300999BE7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E633528621F1C99300999BE7 /* HPContactsInfoCell.m */,
+				E633528721F1C99300999BE7 /* HPContactsInfoCell.xib */,
+				E633528821F1C99300999BE7 /* HPContactsInfoCell.h */,
+				E633528921F1C99300999BE7 /* Aspects */,
+				E633528C21F1C99300999BE7 /* YXTableViewIndexView */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E633528921F1C99300999BE7 /* Aspects */ = {
+			isa = PBXGroup;
+			children = (
+				E633528A21F1C99300999BE7 /* Aspects.h */,
+				E633528B21F1C99300999BE7 /* Aspects.m */,
+			);
+			path = Aspects;
+			sourceTree = "<group>";
+		};
+		E633528C21F1C99300999BE7 /* YXTableViewIndexView */ = {
+			isa = PBXGroup;
+			children = (
+				E633528D21F1C99300999BE7 /* UITableView+ZYXIndexTip.h */,
+				E633528E21F1C99300999BE7 /* YXTableViewIndexView.m */,
+				E633528F21F1C99300999BE7 /* YXTableViewIndexView.xib */,
+				E633529021F1C99300999BE7 /* UITableView+ZYXIndexTip.m */,
+				E633529121F1C99300999BE7 /* YXTableViewIndexView.h */,
+			);
+			path = YXTableViewIndexView;
+			sourceTree = "<group>";
+		};
+		E633529221F1C99300999BE7 /* PPGetAddressBook */ = {
+			isa = PBXGroup;
+			children = (
+				E633529321F1C99300999BE7 /* PPGetAddressBook.m */,
+				E633529421F1C99300999BE7 /* PPPersonModel.m */,
+				E633529521F1C99300999BE7 /* HPAddressBookViewController.m */,
+				E633529621F1C99300999BE7 /* PPAddressBookHandle.h */,
+				E633529721F1C99300999BE7 /* HPAddressBookViewController.xib */,
+				E633529821F1C99300999BE7 /* PPSingleton.h */,
+				E633529921F1C99300999BE7 /* PPGetAddressBook.h */,
+				E633529A21F1C99300999BE7 /* HPAddressBookViewController.h */,
+				E633529B21F1C99300999BE7 /* PPPersonModel.h */,
+				E633529C21F1C99300999BE7 /* PPAddressBookHandle.m */,
+			);
+			path = PPGetAddressBook;
 			sourceTree = "<group>";
 		};
 		E661B091219BAC4300C86CF5 /* Main */ = {
@@ -1824,6 +1918,8 @@
 		E693E8FB21E8331E0063797A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E633525A21F17A7C00999BE7 /* HPProvinceModel.h */,
+				E633525921F17A7B00999BE7 /* HPProvinceModel.m */,
 				E693E90021E8331E0063797A /* ClusterAnnotation.h */,
 				E693E8FC21E8331E0063797A /* ClusterAnnotation.m */,
 				E693E90121E8331E0063797A /* CoordinateQuadTree.h */,
@@ -2131,8 +2227,11 @@
 				E61E27A621C8D68000CD5288 /* EBBannerView.xib in Resources */,
 				E629216B219AAAB900BEF16C /* Default-568h@2x.png in Resources */,
 				E622A9C021C33989007C35BC /* RefreshTableView.bundle in Resources */,
+				E633529E21F1C99300999BE7 /* HPContactsInfoCell.xib in Resources */,
 				E629213E219AA83A00BEF16C /* Assets.xcassets in Resources */,
 				E629213C219AA83100BEF16C /* Main.storyboard in Resources */,
+				E63352A121F1C99300999BE7 /* YXTableViewIndexView.xib in Resources */,
+				E63352A621F1C99300999BE7 /* HPAddressBookViewController.xib in Resources */,
 				E661B12321A28E8500C86CF5 /* LICENSE in Resources */,
 				E622A9C121C33989007C35BC /* .gitkeep in Resources */,
 				E61E27AC21C8D68000CD5288 /* EBMuteDetector.mp3 in Resources */,
@@ -2272,6 +2371,7 @@
 				6993AD3321C79B100019506C /* HPShareAnnotation.m in Sources */,
 				E693E90E21E834E20063797A /* HPRouteButton.m in Sources */,
 				E654C7DF21BFE6160066C506 /* HPCollectListModel.m in Sources */,
+				E633525B21F17A7C00999BE7 /* HPProvinceModel.m in Sources */,
 				E61E27A921C8D68000CD5288 /* EBCustomBannerView.m in Sources */,
 				E62C84D421C28F1D00D7DFB3 /* HPInviteSBGiftsController.m in Sources */,
 				E654C7DE21BFE58E0066C506 /* HPFansListModel.m in Sources */,
@@ -2297,6 +2397,7 @@
 				E6D75F3E21AFDEB700B2067C /* HPRightImageButton.m in Sources */,
 				E620646D21DF81BA00E37568 /* LEEAlert.m in Sources */,
 				E661B0C7219CFF1800C86CF5 /* HPProgressHUD.m in Sources */,
+				E63352A721F1C99300999BE7 /* PPAddressBookHandle.m in Sources */,
 				7AAFF3A921E390540049D175 /* CommonUtility.m in Sources */,
 				7AAFF36821CD2F680049D175 /* HPTimeRentButton.m in Sources */,
 				E661B0CD219D1B9200C86CF5 /* HPRowPanel.m in Sources */,
@@ -2314,6 +2415,7 @@
 				E620646721DEFC5700E37568 /* HPInfoModel.m in Sources */,
 				E661B0D6219D436900C86CF5 /* HPAlertSheet.m in Sources */,
 				69165CCB21BE098100593D25 /* HPAddPhotoView.m in Sources */,
+				E63352A221F1C99300999BE7 /* UITableView+ZYXIndexTip.m in Sources */,
 				E661B12B21A28E8500C86CF5 /* JTHorizontalCalendarView.m in Sources */,
 				E61E27A521C8D68000CD5288 /* EBEmptyWindow.m in Sources */,
 				E61B5EA821CC739200DC8A59 /* HPStoreItemButton.m in Sources */,
@@ -2343,6 +2445,7 @@
 				7A54485A21C16A48001301F3 /* HPPartyCenterModel.m in Sources */,
 				E683295921E4559400C119FE /* HPQueryproductersModel.m in Sources */,
 				E68C856A21E9EC2B00AF259C /* HPHeaderCell.m in Sources */,
+				E63352A321F1C99300999BE7 /* PPGetAddressBook.m in Sources */,
 				E6D75F7921B54E7900B2067C /* HPShareShopListController.m in Sources */,
 				69165D0021C355E500593D25 /* HPImagePager.m in Sources */,
 				E6B4CECB21C51A4400429C11 /* HPGuideViewController.m in Sources */,
@@ -2355,6 +2458,7 @@
 				E61E27AB21C8D68000CD5288 /* EBBannerView+Categories.m in Sources */,
 				E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */,
 				E6D75F2821AD463000B2067C /* HPLoginByPasswordController.m in Sources */,
+				E63352A521F1C99300999BE7 /* HPAddressBookViewController.m in Sources */,
 				E6D75F6421B2301600B2067C /* HPCirclePageControl.m in Sources */,
 				E68DDE0C21EDCEE400742D49 /* HPPoiDetailViewController.m in Sources */,
 				E66F1CB521D3569000C2DEEF /* HPHotShareStoreCell.m in Sources */,
@@ -2385,6 +2489,7 @@
 				E661B12A21A28E8500C86CF5 /* JTCalendarWeekDayView.m in Sources */,
 				6993AD4921CE97B40019506C /* HPShareTempHumanController.m in Sources */,
 				E6F551D821B8C9480086094F /* HPValidatePhone.m in Sources */,
+				E633529F21F1C99300999BE7 /* Aspects.m in Sources */,
 				E61FE0A021BA0F4A00555F3F /* HPNearbyShareView.m in Sources */,
 				69165CCE21BE402E00593D25 /* HPTimePicker.m in Sources */,
 				6993AD4C21CE97D40019506C /* HPShareTempGoodsController.m in Sources */,
@@ -2417,6 +2522,7 @@
 				E6B4CEDC21C5286F00429C11 /* SDCycleScrollView.m in Sources */,
 				69165CEE21C0EBD400593D25 /* HPLocateHistory.m in Sources */,
 				E68C857121E9EDFB00AF259C /* HPIdeaListModel.m in Sources */,
+				E63352A421F1C99300999BE7 /* PPPersonModel.m in Sources */,
 				E6B4CEE021C5286F00429C11 /* TAPageControl.m in Sources */,
 				E622A9BF21C33989007C35BC /* YYLRefreshNoNetworkView.m in Sources */,
 				E6B4CEDF21C5286F00429C11 /* TADotView.m in Sources */,
@@ -2429,6 +2535,7 @@
 				E68DDE0621EDBA2B00742D49 /* CustomCalloutView.m in Sources */,
 				E661B0EA219EBF3600C86CF5 /* HPShareRecommendCard.m in Sources */,
 				E681446F21F05C3B0052A93F /* HPCommonBannerData.m in Sources */,
+				E63352A021F1C99300999BE7 /* YXTableViewIndexView.m in Sources */,
 				E692144121D46CB300ED6B5C /* HPOwnnerReleaseViewController.m in Sources */,
 				7AAFF36521CD2EC20049D175 /* HPTimeRentView.m in Sources */,
 				E6B4CEDD21C5286F00429C11 /* UIView+SDExtension.m in Sources */,
@@ -2492,6 +2599,7 @@
 				E661B12D21A28E8500C86CF5 /* JTCalendarDayView.m in Sources */,
 				69165CFA21C24DE100593D25 /* HPShareDetailModel.m in Sources */,
 				E6D75F5921B1117500B2067C /* HPShareHumanListController.m in Sources */,
+				E633529D21F1C99300999BE7 /* HPContactsInfoCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -549,7 +549,7 @@
 - (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view {
     [view setSelected:YES];
 
-    ClusterAnnotation *annotation = (ClusterAnnotation *)view.annotation;
+//    ClusterAnnotation *annotation = (ClusterAnnotation *)view.annotation;
     [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
     [self.mapView setZoomLevel:18.f animated:YES];
     
@@ -564,6 +564,7 @@
     [self.selectedPoiArray removeAllObjects];
     [self.customCalloutView dismissCalloutView];
     self.customCalloutView.delegate = nil;
+    [self.mapView deselectAnnotation:view.annotation animated:YES];
 }
 
 - (void)mapView:(MAMapView *)mapView mapDidMoveByUser:(BOOL)wasUserAction {
@@ -591,7 +592,13 @@
     for (int i = 0; i < self.dataArray.count; i++) {
         //创建大头针对象
         HPShareListModel *model = self.dataArray[i];
-        _pointAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:CLLocationCoordinate2DMake(model.latitude, model.longitude) count:0];
+        CLLocationCoordinate2D cordote = CLLocationCoordinate2DMake(115.93,23.5);
+        if (!model.latitude || !model.longitude) {
+            _pointAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:cordote count:0];
+
+        }else{
+            _pointAnnotation = [[ClusterAnnotation alloc] initWithCoordinate:CLLocationCoordinate2DMake(model.latitude, model.longitude) count:0];
+        }
         _pointAnnotation.pois = [NSMutableArray arrayWithObject:model];;
         _pointAnnotation.title = model.title;
         [self.annoArray addObject:_pointAnnotation];
@@ -625,7 +632,9 @@
     {
         //        NSLog(@"tree is not ready.");
         /* 根据当前zoomLevel和zoomScale 进行annotation聚合. */
-        double zoomScale = self.mapView.bounds.size.width / self.mapView.visibleMapRect.size.width;
+        MAMapRect visibleRect = self.mapView.visibleMapRect;
+
+        double zoomScale = self.mapView.bounds.size.width / visibleRect.size.width;
         
         NSArray *annotations = [self.coordinateQuadTree clusteredAnnotationsWithinMapRect:mapView.visibleMapRect
                                                                             withZoomScale:zoomScale

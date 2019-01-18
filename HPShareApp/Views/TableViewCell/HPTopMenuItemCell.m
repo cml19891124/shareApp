@@ -8,7 +8,6 @@
 
 #import "HPTopMenuItemCell.h"
 #import "HPMenuCellbutton.h"
-#import "HPHomeBannerModel.h"
 #import "HPCommonBannerData.h"
 #import "HPSingleton.h"
 
@@ -29,6 +28,7 @@
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.bannerImageArr = [NSMutableArray array];
+        self.bannerModelsArr = [NSMutableArray array];
 
         [self getHomeBannerDataList];
 
@@ -127,7 +127,7 @@
 - (void)setUpMenuButtonViews
 {
     NSArray *menuImageArr = @[@"home_page_store_ sharing",@"home_page_lobby_ sharing",@"home_page_other_sharing",@"home_page_map",@"home_page_stock_purchase",@"home_page_shelf_rental",@"home_page_used_shelves",@"home_page_new_store_opens"];
-    NSArray *menuTitleArr = @[@"店铺共享",@"大堂共享",@"其他共享",@"地图找店",@"进货",@"货架出租",@"二手货架",@"新店合开"];
+    NSArray *menuTitleArr = @[@"店铺拼组",@"大堂拼组",@"空间短租",@"地图找店",@"进货",@"货架出租",@"二手货架",@"新店合开"];
     for (int i = 0; i < menuImageArr.count; i++) {
         HPMenuCellbutton *menuBtn = [HPMenuCellbutton new];
         [menuBtn setImage:ImageNamed(menuImageArr[i]) forState:UIControlStateNormal];
@@ -157,6 +157,10 @@
 
 - (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
     [_pageControl setCurrentPage:index];
+    HPHomeBannerModel *model = self.bannerModelsArr[index];
+    if (self.bannerClickTypeBlock) {
+        self.bannerClickTypeBlock(model);
+    }
 }
 
 
@@ -166,6 +170,7 @@
     [HPHTTPSever HPGETServerWithMethod:@"/v1/banner/list" isNeedToken:YES paraments:@{@"size":@(5)} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             NSArray *bannerImageArr = [HPHomeBannerModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+            [self.bannerModelsArr addObjectsFromArray:bannerImageArr];
             for (int i = 0;i < bannerImageArr.count;i++) {
                 HPHomeBannerModel *model = bannerImageArr[i];
                 if ([model.imgUrl containsString:@"http"]) {
@@ -180,11 +185,11 @@
                     [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
 
                 }
-                if (self.bannerImageArr.count <= 1) {//用本地图片填充两张
-                    [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
-                    [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
-
-                }
+//                if (self.bannerImageArr.count <= 1) {//用本地图片填充两张
+//                    [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
+//                    [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
+//
+//                }
             }
             
             [self setUpTopMenuSubviews];

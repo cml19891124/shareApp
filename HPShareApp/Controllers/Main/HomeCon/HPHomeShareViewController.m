@@ -292,6 +292,18 @@ static NSString *shareListCell = @"shareListCell";
     HPTopMenuItemCell *cell = [tableView dequeueReusableCellWithIdentifier:topMenuItemCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     HPLoginModel *account = [HPUserTool account];
+    //广告点击跳转block
+    [cell setBannerClickTypeBlock:^(HPHomeBannerModel *model) {
+        if (!account.token) {
+            [HPProgressHUD alertMessage:@"请前往登录"];
+        }else{
+            if (model.link) {
+                
+            }
+            //                [self pushVCByClassName:@"HPIdeaDetailViewController"];
+        }
+        
+    }];
 //    kWeakSelf(weakSlef);
     [cell setClickMenuItemBlock:^(NSInteger HPHomeShareMenuItem) {
         switch (HPHomeShareMenuItem) {

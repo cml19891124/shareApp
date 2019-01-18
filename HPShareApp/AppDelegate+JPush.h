@@ -17,12 +17,12 @@
 #import <AdSupport/AdSupport.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AppDelegate (JPush)<JPUSHRegisterDelegate>
+@interface AppDelegate (JPush)
 
 /**
 JPush配置
  */
-+ (void)setUpJPushConfigWithOptions:(NSDictionary *)launchOptions;
++ (void)setUpJPushAndMessageConfigWithOptions:(NSDictionary *)launchOptions;
 @end
 
 NS_ASSUME_NONNULL_END

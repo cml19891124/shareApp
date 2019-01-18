@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPHomeBannerModel : NSObject
 @property (nonatomic, copy) NSString *bannerId;
+
+/**
+ 跳转对应的目标控制器
+ */
+@property (nonatomic, copy) NSString *link;
 @property (nonatomic, copy) NSString *bannerName;
 @property (nonatomic, copy) NSString *createTime;
 @property (nonatomic, copy) NSString *deleteTime;

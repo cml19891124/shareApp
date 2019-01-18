@@ -7,23 +7,32 @@
 //
 
 #import "AppDelegate+JPush.h"
+#import <JMessage/JMessage.h>
 
 @implementation AppDelegate (JPush)
-+ (void)setUpJPushConfigWithOptions:(NSDictionary *)launchOptions{
-   
++ (void)setUpJPushAndMessageConfigWithOptions:(NSDictionary *)launchOptions{
+    // Required - 启动 JMessage SDK  开启消息漫游
+    [JMessage setupJMessage:launchOptions appKey:JPushAppKey channel:nil apsForProduction:NO category:nil messageRoaming:YES];
+    
     //Required
     //notice: 3.0.0 及以后版本注册可以这样写，也可以继续用之前的注册方式
     JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
     if (@available(iOS 12.0, *)) {
         entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound|UNAuthorizationOptionProvidesAppNotificationSettings;
+        
+        [JMessage registerForRemoteNotificationTypes:(UNAuthorizationOptionProvidesAppNotificationSettings |
+                                                      UNAuthorizationOptionSound |
+                                                      UNAuthorizationOptionAlert | UNAuthorizationOptionBadge)
+                                          categories:nil];
     } else {
         // Fallback on earlier versions
+        //可以添加自定义categories
+        [JMessage registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
+                                                      UIUserNotificationTypeSound |
+                                                      UIUserNotificationTypeAlert)
+                                          categories:nil];
     }
-    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
-        // 可以添加自定义 categories
-        // NSSet<UNNotificationCategory *> *categories for iOS10 or later
-        // NSSet<UIUserNotificationCategory *> *categories for iOS8 and iOS9
-    }
+
     [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
     
     //初始化极光
@@ -45,11 +54,13 @@
             advertisingIdentifier:advertisingId];
 }
 
-
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     /// Required - 注册 DeviceToken
     [JPUSHService registerDeviceToken:deviceToken];
+    
+    // Required - 注册token
+    [JMessage registerDeviceToken:deviceToken];
 }
 
 //实现注册 APNs 失败接口（可选）
