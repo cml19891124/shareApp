@@ -9,9 +9,22 @@
 #import "HPInteractiveController.h"
 #import "HPInteractiveCell.h"
 #import "HPInterActiveModel.h"
+#import "ViewUtil.h"
+#import "JCHATSelectFriendsCtl.h"
+#import "JCHATAlertViewWait.h"
+#import "JCHATConversationViewController.h"
 
-@interface HPInteractiveController ()<UITableViewDelegate,UITableViewDataSource,HPBaseViewControllerDelegate>
+#define kBackBtnFrame CGRectMake(0, 0, 50, 30)
+#define UIColorFromRGB(rgbValue) [UIColor  colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0  green:((float)((rgbValue & 0xFF00) >> 8))/255.0  blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
+#define kBubbleBtnColor UIColorFromRGB(0x4880d7)
+
+@interface HPInteractiveController ()<UITableViewDelegate,UITableViewDataSource,HPBaseViewControllerDelegate,TouchTableViewDelegate>
+{
+    UIButton *_leftBarButton;
+}
+
+@property (nonatomic, strong) UIView *navTitleView;
 @property (nonatomic, strong) NSArray *imageArray;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *interArray;
@@ -30,9 +43,17 @@
 {
     [self getDataResources];
 }
+
+- (void)clickLeftButtonToHandle:(UIButton *)button
+{
+    [self addBtnClick:button];
+}
 static NSString *interactiveCell = @"interactiveCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self setupBubbleView];
+    
     [self setUpNotiConfig];
     // Do any additional setup after loading the view.
     self.delegate = self;
@@ -40,11 +61,104 @@ static NSString *interactiveCell = @"interactiveCell";
     [self getDataResources];
     
     [self setupUI];
-    [self setupNavigationBarWithTitle:@"互动"];
+    _navTitleView = [self setupNavigationBarWithTitle:@"互动"];
     [self setupRightBarbuttonBtn:@"一键已读"];
     [self.view setBackgroundColor:COLOR_GRAY_F7F7F7];
-
+//左边按钮
+    [self setupLeftBarbuttonBtn:@"fdf"];
 }
+
+- (void)setupBubbleView {
+    _addBgView = [[UIImageView alloc] init];
+    [_addBgView setBackgroundColor:[UIColor clearColor]];
+    [_addBgView setUserInteractionEnabled:YES];
+    UIImage *frameImg = [UIImage imageNamed:@"frame"];
+    frameImg = [frameImg resizableImageWithCapInsets:UIEdgeInsetsMake(30, 10, 30, 64) resizingMode:UIImageResizingModeTile];
+    [_addBgView setImage:frameImg];
+    [_addBgView setHidden:YES];
+    [self.view addSubview:self.addBgView];
+    [self.addBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(g_statusBarHeight + getWidth(54.5f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(100.f), getWidth(100.f)));
+        make.left.mas_equalTo(self.view);
+    }];
+    [self.view bringSubviewToFront:self.addBgView];
+    [self addBtn];
+}
+
+- (void)addBtn {
+    for (NSInteger i=0; i<2; i++) {
+        UIButton *btn =[UIButton buttonWithType:UIButtonTypeCustom];
+        if (i==0) {
+            [btn setTitle:@"发起群聊" forState:UIControlStateNormal];
+        }
+        if (i==1) {
+            [btn setTitle:@"发起单聊" forState:UIControlStateNormal];
+        }
+        [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+        btn.tag=i + 100;
+        [btn setFrame:CGRectMake(5, i*30+15, 80, 30)];
+        [btn.titleLabel setFont:[UIFont systemFontOfSize:16]];
+        [btn setBackgroundImage:[ViewUtil colorImage:kBubbleBtnColor frame:btn.frame] forState:UIControlStateHighlighted];
+        [self.addBgView addSubview:btn];
+    }
+}
+
+- (void)btnClick :(UIButton *)btn {
+    [self.addBgView setHidden:YES];
+    if (btn.tag == 100) {
+        JCHATSelectFriendsCtl *selectCtl =[[JCHATSelectFriendsCtl alloc] init];
+        UINavigationController *selectNav =[[UINavigationController alloc] initWithRootViewController:selectCtl];
+        UINavigationBar *bar = [UINavigationBar appearance];
+        
+        //设置显示的颜色
+        
+        bar.barTintColor = COLOR_RED_EA0000;
+        [self.navigationController presentViewController:selectNav animated:YES completion:nil];
+    } else if (btn.tag == 101) {
+        UIAlertView *alerView =[[UIAlertView alloc] initWithTitle:@"添加聊天对象"
+                                                          message:@"输入对方的用户名!"
+                                                         delegate:self
+                                                cancelButtonTitle:@"取消"
+                                                otherButtonTitles:@"确定", nil];
+        alerView.alertViewStyle =UIAlertViewStylePlainTextInput;
+        [alerView show];
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+    } else if (buttonIndex == 1)
+    {
+        if ([[alertView textFieldAtIndex:0].text isEqualToString:@""]) {
+            [HPProgressHUD alertMessage:@"请输入用户名"];
+            
+            return;
+        }
+        
+        [[JCHATAlertViewWait ins] showInView];
+        __block JCHATConversationViewController *sendMessageCtl = [[JCHATConversationViewController alloc] init];
+        sendMessageCtl.superViewController = self;
+        sendMessageCtl.hidesBottomBarWhenPushed = YES;
+        [[alertView textFieldAtIndex:0] resignFirstResponder];
+        __weak __typeof(self)weakSelf = self;
+        [JMSGConversation createSingleConversationWithUsername:[alertView textFieldAtIndex:0].text appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
+            [[JCHATAlertViewWait ins] hidenAll];
+            
+            if (error == nil) {
+//                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                __strong __typeof(weakSelf) strongSelf = weakSelf;
+                sendMessageCtl.conversation = resultObject;
+                [strongSelf.navigationController pushViewController:sendMessageCtl animated:YES];
+            } else {
+                HPLog(@"createSingleConversationWithUsername fail");
+                [HPProgressHUD alertMessage:@"添加的用户不存在"];
+            }
+        }];
+    }
+}
+
 #pragma mark - 获取原始数据-也是设置消息是否已读的源数据
 - (void)getDataResources
 {
@@ -225,6 +339,13 @@ static NSString *interactiveCell = @"interactiveCell";
     }
 }
 
+#pragma mark - TouchTableViewDelegate
+- (void)tableView:(UITableView *)tableView touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self.addBgView setHidden:YES];
+    _leftBarButton.selected=NO;
+}
+
 #pragma mark - 取消下拉  允许上拉
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGPoint offset = self.tableView.contentOffset;
@@ -234,4 +355,17 @@ static NSString *interactiveCell = @"interactiveCell";
     self.tableView.contentOffset = offset;
 }
 
+#pragma mark - JPush IM
+
+- (void)addBtnClick:(UIButton *)btn {
+    
+    if (btn.selected) {
+        btn.selected=NO;
+        [self.addBgView setHidden:YES];
+    } else {
+        btn.selected=YES;
+        [self.addBgView setHidden:NO];
+    }
+    [self.view bringSubviewToFront:self.addBgView];
+}
 @end

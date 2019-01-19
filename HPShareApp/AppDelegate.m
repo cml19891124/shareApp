@@ -23,7 +23,7 @@
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate,JPUSHRegisterDelegate>
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
-
+@property (nonatomic, strong) HPMainTabBarController *mainTabBarController;
 @end
 
 @implementation AppDelegate
@@ -106,11 +106,11 @@
     
     [self configureAMapKey];
     HPGuideViewController *guidevc = [[HPGuideViewController alloc] init];
-    HPMainTabBarController *mainTabBarController = [[HPMainTabBarController alloc] init];
+    _mainTabBarController = [[HPMainTabBarController alloc] init];
     
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainTabBarController];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:_mainTabBarController];
     navigationController.navigationBarHidden = YES;
-    [navigationController.interactivePopGestureRecognizer setDelegate:mainTabBarController];
+    [navigationController.interactivePopGestureRecognizer setDelegate:_mainTabBarController];
     NSString *isFirst = [kUserDefaults objectForKey:@"isFirst"];
     if ([isFirst isEqualToString:@"isFirst"]) {
         self.window.rootViewController = navigationController;

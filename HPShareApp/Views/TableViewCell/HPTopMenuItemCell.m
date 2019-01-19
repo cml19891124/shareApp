@@ -7,9 +7,7 @@
 //
 
 #import "HPTopMenuItemCell.h"
-#import "HPMenuCellbutton.h"
 #import "HPCommonBannerData.h"
-#import "HPSingleton.h"
 
 @implementation HPTopMenuItemCell
 
@@ -39,7 +37,7 @@
 
 - (void)setUpTopMenuSubviews
 {
-    [self.contentView addSubview:self.iCarousel];
+    [self.contentView addSubview:self.pageView];
 
     [self.contentView addSubview:self.pageControl];
     
@@ -49,7 +47,7 @@
 - (void)setUpCellSubviewsFrame
 {
     
-    [self.iCarousel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.pageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(self);
         make.top.mas_equalTo(getWidth(10.f));
         make.height.mas_equalTo(getWidth(120.f));
@@ -57,7 +55,7 @@
     
     [_pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self);
-        make.bottom.equalTo(self.iCarousel).with.offset(-18.f * g_rateWidth);
+        make.bottom.equalTo(self.pageView).with.offset(-18.f * g_rateWidth);
     }];
 }
 
@@ -75,30 +73,30 @@
     return _bannerView;
 }
 
-- (HPBannerView *)iCarousel
+- (HPBannerView *)pageView
 {
-    if (!_iCarousel) {
-        _iCarousel = [[HPBannerView alloc] init];
+    if (!_pageView) {
+        _pageView = [[HPBannerView alloc] init];
         if (self.bannerImageArr && self.bannerImageArr.count) {
-            [_iCarousel setImages:self.bannerImageArr];
+            [_pageView setImages:self.bannerImageArr];
 
         }else{
             NSArray *bannerImageArr = @[ImageNamed(@"home_page_banner"),ImageNamed(@"home_page_banner"),ImageNamed(@"home_page_banner")];
 
-            [_iCarousel setImages:bannerImageArr];
+            [_pageView setImages:bannerImageArr];
 
         }
         
-        [_iCarousel setImageContentMode:UIViewContentModeScaleToFill];
-        [_iCarousel setPageSpace:getWidth(15.f)];//space + width = 每次滑动到距离
-        [_iCarousel setPageMarginLeft:getWidth(25.f)];//距离屏幕左边的宽度
-        [_iCarousel setPageWidth:getWidth(325.f)];
-        [_iCarousel setPageItemSize:CGSizeMake(getWidth(325.f), getWidth(120.f))];//轮播里面卡片控件的大小。默认与width相等
-        [_iCarousel setBannerViewDelegate:self];
-        [_iCarousel startAutoScrollWithInterval:2];
-        _iCarousel.backgroundColor = [[UIColor clearColor] colorWithAlphaComponent:0.001];
+        [_pageView setImageContentMode:UIViewContentModeScaleToFill];
+        [_pageView setPageSpace:getWidth(15.f)];//space + width = 每次滑动到距离
+        [_pageView setPageMarginLeft:getWidth(25.f)];//距离屏幕左边的宽度
+        [_pageView setPageWidth:getWidth(325.f)];
+        [_pageView setPageItemSize:CGSizeMake(getWidth(325.f), getWidth(120.f))];//轮播里面卡片控件的大小。默认与width相等
+        [_pageView setBannerViewDelegate:self];
+        [_pageView startAutoScrollWithInterval:2];
+        _pageView.backgroundColor = [[UIColor clearColor] colorWithAlphaComponent:0.001];
     }
-    return _iCarousel;
+    return _pageView;
 }
 
 - (HPPageControl *)pageControl
@@ -133,14 +131,17 @@
         [menuBtn setImage:ImageNamed(menuImageArr[i]) forState:UIControlStateNormal];
         [menuBtn setTitle:menuTitleArr[i] forState:UIControlStateNormal];
         [menuBtn addTarget:self action:@selector(clickMenuItem:) forControlEvents:UIControlEventTouchUpInside];
+        menuBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
+
         menuBtn.tag = 50 + i;
         CGFloat row = i/4;
         CGFloat col = i%4;
         [self addSubview:menuBtn];
+        self.menuBtn = menuBtn;
         CGFloat margin = (kScreenWidth - getWidth(52.f) * 4 - getWidth(26.f) * 2)/3;
         [menuBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(getWidth(26.f) + (getWidth(52.f) + margin) * col);
-            make.top.mas_equalTo(self.iCarousel.mas_bottom).offset(getWidth(25.f) + (getWidth(77.f) + getWidth(21.f)) * row);
+            make.top.mas_equalTo(self.pageView.mas_bottom).offset(getWidth(25.f) + (getWidth(77.f) + getWidth(21.f)) * row);
             make.size.mas_equalTo(CGSizeMake(getWidth(52.f), getWidth(77.f)));
         }];
     }
@@ -157,9 +158,11 @@
 
 - (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
     [_pageControl setCurrentPage:index];
+    _pageView.tag = 60 + index;
+    [_pageView stopAutoScroll];
     HPHomeBannerModel *model = self.bannerModelsArr[index];
     if (self.bannerClickTypeBlock) {
-        self.bannerClickTypeBlock(model);
+        self.bannerClickTypeBlock(model,_pageView.tag);
     }
 }
 

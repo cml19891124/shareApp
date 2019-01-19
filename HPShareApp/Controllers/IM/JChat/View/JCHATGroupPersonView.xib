@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="JCHATGroupPersonView">
+            <rect key="frame" x="0.0" y="0.0" width="56" height="75"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="73S-EI-iRM">
+                    <rect key="frame" x="4" y="0.0" width="46" height="46"/>
+                    <animations/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="46" id="V8L-kz-gHT"/>
+                        <constraint firstAttribute="width" constant="46" id="aGf-Wd-yff"/>
+                    </constraints>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="headViewBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="QLQ-Wz-hnx"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="张三" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6d7-tY-UO6">
+                    <rect key="frame" x="0.0" y="54" width="56" height="21"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="HHI-nu-mQz"/>
+                        <constraint firstAttribute="width" constant="56" id="ZAA-tq-DaN"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t0q-dv-nx0">
+                    <rect key="frame" x="36" y="0.0" width="20" height="20"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.93045691289999999" green="0.26005291935733998" blue="0.086192203313621041" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="Dsu-8P-569"/>
+                        <constraint firstAttribute="width" constant="20" id="Egg-4L-Hdk"/>
+                    </constraints>
+                    <state key="normal" title="--">
+                        <color key="titleColor" red="0.89152115070000004" green="0.63602897570000005" blue="0.93045691289999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="deleteBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="do5-Jx-PdK"/>
+                    </connections>
+                </button>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="73S-EI-iRM" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Bj2-iJ-yko"/>
+                <constraint firstAttribute="trailing" secondItem="73S-EI-iRM" secondAttribute="trailing" constant="6" id="EPX-NM-a8K"/>
+                <constraint firstItem="73S-EI-iRM" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="4" id="Zvx-kp-dOt"/>
+                <constraint firstItem="6d7-tY-UO6" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="b9S-HK-kOR"/>
+                <constraint firstAttribute="trailing" secondItem="t0q-dv-nx0" secondAttribute="trailing" id="kCG-gu-Zgb"/>
+                <constraint firstItem="t0q-dv-nx0" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="kpe-uZ-8G8"/>
+                <constraint firstAttribute="trailing" secondItem="6d7-tY-UO6" secondAttribute="trailing" id="mdh-Gx-j5g"/>
+                <constraint firstItem="6d7-tY-UO6" firstAttribute="top" secondItem="73S-EI-iRM" secondAttribute="bottom" constant="8" id="spO-UH-pm3"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="deletePersonBtn" destination="t0q-dv-nx0" id="tQG-98-UBX"/>
+                <outlet property="headViewBtn" destination="73S-EI-iRM" id="0Ri-3l-ZIQ"/>
+                <outlet property="memberLable" destination="6d7-tY-UO6" id="jIQ-X8-Flm"/>
+            </connections>
+            <point key="canvasLocation" x="901" y="437.5"/>
+        </view>
+    </objects>
+</document>

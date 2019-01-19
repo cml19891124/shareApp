@@ -64,6 +64,8 @@
         //高度自适应，前提不设置宽度，高度自适应
         [_ideaTitle setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
         _ideaTitle.numberOfLines = 0;
+        //宽度自适应
+        _ideaTitle.adjustsFontSizeToFitWidth = YES;
     }
     return _ideaTitle;
 }

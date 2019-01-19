@@ -7,10 +7,14 @@
 //
 
 #import "HPBaseShareListController.h"
+#import "JCHATChatTable.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPInteractiveController : HPBaseViewController
+
+@property (nonatomic, strong) UIImageView *addBgView;
 
 @end
 

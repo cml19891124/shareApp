@@ -9,7 +9,7 @@
 #ifndef Macro_h
 #define Macro_h
 
-#define JPushAppKey @"fe7e1f4e51fda593af68b71e"
+#define JPushAppKey @"e9ab740a789860714d7a511a"
 /**
  全局宏定义。
  */
@@ -170,6 +170,9 @@
 #define ErrorNet                 [HPProgressHUD alertMessage:@"网络错误"];
 //弱引用/强引用
 #define kWeakSelf(weakSelf)  __weak __typeof(&*self) weakSelf = self;
+#define kWEAKSELF __weak __typeof(self)weakSelf = self;
+#define kSTRONGSELF __strong __typeof(weakSelf)strongSelf = weakSelf;
+#define UIColorFromRGBA(rgbValue) [UIColor  colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0  green:((float)((rgbValue & 0xFF00) >> 8))/255.0  blue:((float)(rgbValue & 0xFF))/255.0 alpha:0.7]
 
 //字符串是否为空
 #define kStringIsEmpty(str) ([str isKindOfClass:[NSNull class]] || str == nil || [str length] < 1 ? YES : NO )
@@ -200,6 +203,7 @@
 #import <MAMapKit/MAMapKit.h>
 #import <AMapLocationKit/AMapLocationKit.h>
 #import <AMapSearchKit/AMapSearchKit.h>
+#import "ViewUtil.h"
 
 //自定义打印语句
 #ifdef DEBUG
@@ -212,5 +216,29 @@
  高德地图API key
  */
 #define AMAP_KEY @"bdd5ea7841253bf7196e963c2e5a830a"
+#define UIColorFromRGB(rgbValue) [UIColor  colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0  green:((float)((rgbValue & 0xFF00) >> 8))/255.0  blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+static NSInteger const st_toolBarTextSize = 17.0f;
+#define kTabBarHeight            49
+
+#define kNavigationLeftButtonRect CGRectMake(0, 0, 30, 30)
+#define kGoBackBtnImageOffset UIEdgeInsetsMake(0, 0, 0, 15)
+#define kDeleteAllMessage  @"deleteAllMessage"
+
+//static const
+static NSString * const st_chatViewController = @"JCHATChatViewController";
+static NSString * const st_contactsViewController = @"JCHATContactsViewController";
+static NSString * const st_userInfoViewController = @"JCHATUserInfoViewController";
+
+static NSString * const st_chatViewControllerTittle = @"会话";
+static const NSInteger st_chatTabTag = 10;
+
+static NSString * const st_contactsTabTitle = @"通讯录";
+static NSInteger const st_contactsTabTag = 11;
+
+static NSString * const st_settingTabTitle = @"我";
+static NSInteger const st_settingTag = 12;
+
+static NSString * const st_receiveUnknowMessageDes = @"收到新消息类型无法解析的数据，请升级查看";
+static NSString * const st_receiveErrorMessageDes = @"接收消息错误";
 
 #endif /* Macro_h */

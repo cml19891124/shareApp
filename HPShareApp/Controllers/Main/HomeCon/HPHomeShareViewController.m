@@ -293,11 +293,11 @@ static NSString *shareListCell = @"shareListCell";
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     HPLoginModel *account = [HPUserTool account];
     //广告点击跳转block
-    [cell setBannerClickTypeBlock:^(HPHomeBannerModel *model) {
+    [cell setBannerClickTypeBlock:^(HPHomeBannerModel *model,NSInteger index) {
         if (!account.token) {
             [HPProgressHUD alertMessage:@"请前往登录"];
         }else{
-            if (model.link) {
+            if (index && model.link) {
                 
             }
             //                [self pushVCByClassName:@"HPIdeaDetailViewController"];

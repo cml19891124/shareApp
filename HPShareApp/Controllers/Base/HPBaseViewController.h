@@ -15,6 +15,8 @@
 
 - (void)clickRightButtonToHandle;
 
+- (void)clickLeftButtonToHandle:(UIButton *)button;
+
 @end
 
 NS_ASSUME_NONNULL_BEGIN
@@ -27,11 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isPopGestureRecognize;
 
+@property (nonatomic, copy) NSString *imageName;
+
 @property (nonatomic, weak) id<HPBaseViewControllerDelegate> delegate;
 
 - (void)setupBackBtn;
 
 - (UIView *)setupNavigationBarWithTitle:(NSString *)title;
+
+- (void)setupLeftBarbuttonBtn:(NSString *)text;
 
 - (void)setupRightBarbuttonBtn:(NSString *)text;
 

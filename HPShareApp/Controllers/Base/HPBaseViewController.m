@@ -21,6 +21,7 @@
         _isPopGestureRecognize = YES;
         _isPop = NO;
         _param = [NSMutableDictionary dictionary];
+
     }
     return self;
 }
@@ -90,7 +91,7 @@
     return navigationBar;
 }
 
-- (void)setupBackBtn {
+- (void)setupBackBtn{
     UIButton *backBtn = [[UIButton alloc] init];
     [backBtn addTarget:self action:@selector(onClickBackBtn) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backBtn];
@@ -124,6 +125,36 @@
         make.width.mas_equalTo(textW);
         make.height.mas_equalTo(44.f);
     }];
+}
+
+- (void)setupLeftBarbuttonBtn:(NSString *)text {
+    UIButton *leftBarbuttonBtn = [[UIButton alloc] init];
+    [leftBarbuttonBtn setImage:ImageNamed(@"createConversation") forState:UIControlStateNormal];
+    [leftBarbuttonBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(15.f), 0, getWidth(-20.f), 0)];
+    if (text.length > 0) {
+        leftBarbuttonBtn.hidden = NO;
+    }else{
+        leftBarbuttonBtn.hidden = YES;
+        
+    }
+    [leftBarbuttonBtn addTarget:self action:@selector(onClickleftBarbuttonBtn:) forControlEvents:UIControlEventTouchUpInside];
+    leftBarbuttonBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    [self.view addSubview:leftBarbuttonBtn];
+    
+    [leftBarbuttonBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).with.offset(g_statusBarHeight);
+        make.left.equalTo(self.view).offset(getWidth(15.f));
+        
+    }];
+    [leftBarbuttonBtn sizeToFit];
+}
+
+
+- (void)onClickleftBarbuttonBtn:(UIButton *)button
+{
+    if ([self.delegate respondsToSelector:@selector(clickLeftButtonToHandle:)]) {
+        [self.delegate clickLeftButtonToHandle:button];
+    }
 }
 
 - (void)onClickRightButtonBtn

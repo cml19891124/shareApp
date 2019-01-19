@@ -81,9 +81,12 @@ CGFloat ScaledValueForValue(CGFloat value)
 - (void)setupSubviewsmaonry
 {
     [self.countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(11.f));
-        make.top.mas_equalTo(getWidth(10.f));
+//        make.left.mas_equalTo(getWidth(11.f));
+//        make.top.mas_equalTo(getWidth(10.f));
         make.size.mas_equalTo(CGSizeMake(getWidth(20.f), getWidth(20.f)));
+        make.centerX.mas_equalTo(self);
+        make.centerY.mas_equalTo(self).offset(getWidth(-5.f));
+
     }];
 }
 

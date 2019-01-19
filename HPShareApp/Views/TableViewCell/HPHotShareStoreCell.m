@@ -40,6 +40,7 @@
 {
     [self.contentView addSubview:self.titleLabel];
     HPRightImageButton *moreBtn = [self setupGotoBtnWithTitle:@"更多"];
+    moreBtn.font = iPhone5?kFont_Medium(12.f):kFont_Medium(14.f);
     [self.contentView addSubview:moreBtn];
     self.moreBtn = moreBtn;
     
