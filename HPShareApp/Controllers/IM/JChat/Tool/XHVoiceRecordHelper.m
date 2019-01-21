@@ -95,7 +95,7 @@
 }
 
 - (void)startRecordingWithPath:(NSString *)path StartRecorderCompletion:(XHStartRecorderCompletion)startRecorderCompletion {
-    NSLog(@"startRecordingWithPath");
+    HPLog(@"startRecordingWithPath");
     _isPause = NO;
     NSError *error = nil;
     

@@ -26,6 +26,7 @@ UICollectionViewDelegate,
 UICollectionViewDelegateFlowLayout,
 UIAlertViewDelegate,
 UITableViewDataSource,
+UITableViewDelegate,
 UITabBarDelegate> {
   BOOL _isInEditToDeleteMember;
   BOOL _isNoDisturb;
@@ -65,7 +66,7 @@ UITabBarDelegate> {
   self.title=@"聊天详情";
   UIButton *leftBtn =[UIButton buttonWithType:UIButtonTypeCustom];
   [leftBtn setFrame:kNavigationLeftButtonRect];
-  [leftBtn setImage:[UIImage imageNamed:@"goBack"] forState:UIControlStateNormal];
+  [leftBtn setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
   [leftBtn setImageEdgeInsets:kGoBackBtnImageOffset];
   [leftBtn addTarget:self
               action:@selector(backClick)
@@ -423,9 +424,12 @@ UITabBarDelegate> {
       if (error == nil) {
           self->_isNoDisturb = !self->_isNoDisturb;
         if (weakUser.isNoDisturb) {
-          NSLog(@"is no disturb");
+          HPLog(@"is no disturb");
+            [HPProgressHUD alertWithLoadingText:@"免打扰成功"];
         } else {
-          NSLog(@"is disturb");
+          HPLog(@"is disturb");
+            [HPProgressHUD alertWithLoadingText:@"打扰成功"];
+
         }
       }
     }];

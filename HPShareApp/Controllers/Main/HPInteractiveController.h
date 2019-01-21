@@ -13,7 +13,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPInteractiveController : HPBaseViewController
-
+{
+    
+    NSInteger cacheCount;
+    BOOL isGetingAllConversation;
+}
 @property (nonatomic, strong) UIImageView *addBgView;
 
 @end

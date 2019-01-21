@@ -31,16 +31,6 @@
     // Do any additional setup after loading the view.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 - (UIView *)setupStatusbar {
     UIView *statusBar = [[UIView alloc] init];
     [statusBar setBackgroundColor:COLOR_RED_EA0000];
@@ -130,7 +120,8 @@
 - (void)setupLeftBarbuttonBtn:(NSString *)text {
     UIButton *leftBarbuttonBtn = [[UIButton alloc] init];
     [leftBarbuttonBtn setImage:ImageNamed(@"createConversation") forState:UIControlStateNormal];
-    [leftBarbuttonBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(15.f), 0, getWidth(-20.f), 0)];
+    [leftBarbuttonBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(15.f), getWidth(15.f), getWidth(-20.f), getWidth(-15.f))];
+    leftBarbuttonBtn.imageView.contentMode = UIViewContentModeCenter;
     if (text.length > 0) {
         leftBarbuttonBtn.hidden = NO;
     }else{

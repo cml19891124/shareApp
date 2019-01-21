@@ -269,7 +269,7 @@ static NSInteger const readViewRadius = 4;
   }
   if (_model.message.contentType == kJMSGContentTypeImage) {
     if (self.model.message.status == kJMSGMessageStatusReceiveDownloadFailed) {
-      NSLog(@"正在下载缩略图");
+      HPLog(@"正在下载缩略图");
       HPLog(@"Action");
       [_circleView startAnimating];
     } else {

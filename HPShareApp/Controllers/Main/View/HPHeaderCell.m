@@ -69,7 +69,8 @@
     
     [self.headImageview mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.headTitlelabel.mas_right).offset(getWidth(4.f));
-        make.top.mas_equalTo(self.headTitlelabel);
+//        make.top.mas_equalTo(self.headTitlelabel);
+        make.centerY.mas_equalTo(self.headTitlelabel);
         make.size.mas_equalTo(CGSizeMake(getWidth(32.f), getWidth(19.f)));
     }];
 }
@@ -106,8 +107,10 @@
         _headTitlelabel = [UILabel new];
         _headTitlelabel.text = @"合店";
         _headTitlelabel.textColor = COLOR_BLACK_333333;
-        _headTitlelabel.textAlignment = NSTextAlignmentLeft;
+        _headTitlelabel.textAlignment = NSTextAlignmentCenter;
         _headTitlelabel.font = kFont_Bold(18.f);
+        _headTitlelabel.adjustsFontSizeToFitWidth = YES;
+//        _headTitlelabel.verticalAlignment = VerticalAlignmentMiddle;
     }
     return _headTitlelabel;
 }

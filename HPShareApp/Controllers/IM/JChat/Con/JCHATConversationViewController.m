@@ -28,6 +28,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "JCHATPhotoSelectViewController.h"
 #import "Macro.h"
+#import "HPImageUtil.h"
 #define kAlertToSendImage @"AlertToSendImage"
 #define JCHATMAINTHREAD(block) dispatch_async(dispatch_get_main_queue(), block)
 #define kuserName @"userName"
@@ -35,7 +36,7 @@
 #define upLoadImgWidth            720
 #define kDeleteMessage @"DeleteMessage"
 
-@interface JCHATConversationViewController () {
+@interface JCHATConversationViewController ()<JCHATPhotoPickerViewControllerDelegate> {
   
 @private
     BOOL isNoOtherMessage;
@@ -55,7 +56,7 @@
 @implementation JCHATConversationViewController//change name chatcontroller
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.automaticallyAdjustsScrollViewInsets = NO;
+//    self.automaticallyAdjustsScrollViewInsets = NO;这行代码表示scrollview可以延伸到导航栏下
 
     _refreshAvatarUsersDic = [NSMutableDictionary dictionary];
     _allMessageDic = [NSMutableDictionary dictionary];
@@ -124,6 +125,14 @@
 - (void)viewWillDisappear:(BOOL)animated {
   HPLog(@"Event - viewWillDisappear");
   [super viewWillDisappear:animated];
+    if (self.isPop) {
+        [self.navigationController setNavigationBarHidden:YES animated:NO];
+
+    }else{
+        [self.navigationController setNavigationBarHidden:NO animated:NO];
+
+    }
+
   [_conversation clearUnreadCount];
   [[JCHATAudioPlayerHelper shareInstance] stopAudio];
   [[JCHATAudioPlayerHelper shareInstance] setDelegate:nil];
@@ -170,7 +179,12 @@
 }
 
 - (void)setupNavigation {
-  self.navigationController.navigationBar.translucent = NO;
+  self.navigationController.navigationBar.translucent = YES;
+    [self.navigationController.navigationBar setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_EA0000] forBarMetrics:UIBarMetricsDefault];
+    // 底部分割线
+    [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+
+
   _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
   [_rightBtn setFrame:navigationRightButtonRect];
   if (_conversation.conversationType == kJMSGConversationTypeSingle) {
@@ -190,7 +204,7 @@
     
   UIButton *leftBtn =[UIButton buttonWithType:UIButtonTypeCustom];
   [leftBtn setFrame:kNavigationLeftButtonRect];
-  [leftBtn setImage:[UIImage imageNamed:@"goBack"] forState:UIControlStateNormal];
+  [leftBtn setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
   [leftBtn setImageEdgeInsets:kGoBackBtnImageOffset];
 
   [leftBtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
@@ -243,7 +257,7 @@
   HPLog(@"Event - sendMessageResponse");
     
   if (message != nil) {
-    NSLog(@"发送的 Message:  %@",message);
+    HPLog(@"发送的 Message:  %@",message);
   }
     [self relayoutTableCellWithMessage:message];
   
@@ -702,6 +716,7 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
   if ([[JCHATAudioPlayerHelper shareInstance] isPlaying]) {
     [[JCHATAudioPlayerHelper shareInstance] stopAudio];
   }
+    self.isPop = YES;
   [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -712,7 +727,7 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
 }
 
 - (void)switchToTextInputMode {
-  UITextField *inputview = self.toolBarContainer.toolbar.textView;
+  UITextField *inputview = (UITextField *)self.toolBarContainer.toolbar.textView;
   [inputview becomeFirstResponder];
   [self layoutAndAnimateMessageInputTextView:inputview];
 }
@@ -1194,7 +1209,7 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
     }
 }
 
-#pragma mark - 检查并刷新消息图片图片
+#pragma mark - 检查并刷新消息图片
 - (void)refreshCellMessageMediaWithChatModel:(JCHATChatModel *)model {
     HPLog(@"Action - refreshCellMessageMediaWithChatModel:");
     

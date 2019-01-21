@@ -94,10 +94,10 @@ static const NSInteger tablecellHeight = 64;
     return;
   }
     [_groupTextField resignFirstResponder];
-    [HPProgressHUD alertMessage:@"正在创建群组！"];
+    [HPProgressHUD alertWithLoadingText:@"正在创建群组！"];
 
   [JMSGGroup createGroupWithName:_groupTextField.text desc:@"" memberArray:nil completionHandler:^(id resultObject, NSError *error) {
-      [HPProgressHUD alertMessage:@"创建群组成功！"];
+      [HPProgressHUD alertWithFinishText:@"创建群组成功！"];
     if (error ==nil) {
       [self.navigationController dismissViewControllerAnimated:YES completion:nil];
       [[NSNotificationCenter defaultCenter] postNotificationName:kCreatGroupState object:resultObject];

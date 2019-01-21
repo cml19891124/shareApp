@@ -320,6 +320,7 @@
 		E6B4CEE121C5286F00429C11 /* TAAnimatedDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED721C5286F00429C11 /* TAAnimatedDotView.m */; };
 		E6B4CEE221C5286F00429C11 /* TAAbstractDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED821C5286F00429C11 /* TAAbstractDotView.m */; };
 		E6B8987521D0D53900FD443B /* HPStoreLeavesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */; };
+		E6D492A521F55B8400EC6380 /* MiddleUILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D492A421F55B8400EC6380 /* MiddleUILabel.m */; };
 		E6D75F1321A78AD300B2067C /* HPSharePersonCard.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */; };
 		E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1621A811E500B2067C /* HPWhatIsShareSpaceController.m */; };
 		E6D75F1A21ABCA7B00B2067C /* HPHowToPlayShareSpaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1921ABCA7B00B2067C /* HPHowToPlayShareSpaceController.m */; };
@@ -992,6 +993,8 @@
 		E6B4CEDB21C5286F00429C11 /* TAPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAPageControl.h; sourceTree = "<group>"; };
 		E6B8987321D0D53900FD443B /* HPStoreLeavesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPStoreLeavesViewController.h; sourceTree = "<group>"; };
 		E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPStoreLeavesViewController.m; sourceTree = "<group>"; };
+		E6D492A321F55B8400EC6380 /* MiddleUILabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MiddleUILabel.h; sourceTree = "<group>"; };
+		E6D492A421F55B8400EC6380 /* MiddleUILabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MiddleUILabel.m; sourceTree = "<group>"; };
 		E6D75F1121A78AD300B2067C /* HPSharePersonCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSharePersonCard.h; sourceTree = "<group>"; };
 		E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSharePersonCard.m; sourceTree = "<group>"; };
 		E6D75F1521A811E500B2067C /* HPWhatIsShareSpaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPWhatIsShareSpaceController.h; sourceTree = "<group>"; };
@@ -2418,6 +2421,8 @@
 				E68C856921E9EC2B00AF259C /* HPHeaderCell.m */,
 				E68C856B21E9ED9400AF259C /* HPIdeaListCell.h */,
 				E68C856C21E9ED9400AF259C /* HPIdeaListCell.m */,
+				E6D492A321F55B8400EC6380 /* MiddleUILabel.h */,
+				E6D492A421F55B8400EC6380 /* MiddleUILabel.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3228,6 +3233,7 @@
 				E6F551E121B911DF0086094F /* HPInterActiveModel.m in Sources */,
 				E61E27A421C8D68000CD5288 /* EBBannerViewMaker.m in Sources */,
 				E68C856D21E9ED9400AF259C /* HPIdeaListCell.m in Sources */,
+				E6D492A521F55B8400EC6380 /* MiddleUILabel.m in Sources */,
 				E63C73F421EED2D7003D35E0 /* HPHomeBannerModel.m in Sources */,
 				E6B8987521D0D53900FD443B /* HPStoreLeavesViewController.m in Sources */,
 				E6D75F8521B65AAD00B2067C /* HPFeedbackController.m in Sources */,

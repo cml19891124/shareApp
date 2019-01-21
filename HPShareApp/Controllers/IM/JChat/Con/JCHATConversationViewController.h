@@ -5,7 +5,7 @@
 //  Created by Apple on 14/12/26.
 //  Copyright (c) 2014年 Apple. All rights reserved.
 //
-
+#import "HPBaseViewController.h"
 #import <UIKit/UIKit.h>
 #import "JCHATMoreView.h"
 #import "JCHATChatModel.h"
@@ -23,7 +23,7 @@
 static NSInteger const messagePageNumber = 25;
 static NSInteger const messagefristPageNumber = 20;
 
-@interface JCHATConversationViewController : UIViewController <
+@interface JCHATConversationViewController : HPBaseViewController <
 UITableViewDataSource,
 UITableViewDelegate,
 SendMessageDelegate,
