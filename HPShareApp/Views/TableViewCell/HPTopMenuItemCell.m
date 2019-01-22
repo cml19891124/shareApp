@@ -27,7 +27,7 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.bannerImageArr = [NSMutableArray array];
         self.bannerModelsArr = [NSMutableArray array];
-
+        
         [self getHomeBannerDataList];
 
     }
@@ -159,14 +159,8 @@
 - (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
     [_pageControl setCurrentPage:index];
     _pageView.tag = 60 + index;
-    [_pageView stopAutoScroll];
-    HPHomeBannerModel *model = self.bannerModelsArr[index];
-    if (self.bannerClickTypeBlock) {
-        self.bannerClickTypeBlock(model,_pageView.tag);
-    }
+    
 }
-
-
 
 - (void)getHomeBannerDataList
 {
@@ -188,11 +182,7 @@
                     [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
 
                 }
-//                if (self.bannerImageArr.count <= 1) {//用本地图片填充两张
-//                    [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
-//                    [self.bannerImageArr addObject:ImageNamed(@"home_page_banner")];
-//
-//                }
+                
             }
             
             [self setUpTopMenuSubviews];
@@ -205,5 +195,6 @@
     }];
     
 }
+
 
 @end

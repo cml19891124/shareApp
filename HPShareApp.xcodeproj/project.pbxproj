@@ -136,6 +136,9 @@
 		E64B727321D24DAC00DCA29A /* HPMenuCellbutton.m in Sources */ = {isa = PBXBuildFile; fileRef = E64B727221D24DAC00DCA29A /* HPMenuCellbutton.m */; };
 		E654C7DE21BFE58E0066C506 /* HPFansListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CDD21BFA0ED00593D25 /* HPFansListModel.m */; };
 		E654C7DF21BFE6160066C506 /* HPCollectListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69165CDB21BFA0ED00593D25 /* HPCollectListModel.m */; };
+		E657A2E421F6B670008198C9 /* JCHATConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E657A2E221F6B670008198C9 /* JCHATConversationListViewController.m */; };
+		E657A2E521F6B670008198C9 /* JCHATConversationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E657A2E321F6B670008198C9 /* JCHATConversationListViewController.xib */; };
+		E657A2E821F6E762008198C9 /* HPNavGationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E657A2E721F6E762008198C9 /* HPNavGationViewController.m */; };
 		E661B094219BACE900C86CF5 /* HPShareController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B093219BACE900C86CF5 /* HPShareController.m */; };
 		E661B097219BAD5000C86CF5 /* HPIdeaController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B096219BAD5000C86CF5 /* HPIdeaController.m */; };
 		E661B09A219BADB200C86CF5 /* HPInteractiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = E661B099219BADB200C86CF5 /* HPInteractiveController.m */; };
@@ -651,6 +654,11 @@
 		E64B727121D24DAC00DCA29A /* HPMenuCellbutton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPMenuCellbutton.h; sourceTree = "<group>"; };
 		E64B727221D24DAC00DCA29A /* HPMenuCellbutton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPMenuCellbutton.m; sourceTree = "<group>"; };
 		E654C7DC21BFD6460066C506 /* HPMyCardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPMyCardController.m; sourceTree = "<group>"; };
+		E657A2E121F6B670008198C9 /* JCHATConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCHATConversationListViewController.h; sourceTree = "<group>"; };
+		E657A2E221F6B670008198C9 /* JCHATConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCHATConversationListViewController.m; sourceTree = "<group>"; };
+		E657A2E321F6B670008198C9 /* JCHATConversationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JCHATConversationListViewController.xib; sourceTree = "<group>"; };
+		E657A2E621F6E762008198C9 /* HPNavGationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPNavGationViewController.h; sourceTree = "<group>"; };
+		E657A2E721F6E762008198C9 /* HPNavGationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPNavGationViewController.m; sourceTree = "<group>"; };
 		E661B092219BACE900C86CF5 /* HPShareController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareController.h; sourceTree = "<group>"; };
 		E661B093219BACE900C86CF5 /* HPShareController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareController.m; sourceTree = "<group>"; };
 		E661B095219BAD5000C86CF5 /* HPIdeaController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaController.h; sourceTree = "<group>"; };
@@ -2190,6 +2198,9 @@
 		E68A76D521F2CBD100083A90 /* Con */ = {
 			isa = PBXGroup;
 			children = (
+				E657A2E121F6B670008198C9 /* JCHATConversationListViewController.h */,
+				E657A2E221F6B670008198C9 /* JCHATConversationListViewController.m */,
+				E657A2E321F6B670008198C9 /* JCHATConversationListViewController.xib */,
 				E68A780221F325F100083A90 /* JCHATGroupDetailViewController.h */,
 				E68A780021F325F100083A90 /* JCHATGroupDetailViewController.m */,
 				E68A780121F325F100083A90 /* JCHATGroupDetailViewController.xib */,
@@ -2208,6 +2219,8 @@
 				E68A76D821F2CBFD00083A90 /* JCHATSelectFriendsCtl.h */,
 				E68A76D721F2CBFD00083A90 /* JCHATSelectFriendsCtl.m */,
 				E68A76D621F2CBFD00083A90 /* JCHATSelectFriendsCtl.xib */,
+				E657A2E621F6E762008198C9 /* HPNavGationViewController.h */,
+				E657A2E721F6E762008198C9 /* HPNavGationViewController.m */,
 			);
 			path = Con;
 			sourceTree = "<group>";
@@ -2798,6 +2811,7 @@
 				E61E27A721C8D68000CD5288 /* EBBannerViewController.xib in Resources */,
 				E68A77D421F321BD00083A90 /* JCHATPhotoPickerViewController.xib in Resources */,
 				E68A77D921F321BD00083A90 /* JCHATAlbumViewController.xib in Resources */,
+				E657A2E521F6B670008198C9 /* JCHATConversationListViewController.xib in Resources */,
 				E68A773221F31C4C00083A90 /* JCHATMoreView.xib in Resources */,
 				E68A77E321F321BD00083A90 /* ThumbImageCollectionViewCell.xib in Resources */,
 				E68A77E421F321BD00083A90 /* JCHATPhotoBrowserCollectionViewCell.xib in Resources */,
@@ -3061,6 +3075,7 @@
 				E661B13321A2C4F500C86CF5 /* HPCalendarView.m in Sources */,
 				69165D0F21C4D77100593D25 /* HPLinkageView.m in Sources */,
 				E68A77C021F321BD00083A90 /* ChatBubbleLayer.m in Sources */,
+				E657A2E421F6B670008198C9 /* JCHATConversationListViewController.m in Sources */,
 				69165CE421BFB36500593D25 /* HPPictureModel.m in Sources */,
 				E6B4CEE221C5286F00429C11 /* TAAbstractDotView.m in Sources */,
 				E6830E5121D20594000E0F39 /* HPMenuOpenStoreView.m in Sources */,
@@ -3167,6 +3182,7 @@
 				E6830E4821D1D0B3000E0F39 /* HPIntentionListModel.m in Sources */,
 				E61F710421C12F1C00932708 /* HPSystemNotiController.m in Sources */,
 				E661B12521A28E8500C86CF5 /* JTDateHelper.m in Sources */,
+				E657A2E821F6E762008198C9 /* HPNavGationViewController.m in Sources */,
 				E661B0C4219CFE6D00C86CF5 /* HPCheckTableCell.m in Sources */,
 				E6D75F3B21AEA15400B2067C /* HPConfigCenterController.m in Sources */,
 				E68A76FF21F2D2F200083A90 /* JCHATTimeOutManager.m in Sources */,

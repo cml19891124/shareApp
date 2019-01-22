@@ -169,6 +169,10 @@
     
     [_imagePager scrollToPageAtIndex:self.currentPage];
     [_imagePager show:YES];
+    
+    if (_bannerViewDelegate && [_bannerViewDelegate respondsToSelector:@selector(pageView:didClickPageItem:atIndex:)]) {
+        [_bannerViewDelegate pageView:self didClickPageItem:item atIndex:index];
+    }
 }
 
 #pragma mark - UIResponder

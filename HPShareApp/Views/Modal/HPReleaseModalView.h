@@ -10,7 +10,8 @@
 
 typedef NS_ENUM(NSInteger, HPReleaseCardType) {
     HPReleaseCardTypeOwner = 0,
-    HPReleaseCardTypeStartup
+    HPReleaseCardTypeStartup,
+    HPReleaseCardTypeGoods
 };
 
 typedef void(^HPReleaseCardCallBack)(HPReleaseCardType type);

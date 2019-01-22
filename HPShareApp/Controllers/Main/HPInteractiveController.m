@@ -14,6 +14,9 @@
 #import "JCHATAlertViewWait.h"
 #import "JCHATConversationViewController.h"
 #import "HPImageUtil.h"
+#import "JCHATConversationListViewController.h"
+#import "HPNavGationViewController.h"
+
 #define JCHATMAINTHREAD(block) dispatch_async(dispatch_get_main_queue(), block)
 #define kDBMigrateFinishNotification @"DBMigrateFinishNotification"
 #define kLogin_NotifiCation @"loginNotification"
@@ -82,17 +85,17 @@
 
 - (void)clickLeftButtonToHandle:(UIButton *)button
 {
-    [self addBtnClick:button];
+//    [self addBtnClick:button];
 }
 static NSString *interactiveCell = @"interactiveCell";
 static NSString *conversationListCell = @"conversationListCell";
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.isPop = NO;
 //    [self setUpNavgationBarConfig];
     [self setupBubbleView];
-    
+    _conversationArr = [NSMutableArray array];
     [self setUpNotiConfig];
     // Do any additional setup after loading the view.
     self.delegate = self;
@@ -104,68 +107,7 @@ static NSString *conversationListCell = @"conversationListCell";
     [self setupRightBarbuttonBtn:@"一键已读"];
     [self.view setBackgroundColor:COLOR_GRAY_F7F7F7];
 //左边按钮
-    [self setupLeftBarbuttonBtn:@"fdf"];
-}
-
-- (UIView *)myTitleView
-{
-    if (!_myTitleView) {
-        _myTitleView = [UIView new];
-    }
-    return _myTitleView;
-}
-
-- (UILabel *)titleLabel
-{
-    if (!_titleLabel) {
-        _titleLabel = [UILabel new];
-        _titleLabel.text = @"互动";
-        _titleLabel.textColor = COLOR_GRAY_FFFFFF;
-        _titleLabel.textAlignment = NSTextAlignmentCenter;
-        _titleLabel.font = kFont_Bold(18.f);
-    }
-    return _titleLabel;
-}
-
-- (UIActivityIndicatorView *)titleActivity
-{
-    if (!_titleActivity) {
-        _titleActivity = [UIActivityIndicatorView new];
-    }
-    return _titleActivity;
-}
-
-- (void)setUpNavgationBarConfig
-{
-    self.navigationController.interactivePopGestureRecognizer.delegate = self;
-    _titleActivity.hidden = YES;
-    [_titleActivity startAnimating];
-    self.navigationItem.titleView = self.myTitleView;
-    
-    [self.myTitleView addSubview:self.titleLabel];
-    
-    [self.myTitleView addSubview:self.titleActivity];
-    
-    [self.myTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(getWidth(200.f), getWidth(40.f)));
-    }];
-    
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.mas_equalTo(self.myTitleView);
-        make.size.mas_equalTo(CGSizeMake(getWidth(40.f), getWidth(22.5)));
-    }];
-    
-    [self.titleActivity mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.titleLabel.mas_left).offset(getWidth(-10.f));
-        make.centerY.mas_equalTo(self.titleLabel);
-    }];
-    
-    _rightBarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_rightBarButton setFrame:kBackBtnFrame];
-    [_rightBarButton addTarget:self action:@selector(addBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    [_rightBarButton setImage:[UIImage imageNamed:@"createConversation"] forState:UIControlStateNormal];
-    [_rightBarButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -15*[UIScreen mainScreen].scale)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_rightBarButton];//为导航栏添加右侧按钮
+//    [self setupLeftBarbuttonBtn:@"fdf"];
 }
 
 #pragma mark - 下拉IM卡选项
@@ -288,34 +230,34 @@ static NSString *conversationListCell = @"conversationListCell";
     [kNotificationCenter addObserver:self selector:@selector(getNotiInfo:) name:@"regiest" object:nil];
     [kNotificationCenter addObserver:self selector:@selector(getNotiInfo:) name:@"login" object:nil];
 
-    [kNotificationCenter addObserver:self
-                                             selector:@selector(netWorkConnectClose)
-                                                 name:kJMSGNetworkDidCloseNotification
-                                               object:nil];
+//    [kNotificationCenter addObserver:self
+//                                             selector:@selector(netWorkConnectClose)
+//                                                 name:kJMSGNetworkDidCloseNotification
+//                                               object:nil];
     
-    [kNotificationCenter addObserver:self
-                                             selector:@selector(netWorkConnectSetup)
-                                                 name:kJMSGNetworkDidSetupNotification
-                                               object:nil];
+//    [kNotificationCenter addObserver:self
+//                                             selector:@selector(netWorkConnectSetup)
+//                                                 name:kJMSGNetworkDidSetupNotification
+//                                               object:nil];
     
-    [kNotificationCenter addObserver:self
-                                             selector:@selector(connectSucceed)
-                                                 name:kJMSGNetworkDidLoginNotification
-                                               object:nil];
+//    [kNotificationCenter addObserver:self
+//                                             selector:@selector(connectSucceed)
+//                                                 name:kJMSGNetworkDidLoginNotification
+//                                               object:nil];
     
-    [kNotificationCenter addObserver:self
-                                             selector:@selector(isConnecting)
-                                                 name:kJMSGNetworkIsConnectingNotification
-                                               object:nil];
+//    [kNotificationCenter addObserver:self
+//                                             selector:@selector(isConnecting)
+//                                                 name:kJMSGNetworkIsConnectingNotification
+//                                               object:nil];
     
     [kNotificationCenter addObserver:self
                                              selector:@selector(dBMigrateFinish)
                                                  name:kDBMigrateFinishNotification object:nil];
     
     
-    [kNotificationCenter addObserver:self
-                                             selector:@selector(alreadyLoginClick)
-                                                 name:kLogin_NotifiCation object:nil];
+//    [kNotificationCenter addObserver:self
+//                                             selector:@selector(alreadyLoginClick)
+//                                                 name:kLogin_NotifiCation object:nil];
     
     [kNotificationCenter addObserver:self
                                              selector:@selector(creatGroupSuccessToPushView:)
@@ -356,7 +298,7 @@ static NSString *conversationListCell = @"conversationListCell";
     });
     
     [self addDelegate];
-    [self getConversationList];
+//    [self getConversationList];
 }
 
 #pragma mark --创建群成功Push group viewctl
@@ -413,9 +355,9 @@ static NSString *conversationListCell = @"conversationListCell";
     [kNotificationCenter removeObserver:self];
     [kNotificationCenter removeObserver:self];
     [kNotificationCenter removeObserver:self];
-    [kNotificationCenter removeObserver:self];
-    [kNotificationCenter removeObserver:self];
-    [kNotificationCenter removeObserver:self];
+//    [kNotificationCenter removeObserver:self];
+//    [kNotificationCenter removeObserver:self];
+//    [kNotificationCenter removeObserver:self];
 
 }
 - (void)setupUI {
@@ -440,7 +382,7 @@ static NSString *conversationListCell = @"conversationListCell";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return _interArray.count;
+    return _interArray.count + 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -448,8 +390,8 @@ static NSString *conversationListCell = @"conversationListCell";
     if (section == 0) {
         return [_interArray count];
     }else if (section == 1) {
-//        return 1.f;
-        return _conversationArr.count;
+        return 1.f;
+//        return _conversationArr.count;
     }
     return 0;
 }
@@ -463,39 +405,41 @@ static NSString *conversationListCell = @"conversationListCell";
         cell.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
-    }else{
-        if (_conversationArr.count == 0) {
-            [cell.contentView removeFromSuperview];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UIImage *image = ImageNamed(@"waiting");
-            UIImageView *waitingView = [[UIImageView alloc] init];
-            waitingView.image = image;
-            [cell addSubview:waitingView];
-            [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(72.f * g_rateWidth);
-                make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
-                make.centerX.mas_equalTo(cell);
-            }];
-            
-            UILabel *waitingLabel = [[UILabel alloc] init];
-            waitingLabel.text = @"在线互动即将开启，敬情期待 ~";
-            waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
-            waitingLabel.textColor = COLOR_GRAY_BBBBBB;
-            waitingLabel.textAlignment = NSTextAlignmentCenter;
-            [cell addSubview:waitingLabel];
-            [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.mas_equalTo(cell);
-                make.top.mas_equalTo(waitingView.mas_top).offset(158.f * g_rateWidth);
-                make.width.mas_equalTo(kScreenWidth);
-            }];
-        }else{
-            JCHATConversationListCell *cell = (JCHATConversationListCell *)[tableView dequeueReusableCellWithIdentifier:conversationListCell];
-            
-            JMSGConversation *conversation =[_conversationArr objectAtIndex:indexPath.row];
-            [cell setCellDataWithConversation:conversation];
-            return cell;
-        }
-        
+    }else if (indexPath.section == 1) {
+//        if (_conversationArr.count == 0) {
+//            [cell.contentView removeFromSuperview];
+//            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//            UIImage *image = ImageNamed(@"waiting");
+//            UIImageView *waitingView = [[UIImageView alloc] init];
+//            waitingView.image = image;
+//            [cell addSubview:waitingView];
+//            [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
+//                make.top.mas_equalTo(72.f * g_rateWidth);
+//                make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
+//                make.centerX.mas_equalTo(cell);
+//            }];
+//
+//            UILabel *waitingLabel = [[UILabel alloc] init];
+//            waitingLabel.text = @"在线互动即将开启，敬情期待 ~";
+//            waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
+//            waitingLabel.textColor = COLOR_GRAY_BBBBBB;
+//            waitingLabel.textAlignment = NSTextAlignmentCenter;
+//            [cell addSubview:waitingLabel];
+//            [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//                make.centerX.mas_equalTo(cell);
+//                make.top.mas_equalTo(waitingView.mas_top).offset(158.f * g_rateWidth);
+//                make.width.mas_equalTo(kScreenWidth);
+//            }];
+//            return cell;
+//        }else{
+//            JCHATConversationListCell *cell = (JCHATConversationListCell *)[tableView dequeueReusableCellWithIdentifier:conversationListCell];
+//
+//            JMSGConversation *conversation =[_conversationArr objectAtIndex:indexPath.row];
+//            [cell setCellDataWithConversation:conversation];
+//            return cell;
+//        }
+        cell.titleLabel.text = @"合店在线";
+        cell.subtitleLabel.text = @"暂无数据";
     }
 
     return cell;
@@ -558,6 +502,13 @@ static NSString *conversationListCell = @"conversationListCell";
     }else if (indexPath.section == 0 && indexPath.row == 1){
             [self pushVCByClassName:@"HPPartyCenterController" withParam:@{@"data":self.interArray}];
     }
+    
+    if (indexPath.section == 1) {
+        JCHATConversationListViewController *listvc = [JCHATConversationListViewController new];
+        HPNavGationViewController *nav = [[HPNavGationViewController alloc] initWithRootViewController:listvc];
+        self.isPop = YES;
+        [self.navigationController presentViewController:nav animated:NO completion:NULL];
+    }
 }
 
 #pragma mark - TouchTableViewDelegate
@@ -577,7 +528,7 @@ static NSString *conversationListCell = @"conversationListCell";
 }
 
 #pragma mark - JPush IM
-
+/*
 - (void)addBtnClick:(UIButton *)btn {
     
     if (btn.selected) {
@@ -691,26 +642,17 @@ static NSString *conversationListCell = @"conversationListCell";
     _unreadCount = _unreadCount + [conversation.unreadCount integerValue];
     [self saveBadge:_unreadCount];
     [self.tableView reloadData];
-}
+}*/
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_EA0000] forBarMetrics:UIBarMetricsDefault];
-    [self getConversationList];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
 
 }
-- (void)viewDidAppear:(BOOL)animated {
-    HPLog(@"Action - viewDidAppear");
-    [super viewDidAppear:YES];
-    
-}
 
-- (void)viewDidDisappear:(BOOL)animated {
-    HPLog(@"Action - viewDidDisappear");
-    [super viewDidDisappear:YES];
-}
-
+/*
 - (void)getConversationList {
     
     if (isGetingAllConversation) {
@@ -784,5 +726,5 @@ NSInteger sortType(id object1,id object2,void *cha) {
 - (void)saveBadge:(NSInteger)badge {
     [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%zd",badge] forKey:@"badge"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-}
+}*/
 @end

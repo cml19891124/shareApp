@@ -107,14 +107,14 @@
     [self setupGoodsCard:goodsCard];
 }
 
-- (void)setupGoodsCard:(UIView *)cardView {
+- (void)setupGoodsCard:(UIView *)goodsView {
     UIView *view = [[UIView alloc] init];
     [view.layer setCornerRadius:10.f];
     [view.layer setMasksToBounds:YES];
     view.userInteractionEnabled = NO;
-    [cardView addSubview:view];
+    [goodsView addSubview:view];
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(cardView);
+        make.edges.mas_equalTo(goodsView);
     }];
     
     UIImageView *bgView = [[UIImageView alloc] init];

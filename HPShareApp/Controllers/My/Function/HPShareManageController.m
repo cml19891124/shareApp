@@ -219,7 +219,7 @@
 - (void)getShareListData:(HPShareListParam *)param reload:(BOOL)isReload {
     NSMutableDictionary *dict = param.mj_keyValues;
     
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:NO paraments:dict complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/myList" isNeedToken:YES paraments:dict complete:^(id  _Nonnull responseObject) {
         NSArray<HPShareListModel *> *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:DATA[@"list"]];
         
         if (models.count < self.shareListParam.pageSize) {

@@ -125,13 +125,6 @@
 - (void)viewWillDisappear:(BOOL)animated {
   HPLog(@"Event - viewWillDisappear");
   [super viewWillDisappear:animated];
-    if (self.isPop) {
-        [self.navigationController setNavigationBarHidden:YES animated:NO];
-
-    }else{
-        [self.navigationController setNavigationBarHidden:NO animated:NO];
-
-    }
 
   [_conversation clearUnreadCount];
   [[JCHATAudioPlayerHelper shareInstance] stopAudio];

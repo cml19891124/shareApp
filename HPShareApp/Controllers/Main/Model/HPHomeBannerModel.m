@@ -10,4 +10,6 @@
 
 @implementation HPHomeBannerModel
 
+
+
 @end

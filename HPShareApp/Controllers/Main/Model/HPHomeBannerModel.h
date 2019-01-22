@@ -24,6 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *pictureId;
 @property (nonatomic, copy) NSString *sort;
 @property (nonatomic, copy) NSString *updateTime;
+
+//+(instancetype)homeBannerModelWithArray:(NSMutableArray *)array;
+
 @end
 
 NS_ASSUME_NONNULL_END

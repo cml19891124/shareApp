@@ -14,6 +14,7 @@
 @optional
 - (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index;
 
+- (void)pageView:(HPPageView *)pageView didClickPageItem:(UIView *)item atIndex:(NSInteger)index;
 @end
 
 NS_ASSUME_NONNULL_BEGIN

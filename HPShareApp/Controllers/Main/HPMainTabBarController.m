@@ -173,6 +173,10 @@
                     else if (type == HPReleaseCardTypeStartup) {
                         vc = [[HPStartUpCardDefineController alloc] init];
                     }
+                    else if (type == HPReleaseCardTypeGoods) {
+#warning TODO---有货共享界面
+                        vc = [[HPStartUpCardDefineController alloc] init];
+                    }
                     
                     [navigatorController pushViewController:vc animated:YES];
                 }else{

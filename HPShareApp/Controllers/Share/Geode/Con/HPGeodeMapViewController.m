@@ -140,9 +140,9 @@ static const NSInteger RoutePlanningPaddingEdge                    = 20;
 - (void)setupShadowOfMenu:(UIView *)view {
     [view.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
     [view.layer setShadowOffset:CGSizeMake(0.f, 4.f)];
-    [view.layer setShadowRadius:6.f];
+//    [view.layer setShadowRadius:6.f];
     [view.layer setShadowOpacity:0.3f];
-    [view.layer setCornerRadius:6.f];
+//    [view.layer setCornerRadius:6.f];
     [view setBackgroundColor:UIColor.whiteColor];
 }
 
