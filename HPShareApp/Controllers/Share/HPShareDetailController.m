@@ -22,6 +22,7 @@
 #import "HPShareMapAnnotation.h"
 #import "HPImageUtil.h"
 #import "HPShareMapAnnotationView.h"
+#import "HPAttributeLabel.h"
 
 typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     HPShareDetailGotoShare = 180,
@@ -85,7 +86,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 /**
  合作意向
  */
-@property (nonatomic, strong) UILabel *intentionLabel;
+@property (nonatomic, strong) HPAttributeLabel *intentionLabel;
 
 
 /**
@@ -119,9 +120,9 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 /**
  共享时段
  */
-@property (nonatomic, weak) UILabel *shareTimeLabel;
+@property (nonatomic, weak) HPAttributeLabel *shareTimeLabel;
 
-@property (nonatomic, weak) UILabel *areaLabel;
+@property (nonatomic, weak) HPAttributeLabel *areaLabel;
 
 @property (nonatomic, weak) UILabel *priceLabel;
 
@@ -1068,44 +1069,36 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [industryLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(4, _industryLabel.text.length - 4)];
     _industryLabel.attributedText = industryLabelattr;
     
+    NSString *intentString;
     if (model.intention && ![model.intention isEqualToString:@""]) {
         NSString *intention = [HPCommonData getIndustryNameById:model.industryId];
         NSString *subIntention = [HPCommonData getIndustryNameById:model.subIndustryId];
-        [_intentionLabel setText:[NSString stringWithFormat:@"合作意向  %@·%@", intention, subIntention]];
+        intentString = [NSString stringWithFormat:@"合作意向  %@·%@", intention, subIntention];
     }else{
-        [_intentionLabel setText:[NSString stringWithFormat:@"合作意向  面议"]];
+        intentString = [NSString stringWithFormat:@"合作意向  面议"];
     }
-    
+//    _intentionLabel = [HPAttributeLabel getTitle:intentString andFromFont:kFont_Medium(12.f) andToFont:kFont_Medium(17.f) andFromColor:COLOR_GRAY_999999 andToColor:COLOR_RED_EA0000 andFromRange:NSMakeRange(0, 4) andToRange:NSMakeRange(4, intentString.length - 4) andLineSpace:12.f andNumbersOfLine:0 andTextAlignment:NSTextAlignmentLeft andLineBreakMode:NSLineBreakByWordWrapping];
+
     _intentionLabel.textAlignment = NSTextAlignmentLeft;
     _intentionLabel.numberOfLines = 0;
     _intentionLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    NSMutableAttributedString *intentionLabelattr = [[NSMutableAttributedString alloc] initWithString:_intentionLabel.text];
-    
+    NSMutableAttributedString *intentionLabelattr = [[NSMutableAttributedString alloc] initWithString:intentString];
+
     //富文本
     [intentionLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
-    [intentionLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(4, _intentionLabel.text.length - 4)];
+    [intentionLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(4, intentString.length - 4)];
     _intentionLabel.attributedText = intentionLabelattr;
     
     if (model.shareTime && ![model.shareTime isEqualToString:@""]) {
-        [_shareTimeLabel setText:[NSString stringWithFormat:@"共享时段\n%@",model.shareTime]];
+        NSString *shareTimer = [NSString stringWithFormat:@"共享时段\n%@",model.shareTime];
+        _shareTimeLabel = [HPAttributeLabel getTitle:shareTimer andFromFont:kFont_Medium(12.f) andToFont:kFont_Medium(17.f) andFromColor:COLOR_GRAY_999999 andToColor:COLOR_RED_EA0000 andFromRange:NSMakeRange(0, 4) andToRange:NSMakeRange(4, shareTimer.length - 4) andLineSpace:12.f andNumbersOfLine:0 andTextAlignment:NSTextAlignmentLeft andLineBreakMode:NSLineBreakByWordWrapping];
     }
     else {
-        [_shareTimeLabel setText:[NSString stringWithFormat:@"共享时段\n不限"]];
+        NSString *shareTimer = [NSString stringWithFormat:@"共享时段\n不限"];
+        _shareTimeLabel = [HPAttributeLabel getTitle:shareTimer andFromFont:kFont_Medium(12.f) andToFont:kFont_Medium(17.f) andFromColor:COLOR_GRAY_999999 andToColor:COLOR_RED_EA0000 andFromRange:NSMakeRange(0, 4) andToRange:NSMakeRange(4, shareTimer.length - 4) andLineSpace:12.f andNumbersOfLine:0 andTextAlignment:NSTextAlignmentLeft andLineBreakMode:NSLineBreakByWordWrapping];
     }
     
-    _shareTimeLabel.textAlignment = NSTextAlignmentLeft;
-    _shareTimeLabel.numberOfLines = 0;
-    _shareTimeLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    NSMutableAttributedString *shareTimeattr = [[NSMutableAttributedString alloc] initWithString:_shareTimeLabel.text];
-    //设置行间距
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [paragraphStyle setLineSpacing:12];
-    [shareTimeattr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,_shareTimeLabel.text.length)];
     
-    //富文本
-    [shareTimeattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
-    [shareTimeattr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, _shareTimeLabel.text.length - 4)];
-    _shareTimeLabel.attributedText = shareTimeattr;
     
     if (model.area && [model.area isEqualToString:@"0"]) {
         if ([model.areaRange intValue] == 1) {
@@ -1122,24 +1115,27 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
             [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n面议"]];
         }
     }
-    else
+    else{
         [_areaLabel setText:[NSString stringWithFormat:@"共享面积\n不限"]];
+//        NSString *areaStr = [NSString stringWithFormat:@"共享面积\n不限"];
+//        _areaLabel = [HPAttributeLabel getTitle:areaStr andFromFont:kFont_Medium(12.f) andToFont:kFont_Medium(17.f) andFromColor:COLOR_GRAY_999999 andToColor:COLOR_RED_EA0000 andFromRange:NSMakeRange(0, 4) andToRange:NSMakeRange(4, areaStr.length - 4) andLineSpace:12.f andNumbersOfLine:0 andTextAlignment:NSTextAlignmentLeft andLineBreakMode:NSLineBreakByWordWrapping];
 
-        _areaLabel.textAlignment = NSTextAlignmentLeft;
-        _areaLabel.numberOfLines = 0;
-        _areaLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        NSMutableAttributedString *areaattr = [[NSMutableAttributedString alloc] initWithString:_areaLabel.text];
-        //设置行间距
-        NSMutableParagraphStyle *areaparagraphStyle = [[NSMutableParagraphStyle alloc] init];
-        [areaparagraphStyle setLineSpacing:12];
-        [areaattr addAttribute:NSParagraphStyleAttributeName value:areaparagraphStyle range:NSMakeRange(0,_areaLabel.text.length)];
-
-        //富文本
-        [areaattr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(0, 4)];
-        [areaattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
-        [areaattr addAttribute:NSFontAttributeName value:kFont_Medium(17.f) range:NSMakeRange(4, _areaLabel.text.length - 4)];
-        [areaattr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, _areaLabel.text.length - 4)];
-        _areaLabel.attributedText = areaattr;
+    }
+    _areaLabel.textAlignment = NSTextAlignmentLeft;
+    _areaLabel.numberOfLines = 0;
+    _areaLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    NSMutableAttributedString *areaattr = [[NSMutableAttributedString alloc] initWithString:_areaLabel.text];
+    //设置行间距
+    NSMutableParagraphStyle *areaparagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [areaparagraphStyle setLineSpacing:12];
+    [areaattr addAttribute:NSParagraphStyleAttributeName value:areaparagraphStyle range:NSMakeRange(0,_areaLabel.text.length)];
+    
+    //富文本
+    [areaattr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(0, 4)];
+    [areaattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
+    [areaattr addAttribute:NSFontAttributeName value:kFont_Medium(17.f) range:NSMakeRange(4, _areaLabel.text.length - 4)];
+    [areaattr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, _areaLabel.text.length - 4)];
+    _areaLabel.attributedText = areaattr;
 
     if (model.rent && ![model.rent isEqualToString:@"1"]) {
         if (model.rentType == 1) {

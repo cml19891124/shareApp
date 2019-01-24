@@ -313,6 +313,7 @@
 		E693E90721E8331E0063797A /* ClusterAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = E693E8FF21E8331E0063797A /* ClusterAnnotationView.m */; };
 		E693E90D21E834E20063797A /* HPRouteTypeMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = E693E90A21E834E20063797A /* HPRouteTypeMenu.m */; };
 		E693E90E21E834E20063797A /* HPRouteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E693E90B21E834E20063797A /* HPRouteButton.m */; };
+		E69E0E8E21F95F2D0094837A /* HPAttributeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = E69E0E8D21F95F2D0094837A /* HPAttributeLabel.m */; };
 		E6A8108321D700CE0048AA01 /* HPSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A8108221D700CE0048AA01 /* HPSearchBar.m */; };
 		E6B4CECB21C51A4400429C11 /* HPGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CECA21C51A4400429C11 /* HPGuideViewController.m */; };
 		E6B4CEDC21C5286F00429C11 /* SDCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED021C5286E00429C11 /* SDCycleScrollView.m */; };
@@ -980,6 +981,8 @@
 		E693E90A21E834E20063797A /* HPRouteTypeMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPRouteTypeMenu.m; sourceTree = "<group>"; };
 		E693E90B21E834E20063797A /* HPRouteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPRouteButton.m; sourceTree = "<group>"; };
 		E693E90C21E834E20063797A /* HPRouteTypeMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPRouteTypeMenu.h; sourceTree = "<group>"; };
+		E69E0E8C21F95F2D0094837A /* HPAttributeLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAttributeLabel.h; sourceTree = "<group>"; };
+		E69E0E8D21F95F2D0094837A /* HPAttributeLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAttributeLabel.m; sourceTree = "<group>"; };
 		E6A8108121D700CE0048AA01 /* HPSearchBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSearchBar.h; sourceTree = "<group>"; };
 		E6A8108221D700CE0048AA01 /* HPSearchBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSearchBar.m; sourceTree = "<group>"; };
 		E6B4CEC521C4DD5200429C11 /* HPShareApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HPShareApp.entitlements; sourceTree = "<group>"; };
@@ -2676,6 +2679,8 @@
 				E661B14521A68BE300C86CF5 /* HPRoundedRectPageControl.m */,
 				E6D75F6221B2301600B2067C /* HPCirclePageControl.h */,
 				E6D75F6321B2301600B2067C /* HPCirclePageControl.m */,
+				E69E0E8C21F95F2D0094837A /* HPAttributeLabel.h */,
+				E69E0E8D21F95F2D0094837A /* HPAttributeLabel.m */,
 			);
 			path = PageControl;
 			sourceTree = "<group>";
@@ -3107,6 +3112,7 @@
 				E622A9CD21C376E8007C35BC /* HPlaceholdTextView.m in Sources */,
 				E61E27AB21C8D68000CD5288 /* EBBannerView+Categories.m in Sources */,
 				E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */,
+				E69E0E8E21F95F2D0094837A /* HPAttributeLabel.m in Sources */,
 				E6D75F2821AD463000B2067C /* HPLoginByPasswordController.m in Sources */,
 				E68A77BD21F321BD00083A90 /* MJPhotoProgressView.m in Sources */,
 				E63352A521F1C99300999BE7 /* HPAddressBookViewController.m in Sources */,
