@@ -162,14 +162,14 @@
         make.height.mas_equalTo(priceUnitLabel.font.pointSize);
     }];
     
-    UIImageView *typeIcon = [[UIImageView alloc] init];
-    [bgView addSubview:typeIcon];
-    _typeIcon = typeIcon;
-    [typeIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(bgView).with.offset(-7.f);
-        make.left.equalTo(bgView.mas_right).with.offset(-55.f);
-        make.size.mas_equalTo(CGSizeMake(37.f, 50.f));
-    }];
+//    UIImageView *typeIcon = [[UIImageView alloc] init];
+//    [bgView addSubview:typeIcon];
+//    _typeIcon = typeIcon;
+//    [typeIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(bgView).with.offset(-7.f);
+//        make.left.equalTo(bgView.mas_right).with.offset(-55.f);
+//        make.size.mas_equalTo(CGSizeMake(37.f, 50.f));
+//    }];
     
     UIImageView *deleteIcon = [[UIImageView alloc] init];
     [deleteIcon setImage:[UIImage imageNamed:@"share_delete"]];
@@ -181,7 +181,7 @@
     [deleteIcon setHidden:YES];
     
     [titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(typeIcon.mas_left).with.offset(-10.f * g_rateWidth);
+        make.right.equalTo(self.bgView).with.offset(-10.f * g_rateWidth);
     }];
     
     UIImage *normalImage = [HPImageUtil getRectangleByStrokeColor:COLOR_GRAY_BCC1CF fillColor:UIColor.whiteColor borderWidth:1.f cornerRadius:10.f inRect:CGRectMake(0.f, 0.f, 19.f, 19.f)];

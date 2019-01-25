@@ -15,11 +15,11 @@ target 'HPShareApp' do
   pod 'JPush'
   pod 'JMessage'
   pod 'Bugly', '~> 2.5.0'
-  pod 'AlipaySDK-iOS'
-  pod 'WechatOpenSDK'
+#  pod 'AlipaySDK-iOS'
+#  pod 'WechatOpenSDK'
   use_frameworks!
   pod 'Charts'
-
+  pod 'LTScrollView', '~> 0.1.7'
   # Pods for HPShareApp
 
   target 'HPShareAppTests' do

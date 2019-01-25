@@ -17,6 +17,7 @@
 #import "HPJudgingLoginView.h"
 #import "HPLoginController.h"
 #import "HPHomeShareViewController.h"
+#import "HPPlusBtn.h"
 @interface HPMainTabBarController ()
 
 @property (nonatomic, weak) HPReleaseModalView *releaseModalView;
@@ -65,6 +66,8 @@
     shareController.tabBarItem.image = [UIImage imageNamed:@"share_unchecked"];
     shareController.tabBarItem.selectedImage = [UIImage imageNamed:@"share_checked"];
     [shareController.tabBarItem setTitlePositionAdjustment:UIOffsetMake(-5.f * g_rateWidth, -3.f)];
+    [shareController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateSelected];
+    [shareController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateNormal];
     [self addChildViewController:shareController];
     
     HPIdeaController *ideaController = [[HPIdeaController alloc] init];
@@ -73,6 +76,8 @@
     ideaController.tabBarItem.selectedImage = [UIImage imageNamed:@"method_checked"];
     [ideaController.tabBarItem setTitlePositionAdjustment:UIOffsetMake(-25.f * g_rateWidth, -3.f)];
     ideaController.view.backgroundColor = UIColor.whiteColor;
+    [ideaController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateSelected];
+    [ideaController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateNormal];
     [self addChildViewController:ideaController];
     
     HPInteractiveController *interactiveController = [[HPInteractiveController alloc] init];
@@ -81,6 +86,8 @@
     interactiveController.tabBarItem.selectedImage = [UIImage imageNamed:@"interaction_checked"];
     [interactiveController.tabBarItem setTitlePositionAdjustment:UIOffsetMake(25.f * g_rateWidth, -3.f)];
     interactiveController.view.backgroundColor = UIColor.whiteColor;
+    [interactiveController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateSelected];
+    [interactiveController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateNormal];
     [self addChildViewController:interactiveController];
     
     HPMyController *myController = [[HPMyController alloc] init];
@@ -89,17 +96,34 @@
     myController.tabBarItem.selectedImage = [UIImage imageNamed:@"my_checked"];
     [myController.tabBarItem setTitlePositionAdjustment:UIOffsetMake(5.f * g_rateWidth, -3.f)];
     myController.view.backgroundColor = UIColor.whiteColor;
+
+    [myController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateSelected];
+    [myController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateNormal];
+
     [self addChildViewController:myController];
     
-    UIButton *plusBtn = [[UIButton alloc] init];
+    HPPlusBtn *plusBtn = [[HPPlusBtn alloc] init];
     [plusBtn setImage:[UIImage imageNamed:@"plus"] forState:UIControlStateNormal];
+    [plusBtn setTitle:@"发布" forState:UIControlStateNormal];
+    plusBtn.titleLabel.font = kFont_Bold(10.f);
+    [plusBtn.layer setShadowColor:COLOR_GRAY_E6E5E5.CGColor];
+    [plusBtn.layer setShadowOffset:CGSizeMake(0.f, 3.f)];
+    [plusBtn.layer setShadowRadius:39.f/2];
+    [plusBtn.layer setShadowOpacity:0.82f];
+    [plusBtn.layer setCornerRadius:39.f/2];
+    [plusBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+    plusBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
+    
     [plusBtn setImage:[UIImage imageNamed:@"customizing_business_cards_close_button"] forState:UIControlStateSelected];
+    
     [plusBtn addTarget:self action:@selector(onClickPlusBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:plusBtn];
     [plusBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.view);
         make.bottom.equalTo(self.mas_bottomLayoutGuideTop).with.offset(-6.f);
     }];
+    
+    
 }
 
 #pragma mark - UIGestureRecognizerDelegate

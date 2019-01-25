@@ -9,8 +9,8 @@
 #ifndef Macro_h
 #define Macro_h
 
-//#define JPushAppKey @"e9ab740a789860714d7a511a"
-#define JPushAppKey @"4f7aef34fb361292c566a1cd"
+#define JPushAppKey @"e9ab740a789860714d7a511a"
+//#define JPushAppKey @"4f7aef34fb361292c566a1cd"
 /**
  全局宏定义。
  */
@@ -131,6 +131,7 @@
 #define COLOR_GRAY_808080 [UIColor colorWithHexString:@"#808080"]
 #define COLOR_RED_F91E54 [UIColor colorWithHexString:@"#F91E54"]
 #define COLOR_GRAY_F9F9F9 [UIColor colorWithHexString:@"#F9F9F9"]
+#define COLOR_BLUE_841307 [UIColor colorWithHexString:@"#841307"]
 
 
 #define kAppleId @"1447187764"
@@ -151,8 +152,8 @@
 #define kFont_Heavy(font)  [UIFont fontWithName:@"PingFangSC-Semibold"size:font]
 #define kRect(x, y, w, h)   CGRectMake(x, y, w, h)
 //#define kBaseUrl  @"https://inner.hepaicn.com"
-//#define kBaseUrl  @"https://app.hepaicn.com"
-#define kBaseUrl  @"http://192.168.0.104:8083"//测试
+#define kBaseUrl  @"https://app.hepaicn.com"
+//#define kBaseUrl  @"http://192.168.0.104:8083"//测试
 //#define kBaseUrl  @"http://192.168.0.60:8083"//罗
 //#define kBaseUrl  @"http://192.168.0.148:8083"//胜光
 

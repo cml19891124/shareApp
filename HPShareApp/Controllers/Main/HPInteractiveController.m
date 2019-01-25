@@ -407,29 +407,29 @@ static NSString *conversationListCell = @"conversationListCell";
         return cell;
     }else if (indexPath.section == 1) {
 //        if (_conversationArr.count == 0) {
-//            [cell.contentView removeFromSuperview];
-//            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//            UIImage *image = ImageNamed(@"waiting");
-//            UIImageView *waitingView = [[UIImageView alloc] init];
-//            waitingView.image = image;
-//            [cell addSubview:waitingView];
-//            [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
-//                make.top.mas_equalTo(72.f * g_rateWidth);
-//                make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
-//                make.centerX.mas_equalTo(cell);
-//            }];
-//
-//            UILabel *waitingLabel = [[UILabel alloc] init];
-//            waitingLabel.text = @"在线互动即将开启，敬情期待 ~";
-//            waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
-//            waitingLabel.textColor = COLOR_GRAY_BBBBBB;
-//            waitingLabel.textAlignment = NSTextAlignmentCenter;
-//            [cell addSubview:waitingLabel];
-//            [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//                make.centerX.mas_equalTo(cell);
-//                make.top.mas_equalTo(waitingView.mas_top).offset(158.f * g_rateWidth);
-//                make.width.mas_equalTo(kScreenWidth);
-//            }];
+            [cell.contentView removeFromSuperview];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            UIImage *image = ImageNamed(@"waiting");
+            UIImageView *waitingView = [[UIImageView alloc] init];
+            waitingView.image = image;
+            [cell addSubview:waitingView];
+            [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(72.f * g_rateWidth);
+                make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
+                make.centerX.mas_equalTo(cell);
+            }];
+
+            UILabel *waitingLabel = [[UILabel alloc] init];
+            waitingLabel.text = @"在线互动即将开启，敬情期待 ~";
+            waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
+            waitingLabel.textColor = COLOR_GRAY_BBBBBB;
+            waitingLabel.textAlignment = NSTextAlignmentCenter;
+            [cell addSubview:waitingLabel];
+            [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.mas_equalTo(cell);
+                make.top.mas_equalTo(waitingView.mas_top).offset(158.f * g_rateWidth);
+                make.width.mas_equalTo(kScreenWidth);
+            }];
 //            return cell;
 //        }else{
 //            JCHATConversationListCell *cell = (JCHATConversationListCell *)[tableView dequeueReusableCellWithIdentifier:conversationListCell];
@@ -438,8 +438,8 @@ static NSString *conversationListCell = @"conversationListCell";
 //            [cell setCellDataWithConversation:conversation];
 //            return cell;
 //        }
-        cell.titleLabel.text = @"合店在线";
-        cell.subtitleLabel.text = @"暂无数据";
+//        cell.titleLabel.text = @"合店在线";
+//        cell.subtitleLabel.text = @"暂无数据";
     }
 
     return cell;
@@ -504,10 +504,10 @@ static NSString *conversationListCell = @"conversationListCell";
     }
     
     if (indexPath.section == 1) {
-        JCHATConversationListViewController *listvc = [JCHATConversationListViewController new];
-        HPNavGationViewController *nav = [[HPNavGationViewController alloc] initWithRootViewController:listvc];
-        self.isPop = YES;
-        [self.navigationController presentViewController:nav animated:NO completion:NULL];
+//        JCHATConversationListViewController *listvc = [JCHATConversationListViewController new];
+//        HPNavGationViewController *nav = [[HPNavGationViewController alloc] initWithRootViewController:listvc];
+//        self.isPop = YES;
+//        [self.navigationController presentViewController:nav animated:NO completion:NULL];
     }
 }
 

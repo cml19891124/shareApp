@@ -20,6 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIImageView *bgView;
 
+/**
+ 享法des
+ */
+@property (nonatomic, strong) UILabel *ideaLabel;
+
 @property (nonatomic, strong) UILabel *headTitlelabel;
 
 @property (nonatomic, strong) UIImageView *headImageview;

@@ -136,7 +136,7 @@
     [loginBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [loginBtn setTitleColor:COLOR_PINK_FFEFF2 forState:UIControlStateNormal];
     [loginBtn setTitle:@"登录" forState:UIControlStateNormal];
-    [loginBtn setBackgroundColor:COLOR_RED_FF3C5E];
+    [loginBtn setBackgroundColor:COLOR_RED_EA0000];
     [loginBtn addTarget:self action:@selector(onClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:loginBtn];
     [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {

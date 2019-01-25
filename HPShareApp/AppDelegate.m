@@ -12,7 +12,6 @@
 #import "HPMainTabBarController.h"
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import "AppDelegate+JPush.h"
-#import <UserNotifications/UserNotifications.h>
 #import "HPTextDialogView.h"
 #import "HPGuideViewController.h"
 #import "HPCommonData.h"
@@ -20,8 +19,16 @@
 #import "HPHomeBannerModel.h"
 #import "HPSingleton.h"
 #import "Bugly/Bugly.h"
-#import "Macro.h"
 #import <JMessage/JMessage.h>
+
+// 引入 JPush 功能所需头文件
+#import "JPUSHService.h"
+// iOS10 注册 APNs 所需头文件
+#ifdef NSFoundationVersionNumber_iOS_9_x_Max
+#import <UserNotifications/UserNotifications.h>
+#endif
+// 如果需要使用 idfa 功能所需要引入的头文件（可选）
+#import <AdSupport/AdSupport.h>
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate,JPUSHRegisterDelegate>
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
@@ -97,7 +104,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     //极光
-    [AppDelegate setUpJPushAndMessageConfigWithOptions:launchOptions];
+    [self setUpJPushAndMessageConfigWithOptions:launchOptions];
     
     //注册极光IM
     [self regiestJMessage];
@@ -201,5 +208,109 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+#pragma mark - jpush
+- (void)setUpJPushAndMessageConfigWithOptions:(NSDictionary *)launchOptions{
+    // Required - 启动 JMessage SDK  开启消息漫游
+    [JMessage setupJMessage:launchOptions appKey:JPushAppKey channel:nil apsForProduction:NO category:nil messageRoaming:YES];
+    
+    //Required
+    //notice: 3.0.0 及以后版本注册可以这样写，也可以继续用之前的注册方式
+    JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
+    if (@available(iOS 12.0, *)) {
+        entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound|UNAuthorizationOptionProvidesAppNotificationSettings;
+        
+        [JMessage registerForRemoteNotificationTypes:(UNAuthorizationOptionProvidesAppNotificationSettings |
+                                                      UNAuthorizationOptionSound |
+                                                      UNAuthorizationOptionAlert | UNAuthorizationOptionBadge)
+                                          categories:nil];
+    } else {
+        // Fallback on earlier versions
+        //可以添加自定义categories
+        [JMessage registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
+                                                      UIUserNotificationTypeSound |
+                                                      UIUserNotificationTypeAlert)
+                                          categories:nil];
+    }
+    
+    [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+    
+    //初始化极光
+    // Optional
+    // 获取 IDFA
+    // 如需使用 IDFA 功能请添加此代码并在初始化方法的 advertisingIdentifier 参数中填写对应值
+    NSString *advertisingId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+    
+    // Required
+    // init Push
+    // notice: 2.1.5 版本的 SDK 新增的注册方法，改成可上报 IDFA，如果没有使用 IDFA 直接传 nil
+    // 如需继续使用 pushConfig.plist 文件声明 appKey 等配置内容，请依旧使用 [JPUSHService setupWithOption:launchOptions] 方式初始化。
+    /*channel
+     指明应用程序包的下载渠道，为方便分渠道统计，具体值由你自行定义，如：App Store。
+     */
+    [JPUSHService setupWithOption:launchOptions appKey:JPushAppKey
+                          channel:@""
+                 apsForProduction:NO
+            advertisingIdentifier:advertisingId];
+}
 
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    /// Required - 注册 DeviceToken
+    [JPUSHService registerDeviceToken:deviceToken];
+    
+    // Required - 注册token
+    [JMessage registerDeviceToken:deviceToken];
+}
+
+//实现注册 APNs 失败接口（可选）
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    //Optional
+    NSLog(@"did Fail To Register For Remote Notifications With Error: %@", error);
+}
+
+#pragma mark- JPUSHRegisterDelegate
+
+// iOS 12 Support
+- (void)jpushNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(UNNotification *)notification API_AVAILABLE(ios(10.0)){
+    if (notification && [notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        //从通知界面直接进入应用
+    }else{
+        //从通知设置界面进入应用
+    }
+}
+
+// iOS 10 Support
+- (void)jpushNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(NSInteger))completionHandler  API_AVAILABLE(ios(10.0)){
+    // Required
+    NSDictionary * userInfo = notification.request.content.userInfo;
+    if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        [JPUSHService handleRemoteNotification:userInfo];
+    }
+    completionHandler(UNNotificationPresentationOptionAlert); // 需要执行这个方法，选择是否提醒用户，有 Badge、Sound、Alert 三种类型可以选择设置
+}
+
+// iOS 10 Support
+- (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler  API_AVAILABLE(ios(10.0)){
+    // Required
+    NSDictionary * userInfo = response.notification.request.content.userInfo;
+    if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        [JPUSHService handleRemoteNotification:userInfo];
+    }
+    completionHandler();  // 系统要求执行这个方法
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    
+    // Required, iOS 7 Support
+    [JPUSHService handleRemoteNotification:userInfo];
+    completionHandler(UIBackgroundFetchResultNewData);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    
+    // Required, For systems with less than or equal to iOS 6
+    [JPUSHService handleRemoteNotification:userInfo];
+}
 @end

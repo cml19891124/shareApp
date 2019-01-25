@@ -69,7 +69,8 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"店铺共享"];
+    NSString *title = self.param[@"title"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:title];
     _navigationView = navigationView;
     
     _headerHeight = getWidth(150.f) + 10.f;

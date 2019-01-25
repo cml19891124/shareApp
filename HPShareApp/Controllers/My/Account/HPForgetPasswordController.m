@@ -176,7 +176,7 @@
     [confirmBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [confirmBtn setTitleColor:COLOR_PINK_FFEFF2 forState:UIControlStateNormal];
     [confirmBtn setTitle:@"完成" forState:UIControlStateNormal];
-    [confirmBtn setBackgroundColor:COLOR_RED_FF3C5E];
+    [confirmBtn setBackgroundColor:COLOR_RED_EA0000];
     [confirmBtn addTarget:self action:@selector(onClickConfirmBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:confirmBtn];
     [confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {

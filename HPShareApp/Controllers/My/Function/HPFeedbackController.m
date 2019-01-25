@@ -72,7 +72,7 @@
     [layout setNormalFont:[UIFont fontWithName:FONT_MEDIUM size:13.f]];
     [layout setSelectedFont:[UIFont fontWithName:FONT_MEDIUM size:13.f]];
     [layout setNormalBgColor:COLOR_GRAY_EEEEEE];
-    [layout setSelectedBgColor:COLOR_RED_FF3C5E];
+    [layout setSelectedBgColor:COLOR_RED_EA0000];
     [layout setNormalTextColor:COLOR_BLACK_666666];
     [layout setSelectTextColor:UIColor.whiteColor];
     [layout setItemCornerRadius:5.f];
@@ -110,7 +110,7 @@
     [commitBtn.layer setCornerRadius:24.f];
     [commitBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [commitBtn setTitleColor:COLOR_PINK_FFEFF2 forState:UIControlStateNormal];
-    [commitBtn setBackgroundColor:COLOR_RED_FF3C5E];
+    [commitBtn setBackgroundColor:COLOR_RED_EA0000];
     [commitBtn setTitle:@"提交" forState:UIControlStateNormal];
     [commitBtn addTarget:self action:@selector(onClickCommitBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:commitBtn];

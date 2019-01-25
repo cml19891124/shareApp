@@ -16,6 +16,7 @@
 #import "HPShareListParam.h"
 #import "HPCommonData.h"
 #import "HPHomeBannerModel.h"
+#import "HPMenuItemCell.h"
 
 #define slideRatio fabs(y/71.0f)
 
@@ -53,6 +54,7 @@ typedef NS_ENUM(NSInteger, HPDisplaycellIndexpath) {
 @implementation HPHomeShareViewController
 static NSString *defaultCell = @"defaultCell";
 static NSString *topMenuItemCell = @"topMenuItemCell";
+static NSString *menuItemCell = @"menuItemCell";
 static NSString *gamesItemCell = @"gamesItemCell";
 static NSString *hotShareStoreCell = @"hotShareStoreCell";
 static NSString *shareListCell = @"shareListCell";
@@ -229,6 +231,7 @@ static NSString *shareListCell = @"shareListCell";
         _tableView.backgroundColor = [[UIColor clearColor] colorWithAlphaComponent:0.001];;
         [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:defaultCell];
         [_tableView registerClass:HPTopMenuItemCell.class forCellReuseIdentifier:topMenuItemCell];
+        [_tableView registerClass:HPMenuItemCell.class forCellReuseIdentifier:menuItemCell];
         [_tableView registerClass:HPGamesCell.class forCellReuseIdentifier:gamesItemCell];
         [_tableView registerClass:HPHotShareStoreCell.class forCellReuseIdentifier:hotShareStoreCell];
         [_tableView registerClass:HPShareListCell.class forCellReuseIdentifier:shareListCell];
@@ -255,12 +258,12 @@ static NSString *shareListCell = @"shareListCell";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 4.f;
+    return 5.f;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 3) {
+    if (section == 4) {
         return _dataArray.count;
     }
     return 1.f;
@@ -270,15 +273,18 @@ static NSString *shareListCell = @"shareListCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:defaultCell];
     switch (indexPath.section) {
         case 0:
-            return [self setUpMenuCell:tableView];
+            return [self setUpBannerCell:tableView];
             break;
         case 1:
-            return [self setUpGamesCell:tableView];
+            return [self setUpMenuCell:tableView];
             break;
         case 2:
-            return [self setUpHotShareCell:tableView];
+            return [self setUpGamesCell:tableView];
             break;
         case 3:
+            return [self setUpHotShareCell:tableView];
+            break;
+        case 4:
             return [self setUpShareListCell:tableView withIndexpath:indexPath];
             break;
         default:
@@ -287,7 +293,7 @@ static NSString *shareListCell = @"shareListCell";
     return cell;
 }
 
-- (HPTopMenuItemCell *)setUpMenuCell:(UITableView *)tableView
+- (HPTopMenuItemCell *)setUpBannerCell:(UITableView *)tableView
 {
     HPTopMenuItemCell *cell = [tableView dequeueReusableCellWithIdentifier:topMenuItemCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -300,30 +306,46 @@ static NSString *shareListCell = @"shareListCell";
             if (index && model.link) {
                 
             }
-            //                [self pushVCByClassName:@"HPIdeaDetailViewController"];
+            
         }
         
     }];
-//    kWeakSelf(weakSlef);
-    [cell setClickMenuItemBlock:^(NSInteger HPHomeShareMenuItem) {
+
+    
+    return cell;
+}
+
+
+- (HPMenuItemCell *)setUpMenuCell:(UITableView *)tableView
+{
+    HPMenuItemCell *cell = [tableView dequeueReusableCellWithIdentifier:menuItemCell];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    HPLoginModel *account = [HPUserTool account];
+
+    //    kWeakSelf(weakSlef);
+    [cell setClickMenuItemBlock:^(NSInteger HPHomeShareMenuItem,NSString *menuString) {
+        if (!account.token) {
+            [HPProgressHUD alertMessage:@"请前往登录"];
+            return ;
+        }
         switch (HPHomeShareMenuItem) {
             case HPHome_page_store_sharing:
-                if (!account.token) {
-                    [HPProgressHUD alertMessage:@"请前往登录"];
-                }else{
-                    [self pushVCByClassName:@"HPShareShopListController"];
-                }
+                [self pushVCByClassName:@"HPShareShopListController" withParam:@{@"title":menuString}];
+
                 break;
             case HPHome_page_lobby_sharing:
                 HPLog(@"HPHome_page_lobby_sharing");
+                [self pushVCByClassName:@"HPShareShopListController" withParam:@{@"title":menuString}];
                 break;
             case HPHome_page_other_sharing:
                 HPLog(@"HPHome_page_other_sharing");
+                [self pushVCByClassName:@"HPShareShopListController" withParam:@{@"title":menuString}];
+
                 break;
             case HPHome_page_map:
                 HPLog(@"HPHome_page_map");
                 [self pushVCByClassName:@"HPShareMapController"];
-
+                
                 break;
             case HPHome_page_stock_purchase:
                 HPLog(@"HPHome_page_stock_purchase");
@@ -343,6 +365,7 @@ static NSString *shareListCell = @"shareListCell";
     }];
     
     return cell;
+    
 }
 
 #pragma mark - games活动专区
@@ -354,9 +377,12 @@ static NSString *shareListCell = @"shareListCell";
         switch (tap) {
             case HPGamesCellIndexNinePointNine:
                 HPLog(@"HPGamesCellIndexNinePointNine");
+                [HPProgressHUD alertMessage:@"一大波活动正拼命赶来～"];
                 break;
             case HPGamesCellIndexpfrofessionalGoods:
                 HPLog(@"HPGamesCellIndexpfrofessionalGoods");
+                [HPProgressHUD alertMessage:@"一大波活动正拼命赶来～"];
+
                 break;
             default:
                 break;
@@ -369,20 +395,28 @@ static NSString *shareListCell = @"shareListCell";
 {
     HPHotShareStoreCell *cell = [tableView dequeueReusableCellWithIdentifier:hotShareStoreCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    kWEAKSELF
     [cell setClickMoreBtnBlock:^{
         HPLog(@"MoreBtn");
+        [self pushVCByClassName:@"LTPersonMainPageDemo" withParam:@{@"area": weakSelf.shareListParam.areaIds}];
     }];
     
     [cell setTapHotImageViewBlock:^(NSInteger tag) {
         switch (tag) {
             case HPStoresShareAreaIndexBaoan:
-                HPLog(@"HPStoresShareAreaIndexBaoan");
+//                HPLog(@"HPStoresShareAreaIndexBaoan");
+                [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area": weakSelf.shareListParam.areaIds}];
+
                 break;
             case HPStoresShareAreaIndexLonghua:
-                HPLog(@"HPStoresShareAreaIndexLonghua");
+//                HPLog(@"HPStoresShareAreaIndexLonghua");
+                [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area": weakSelf.shareListParam.areaIds}];
+
                 break;
             case HPStoresShareAreaIndexNanshan:
-                HPLog(@"HPStoresShareAreaIndexNanshan");
+//                HPLog(@"HPStoresShareAreaIndexNanshan");
+                [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area": weakSelf.shareListParam.areaIds}];
+
                 break;
             default:
                 break;
@@ -394,7 +428,7 @@ static NSString *shareListCell = @"shareListCell";
 #pragma mark - 共享店铺列表
 - (HPShareListCell *)setUpShareListCell:(UITableView *)tableView withIndexpath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 3) {
+    if (indexPath.section == 4) {
         HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:shareListCell forIndexPath:indexPath];
         HPShareListModel *model = _dataArray[indexPath.row];
         cell.model = model;
@@ -408,14 +442,17 @@ static NSString *shareListCell = @"shareListCell";
 {
     switch (indexPath.section) {
         case 0:
-            return getWidth(336.f);
+            return getWidth(132.f);
             break;
         case 1:
-            return getWidth(165.f);
+            return getWidth(208.f)/2;
             break;
         case 2:
-            return getWidth(135.f);
+            return getWidth(165.f);
+            break;
         case 3:
+            return getWidth(135.f);
+        case 4:
             return getWidth(137.f);
         default:
             return CGFLOAT_MIN;
@@ -435,7 +472,7 @@ static NSString *shareListCell = @"shareListCell";
     }
 }
 
-#pragma mark - 取消下拉  允许上拉
+#pragma mark - 上下拉 搜索栏的动画
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGPoint offset = scrollView.contentOffset;
     
@@ -472,7 +509,6 @@ static NSString *shareListCell = @"shareListCell";
         }];
     }
     
-//    HPLog(@"yyyyy:%f",y);
 }
 
 @end

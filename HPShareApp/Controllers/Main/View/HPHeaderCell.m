@@ -37,6 +37,8 @@
     
     [self.contentView addSubview:self.bgView];
     
+    [self.bgView addSubview:self.ideaLabel];
+    
     [self.contentView addSubview:self.whatIsShareSpace];
     
     [self.contentView addSubview:self.headTitlelabel];
@@ -50,6 +52,12 @@
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self);
         make.bottom.mas_equalTo(getWidth(-116.f));
+    }];
+    
+    [self.ideaLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(getWidth(226.f), getWidth(36.f)));
+        make.centerX.mas_equalTo(self);
+        make.top.mas_equalTo(getWidth(43.f));
     }];
     
     [self.whatIsShareSpace mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -69,7 +77,6 @@
     
     [self.headImageview mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.headTitlelabel.mas_right).offset(getWidth(4.f));
-//        make.top.mas_equalTo(self.headTitlelabel);
         make.centerY.mas_equalTo(self.headTitlelabel);
         make.size.mas_equalTo(CGSizeMake(getWidth(32.f), getWidth(19.f)));
     }];
@@ -83,6 +90,19 @@
         [_bgView setImage:[UIImage imageNamed:@"sharing_method_background"]];
     }
     return _bgView;
+}
+
+- (UILabel *)ideaLabel
+{
+    if (!_ideaLabel) {
+        _ideaLabel = [UILabel new];
+        _ideaLabel.text = @"“拼”你所想，“拼”未来！";
+        _ideaLabel.textColor = COLOR_GRAY_FFFFFF;
+        _ideaLabel.textAlignment = NSTextAlignmentCenter;
+        _ideaLabel.font = kFont_Bold(18.f);
+        _ideaLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.16];
+    }
+    return _ideaLabel;
 }
 
 - (UIControl *)whatIsShareSpace
@@ -110,7 +130,6 @@
         _headTitlelabel.textAlignment = NSTextAlignmentCenter;
         _headTitlelabel.font = kFont_Bold(18.f);
         _headTitlelabel.adjustsFontSizeToFitWidth = YES;
-//        _headTitlelabel.verticalAlignment = VerticalAlignmentMiddle;
     }
     return _headTitlelabel;
 }

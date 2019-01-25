@@ -58,7 +58,7 @@
         _tipBtn.titleLabel.font = kFont_Medium(14.f);
         [_tipBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
         _tipBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-        _tipBtn.backgroundColor = COLOR_RED_FF3C5E;
+        _tipBtn.backgroundColor = COLOR_RED_EA0000;
         _tipBtn.layer.cornerRadius = 6.f;
         _tipBtn.layer.masksToBounds = YES;
         [_tipBtn addTarget:self action:@selector(checkForRequirements:) forControlEvents:UIControlEventTouchUpInside];

@@ -188,7 +188,7 @@
     [registerBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [registerBtn setTitleColor:COLOR_PINK_FFEFF2 forState:UIControlStateNormal];
     [registerBtn setTitle:@"立即注册" forState:UIControlStateNormal];
-    [registerBtn setBackgroundColor:COLOR_RED_FF3C5E];
+    [registerBtn setBackgroundColor:COLOR_RED_EA0000];
     [registerBtn addTarget:self action:@selector(onClickRegisterBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:registerBtn];
     [registerBtn mas_makeConstraints:^(MASConstraintMaker *make) {

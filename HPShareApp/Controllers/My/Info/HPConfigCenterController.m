@@ -224,7 +224,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [switchBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [switchBtn setTitleColor:COLOR_PINK_FFEFF2 forState:UIControlStateNormal];
     [switchBtn setTitle:@"切换账号" forState:UIControlStateNormal];
-    [switchBtn setBackgroundColor:COLOR_RED_FF3C5E];
+    [switchBtn setBackgroundColor:COLOR_RED_EA0000];
     [switchBtn addTarget:self action:@selector(swithAccountOfOthers:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:switchBtn];
     [switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -40,8 +40,6 @@
     [self.contentView addSubview:self.pageView];
 
     [self.contentView addSubview:self.pageControl];
-    
-    [self setUpMenuButtonViews];
 }
 
 - (void)setUpCellSubviewsFrame
@@ -53,7 +51,7 @@
         make.height.mas_equalTo(getWidth(120.f));
     }];
     
-    [_pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self);
         make.bottom.equalTo(self.pageView).with.offset(-18.f * g_rateWidth);
     }];
@@ -122,38 +120,6 @@
     
 }
 
-- (void)setUpMenuButtonViews
-{
-    NSArray *menuImageArr = @[@"home_page_store_ sharing",@"home_page_lobby_ sharing",@"home_page_other_sharing",@"home_page_map",@"home_page_stock_purchase",@"home_page_shelf_rental",@"home_page_used_shelves",@"home_page_new_store_opens"];
-    NSArray *menuTitleArr = @[@"店铺拼组",@"大堂拼组",@"空间短租",@"地图找店",@"进货",@"货架出租",@"二手货架",@"新店合开"];
-    for (int i = 0; i < menuImageArr.count; i++) {
-        HPMenuCellbutton *menuBtn = [HPMenuCellbutton new];
-        [menuBtn setImage:ImageNamed(menuImageArr[i]) forState:UIControlStateNormal];
-        [menuBtn setTitle:menuTitleArr[i] forState:UIControlStateNormal];
-        [menuBtn addTarget:self action:@selector(clickMenuItem:) forControlEvents:UIControlEventTouchUpInside];
-        menuBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
-
-        menuBtn.tag = 50 + i;
-        CGFloat row = i/4;
-        CGFloat col = i%4;
-        [self addSubview:menuBtn];
-        self.menuBtn = menuBtn;
-        CGFloat margin = (kScreenWidth - getWidth(52.f) * 4 - getWidth(26.f) * 2)/3;
-        [menuBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(getWidth(26.f) + (getWidth(52.f) + margin) * col);
-            make.top.mas_equalTo(self.pageView.mas_bottom).offset(getWidth(25.f) + (getWidth(77.f) + getWidth(21.f)) * row);
-            make.size.mas_equalTo(CGSizeMake(getWidth(52.f), getWidth(77.f)));
-        }];
-    }
-
-}
-
-- (void)clickMenuItem:(UIButton *)button
-{
-    if (self.clickMenuItemBlock) {
-        self.clickMenuItemBlock(button.tag);
-    }
-}
 #pragma mark - HPBannerViewDelegate
 
 - (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
@@ -186,7 +152,9 @@
             }
             
             [self setUpTopMenuSubviews];
+            
             [self setUpCellSubviewsFrame];
+            
         }else{
             [HPProgressHUD alertMessage:MSG];
         }

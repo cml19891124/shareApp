@@ -39,7 +39,7 @@
     UILabel *descLabel = [[UILabel alloc] init];
     [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:20.f]];
     [descLabel setTextColor:COLOR_BLACK_333333];
-    [descLabel setText:@"店铺共享"];
+    [descLabel setText:@"店铺拼租"];
     [view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).offset(getWidth(36.f));
@@ -78,7 +78,7 @@
         make.size.mas_equalTo(CGSizeMake(324.f * g_rateWidth, 119.f * g_rateWidth));
     }];
     [self setupStartupCard:startupCard];
-    
+    /*
     UILabel *goodsDescLabel = [[UILabel alloc] init];
     [goodsDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:20.f]];
     [goodsDescLabel setTextColor:COLOR_BLACK_333333];
@@ -104,7 +104,7 @@
         make.top.equalTo(goodsDescLabel.mas_bottom).with.offset(9.f * g_rateWidth);
         make.size.mas_equalTo(CGSizeMake(324.f * g_rateWidth, 119.f * g_rateWidth));
     }];
-    [self setupGoodsCard:goodsCard];
+    [self setupGoodsCard:goodsCard];*/
 }
 
 - (void)setupGoodsCard:(UIView *)goodsView {
@@ -187,7 +187,7 @@
     UILabel *descLabel = [[UILabel alloc] init];
     [descLabel setFont:[UIFont fontWithName:FONT_REGULAR size:13.f]];
     [descLabel setTextColor:UIColor.whiteColor];
-    [descLabel setText:@"我想发布共享空间>>"];
+    [descLabel setText:@"我想发布拼租信息>>"];
     [view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(titleLabel);
@@ -236,7 +236,7 @@
     UILabel *descLabel = [[UILabel alloc] init];
     [descLabel setFont:[UIFont fontWithName:FONT_REGULAR size:13.f]];
     [descLabel setTextColor:UIColor.whiteColor];
-    [descLabel setText:@"我想发布空间需求>>"];
+    [descLabel setText:@"我想发布租店需求>>"];
     [view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(titleLabel);

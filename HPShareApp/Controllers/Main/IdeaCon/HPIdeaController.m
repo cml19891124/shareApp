@@ -124,23 +124,7 @@ static NSString *headerCell = @"headerCell";
     
     _navTitleView = [self setupNavigationBarWithTitle:@"享法"];
     [self.view addSubview:self.tableView];
-    
-//    UIControl *howToPlayShareSpace = [[UIControl alloc] init];
-//    [howToPlayShareSpace.layer setCornerRadius:6.5f];
-//    [howToPlayShareSpace.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
-//    [howToPlayShareSpace.layer setShadowOffset:CGSizeMake(0.f, 4.f)];
-//    [howToPlayShareSpace.layer setShadowRadius:11.f];
-//    [howToPlayShareSpace.layer setShadowOpacity:1.f];
-//    [howToPlayShareSpace setBackgroundColor:UIColor.whiteColor];
-//    [howToPlayShareSpace setTag:1];
-//    [howToPlayShareSpace addTarget:self action:@selector(onClickShareSpaceCtrl:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:howToPlayShareSpace];
-//    [howToPlayShareSpace mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(whatIsShareSpace.mas_bottom).with.offset(15.f * g_rateWidth);
-//        make.centerX.equalTo(self.view);
-//        make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 150.f * g_rateWidth));
-//    }];
-//    [self setupHowToPlayShareSpace:howToPlayShareSpace];
+
 }
 
 #pragma mark - 初始化控件
@@ -163,46 +147,6 @@ static NSString *headerCell = @"headerCell";
     }
     return _tableView;
 }
-
-/*
-- (void)setupHowToPlayShareSpace:(UIView *)view {
-    UILabel *titleLabel = [self setupTitle:@"共享空间怎么玩?" ofView:view];
-    UIImageView *iconView = [self setupIcon:[UIImage imageNamed:@"idea_how_to_play_share_space"] ofView:view];
-    
-    UILabel *questionLabel = [[UILabel alloc] init];
-    [questionLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
-    [questionLabel setTextColor:COLOR_BLACK_4A4A4B];
-    [questionLabel setText:@"概念太抽象？"];
-    [view addSubview:questionLabel];
-    [questionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(titleLabel);
-        make.top.equalTo(titleLabel.mas_bottom).with.offset(20.f * g_rateWidth);
-        make.height.mas_equalTo(questionLabel.font.pointSize);
-    }];
-    
-    UILabel *answerLabel = [[UILabel alloc] init];
-    [answerLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
-    [answerLabel setTextColor:COLOR_RED_FF4562];
-    [answerLabel setText:@"莫慌 !!!"];
-    [view addSubview:answerLabel];
-    [answerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(questionLabel.mas_right).with.offset(5.f * g_rateWidth);
-        make.centerY.equalTo(questionLabel);
-        make.height.mas_equalTo(answerLabel.font.pointSize);
-    }];
-    
-    UILabel *descLabel = [[UILabel alloc] init];
-    [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:13.f]];
-    [descLabel setTextColor:COLOR_GRAY_999999];
-    [descLabel setNumberOfLines:0];
-    [descLabel setText:@"不怕你不会玩，就怕你玩不过来！我们一起“享”未来！"];
-    [view addSubview:descLabel];
-    [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(titleLabel);
-        make.right.equalTo(iconView.mas_left).with.offset(11.f * g_rateWidth);
-        make.top.equalTo(questionLabel.mas_bottom).with.offset(15.f * g_rateWidth);
-    }];
-}*/
 
 #pragma mark - OnClick
 
@@ -249,7 +193,7 @@ static NSString *headerCell = @"headerCell";
 {
     HPHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:headerCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//    HPLoginModel *account = [HPUserTool account];
+
     [cell setHeaderClickBlock:^(NSInteger ideaIndex) {
         if (ideaIndex == 0) {
             [self pushVCByClassName:@"HPWhatIsShareSpaceController"];
