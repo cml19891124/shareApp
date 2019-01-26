@@ -1470,6 +1470,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 -(void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view
 {
     [view setSelected:NO];
-    [self pushVCByClassName:@"HPGeodeMapViewController" withParam:@{@"loaction":_model}];
+//    [self pushVCByClassName:@"HPGeodeMapViewController" withParam:@{@"loaction":_model}];
 }
 @end

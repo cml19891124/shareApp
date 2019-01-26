@@ -99,7 +99,6 @@
 		E622A9C021C33989007C35BC /* RefreshTableView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E622A9BA21C33989007C35BC /* RefreshTableView.bundle */; };
 		E622A9C121C33989007C35BC /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = E622A9BB21C33989007C35BC /* .gitkeep */; };
 		E622A9C421C34E1C007C35BC /* HPClearCacheTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9C321C34E1C007C35BC /* HPClearCacheTool.m */; };
-		E622A9C721C358DA007C35BC /* AppDelegate+JPush.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9C621C358DA007C35BC /* AppDelegate+JPush.m */; };
 		E622A9CD21C376E8007C35BC /* HPlaceholdTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9CC21C376E8007C35BC /* HPlaceholdTextView.m */; };
 		E622A9D021C3A6B3007C35BC /* HPCardDetailsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E622A9CF21C3A6B3007C35BC /* HPCardDetailsModel.m */; };
 		E6292136219AA83000BEF16C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292135219AA83000BEF16C /* AppDelegate.m */; };
@@ -586,8 +585,6 @@
 		E622A9BB21C33989007C35BC /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		E622A9C221C34E1C007C35BC /* HPClearCacheTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPClearCacheTool.h; sourceTree = "<group>"; };
 		E622A9C321C34E1C007C35BC /* HPClearCacheTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPClearCacheTool.m; sourceTree = "<group>"; };
-		E622A9C521C358DA007C35BC /* AppDelegate+JPush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+JPush.h"; sourceTree = "<group>"; };
-		E622A9C621C358DA007C35BC /* AppDelegate+JPush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+JPush.m"; sourceTree = "<group>"; };
 		E622A9CB21C376E8007C35BC /* HPlaceholdTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPlaceholdTextView.h; sourceTree = "<group>"; };
 		E622A9CC21C376E8007C35BC /* HPlaceholdTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPlaceholdTextView.m; sourceTree = "<group>"; };
 		E622A9CE21C3A6B3007C35BC /* HPCardDetailsModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCardDetailsModel.h; sourceTree = "<group>"; };
@@ -1614,8 +1611,6 @@
 				E6292166219AA99D00BEF16C /* Supporting Files */,
 				E6292134219AA83000BEF16C /* AppDelegate.h */,
 				E6292135219AA83000BEF16C /* AppDelegate.m */,
-				E622A9C521C358DA007C35BC /* AppDelegate+JPush.h */,
-				E622A9C621C358DA007C35BC /* AppDelegate+JPush.m */,
 			);
 			path = HPShareApp;
 			sourceTree = "<group>";
@@ -3295,7 +3290,6 @@
 				69165CF721C221C000593D25 /* HPCommonData.m in Sources */,
 				E68A76CC21F2C84200083A90 /* JCHATMessageTableView.m in Sources */,
 				7A54489E21C6304C001301F3 /* HPCardHeaderView.m in Sources */,
-				E622A9C721C358DA007C35BC /* AppDelegate+JPush.m in Sources */,
 				E68A76B521F2C6D100083A90 /* JCHATConversationListCell.m in Sources */,
 				E693E90421E8331E0063797A /* ClusterAnnotation.m in Sources */,
 				E6A8108321D700CE0048AA01 /* HPSearchBar.m in Sources */,

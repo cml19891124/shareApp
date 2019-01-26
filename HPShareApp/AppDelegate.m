@@ -11,12 +11,11 @@
 #import "Macro.h"
 #import "HPMainTabBarController.h"
 #import <AMapFoundationKit/AMapFoundationKit.h>
-#import "AppDelegate+JPush.h"
 #import "HPTextDialogView.h"
 #import "HPGuideViewController.h"
 #import "HPCommonData.h"
 #import "HPCommonBannerData.h"
-#import "HPHomeBannerModel.h"
+
 #import "HPSingleton.h"
 #import "Bugly/Bugly.h"
 #import <JMessage/JMessage.h>
@@ -103,14 +102,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    //极光
+    //极光推送
     [self setUpJPushAndMessageConfigWithOptions:launchOptions];
     
     //注册极光IM
-    [self regiestJMessage];
+//    [self regiestJMessage];
     
     //登录极光IM
-    [self loginJMessage];
+//    [self loginJMessage];
     
     //注册腾讯bugly
     [Bugly startWithAppId:kAppleId];

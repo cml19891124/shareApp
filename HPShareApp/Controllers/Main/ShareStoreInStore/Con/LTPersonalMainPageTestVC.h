@@ -8,9 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "HPBaseViewController.h"
+#import "HPShareListParam.h"
 
 @interface LTPersonalMainPageTestVC : HPBaseViewController
 
 @property(assign, nonatomic) NSInteger totalCount;
 
+@property(strong, nonatomic) UITableView *tableView;
+
+@property (nonatomic, strong) HPShareListParam *shareListParam;
+#pragma mark - network - 共享发布数据
+
+- (void)getAreaShareListDataReload:(BOOL)isReload;
 @end

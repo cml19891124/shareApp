@@ -62,18 +62,18 @@
     self.tabBar.layer.shadowOpacity = 0.82f;
 
     HPHomeShareViewController *shareController = [[HPHomeShareViewController alloc] init];
-    shareController.tabBarItem.title = @"共享";
+    shareController.tabBarItem.title = @"合店";
     shareController.tabBarItem.image = [UIImage imageNamed:@"share_unchecked"];
-    shareController.tabBarItem.selectedImage = [UIImage imageNamed:@"share_checked"];
+    shareController.tabBarItem.selectedImage = [[UIImage imageNamed:@"share_checked"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [shareController.tabBarItem setTitlePositionAdjustment:UIOffsetMake(-5.f * g_rateWidth, -3.f)];
     [shareController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateSelected];
     [shareController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateNormal];
     [self addChildViewController:shareController];
     
     HPIdeaController *ideaController = [[HPIdeaController alloc] init];
-    ideaController.tabBarItem.title = @"享法";
+    ideaController.tabBarItem.title = @"拼法";
     ideaController.tabBarItem.image = [UIImage imageNamed:@"method_unchecked"];
-    ideaController.tabBarItem.selectedImage = [UIImage imageNamed:@"method_checked"];
+    ideaController.tabBarItem.selectedImage = [[UIImage imageNamed:@"method_checked"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [ideaController.tabBarItem setTitlePositionAdjustment:UIOffsetMake(-25.f * g_rateWidth, -3.f)];
     ideaController.view.backgroundColor = UIColor.whiteColor;
     [ideaController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateSelected];
@@ -83,7 +83,7 @@
     HPInteractiveController *interactiveController = [[HPInteractiveController alloc] init];
     interactiveController.tabBarItem.title = @"互动";
     interactiveController.tabBarItem.image = [UIImage imageNamed:@"interaction_unchecked"];
-    interactiveController.tabBarItem.selectedImage = [UIImage imageNamed:@"interaction_checked"];
+    interactiveController.tabBarItem.selectedImage = [[UIImage imageNamed:@"interaction_checked"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [interactiveController.tabBarItem setTitlePositionAdjustment:UIOffsetMake(25.f * g_rateWidth, -3.f)];
     interactiveController.view.backgroundColor = UIColor.whiteColor;
     [interactiveController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateSelected];
@@ -93,7 +93,7 @@
     HPMyController *myController = [[HPMyController alloc] init];
     myController.tabBarItem.title = @"我的";
     myController.tabBarItem.image = [UIImage imageNamed:@"my_unchecked"];
-    myController.tabBarItem.selectedImage = [UIImage imageNamed:@"my_checked"];
+    myController.tabBarItem.selectedImage = [[UIImage imageNamed:@"my_checked"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [myController.tabBarItem setTitlePositionAdjustment:UIOffsetMake(5.f * g_rateWidth, -3.f)];
     myController.view.backgroundColor = UIColor.whiteColor;
 

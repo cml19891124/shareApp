@@ -20,6 +20,7 @@
 #import "LTScrollView-Swift.h"
 #import "Macro.h"
 #import "HPGlobalVariable.h"
+#import "HPShareListParam.h"
 
 #define RGBA(r,g,b,a) [UIColor colorWithRed:(float)r/255.0f green:(float)g/255.0f blue:(float)b/255.0f alpha:a]
 #define kIPhoneX ([UIScreen mainScreen].bounds.size.height == 812.0)
@@ -35,6 +36,11 @@
 @property(strong, nonatomic) UIView *headerView;
 @property(strong, nonatomic) UIImageView *headerImageView;
 @property(assign, nonatomic) CGFloat currentProgress;
+@property (nonatomic, strong) HPShareListParam *shareListParam;
+
+@property (nonatomic, strong) LTPersonalMainPageTestVC *testVC;
+
+@property (nonatomic, strong) NSMutableArray *testVCs;
 @end
 
 @implementation LTPersonMainPageDemo
@@ -49,8 +55,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _testVCs = [NSMutableArray array];
     self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    //默认三个区域
+//    _shareListParam.areaIds = [NSString stringWithFormat:@"9,7,1"]; //宝安，龙华，南山
+
+    _shareListParam = self.param[@"area"];
+    
+    self.testVC.shareListParam = self.shareListParam;
+//    [self.testVC getShareListDataReload:YES];
+    
     [self setupNavigationBarWithTitle:@"热门店铺推荐"];
     [self setupSubViews];
 }
@@ -68,22 +83,44 @@
         return weakSelf.headerView;
     }];
     
+    if ([_shareListParam.areaIds isEqualToString:@"9"]) {
+        [self.managerView scrollToIndexWithIndex:0]; //宝安
+    }else if ([_shareListParam.areaIds isEqualToString:@"7"]){
+        [self.managerView scrollToIndexWithIndex:1];//龙华区
+    }else if ([_shareListParam.areaIds isEqualToString:@"1"]){
+        [self.managerView scrollToIndexWithIndex:2]; //南山区
+    }else if ([_shareListParam.areaIds isEqualToString:@"9,7,1"]){
+        [self.managerView scrollToIndexWithIndex:0]; //宝安\龙华区\南山区
+    }
+    self.testVC.shareListParam = self.shareListParam;
+
     //pageView点击事件
     [self.managerView didSelectIndexHandle:^(NSInteger index) {
         HPLog(@"点击了 -> %ld", index);
+        if (index == 0) {
+            weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"9"]; //宝安
+        }else if (index == 1){
+            weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"7"]; //龙华
+        }else if (index == 2){
+            weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"1"]; //南山
+        }
+        weakSelf.testVC = weakSelf.testVCs[index];
+        weakSelf.testVC.shareListParam = weakSelf.shareListParam;
+        [weakSelf.testVC getAreaShareListDataReload:NO];
+        [weakSelf.testVC.tableView reloadData];
     }];
     
     //控制器刷新事件
-    [self.managerView refreshTableViewHandle:^(UIScrollView * _Nonnull scrollView, NSInteger index) {
-        __weak typeof(scrollView) weakScrollView = scrollView;
-        scrollView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-            __strong typeof(weakScrollView) strongScrollView = weakScrollView;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                HPLog(@"对应控制器的刷新自己玩吧，这里就不做处理了🙂-----%ld", index);
-                [strongScrollView.mj_header endRefreshing];
-            });
-        }];
-    }];
+//    [self.managerView refreshTableViewHandle:^(UIScrollView * _Nonnull scrollView, NSInteger index) {
+//        __weak typeof(scrollView) weakScrollView = scrollView;
+//        scrollView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+//            __strong typeof(weakScrollView) strongScrollView = weakScrollView;
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                HPLog(@"对应控制器的刷新自己玩吧，这里就不做处理了🙂-----%ld", index);
+//                [strongScrollView.mj_header endRefreshing];
+//            });
+//        }];
+//    }];
     
 }
 
@@ -128,7 +165,7 @@
         _managerView.delegate = self;
         
         /* 设置悬停位置 */
-        _managerView.hoverY = NavHeight;
+        _managerView.hoverY = 0;//NavHeight;
         
     }
     return _managerView;
@@ -177,9 +214,14 @@
 
 
 -(NSArray <UIViewController *> *)setupViewControllers {
+    kWEAKSELF
     NSMutableArray <UIViewController *> *testVCS = [NSMutableArray arrayWithCapacity:0];
     [self.titles enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         LTPersonalMainPageTestVC *testVC = [[LTPersonalMainPageTestVC alloc] init];
+        weakSelf.testVCs = testVCS;
+        [weakSelf.testVCs addObject:testVC];
+//        weakSelf.testVC = testVC;
+//        testVC.shareListParam = weakSelf.shareListParam;
         [testVCS addObject:testVC];
     }];
     return testVCS.copy;

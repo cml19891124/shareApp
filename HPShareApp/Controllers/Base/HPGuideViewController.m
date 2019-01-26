@@ -61,8 +61,8 @@
 
 - (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didScrollToIndex:(NSInteger)index{
     _bannerView.currentPageIndex = (int)index;
-    NSArray *themeTitleArray = @[@"共享店铺",@"共享货品",@"共享人力"];
-    NSArray *themeSBTitleArray = @[@"让店铺每平米空间都能增值",@"厂家直供，没有中间商",@"人手不够，短工随时找"];
+    NSArray *themeTitleArray = @[@"店铺拼租",@"店铺短租",@"智能推送"];
+    NSArray *themeSBTitleArray = @[@"让店铺每平米空间都能增值",@"租期灵活，一天一月都能租",@"AI赋能，用算法匹配最适合你的店"];
     _bannerView.themeTitleArray = themeTitleArray;
     _bannerView.themeSBTitleArray = themeSBTitleArray;
 }

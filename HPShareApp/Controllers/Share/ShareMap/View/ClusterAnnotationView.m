@@ -115,13 +115,13 @@ CGFloat ScaledValueForValue(CGFloat value)
     }
     if(_count == 1){//非聚合网点标注
         if(self.storeAnnotation.selected){
-            self.image = [UIImage imageNamed:@"hasStoreAnnotation_selected"];//要点击选中状态
+            self.image = [UIImage imageNamed:@"hasStoreAnnotation_selected"];//要点击选中状态 hasStoreAnnotation_selected
         }else{
-            self.image = [UIImage imageNamed:@"hasStoreAnnotation"];
+            self.image = [UIImage imageNamed:@"hasStoreAnnotation"];//hasStoreAnnotation
         }
         
     }else{//聚合网点标注
-        self.image = [UIImage imageNamed:@"hasStoreAnnotation_selected"];
+        self.image = [UIImage imageNamed:@"hasStoreAnnotation_selected"];//hasStoreAnnotation_selected
 
     }
     self.countLabel.text = [NSString stringWithFormat:@"%ld",count];

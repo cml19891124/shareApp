@@ -9,7 +9,9 @@
 #import "HPWhatIsShareSpaceController.h"
 
 @interface HPWhatIsShareSpaceController () <UIScrollViewDelegate>
+@property (nonatomic, strong) UIView *topicPanel;
 
+@property (nonatomic, assign) MASConstraint *size;
 @end
 
 @implementation HPWhatIsShareSpaceController
@@ -69,7 +71,7 @@
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [titleLabel setTextColor:UIColor.whiteColor];
-    [titleLabel setText:@"什么是共享空间?"];
+    [titleLabel setText:@"什么是店铺拼租?"];
     [scrollView addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(scrollView);
@@ -84,14 +86,16 @@
     [topicPanel.layer setShadowOpacity:0.1f];
     [topicPanel setBackgroundColor:UIColor.whiteColor];
     [scrollView addSubview:topicPanel];
+    _topicPanel = topicPanel;
+
     [topicPanel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(bgView.mas_bottom).with.offset(-31.f * g_rateWidth);
         make.centerX.equalTo(scrollView);
-        make.size.mas_equalTo(CGSizeMake(336.f * g_rateWidth, 84.f * g_rateWidth));
+        make.size.mas_equalTo(CGSizeMake(336.f * g_rateWidth, 151.f * g_rateWidth));
     }];
     [self setupTopicPanel:topicPanel];
     
-    UIImageView *typeCategoryView = [self setupCategoryViewWithTitle:@"共享类型"];
+    UIImageView *typeCategoryView = [self setupCategoryViewWithTitle:@"拼租、短租类型"];
     [scrollView addSubview:typeCategoryView];
     [typeCategoryView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(topicPanel.mas_bottom).with.offset(19.f * g_rateWidth);
@@ -114,7 +118,7 @@
     }];
     [self setupTypeView:typeView];
     
-    UIView *ruleCategoryView = [self setupCategoryViewWithTitle:@"共享匹配规则"];
+    UIView *ruleCategoryView = [self setupCategoryViewWithTitle:@"拼租匹配规则"];
     [scrollView addSubview:ruleCategoryView];
     [ruleCategoryView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(typeView.mas_bottom).with.offset(20.f * g_rateWidth);
@@ -137,7 +141,7 @@
     }];
     [self setupRuleView:ruleView];
     
-    UIView *sortCategoryView = [self setupCategoryViewWithTitle:@"共享匹配规则"];
+    UIView *sortCategoryView = [self setupCategoryViewWithTitle:@"拼租场景分类"];
     [scrollView addSubview:sortCategoryView];
     [sortCategoryView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(ruleView.mas_bottom).with.offset(20.f * g_rateWidth);
@@ -174,40 +178,44 @@
     UILabel *questionLabel = [[UILabel alloc] init];
     [questionLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
     [questionLabel setTextColor:COLOR_BLACK_4A4A4B];
-    [questionLabel setText:@"共享经济已死？"];
+    [questionLabel setText:@"合店站介绍"];
     [view addSubview:questionLabel];
     [questionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(18.f * g_rateWidth);
         make.top.equalTo(view).with.offset(13.f);
         make.height.mas_equalTo(questionLabel.font.pointSize);
     }];
-    
-    UILabel *answerLabel = [[UILabel alloc] init];
-    [answerLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
-    [answerLabel setTextColor:COLOR_RED_FF4562];
-    [answerLabel setText:@"NO !!!"];
-    [view addSubview:answerLabel];
-    [answerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(questionLabel.mas_right).with.offset(5.f);
-        make.centerY.equalTo(questionLabel);
-        make.height.mas_equalTo(answerLabel.font.pointSize);
-    }];
+//
+//    UILabel *answerLabel = [[UILabel alloc] init];
+//    [answerLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
+//    [answerLabel setTextColor:COLOR_RED_FF4562];
+//    [answerLabel setText:@"NO !!!"];
+//    [view addSubview:answerLabel];
+//    [answerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(questionLabel.mas_right).with.offset(5.f);
+//        make.centerY.equalTo(questionLabel);
+//        make.height.mas_equalTo(answerLabel.font.pointSize);
+//    }];
     
     UILabel *descLabel = [[UILabel alloc] init];
     [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:13.f]];
     [descLabel setTextColor:COLOR_GRAY_999999];
     [descLabel setNumberOfLines:0];
-    [descLabel setText:@"共享空间告诉你什么才是共享的正确打开方式！"];
+    //高度自适应，前提不设置宽度，高度自适应
+    [descLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    [descLabel setText:@"合店站是由深圳前海合派科技有限公司推出的店铺在线拼租、短租平台。通过大数据及人工智能技术的加持，帮助商家进行精准店铺拼租匹配，为商家找到最合适的合作伙伴。切实降低实体店租金，提高商业效率。致力打造全球拼租、短租第一平台。"];
     [view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(questionLabel.mas_bottom).with.offset(11.f * g_rateWidth);
-        make.left.equalTo(questionLabel);
-        make.width.mas_equalTo(181.f);
+        make.top.mas_equalTo(questionLabel.mas_bottom).offset(13.f * g_rateWidth);
+        make.left.mas_equalTo(getWidth(18.f));
+        make.right.mas_equalTo(getWidth(-18.f));
+//        make.height.mas_equalTo(181.f);
     }];
+
 }
 
 - (void)setupTypeView:(UIView *)view {
-    UIView *timeShareTitleView = [self setupQuestionTitleViewWithIndex:@"01" title:@"时间型共享"];
+    UIView *timeShareTitleView = [self setupQuestionTitleViewWithIndex:@"01" title:@"闲置时段拼租、短租"];
     [view addSubview:timeShareTitleView];
     [timeShareTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(27.f * g_rateWidth);
@@ -218,7 +226,7 @@
     [timeShareDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:14.f]];
     [timeShareDescLabel setTextColor:COLOR_BLACK_666666];
     [timeShareDescLabel setNumberOfLines:0];
-    [timeShareDescLabel setText:@"同一空间（店铺），因使用时段不同，而产的空置时间。将店铺空置时间进行出租，获取收益。将利益最大化"];
+    [timeShareDescLabel setText:@"同一店铺（空间），因使用时段的不同，而形成“闲置时段”。在“闲置时段将转租，获取更多收益。”"];
     [view addSubview:timeShareDescLabel];
     [timeShareDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(timeShareTitleView);
@@ -226,14 +234,14 @@
         make.width.mas_equalTo(293.f * g_rateWidth);
     }];
     
-    UIView *timeShareExampleView = [self setupExampleViewWithText:@"例：酒吧、早餐店等经营时段固定的场所"];
+    UIView *timeShareExampleView = [self setupExampleViewWithText:@"例：做中餐厅的老板，将铺头租给做早餐档的老板；做酒吧的老板，出租店铺的“白天时段”"];
     [view addSubview:timeShareExampleView];
     [timeShareExampleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(timeShareDescLabel.mas_bottom).with.offset(12.f * g_rateWidth);
         make.left.and.width.equalTo(view);
     }];
     
-    UIView *spaceShareTitleView = [self setupQuestionTitleViewWithIndex:@"02" title:@"空间型共享"];
+    UIView *spaceShareTitleView = [self setupQuestionTitleViewWithIndex:@"02" title:@"闲置时段拼租、短租"];
     [view addSubview:spaceShareTitleView];
     [spaceShareTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(timeShareTitleView);
@@ -244,7 +252,7 @@
     [spaceShareDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:14.f]];
     [spaceShareDescLabel setTextColor:COLOR_BLACK_666666];
     [spaceShareDescLabel setNumberOfLines:0];
-    [spaceShareDescLabel setText:@"将同一空间内，空余闲置的空间进行出租，获取收益。"];
+    [spaceShareDescLabel setText:@"同一店铺（空间），因使用面积有限，而产生”闲置空间“。将”闲置空间“进行转租，获取更多收益。"];
     [view addSubview:spaceShareDescLabel];
     [spaceShareDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(spaceShareTitleView);
@@ -252,7 +260,7 @@
         make.width.mas_equalTo(293.f * g_rateWidth);
     }];
     
-    UIView *spaceShareExampleView = [self setupExampleViewWithText:@"例：健身房、洗车店等店铺经营面积较大，闲置空间较多的场所"];
+    UIView *spaceShareExampleView = [self setupExampleViewWithText:@"例：便利店、健身房、洗车店等店铺经营面积较大，是拼租、短租的理想场所。"];
     [view addSubview:spaceShareExampleView];
     [spaceShareExampleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(spaceShareDescLabel.mas_bottom).with.offset(12.f);

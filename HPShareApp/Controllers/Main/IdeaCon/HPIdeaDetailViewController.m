@@ -30,8 +30,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = COLOR_GRAY_FFFFFF;
-    HPIdeaListModel *model = self.param[@"model"];
-    _navTitleView = [self setupNavigationBarWithTitle:model.title];
+//    HPIdeaListModel *model = self.param[@"model"];
+    _navTitleView = [self setupNavigationBarWithTitle:@"合店头条"];
     
     [self setUpSubviewsUI];
     [self setUpSubviewsUIMasonry];

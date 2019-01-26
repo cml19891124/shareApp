@@ -145,41 +145,41 @@
 
 
 - (void)setupWhatIsShareSpace:(UIView *)view {
-    UILabel *titleLabel = [self setupTitle:@"什么是共享空间?" ofView:view];
+    UILabel *titleLabel = [self setupTitle:@"什么是店铺拼租?" ofView:view];
     UIImageView *iconView = [self setupIcon:[UIImage imageNamed:@"idea_what_is_share_space"] ofView:view];
     
-    UILabel *questionLabel = [[UILabel alloc] init];
-    [questionLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
-    [questionLabel setTextColor:COLOR_BLACK_4A4A4B];
-    [questionLabel setText:@"共享经济已死？"];
-    [view addSubview:questionLabel];
-    [questionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(titleLabel);
-        make.top.equalTo(titleLabel.mas_bottom).with.offset(20.f * g_rateWidth);
-        make.height.mas_equalTo(questionLabel.font.pointSize);
-    }];
-    
-    UILabel *answerLabel = [[UILabel alloc] init];
-    [answerLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
-    [answerLabel setTextColor:COLOR_RED_FF4562];
-    [answerLabel setText:@"NO !!!"];
-    [view addSubview:answerLabel];
-    [answerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(questionLabel.mas_right).with.offset(5.f * g_rateWidth);
-        make.centerY.equalTo(questionLabel);
-        make.height.mas_equalTo(answerLabel.font.pointSize);
-    }];
+//    UILabel *questionLabel = [[UILabel alloc] init];
+//    [questionLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
+//    [questionLabel setTextColor:COLOR_BLACK_4A4A4B];
+//    [questionLabel setText:@"共享经济已死？"];
+//    [view addSubview:questionLabel];
+//    [questionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(titleLabel);
+//        make.top.equalTo(titleLabel.mas_bottom).with.offset(20.f * g_rateWidth);
+//        make.height.mas_equalTo(questionLabel.font.pointSize);
+//    }];
+//
+//    UILabel *answerLabel = [[UILabel alloc] init];
+//    [answerLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
+//    [answerLabel setTextColor:COLOR_RED_FF4562];
+//    [answerLabel setText:@"NO !!!"];
+//    [view addSubview:answerLabel];
+//    [answerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(questionLabel.mas_right).with.offset(5.f * g_rateWidth);
+//        make.centerY.equalTo(questionLabel);
+//        make.height.mas_equalTo(answerLabel.font.pointSize);
+//    }];
     
     UILabel *descLabel = [[UILabel alloc] init];
     [descLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:13.f]];
     [descLabel setTextColor:COLOR_GRAY_999999];
     [descLabel setNumberOfLines:0];
-    [descLabel setText:@"共享空间告诉你什么才是共享的正确打开方式！"];
+    [descLabel setText:@"什么才是拼租正确的打开方式？"];
     [view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(titleLabel);
         make.right.equalTo(iconView.mas_left).with.offset(11.f * g_rateWidth);
-        make.top.equalTo(questionLabel.mas_bottom).with.offset(15.f * g_rateWidth);
+        make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f * g_rateWidth);
     }];
 }
 

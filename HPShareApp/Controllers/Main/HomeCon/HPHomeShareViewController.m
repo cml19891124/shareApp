@@ -139,28 +139,7 @@ static NSString *shareListCell = @"shareListCell";
             }
             
             if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
-                /*UIImage *image = ImageNamed(@"waiting");
-                 UIImageView *waitingView = [[UIImageView alloc] init];
-                 waitingView.image = image;
-                 [self.tableView addSubview:waitingView];
-                 [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
-                 make.bottom.mas_equalTo(-70.f * g_rateWidth);
-                 make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
-                 make.centerX.mas_equalTo(self.tableView);
-                 }];
-                 
-                 UILabel *waitingLabel = [[UILabel alloc] init];
-                 waitingLabel.text = @"共享发布孤单很久了，快去逛逛吧！";
-                 waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
-                 waitingLabel.textColor = COLOR_GRAY_BBBBBB;
-                 waitingLabel.textAlignment = NSTextAlignmentCenter;
-                 [self.tableView addSubview:waitingLabel];
-                 
-                 [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                 make.centerX.mas_equalTo(self.tableView);
-                 make.top.mas_equalTo(waitingView.mas_top).offset(158.f * g_rateWidth);
-                 make.width.mas_equalTo(kScreenWidth);
-                 }];*/
+                [HPProgressHUD alertMessage:@"暂无发布数据"];
             }
             
             if (models.count < 10) {
@@ -398,24 +377,25 @@ static NSString *shareListCell = @"shareListCell";
     kWEAKSELF
     [cell setClickMoreBtnBlock:^{
         HPLog(@"MoreBtn");
-        [self pushVCByClassName:@"LTPersonMainPageDemo" withParam:@{@"area": weakSelf.shareListParam.areaIds}];
+        weakSelf.shareListParam.areaIds = @"9,7,1";
+        [self pushVCByClassName:@"LTPersonMainPageDemo" withParam:@{@"area": weakSelf.shareListParam}];
     }];
     
     [cell setTapHotImageViewBlock:^(NSInteger tag) {
         switch (tag) {
             case HPStoresShareAreaIndexBaoan:
-//                HPLog(@"HPStoresShareAreaIndexBaoan");
-                [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area": weakSelf.shareListParam.areaIds}];
+                weakSelf.shareListParam.areaIds = @"9";
+                [self pushVCByClassName:@"LTPersonMainPageDemo" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;
             case HPStoresShareAreaIndexLonghua:
-//                HPLog(@"HPStoresShareAreaIndexLonghua");
-                [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area": weakSelf.shareListParam.areaIds}];
+                weakSelf.shareListParam.areaIds = @"7";
+                [self pushVCByClassName:@"LTPersonMainPageDemo" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;
             case HPStoresShareAreaIndexNanshan:
-//                HPLog(@"HPStoresShareAreaIndexNanshan");
-                [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area": weakSelf.shareListParam.areaIds}];
+                weakSelf.shareListParam.areaIds = @"1";
+                [self pushVCByClassName:@"LTPersonMainPageDemo" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;
             default:
@@ -464,10 +444,11 @@ static NSString *shareListCell = @"shareListCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 3) {
+    HPShareListModel *model = self.dataArray[indexPath.row];
+    if (indexPath.section == 4) {
         HPShareListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         if (cell) {
-            [self pushVCByClassName:@"HPShareDetailController" withParam:@{@"model":cell.model}];
+            [self pushVCByClassName:@"HPShareDetailController" withParam:@{@"model":model}];
         }
     }
 }

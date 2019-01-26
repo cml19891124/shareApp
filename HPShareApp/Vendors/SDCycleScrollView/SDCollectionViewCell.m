@@ -50,10 +50,10 @@
         [enterBtn setTitle:@"立即体验" forState:UIControlStateNormal];
 //        enterBtn.hidden = YES;
         enterBtn.titleLabel.font = kFont_Medium(18.f);
-        enterBtn.layer.cornerRadius = getWidth(35.f)/2;
+        enterBtn.layer.cornerRadius = getWidth(15.f)/2;
         enterBtn.layer.masksToBounds = YES;
         [enterBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
-        enterBtn.backgroundColor = COLOR_RED_F91E54;
+        enterBtn.backgroundColor = COLOR_RED_EA0000;
         enterBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [enterBtn addTarget:self action:@selector(enterApp:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:enterBtn];
@@ -67,8 +67,8 @@
         UILabel *themeSBLabel = [[UILabel alloc] init];
         [self.contentView addSubview:themeSBLabel];
         _themeSBLabel = themeSBLabel;
-        [_themeSBLabel setFont:kFont_Bold(16.f)];
-        [_themeSBLabel setTextColor:COLOR_GRAY_CCCCCC];
+        [_themeSBLabel setFont:kFont_Medium(16.f)];
+        [_themeSBLabel setTextColor:COLOR_GRAY_666666];
         _themeSBLabel.textAlignment = NSTextAlignmentCenter;
 //        [_themeSBLabel setText:@"让店铺每平米空间都能增值"];
         [themeSBLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -82,7 +82,7 @@
         UILabel *themeLabel = [[UILabel alloc] init];
         [self.contentView addSubview:themeLabel];
         _themeLabel = themeLabel;
-        [_themeLabel setFont:kFont_Medium(24.f)];
+        [_themeLabel setFont:kFont_Bold(24.f)];
         [_themeLabel setTextColor:COLOR_BLACK_333333];
         _themeLabel.textAlignment = NSTextAlignmentCenter;
 //        [_themeLabel setText:@"共享店铺"];

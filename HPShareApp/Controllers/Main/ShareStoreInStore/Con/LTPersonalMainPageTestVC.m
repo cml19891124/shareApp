@@ -22,18 +22,15 @@
 #import "HPShareListCell.h"
 #import "Macro.h"
 #import "HPGlobalVariable.h"
-#import "HPShareListParam.h"
 
 
 #define kIPhoneX ([UIScreen mainScreen].bounds.size.height == 812.0)
 
 @interface LTPersonalMainPageTestVC () <UITableViewDelegate, UITableViewDataSource>
 
-@property(strong, nonatomic) UITableView *tableView;
 
 @property (nonatomic, strong) NSMutableArray *dataArray;
 
-@property (nonatomic, strong) HPShareListParam *shareListParam;
 
 @end
 
@@ -42,7 +39,6 @@ static NSString *shareListCell = @"shareListCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
     _dataArray = [NSMutableArray array];
 
     self.view.backgroundColor = [UIColor whiteColor];
@@ -52,24 +48,13 @@ static NSString *shareListCell = @"shareListCell";
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
     [self.view addSubview:self.tableView];
-    
-//    if (self.totalCount == 0) {
-//        self.totalCount = 20;
-//    }
-    
+
 #warning 重要 必须赋值
     self.glt_scrollView = self.tableView;
     _dataArray = [NSMutableArray array];
     
-    _shareListParam = [HPShareListParam new];
-    _shareListParam.pageSize = 10;
-    _shareListParam.page = 1;
-    _shareListParam.createTimeOrderType = @"0";
-    
-    _shareListParam.areaIds = [NSString stringWithFormat:@"9,7,1"]; //宝安，龙华，南山
-    
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
-        [self getShareListDataReload:NO];
+        [self getAreaShareListDataReload:NO];
     }];
     
     if (@available(iOS 11.0, *)) {
@@ -82,7 +67,7 @@ static NSString *shareListCell = @"shareListCell";
         _tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
         
     }
-//    [self setupRefreshData];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -95,41 +80,18 @@ static NSString *shareListCell = @"shareListCell";
         self.isPop = NO;
     }
     else {
-        [self getShareListDataReload:YES];
+        [self getAreaShareListDataReload:YES];
     }
 }
-- (void)setupRefreshData {
-    
-    __weak typeof(self) weakSelf = self;
-    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            weakSelf.totalCount += 10;
-            [weakSelf.tableView reloadData];
-            [weakSelf.tableView.mj_footer endRefreshing];
-        });
-    }];
-    
-    
-    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            weakSelf.totalCount = 20;
-            [weakSelf.tableView reloadData];
-            [weakSelf.tableView.mj_header endRefreshing];
-        });
-    }];
-    
-}
-
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//    return self.totalCount;
     return _dataArray.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:shareListCell];
-        HPShareListModel *model = _dataArray[indexPath.row];
-        cell.model = model;
+    HPShareListModel *model = _dataArray[indexPath.row];
+    cell.model = model;
     cell.backgroundColor = UIColor.whiteColor;
     
     return cell;
@@ -137,7 +99,13 @@ static NSString *shareListCell = @"shareListCell";
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    HPLog(@"第 %ld 行", indexPath.row + 1);
+    HPShareListModel *model = _dataArray[indexPath.row];
+
+        HPShareListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if (cell) {
+            [self pushVCByClassName:@"HPShareDetailController" withParam:@{@"model":model}];
+        }
+    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -163,16 +131,18 @@ static NSString *shareListCell = @"shareListCell";
 
 #pragma mark - network - 共享发布数据
 
-- (void)getShareListDataReload:(BOOL)isReload {
+- (void)getAreaShareListDataReload:(BOOL)isReload {
     
     if (isReload) {
         _shareListParam.page = 1;
     }
-    
+    [HPProgressHUD alertWithLoadingText:@"加载数据中..."];
     NSMutableDictionary *param = _shareListParam.mj_keyValues;
-    kWeakSelf(weakSelf);
+    kWEAKSELF
     [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:NO paraments:param complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
+            [weakSelf.dataArray removeAllObjects];
+
             NSArray *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
             if (models) {
                 if (isReload) {
@@ -195,6 +165,7 @@ static NSString *shareListCell = @"shareListCell";
             }
             
             [weakSelf.tableView reloadData];
+            [HPProgressHUD alertWithFinishText:@"加载完成"];
         }
         else {
             [HPProgressHUD alertMessage:MSG];
