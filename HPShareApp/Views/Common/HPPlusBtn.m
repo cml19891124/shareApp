@@ -26,12 +26,28 @@
 }
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect{
-    return kRect((buttonW - getWidth(39.f))/2, getWidth(-19.f), getWidth(39.f), getWidth(39.f));
+    return kRect((buttonW - getWidth(39.f))/2,0, getWidth(39.f), getWidth(39.f));
 }
 
 - (CGRect)titleRectForContentRect:(CGRect)contentRect
 {
-    return kRect(0, buttonH - getWidth(10.f), buttonW, getWidth(10.f));
+    return kRect(0, buttonH - getWidth(10.f), buttonW, getWidth(13.f));
 }
 
+//超出区域外点击无效
+-(UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    //tabbarVC 是否隐藏，隐藏了就不需要考虑点击了
+    if (self.hidden) {
+        return [super hitTest:point withEvent:event];
+    }else{
+        //将centerBtn上的点转化成父View上的点
+        CGPoint touch = [self convertPoint:point fromView:self];
+        //判断点击的点是否在按钮的区域内
+        if (CGRectContainsPoint(self.bounds, touch)) {
+            return self;
+        }else{
+            return [super hitTest:point withEvent:event];
+        }
+    }
+}
 @end

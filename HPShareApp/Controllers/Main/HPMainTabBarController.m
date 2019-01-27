@@ -7,7 +7,6 @@
 //
 
 #import "HPMainTabBarController.h"
-//#import "HPShareController.h"
 #import "HPIdeaController.h"
 #import "HPInteractiveController.h"
 #import "HPMyController.h"
@@ -22,7 +21,7 @@
 
 @property (nonatomic, weak) HPReleaseModalView *releaseModalView;
 @property (nonatomic, strong) HPJudgingLoginView *judgelogin;
-
+@property (nonatomic, strong) HPPlusBtn *plusBtn;
 @end
 
 @implementation HPMainTabBarController
@@ -33,16 +32,6 @@
     
     [self setupUI];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 #pragma mark - SetupUI
 
@@ -107,7 +96,7 @@
     [plusBtn setTitle:@"发布" forState:UIControlStateNormal];
     plusBtn.titleLabel.font = kFont_Bold(10.f);
     [plusBtn.layer setShadowColor:COLOR_GRAY_E6E5E5.CGColor];
-    [plusBtn.layer setShadowOffset:CGSizeMake(0.f, 3.f)];
+    [plusBtn.layer setShadowOffset:CGSizeMake(0.f, -3.f)];
     [plusBtn.layer setShadowRadius:39.f/2];
     [plusBtn.layer setShadowOpacity:0.82f];
     [plusBtn.layer setCornerRadius:39.f/2];
@@ -118,9 +107,12 @@
     
     [plusBtn addTarget:self action:@selector(onClickPlusBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:plusBtn];
+    [self.view bringSubviewToFront:plusBtn];
+    _plusBtn = plusBtn;
     [plusBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.view);
         make.bottom.equalTo(self.mas_bottomLayoutGuideTop).with.offset(-6.f);
+        make.size.mas_equalTo(CGSizeMake(getWidth(kScreenWidth/5), self.tabBar.frame.size.height + getWidth(19.f)));
     }];
     
     
@@ -167,7 +159,7 @@
 
  @param btn btn
  */
-- (void)onClickPlusBtn:(UIButton *)btn {
+- (void)onClickPlusBtn:(HPPlusBtn *)btn {
     if (btn.isSelected) {
         [btn setSelected:NO];
         

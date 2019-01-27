@@ -56,10 +56,10 @@
     }];
     
     UIImageView *backIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_back"]];
-    if (self.navigationController.childViewControllers.count) {
-        backIcon.hidden = NO;
-    }else{
+    if (self.navigationController.childViewControllers.count <= 1) {
         backIcon.hidden = YES;
+    }else{
+        backIcon.hidden = NO;
     }
     [navigationBar addSubview:backIcon];
     [backIcon mas_makeConstraints:^(MASConstraintMaker *make) {

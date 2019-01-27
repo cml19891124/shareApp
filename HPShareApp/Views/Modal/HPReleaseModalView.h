@@ -7,6 +7,7 @@
 //
 
 #import "HPBaseModalView.h"
+#import "HPPlusBtn.h"
 
 typedef NS_ENUM(NSInteger, HPReleaseCardType) {
     HPReleaseCardTypeOwner = 0,
@@ -21,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface HPReleaseModalView : HPBaseModalView
 
 @property (nonatomic, strong) HPReleaseCardCallBack callBack;
+
+@property (strong, nonatomic) HPPlusBtn *plusBtn;
 
 @end
 
