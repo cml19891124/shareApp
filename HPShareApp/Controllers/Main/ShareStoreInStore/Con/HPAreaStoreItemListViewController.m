@@ -95,7 +95,7 @@ static NSString *shareListCell = @"shareListCell";
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 137.0f;
+    return getWidth(137.0f);
 }
 
 - (UITableView *)tableView {

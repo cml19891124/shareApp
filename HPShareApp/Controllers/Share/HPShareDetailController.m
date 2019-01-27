@@ -100,12 +100,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
  */
 @property (nonatomic, strong) UILabel *modeTitlelabel;
 
-
-/**
- 店铺位置
- */
-@property (nonatomic, strong) UIView *storeLocationView;
-
 /**
  店铺标题
  */
@@ -337,14 +331,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     return _modeTitlelabel;
 }
 
-- (UIView *)storeLocationView
-{
-    if (!_storeLocationView) {
-        _storeLocationView = [UIView new];
-    }
-    return _storeLocationView;
-}
-
 - (UILabel *)storeTitleLabel
 {
     if (!_storeTitleLabel) {
@@ -459,11 +445,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         make.size.mas_equalTo(CGSizeMake(getWidth(335.f), getWidth(1.f)));
         make.centerX.mas_equalTo(self.titleRegion);
         make.top.mas_equalTo(self.baseInfoLine.mas_bottom).offset(getWidth(120.f));
-    }];
-    
-    [self.storeLocationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.titleRegion);
-        make.height.mas_equalTo(getWidth(215.f));
     }];
     
     [self.storeTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -642,8 +623,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         btn.userInteractionEnabled = NO;
     }
     [view addSubview:self.rentModelLine];
-    
-    [view addSubview:self.storeLocationView];
+
     [view addSubview:self.storeTitleLabel];
     [view addSubview:self.mapSuperView];
     [self.mapSuperView addSubview:self.mapView];
@@ -654,24 +634,9 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 {
     NSArray *shareInfoArr = @[@"共享租金\n面议",@"共享面积\n不限",@"共享时段\n不限"];
     for (int i = 0; i < shareInfoArr.count; i++) {
-        HPAttributeLabel *infoLabel = [HPAttributeLabel new];
-        infoLabel.textAlignment = NSTextAlignmentLeft;
-        infoLabel.text = shareInfoArr[i];
-        infoLabel.numberOfLines = 0;
-        infoLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        NSString *info = shareInfoArr[i];
-        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:info];
-        //设置行间距
-        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        [paragraphStyle setLineSpacing:12];
-        [attr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,info.length)];
+        NSString *text = shareInfoArr[i];
+            HPAttributeLabel *infoLabel = [HPAttributeLabel getTitle:text andFromFont:kFont_Medium(12.f) andToFont:kFont_Medium(17.f) andFromColor:COLOR_GRAY_999999 andToColor:COLOR_RED_EA0000 andFromRange:NSMakeRange(0, 4) andToRange:NSMakeRange(4, text.length - 4) andLineSpace:12.f andNumbersOfLine:0 andTextAlignment:NSTextAlignmentLeft andLineBreakMode:NSLineBreakByWordWrapping];
         
-        //富文本
-        [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(0, 4)];
-        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
-        [attr addAttribute:NSFontAttributeName value:kFont_Medium(17.f) range:NSMakeRange(4, info.length - 4)];
-        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, info.length - 4)];
-        infoLabel.attributedText = attr;
         if (i == 0) {
             self.priceLabel = infoLabel;
         }else if (i == 1){
@@ -683,8 +648,8 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         [infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(getWidth(51.f));
             make.left.mas_equalTo(getWidth(20.f) + i * (kScreenWidth/3));
-            make.height.mas_equalTo(getWidth(60.f));
         }];
+        [infoLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     }
 }
 
