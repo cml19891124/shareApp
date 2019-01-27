@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setType:(HPShareListCellType)type;
 
-- (void)setUnitType:(HPSharePriceUnitType)type;
+- (void)setUnitType:(HPShareListModel *)model;
 
 - (void)setTags:(NSArray *)tags;
 

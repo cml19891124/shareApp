@@ -7,9 +7,6 @@
 //
 
 #import "HPAttributeLabel.h"
-#define UILABEL_LINE_SPACE 3
-
-#define HEIGHT [[UIScreen mainScreen] bounds].size.height
 
 @implementation HPAttributeLabel
 

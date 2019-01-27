@@ -355,11 +355,11 @@ static NSString *shareListCell = @"shareListCell";
     [cell setTapClickImageViewBlcok:^(NSInteger tap) {
         switch (tap) {
             case HPGamesCellIndexNinePointNine:
-                HPLog(@"HPGamesCellIndexNinePointNine");
+//                HPLog(@"HPGamesCellIndexNinePointNine");
                 [HPProgressHUD alertMessage:@"一大波活动正拼命赶来～"];
                 break;
             case HPGamesCellIndexpfrofessionalGoods:
-                HPLog(@"HPGamesCellIndexpfrofessionalGoods");
+//                HPLog(@"HPGamesCellIndexpfrofessionalGoods");
                 [HPProgressHUD alertMessage:@"一大波活动正拼命赶来～"];
 
                 break;
@@ -376,26 +376,26 @@ static NSString *shareListCell = @"shareListCell";
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     kWEAKSELF
     [cell setClickMoreBtnBlock:^{
-        HPLog(@"MoreBtn");
+//        HPLog(@"MoreBtn");
         weakSelf.shareListParam.areaIds = @"9,7,1";
-        [self pushVCByClassName:@"LTPersonMainPageDemo" withParam:@{@"area": weakSelf.shareListParam}];
+        [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area": weakSelf.shareListParam}];
     }];
     
     [cell setTapHotImageViewBlock:^(NSInteger tag) {
         switch (tag) {
             case HPStoresShareAreaIndexBaoan:
                 weakSelf.shareListParam.areaIds = @"9";
-                [self pushVCByClassName:@"LTPersonMainPageDemo" withParam:@{@"area":weakSelf.shareListParam}];
+                [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;
             case HPStoresShareAreaIndexLonghua:
                 weakSelf.shareListParam.areaIds = @"7";
-                [self pushVCByClassName:@"LTPersonMainPageDemo" withParam:@{@"area":weakSelf.shareListParam}];
+                [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;
             case HPStoresShareAreaIndexNanshan:
                 weakSelf.shareListParam.areaIds = @"1";
-                [self pushVCByClassName:@"LTPersonMainPageDemo" withParam:@{@"area":weakSelf.shareListParam}];
+                [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;
             default:
