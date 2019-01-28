@@ -110,10 +110,10 @@
     if (!_whatIsShareSpace) {
         _whatIsShareSpace = [UIControl new];
         [_whatIsShareSpace.layer setCornerRadius:6.5f];
-        [_whatIsShareSpace.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
+        [_whatIsShareSpace.layer setShadowColor:COLOR_GRAY_BBBBBB.CGColor];
         [_whatIsShareSpace.layer setShadowOffset:CGSizeMake(0.f, 4.f)];
         [_whatIsShareSpace.layer setShadowRadius:11.f];
-        [_whatIsShareSpace.layer setShadowOpacity:1.f];
+        [_whatIsShareSpace.layer setShadowOpacity:0.3f];
         [_whatIsShareSpace setBackgroundColor:UIColor.whiteColor];
         [_whatIsShareSpace setTag:0];
         [_whatIsShareSpace addTarget:self action:@selector(onClickShareSpaceCtrl:) forControlEvents:UIControlEventTouchUpInside];

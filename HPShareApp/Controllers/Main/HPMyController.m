@@ -601,16 +601,18 @@
     HPLoginModel *account = [HPUserTool account];
     if (!account.token) {
         [HPProgressHUD alertMessage:@"用户未登录"];
-        return;
+//        return;
+    }else{
+        if ([btn.text isEqualToString:@"我的名片"]) {
+            [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":account.userInfo.userId}];
+        }
+        else if ([btn.text isEqualToString:@"共享管理"]) {
+            [self pushVCByClassName:@"HPShareManageController"];
+        }
     }
     
-    if ([btn.text isEqualToString:@"我的名片"]) {
-        [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":account.userInfo.userId}];
-    }
-    else if ([btn.text isEqualToString:@"共享管理"]) {
-        [self pushVCByClassName:@"HPShareManageController"];
-    }
-    else if ([btn.text isEqualToString:@"意见反馈"]) {
+    
+    if ([btn.text isEqualToString:@"意见反馈"]) {
         [self pushVCByClassName:@"HPFeedbackController"];
     }
     else if ([btn.text isEqualToString:@"在线客服"]) {

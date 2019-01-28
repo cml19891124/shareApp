@@ -25,6 +25,11 @@
     [self setupUI];
 }
 
+- (void)onClickBackBtn:(UIButton *)button
+{
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
     UIView *navigationView = [self setupNavigationBarWithTitle:@"登录"];
@@ -37,6 +42,15 @@
     [navigationView addSubview:registerBtn];
     [registerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(navigationView).with.offset(- 20.f * g_rateWidth);
+        make.centerY.equalTo(navigationView);
+    }];
+    
+    UIButton *backBtn = [[UIButton alloc] init];
+    [backBtn setImage:ImageNamed(@"icon_back") forState:UIControlStateNormal];
+    [backBtn addTarget:self action:@selector(onClickBackBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [navigationView addSubview:backBtn];
+    [backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(navigationView).with.offset(20.f * g_rateWidth);
         make.centerY.equalTo(navigationView);
     }];
     
@@ -176,24 +190,24 @@
         make.centerY.equalTo(separator);
     }];
     
-    UILabel *thirdPartLabel = [[UILabel alloc] init];
-    [thirdPartLabel setFont:[UIFont fontWithName:FONT_REGULAR size:13.f]];
-    [thirdPartLabel setTextColor:COLOR_GRAY_999999];
-    [thirdPartLabel setText:@"使用第三方账号登录"];
-    [self.view addSubview:thirdPartLabel];
-    [thirdPartLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.view).with.offset(- g_bottomSafeAreaHeight - 42.f * g_rateWidth);
-        make.centerX.equalTo(self.view);
-        make.height.mas_equalTo(thirdPartLabel.font.pointSize);
-    }];
-    
-    UIView *thirdPartView = [[UIView alloc] init];
-    [self.view addSubview:thirdPartView];
-    [thirdPartView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(thirdPartLabel.mas_top).with.offset(-20.f * g_rateWidth);
-        make.centerX.equalTo(self.view);
-    }];
-    [self setupThirdPartView:thirdPartView];
+//    UILabel *thirdPartLabel = [[UILabel alloc] init];
+//    [thirdPartLabel setFont:[UIFont fontWithName:FONT_REGULAR size:13.f]];
+//    [thirdPartLabel setTextColor:COLOR_GRAY_999999];
+//    [thirdPartLabel setText:@"使用第三方账号登录"];
+//    [self.view addSubview:thirdPartLabel];
+//    [thirdPartLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.equalTo(self.view).with.offset(- g_bottomSafeAreaHeight - 42.f * g_rateWidth);
+//        make.centerX.equalTo(self.view);
+//        make.height.mas_equalTo(thirdPartLabel.font.pointSize);
+//    }];
+//    
+//    UIView *thirdPartView = [[UIView alloc] init];
+//    [self.view addSubview:thirdPartView];
+//    [thirdPartView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.equalTo(thirdPartLabel.mas_top).with.offset(-20.f * g_rateWidth);
+//        make.centerX.equalTo(self.view);
+//    }];
+//    [self setupThirdPartView:thirdPartView];
 }
 
 - (void)setupThirdPartView:(UIView *)view {
