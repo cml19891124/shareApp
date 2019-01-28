@@ -51,7 +51,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
+
     [self setupUI];
 }
 
@@ -525,8 +526,15 @@
     [btn addTarget:self action:@selector(onClickFunctionBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btn];
     [btn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.and.top.equalTo(view);
-        make.size.mas_equalTo(CGSizeMake(55.f, 55.f));
+        make.left.and.width.equalTo(view);
+        if ([title containsString:@"我的名片"]) {
+            make.top.mas_equalTo(view).offset(getWidth(4.f));
+            make.size.mas_equalTo(CGSizeMake(55.f, 50.f));
+
+        }else{
+            make.top.mas_equalTo(view);
+            make.size.mas_equalTo(CGSizeMake(55.f, 55.f));
+        }
     }];
     
     UILabel *descLabel = [[UILabel alloc] init];
@@ -536,7 +544,11 @@
     [view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(view);
-        make.top.equalTo(btn.mas_bottom).with.offset(6.f * g_rateWidth);
+//        if ([title containsString:@"我的名片"]) {
+//            make.top.equalTo(btn.mas_bottom).with.offset(2.f * g_rateWidth);
+//        }else{
+            make.top.equalTo(btn.mas_bottom).with.offset(6.f * g_rateWidth);
+//        }
         make.height.mas_equalTo(descLabel.font.pointSize);
         make.bottom.equalTo(view);
     }];

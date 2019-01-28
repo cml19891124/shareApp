@@ -67,7 +67,11 @@
         make.bottom.equalTo(self);
         
         if (self.space != -1.f) {
-            make.top.equalTo(self.iconView.mas_bottom).with.offset(self.space);
+            if ([self.text isEqualToString:@"我的名片"]) {
+                make.top.equalTo(self.iconView.mas_bottom).with.offset(getWidth(-4.f));
+            }else{
+                make.top.equalTo(self.iconView.mas_bottom).with.offset(self.space);
+            }
         }
     }];
     

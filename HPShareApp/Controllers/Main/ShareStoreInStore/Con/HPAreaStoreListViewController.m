@@ -1,226 +1,229 @@
+
+//  如有疑问，欢迎联系本人QQ: 1282990794
 //
-//  HPAreaStoreListViewController.m
-//  HPShareApp
+//  ScrollView嵌套ScrolloView解决方案（初级、进阶)， 支持OC/Swift
 //
-//  Created by HP on 2019/1/25.
-//  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
+//  github地址: https://github.com/gltwy/LTScrollView
+//
+//  clone地址:  https://github.com/gltwy/LTScrollView.git
 //
 
 #import "HPAreaStoreListViewController.h"
+#import "HPAreaStoreItemListViewController.h"
+#import "MJRefresh.h"
+#import "LTScrollView-Swift.h"
+#import "Macro.h"
+#import "HPGlobalVariable.h"
 #import "HPShareListParam.h"
-#import "HPShareListCell.h"
 
-@interface HPAreaStoreListViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>
+#define RGBA(r,g,b,a) [UIColor colorWithRed:(float)r/255.0f green:(float)g/255.0f blue:(float)b/255.0f alpha:a]
+#define HeaderHeight getWidth(110.f)
 
-@property (nonatomic, strong) UIImageView *headImageView;
+@interface HPAreaStoreListViewController () <LTSimpleScrollViewDelegate>
 
-@property (nonatomic, strong) UITableView *tableView;
-
-@property (nonatomic, strong) NSMutableArray *dataArray;
-
+@property(copy, nonatomic) NSArray <UIViewController *> *viewControllers;
+@property(copy, nonatomic) NSArray <NSString *> *titles;
+@property(strong, nonatomic) LTLayout *layout;
+@property(strong, nonatomic) LTSimpleManager *managerView;
+@property(strong, nonatomic) UIView *headerView;
+@property(strong, nonatomic) UIImageView *headerImageView;
+@property(assign, nonatomic) CGFloat currentProgress;
 @property (nonatomic, strong) HPShareListParam *shareListParam;
 
+@property (nonatomic, strong) HPAreaStoreItemListViewController *testVC;
+
+@property (nonatomic, strong) NSMutableArray *itemVCs;
 @end
 
 @implementation HPAreaStoreListViewController
 
-static NSString *shareListCell = @"shareListCell";
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.alpha = self.currentProgress;
+    self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.titleTextAttributes = @{NSFontAttributeName : [UIFont systemFontOfSize:18.0f]};
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setupNavigationBarWithTitle:@"热门共享店铺"];
+    _itemVCs = [NSMutableArray array];
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    _shareListParam = self.param[@"area"];
     
-    [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
+    self.testVC.shareListParam = self.shareListParam;    
+    [self setupNavigationBarWithTitle:@"热门店铺推荐"];
+    [self setupSubViews];
+}
 
-    [self.view addSubview:self.headImageView];
+
+-(void)setupSubViews {
     
-    [self.view addSubview:self.tableView];
+    [self.view addSubview:self.managerView];
     
-    _dataArray = [NSMutableArray array];
+    kWEAKSELF
     
-    _shareListParam = [HPShareListParam new];
-    _shareListParam.pageSize = 10;
-    _shareListParam.page = 1;
-    _shareListParam.createTimeOrderType = @"0";
-    
-    _shareListParam.areaIds = [NSString stringWithFormat:@"9,7,1"]; //宝安，龙华，南山
-    
-    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
-        [self getShareListDataReload:NO];
+    //配置headerView
+    [self.managerView configHeaderView:^UIView * _Nullable{
+        [weakSelf.headerView addSubview:weakSelf.headerImageView];
+        return weakSelf.headerView;
     }];
     
-    [self setUpSubviewsFrame];
-    if (@available(iOS 11.0, *)) {
-        
-        _tableView.estimatedRowHeight = 0;
-        
-        _tableView.estimatedSectionFooterHeight = 0;
-        
-        _tableView.estimatedSectionHeaderHeight = 0;
-        _tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
-        
+    if ([_shareListParam.areaIds isEqualToString:@"9"]) {
+        [self.managerView scrollToIndexWithIndex:0]; //宝安
+    }else if ([_shareListParam.areaIds isEqualToString:@"7"]){
+        [self.managerView scrollToIndexWithIndex:1];//龙华区
+    }else if ([_shareListParam.areaIds isEqualToString:@"1"]){
+        [self.managerView scrollToIndexWithIndex:2]; //南山区
+    }else if ([_shareListParam.areaIds isEqualToString:@"9,7,1"]){
+        [self.managerView scrollToIndexWithIndex:0]; //宝安\龙华区\南山区
     }
-}
+    self.testVC.shareListParam = self.shareListParam;
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
-    self.navigationController.navigationBar.translucent = NO;
-    if (self.isPop) {
-        self.isPop = NO;
-    }
-    else {
-        [self getShareListDataReload:YES];
-    }
-}
-
-- (UIImageView *)headImageView
-{
-    if (!_headImageView) {
-        _headImageView = [UIImageView new];
-        _headImageView.image = ImageNamed(@"hot_shop_background");
-    }
-    return _headImageView;
-}
-
-#pragma mark - 初始化控件
-- (UITableView *)tableView
-{
-    if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        _tableView.delegate = self;
-        _tableView.dataSource = self;
-        _tableView.separatorStyle = UITableViewCellAccessoryNone;
-        _tableView.backgroundColor = [[UIColor clearColor] colorWithAlphaComponent:0.001];;
-        
-        [_tableView registerClass:HPShareListCell.class forCellReuseIdentifier:shareListCell];
-        _tableView.showsVerticalScrollIndicator = NO;
-
-    }
-    return _tableView;
-}
-
-
-#pragma mark - 共享发布数据
-
-- (void)getShareListDataReload:(BOOL)isReload {
-    
-    if (isReload) {
-        _shareListParam.page = 1;
-    }
-    
-    NSMutableDictionary *param = _shareListParam.mj_keyValues;
-    kWeakSelf(weakSelf);
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:NO paraments:param complete:^(id  _Nonnull responseObject) {
-        if (CODE == 200) {
-            NSArray *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
-            if (models) {
-                if (isReload) {
-                    [weakSelf.dataArray removeAllObjects];
-                }
-                
-                [weakSelf.dataArray addObjectsFromArray:models];
-            }
-            
-            if ([responseObject[@"data"][@"total"] integerValue] == 0 || weakSelf.dataArray.count == 0) {
-                
-            }
-            
-            if (models.count < 10) {
-                [weakSelf.tableView.mj_footer endRefreshingWithNoMoreData];
-            }
-            else {
-                [weakSelf.tableView.mj_footer endRefreshing];
-                weakSelf.shareListParam.page ++;
-            }
-            
-            [weakSelf.tableView reloadData];
+    //pageView点击事件
+    [self.managerView didSelectIndexHandle:^(NSInteger index) {
+        HPLog(@"点击了 -> %ld", index);
+        if (index == 0) {
+            weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"9"]; //宝安
+        }else if (index == 1){
+            weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"7"]; //龙华
+        }else if (index == 2){
+            weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"1"]; //南山
         }
-        else {
-            [HPProgressHUD alertMessage:MSG];
-        }
-        
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
-    }];
-}
-
-- (void)setUpSubviewsFrame
-{
-    [self.headImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(getWidth(g_statusBarHeight + 44.f));
-        make.height.mas_equalTo(getWidth(110.f));
+        weakSelf.testVC = weakSelf.itemVCs[index];
+        weakSelf.testVC.shareListParam = weakSelf.shareListParam;
+        [weakSelf.testVC getAreaShareListDataReload:NO];
+        [weakSelf.testVC.tableView reloadData];
     }];
     
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.view).offset(g_statusBarHeight + 44.f + getWidth(151.f));
-        make.bottom.mas_equalTo(self.view);
-    }];
+    //控制器刷新事件
+//    [self.managerView refreshTableViewHandle:^(UIScrollView * _Nonnull scrollView, NSInteger index) {
+//        __weak typeof(scrollView) weakScrollView = scrollView;
+//        scrollView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+//            __strong typeof(weakScrollView) strongScrollView = weakScrollView;
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                HPLog(@"对应控制器的刷新自己玩吧，这里就不做处理了🙂-----%ld", index);
+//                [strongScrollView.mj_header endRefreshing];
+//            });
+//        }];
+//    }];
+    
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1.f;
+
+-(void)tapGesture:(UITapGestureRecognizer *)gesture {
+    HPLog(@"tapGesture");
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return _dataArray.count;
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:shareListCell];
-    [self setUpShareListCell:tableView withIndexpath:indexPath];
-
-    return cell;
-}
-
-#pragma mark - 共享店铺列表
-- (HPShareListCell *)setUpShareListCell:(UITableView *)tableView withIndexpath:(NSIndexPath *)indexPath
-{
-    HPShareListCell *cell = [tableView dequeueReusableCellWithIdentifier:shareListCell forIndexPath:indexPath];
-    HPShareListModel *model = _dataArray[indexPath.row];
-    cell.model = model;
-    cell.backgroundColor = UIColor.whiteColor;
+-(void)glt_scrollViewDidScroll:(UIScrollView *)scrollView {
+    HPLog(@"---> %lf", scrollView.contentOffset.y);
+    CGFloat offsetY = scrollView.contentOffset.y;
+    CGFloat headerImageY = offsetY;
+    CGFloat headerImageH = HeaderHeight - offsetY;
+    if (offsetY <= 0.0) {
+        self.navigationController.navigationBar.alpha = 0.0;
+        self.currentProgress = 0.0;
+    }else {
+        headerImageY = 0;
+        headerImageH = HeaderHeight;
         
-    return cell;
+        CGFloat adjustHeight = HeaderHeight - g_navigationBarHeight;
+        
+        CGFloat progress = 1 - (offsetY / adjustHeight);
+        self.navigationController.navigationBar.barStyle = progress > 0.5 ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
+        
+        self.navigationController.navigationBar.alpha = 1 - progress;
+        self.currentProgress = 1 - progress;
+    }
+    CGRect headerImageFrame = self.headerImageView.frame;
+    headerImageFrame.origin.y = headerImageY;
+    headerImageFrame.size.height = headerImageH;
+    self.headerImageView.frame = headerImageFrame;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    switch (indexPath.section) {
-        case 0:
-            return getWidth(132.f);
-            break;
-        case 1:
-            return getWidth(208.f);
-            break;
-        case 2:
-            return getWidth(165.f);
-            break;
-        case 3:
-            return getWidth(135.f);
-        case 4:
-            return getWidth(137.f);
-        default:
-            return CGFLOAT_MIN;
-            break;
+-(LTSimpleManager *)managerView {
+    if (!_managerView) {
+        CGFloat Y = 0.0;
+        CGFloat H = IPHONE_HAS_NOTCH ? (self.view.bounds.size.height - Y - g_bottomSafeAreaHeight) : self.view.bounds.size.height - Y;
+        _managerView = [[LTSimpleManager alloc] initWithFrame:CGRectMake(0, g_navigationBarHeight, self.view.bounds.size.width, H) viewControllers:self.viewControllers titles:self.titles currentViewController:self layout:self.layout];
+        
+        /* 设置代理 监听滚动 */
+        _managerView.delegate = self;
+        
+        /* 设置悬停位置 */
+        _managerView.hoverY = 0;
+        
     }
-    return CGFLOAT_MIN;
+    return _managerView;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 3) {
-        HPShareListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        if (cell) {
-            [self pushVCByClassName:@"HPShareDetailController" withParam:@{@"model":cell.model}];
-        }
+-(UIImageView *)headerImageView {
+    if (!_headerImageView) {
+        _headerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.headerView.frame.size.width, HeaderHeight)];
+        _headerImageView.image = [UIImage imageNamed:@"hot_shop_background"];
+        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
+        _headerImageView.userInteractionEnabled = YES;
+        [_headerImageView addGestureRecognizer:gesture];
     }
+    return _headerImageView;
 }
+
+-(UIView *)headerView {
+    if (!_headerView) {
+        _headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0,kScreenWidth, HeaderHeight)];
+    }
+    return _headerView;
+}
+
+-(LTLayout *)layout {
+    if (!_layout) {
+        _layout = [[LTLayout alloc] init];
+    }
+    return _layout;
+}
+
+
+- (NSArray <NSString *> *)titles {
+    if (!_titles) {
+        _titles = @[@"宝安区", @"龙华区", @"南山区"];
+    }
+    return _titles;
+}
+
+
+-(NSArray <UIViewController *> *)viewControllers {
+    if (!_viewControllers) {
+        _viewControllers = [self setupViewControllers];
+    }
+    return _viewControllers;
+}
+
+
+-(NSArray <UIViewController *> *)setupViewControllers {
+    kWEAKSELF
+    [self.titles enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        HPAreaStoreItemListViewController *itemVC = [[HPAreaStoreItemListViewController alloc] init];
+        [weakSelf.itemVCs addObject:itemVC];
+    }];
+    return _itemVCs.copy;
+}
+
+-(void)dealloc {
+    HPLog(@"%s",__func__);
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    //侧滑出现的透明细节调整
+    self.navigationController.navigationBar.alpha = self.currentProgress;
+    self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.navigationController.navigationBar.alpha = 0;
+}
+
 @end
+

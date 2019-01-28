@@ -175,11 +175,13 @@
     [descLabel setTextColor:COLOR_GRAY_999999];
     [descLabel setNumberOfLines:0];
     [descLabel setText:@"什么才是拼租正确的打开方式？"];
+    [descLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     [view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(titleLabel);
-        make.right.equalTo(iconView.mas_left).with.offset(11.f * g_rateWidth);
+        make.right.equalTo(iconView.mas_left).with.offset(-11.f * g_rateWidth);
         make.top.equalTo(titleLabel.mas_bottom).with.offset(15.f * g_rateWidth);
+        make.bottom.mas_equalTo(view.mas_bottom).offset(getWidth(-15.f));
     }];
 }
 

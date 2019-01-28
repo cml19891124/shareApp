@@ -229,18 +229,24 @@
     }
 }
 
-- (void)setUnitType:(HPSharePriceUnitType)type {
-    switch (type) {
-        case HPSharePriceUnitTypeHour:
-            [_priceUnitLabel setText:@"/小时"];
-            break;
+- (void)setUnitType:(HPShareListModel *)model {
+
+    if ([[@(model.type) stringValue] isEqualToString:@"1"]) {
+        if (_model.rentType == 1) {
+            [_priceUnitLabel setText:@"元/小时"];
             
-        case HPSharePriceUnitTypeDay:
-            [_priceUnitLabel setText:@"/天"];
-            break;
+        }else if (_model.rentType == 2){
+            [_priceUnitLabel setText:@"元/天"];
             
-        default:
-            break;
+        }else if (_model.rentType == 3){
+            [_priceUnitLabel setText:@"元/月"];
+            
+        }else if (_model.rentType == 4){
+            [_priceUnitLabel setText:@"元/年"];
+            
+        }else {
+            [_priceUnitLabel setText:[NSString stringWithFormat:@""]];
+        }
     }
 }
 
@@ -286,7 +292,7 @@
     
     [self setTitle:title];
     [self setPrice:price];
-    [self setUnitType:unitType];
+    [self setUnitType:model];
     if (tags) {
         [self setTags:tags];
     }

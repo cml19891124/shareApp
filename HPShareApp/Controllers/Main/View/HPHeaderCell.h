@@ -7,7 +7,6 @@
 //
 
 #import "HPBaseTableViewCell.h"
-#import "MiddleUILabel.h"
 
 typedef void (^HeaderClickBlock)(NSInteger ideaIndex);
 NS_ASSUME_NONNULL_BEGIN

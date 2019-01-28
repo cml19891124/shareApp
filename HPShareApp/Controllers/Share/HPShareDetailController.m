@@ -86,7 +86,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 /**
  合作意向
  */
-@property (nonatomic, strong) HPAttributeLabel *intentionLabel;
+@property (nonatomic, strong) UILabel *intentionLabel;
 
 
 /**
@@ -99,12 +99,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
  共享模式标题
  */
 @property (nonatomic, strong) UILabel *modeTitlelabel;
-
-
-/**
- 店铺位置
- */
-@property (nonatomic, strong) UIView *storeLocationView;
 
 /**
  店铺标题
@@ -124,7 +118,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 
 @property (nonatomic, weak) HPAttributeLabel *areaLabel;
 
-@property (nonatomic, weak) UILabel *priceLabel;
+@property (nonatomic, weak) HPAttributeLabel *priceLabel;
 
 @property (nonatomic, weak) UILabel *priceUnitLabel;
 
@@ -337,14 +331,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     return _modeTitlelabel;
 }
 
-- (UIView *)storeLocationView
-{
-    if (!_storeLocationView) {
-        _storeLocationView = [UIView new];
-    }
-    return _storeLocationView;
-}
-
 - (UILabel *)storeTitleLabel
 {
     if (!_storeTitleLabel) {
@@ -396,6 +382,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         make.left.equalTo(self.titleRegion).with.offset(getWidth(21.f));
         make.top.equalTo(self.titleRegion).with.offset(20.f * g_rateWidth);
         make.height.mas_equalTo(self.titleLabel.font.pointSize);
+        make.right.mas_equalTo(self.shareBtn.mas_left).offset(getWidth(-10.f));
     }];
     
     [self.shareBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -458,11 +445,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         make.size.mas_equalTo(CGSizeMake(getWidth(335.f), getWidth(1.f)));
         make.centerX.mas_equalTo(self.titleRegion);
         make.top.mas_equalTo(self.baseInfoLine.mas_bottom).offset(getWidth(120.f));
-    }];
-    
-    [self.storeLocationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.titleRegion);
-        make.height.mas_equalTo(getWidth(215.f));
     }];
     
     [self.storeTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -631,7 +613,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     //基本信息子控件
     [self setupBaseInfoRegion:view];
     
-    [view addSubview:self.shareInfoLine];
     [view addSubview:self.baseInfoLine];
 
     //出租模式
@@ -642,8 +623,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         btn.userInteractionEnabled = NO;
     }
     [view addSubview:self.rentModelLine];
-    
-    [view addSubview:self.storeLocationView];
+
     [view addSubview:self.storeTitleLabel];
     [view addSubview:self.mapSuperView];
     [self.mapSuperView addSubview:self.mapView];
@@ -652,26 +632,11 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 #pragma mark - 共享信息UI
 - (void)setupShareInfoView:(UIView *)view
 {
-    NSArray *shareInfoArr = @[@"共享租金\n-元/天",@"共享面积\n不限",@"共享时段\n--"];
+    NSArray *shareInfoArr = @[@"共享租金\n面议",@"共享面积\n不限",@"共享时段\n不限"];
     for (int i = 0; i < shareInfoArr.count; i++) {
-        UILabel *infoLabel = [UILabel new];
-        infoLabel.textAlignment = NSTextAlignmentLeft;
-        infoLabel.text = shareInfoArr[i];
-        infoLabel.numberOfLines = 0;
-        infoLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        NSString *info = shareInfoArr[i];
-        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:info];
-        //设置行间距
-        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        [paragraphStyle setLineSpacing:12];
-        [attr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,info.length)];
+        NSString *text = shareInfoArr[i];
+            HPAttributeLabel *infoLabel = [HPAttributeLabel getTitle:text andFromFont:kFont_Medium(12.f) andToFont:kFont_Medium(17.f) andFromColor:COLOR_GRAY_999999 andToColor:COLOR_RED_EA0000 andFromRange:NSMakeRange(0, 4) andToRange:NSMakeRange(4, text.length - 4) andLineSpace:12.f andNumbersOfLine:0 andTextAlignment:NSTextAlignmentLeft andLineBreakMode:NSLineBreakByWordWrapping];
         
-        //富文本
-        [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(0, 4)];
-        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
-        [attr addAttribute:NSFontAttributeName value:kFont_Medium(17.f) range:NSMakeRange(4, info.length - 4)];
-        [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, info.length - 4)];
-        infoLabel.attributedText = attr;
         if (i == 0) {
             self.priceLabel = infoLabel;
         }else if (i == 1){
@@ -683,8 +648,8 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         [infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(getWidth(51.f));
             make.left.mas_equalTo(getWidth(20.f) + i * (kScreenWidth/3));
-            make.height.mas_equalTo(getWidth(60.f));
         }];
+        [infoLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     }
 }
 
@@ -1136,30 +1101,41 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [areaattr addAttribute:NSFontAttributeName value:kFont_Medium(17.f) range:NSMakeRange(4, _areaLabel.text.length - 4)];
     [areaattr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF3C5E range:NSMakeRange(4, _areaLabel.text.length - 4)];
     _areaLabel.attributedText = areaattr;
-
+    
+//    NSString *rentAmount;
     if (model.rent && ![model.rent isEqualToString:@"1"]) {
         if (model.rentType == 1) {
             [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/小时"]];
+//            rentAmount = [NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/小时"];
+            
         }else if (model.rentType == 2){
             [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/天"]];
+//            rentAmount = [NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/天"];
+
         }else if (model.rentType == 3){
             [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/月"]];
+//            rentAmount = [NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/月"];
+
         }else if (model.rentType == 4){
             [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/年"]];
+//            rentAmount = [NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/年"];
+
         }else {
             [_priceLabel setText:[NSString stringWithFormat:@"共享租金\n面议"]];
+//            rentAmount = [NSString stringWithFormat:@"共享租金\n%@ %@",model.rent,@"元/面议"];
+
         }
         
         _priceLabel.textAlignment = NSTextAlignmentLeft;
         _priceLabel.numberOfLines = 0;
         _priceLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        
+
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:_priceLabel.text];
         //设置行间距
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         [paragraphStyle setLineSpacing:12];
         [attr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,_priceLabel.text.length)];
-        
+
         //富文本
         [attr addAttribute:NSFontAttributeName value:kFont_Medium(12.f) range:NSMakeRange(0, 4)];
         [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];

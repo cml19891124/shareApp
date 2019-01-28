@@ -1,13 +1,4 @@
-//
-//  LTPageViewTestOneVC.m
-//  OCExample
-//
-//  LTPageViewTestOneVC.m
-//  OCExample
-//
-//  Created by 高刘通 on 2018/4/19.
-//  Copyright © 2018年 LT. All rights reserved.
-//
+
 //  如有疑问，欢迎联系本人QQ: 1282990794
 //
 //  ScrollView嵌套ScrolloView解决方案（初级、进阶)， 支持OC/Swift
@@ -17,31 +8,26 @@
 //  clone地址:  https://github.com/gltwy/LTScrollView.git
 //
 
-#import "LTPersonalMainPageTestVC.h"
+#import "HPAreaStoreItemListViewController.h"
 #import "LTScrollView-Swift.h"
 #import "HPShareListCell.h"
 #import "Macro.h"
 #import "HPGlobalVariable.h"
 
-
-#define kIPhoneX ([UIScreen mainScreen].bounds.size.height == 812.0)
-
-@interface LTPersonalMainPageTestVC () <UITableViewDelegate, UITableViewDataSource>
-
+@interface HPAreaStoreItemListViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) NSMutableArray *dataArray;
 
-
 @end
 
-@implementation LTPersonalMainPageTestVC
+@implementation HPAreaStoreItemListViewController
 static NSString *shareListCell = @"shareListCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     _dataArray = [NSMutableArray array];
 
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = COLOR_GRAY_FFFFFF;
     if (@available(iOS 11.0, *)) {
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     } else {
@@ -109,17 +95,16 @@ static NSString *shareListCell = @"shareListCell";
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 137.0f;
+    return getWidth(137.0f);
 }
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        CGFloat statusBarH = [UIApplication sharedApplication].statusBarFrame.size.height;
         //这个44为导航高度
-        CGFloat Y = statusBarH + 44;
+        CGFloat Y = g_statusBarHeight + 44;
         //这个44为切换条的高度
-        CGFloat H = kIPhoneX ? (self.view.bounds.size.height - Y - 34) : self.view.bounds.size.height - Y - 44;
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, [UIScreen mainScreen].bounds.size.width, H) style:UITableViewStylePlain];
+        CGFloat H = IPHONE_HAS_NOTCH ? (self.view.bounds.size.height - Y - g_bottomSafeAreaHeight) : self.view.bounds.size.height - Y - 44;
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 44,kScreenWidth, H) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellAccessoryNone;

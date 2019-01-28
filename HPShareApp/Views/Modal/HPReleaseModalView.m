@@ -10,13 +10,6 @@
 
 @implementation HPReleaseModalView
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 - (void)setupModalView:(UIView *)view {
     [self setBackgroundColor:[UIColor.whiteColor colorWithAlphaComponent:0.95f]];
@@ -28,7 +21,7 @@
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:30.f]];
     [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:@"免费定制名片"];
+    [titleLabel setText:@"免费发布拼租信息"];
     [view addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(view).with.offset(50.f * g_rateHeight);
@@ -105,6 +98,36 @@
         make.size.mas_equalTo(CGSizeMake(324.f * g_rateWidth, 119.f * g_rateWidth));
     }];
     [self setupGoodsCard:goodsCard];*/
+    
+//    [self setUpDissmissBtn];
+}
+
+- (void)setUpDissmissBtn
+{
+    [self addSubview:self.plusBtn];
+    [self.plusBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(getWidth(39.f), getWidth(39.f)));
+        make.centerX.mas_equalTo(self);
+        make.bottom.mas_equalTo(self.mas_bottom).offset(-g_bottomSafeAreaHeight - getWidth(5.f));
+    }];
+}
+
+- (HPPlusBtn *)plusBtn
+{
+    if (!_plusBtn) {
+        _plusBtn = [HPPlusBtn new];
+        [_plusBtn setTitle:@"发布" forState:UIControlStateNormal];
+        _plusBtn.titleLabel.font = kFont_Bold(10.f);
+        [_plusBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+        [_plusBtn setImage:[UIImage imageNamed:@"customizing_business_cards_close_button"] forState:UIControlStateNormal];
+        [_plusBtn addTarget:self action:@selector(dissmissmodelView) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _plusBtn;
+}
+
+- (void)dissmissmodelView
+{
+    [self show:NO];
 }
 
 - (void)setupGoodsCard:(UIView *)goodsView {
@@ -195,14 +218,14 @@
         make.height.mas_equalTo(descLabel.font.pointSize);
     }];
     
-    UIImageView *icon = [[UIImageView alloc] init];
-    [icon setImage:[UIImage imageNamed:@"customizing_business_cards_owner's_head_portrait"]];
-    [view addSubview:icon];
-    [icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(view).with.offset(-33.f * g_rateWidth);
-        make.centerY.equalTo(view);
-        make.size.mas_equalTo(CGSizeMake(82.f * g_rateWidth, 82.f * g_rateWidth));
-    }];
+//    UIImageView *icon = [[UIImageView alloc] init];
+//    [icon setImage:[UIImage imageNamed:@"customizing_business_cards_owner's_head_portrait"]];
+//    [view addSubview:icon];
+//    [icon mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.right.equalTo(view).with.offset(-33.f * g_rateWidth);
+//        make.centerY.equalTo(view);
+//        make.size.mas_equalTo(CGSizeMake(82.f * g_rateWidth, 82.f * g_rateWidth));
+//    }];
 }
 
 - (void)setupStartupCard:(UIView *)cardView {
@@ -244,14 +267,14 @@
         make.height.mas_equalTo(descLabel.font.pointSize);
     }];
     
-    UIImageView *icon = [[UIImageView alloc] init];
-    [icon setImage:[UIImage imageNamed:@"customizing_business_cards_entrepreneur's_head_portrait"]];
-    [view addSubview:icon];
-    [icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(view).with.offset(-33.f * g_rateWidth);
-        make.centerY.equalTo(view);
-        make.size.mas_equalTo(CGSizeMake(82.f * g_rateWidth, 82.f * g_rateWidth));
-    }];
+//    UIImageView *icon = [[UIImageView alloc] init];
+//    [icon setImage:[UIImage imageNamed:@"customizing_business_cards_entrepreneur's_head_portrait"]];
+//    [view addSubview:icon];
+//    [icon mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.right.equalTo(view).with.offset(-33.f * g_rateWidth);
+//        make.centerY.equalTo(view);
+//        make.size.mas_equalTo(CGSizeMake(82.f * g_rateWidth, 82.f * g_rateWidth));
+//    }];
 }
 
 - (void)onClickCardView:(UIView *)view {
