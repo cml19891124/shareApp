@@ -19,7 +19,7 @@ target 'HPShareApp' do
 #  pod 'WechatOpenSDK'
   use_frameworks!
   pod 'Charts'
-  pod 'LTScrollView', '~> 0.1.7'
+#  pod 'LTScrollView', '~> 0.1.7'
   # Pods for HPShareApp
 
   target 'HPShareAppTests' do
