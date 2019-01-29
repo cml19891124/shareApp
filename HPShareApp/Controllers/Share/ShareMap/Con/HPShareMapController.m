@@ -130,7 +130,7 @@
     MAMapView *mapView = [[MAMapView alloc] init];
     mapView.showsUserLocation = YES;
     mapView.userTrackingMode = MAUserTrackingModeFollow;
-    mapView.zoomLevel = 18.f;
+    mapView.zoomLevel = 11.f;
     [mapView setDelegate:self];
     //地图需要v4.5.0及以上版本才必须要打开此选项（v4.5.0以下版本，需要手动配置info.plist）
     [AMapServices sharedServices].enableHTTPS = YES;
@@ -518,7 +518,7 @@
         /* 不弹出原生annotation */
         annotationView.canShowCallout = NO;
 //        int i = rand() % 5;
-//        annotationView.count = 1;
+//        annotationView.count = i;
         
 //        UITapGestureRecognizer *pan = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(recognizer:)];
 //        pan.delegate = self;
@@ -551,7 +551,7 @@
 
 //    ClusterAnnotation *annotation = (ClusterAnnotation *)view.annotation;
     [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
-    [self.mapView setZoomLevel:18.f animated:YES];
+    [self.mapView setZoomLevel:15.1f animated:YES];
     
 //    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:annotation.index inSection:0];
 //    [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
