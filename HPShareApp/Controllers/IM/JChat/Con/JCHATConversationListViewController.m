@@ -476,7 +476,7 @@ NSInteger sortType(id object1,id object2,void *cha) {
     {
         if ([[alertView textFieldAtIndex:0].text isEqualToString:@""]) {
 
-            [HUD HUDWithString:@"请输入用户名"];
+            [HUD HUDWithString:@"请输入用户名"  Delay:1.0];
             return;
         }
         

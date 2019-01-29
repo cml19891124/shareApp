@@ -153,25 +153,28 @@
 }
 
 - (void)switchBlack {
-    [HPProgressHUD alertWithLoadingText:@"正在修改黑名单"];
-
-  BOOL isbool = self.userInfo.isInBlacklist;
+    [HUD HUDNotHidden:@"正在修改黑名单"];
+//  BOOL isbool = self.userInfo.isInBlacklist;
   if (self.userInfo.isInBlacklist) {
 
     [JMSGUser delUsersFromBlacklist:@[self.userInfo.username] appKey:JPushAppKey
                   completionHandler:^(id resultObject, NSError *error) {
-                        [HPProgressHUD alertWithFinishText:@"操作成功！"];
+                      [HUD HUDHidden];
+                      [HUD HUDWithString:@"操作成功！" Delay:1.0];
                     if (error != nil) {
-                        [HPProgressHUD alertWithFinishText:@"取消用户黑名单状态失败！"];
+                        [HUD HUDHidden];
+                        [HUD HUDWithString:@"取消用户黑名单状态失败！" Delay:1.0];
                       return;
                     }
                   }];
   } else {
     [JMSGUser addUsersToBlacklist:@[self.userInfo.username] appKey:JPushAppKey
                 completionHandler:^(id resultObject, NSError *error) {
-                    [HPProgressHUD alertWithFinishText:@"操作成功！"];
+                    [HUD HUDHidden];
+                    [HUD HUDWithString:@"操作成功！" Delay:1.0];
                   if (error != nil) {
-                      [HPProgressHUD alertWithFinishText:@"添加该用户到黑名单失败！"];
+                      [HUD HUDHidden];
+                      [HUD HUDWithString:@"添加该用户到黑名单失败！" Delay:1.0];
                     return;
                   }
                 }];
@@ -249,7 +252,7 @@
 }
 
 - (void)skipToSendMessage {
-  for (UIViewController *ctl in self.navigationController.childViewControllers) {
+//  for (UIViewController *ctl in self.navigationController.childViewControllers) {
 //    if ([ctl isKindOfClass:[JCHATConversationViewController class]]) {
 //
 //      if (self.isGroupFlag) {
@@ -259,7 +262,7 @@
 //        [self.navigationController popToViewController:ctl animated:YES];
 //      }
 //    }
-  }
+//  }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -273,20 +276,5 @@
   [self.navigationController popViewControllerAnimated:YES];
   
 }
-
-- (void)didReceiveMemoryWarning {
-  [super didReceiveMemoryWarning];
-  // Dispose of any resources that can be recreated.
-}
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 @end

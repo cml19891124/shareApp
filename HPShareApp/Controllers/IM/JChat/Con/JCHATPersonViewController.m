@@ -236,21 +236,24 @@ UIPickerViewDelegate> {
   JMSGUser *user = [JMSGUser myInfo];
   if (buttonIndex == 1) {
     if ([[alertView textFieldAtIndex:0].text isEqualToString:@""]) {
-        [HPProgressHUD alertMessage:@"请输入"];
+        [HUD HUDWithString:@"请输入" Delay:1.0];
       return;
     }
     [[alertView textFieldAtIndex:0] resignFirstResponder];
     if (![[alertView textFieldAtIndex:0].text isEqualToString:@""]) {
-        [HPProgressHUD alertWithLoadingText:@"正在修改"];
+        [HUD HUDNotHidden:@"正在修改"];
       if (alertView.tag == 0) {
         [JMSGUser updateMyInfoWithParameter:[alertView textFieldAtIndex:0].text userFieldType:kJMSGUserFieldsNickname completionHandler:^(id resultObject, NSError *error) {
           [MBProgressHUD hideHUDForView:self.view animated:YES];
           if (error == nil) {
               JCHATPersonInfoCell *cell = (JCHATPersonInfoCell *) [self->_personTabl cellForRowAtIndexPath:[NSIndexPath indexPathForRow:alertView.tag inSection:0]];
             cell.personInfoConten.text = user.nickname;
-              [HPProgressHUD alertWithFinishText:@"修改成功"];
+              [HUD HUDHidden];
+              [HUD HUDWithString:@"修改成功" Delay:1.0];
           } else {
-              [HPProgressHUD alertWithFinishText:@"修改失败"];
+              
+              [HUD HUDHidden];
+              [HUD HUDWithString:@"修改失败" Delay:1.0];
           }
         }];
         
@@ -268,10 +271,13 @@ UIPickerViewDelegate> {
             } else {
               cell.personInfoConten.text = @"未知";
             }
-              [HPProgressHUD alertWithFinishText:@"修改成功"];
-            
+              
+              [HUD HUDHidden];
+              [HUD HUDWithString:@"修改成功" Delay:1.0];
           } else {
-              [HPProgressHUD alertWithFinishText:@"修改失败"];
+              
+              [HUD HUDHidden];
+              [HUD HUDWithString:@"修改失败" Delay:1.0];
           }
         }];
       } else if (alertView.tag == 2) {
@@ -280,20 +286,25 @@ UIPickerViewDelegate> {
           if (error == nil) {
               JCHATPersonInfoCell *cell = (JCHATPersonInfoCell *) [self->_personTabl cellForRowAtIndexPath:[NSIndexPath indexPathForRow:alertView.tag inSection:0]];
             cell.personInfoConten.text = user.region;
-              [HPProgressHUD alertWithFinishText:@"修改成功"];
+              [HUD HUDHidden];
+              [HUD HUDWithString:@"修改成功" Delay:1.0];
           } else {
-              [HPProgressHUD alertWithFinishText:@"修改失败"];
+              [HUD HUDHidden];
+              [HUD HUDWithString:@"修改失败" Delay:1.0];
           }
         }];
       } else if (alertView.tag == 3) {
         [JMSGUser updateMyInfoWithParameter:[alertView textFieldAtIndex:0].text userFieldType:kJMSGUserFieldsSignature completionHandler:^(id resultObject, NSError *error) {
           [MBProgressHUD hideHUDForView:self.view animated:YES];
           if (error == nil) {
-              [HPProgressHUD alertWithFinishText:@"修改成功"];
+              
+              [HUD HUDHidden];
+              [HUD HUDWithString:@"修改成功" Delay:1.0];
               JCHATPersonInfoCell *cell = (JCHATPersonInfoCell *) [self->_personTabl cellForRowAtIndexPath:[NSIndexPath indexPathForRow:alertView.tag inSection:0]];
             cell.personInfoConten.text = user.signature;
           } else {
-              [HPProgressHUD alertWithFinishText:@"修改失败"];
+              [HUD HUDHidden];
+              [HUD HUDWithString:@"修改失败" Delay:1.0];
           }
         }];
       }

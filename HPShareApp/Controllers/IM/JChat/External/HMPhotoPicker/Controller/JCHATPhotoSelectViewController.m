@@ -193,7 +193,7 @@
   if ([[[UIDevice currentDevice]systemVersion] floatValue]>= 8) {
     if (selectedPhotoDic[model.photoAsset] == nil) {
       if (selectedPhotoDic.count > 8) {
-          [HUD HUDWithString:@"最多选择9张图片"];
+          [HUD HUDWithString:@"最多选择9张图片"  Delay:1.0];
           
         return;
       }
@@ -204,7 +204,7 @@
   } else {
     if (selectedPhotoDic[model.asset] == nil) {
       if (selectedPhotoDic.count > 8) {
-          [HUD HUDWithString:@"最多选择9张图片"];
+          [HUD HUDWithString:@"最多选择9张图片"  Delay:1.0];
 
         return;
       }

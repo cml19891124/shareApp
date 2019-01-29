@@ -90,12 +90,12 @@
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
 {
     if (error) {
-        [HUD HUDWithString:@"保存失败"];
+        [HUD HUDWithString:@"保存失败"  Delay:1.0];
     } else {
         MJPhoto *photo = _photos[_currentPhotoIndex];
         photo.save = YES;
         _saveImageBtn.enabled = NO;
-        [HUD HUDWithString:@"成功保存到相册"];
+        [HUD HUDWithString:@"成功保存到相册"  Delay:1.0];
 
     }
 }

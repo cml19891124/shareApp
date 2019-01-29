@@ -90,22 +90,24 @@ static const NSInteger tablecellHeight = 64;
 
 - (void)rightBtnClick {
   if ([_groupTextField.text isEqualToString:@""]) {
-      [HPProgressHUD alertMessage:@"请输入群名称！"];
+      [HUD HUDWithString:@"请输入群名称！" Delay:1.0];
     return;
   }
     [_groupTextField resignFirstResponder];
-    [HPProgressHUD alertWithLoadingText:@"正在创建群组！"];
+    [HUD HUDNotHidden:@"正在创建群组！"];
 
   [JMSGGroup createGroupWithName:_groupTextField.text desc:@"" memberArray:nil completionHandler:^(id resultObject, NSError *error) {
-      [HPProgressHUD alertWithFinishText:@"创建群组成功！"];
+      [HUD HUDHidden];
+      [HUD HUDWithString:@"创建群组成功！" Delay:1.0];
     if (error ==nil) {
       [self.navigationController dismissViewControllerAnimated:YES completion:nil];
       [[NSNotificationCenter defaultCenter] postNotificationName:kCreatGroupState object:resultObject];
     } else if (error.code == 808003) {
-        [HPProgressHUD alertMessage:@"创建群组数量达到上限！"];
-
+        [HUD HUDWithString:@"创建群组数量达到上限！" Delay:1.0];
+         [HUD HUDHidden];
     } else {
-        [HPProgressHUD alertMessage:@"创建群组失败！"];
+        [HUD HUDWithString:@"创建群组失败！" Delay:1.0];
+        
     }
   }];
 }
@@ -158,19 +160,5 @@ static const NSInteger tablecellHeight = 64;
   [super viewWillAppear:YES];
   [self.navigationController setNavigationBarHidden:NO];
 }
-
-- (void)didReceiveMemoryWarning {
-  [super didReceiveMemoryWarning];
-}
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 @end
