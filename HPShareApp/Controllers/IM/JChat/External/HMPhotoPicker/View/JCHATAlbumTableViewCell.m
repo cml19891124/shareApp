@@ -7,6 +7,7 @@
 //
 
 #import "JCHATAlbumTableViewCell.h"
+#import "Macro.h"
 
 @implementation JCHATAlbumTableViewCell
 
@@ -25,20 +26,20 @@
   _albumTittle.text = albumCollection.localizedTitle;
 
   PHFetchResult *albumImagaAssert = [PHAsset fetchAssetsInAssetCollection:albumCollection options:nil];
-  
+  kWEAKSELF
   if (albumImagaAssert.count > 0) {
     PHAsset *imageAsset = albumImagaAssert[albumImagaAssert.count - 1];
     PHCachingImageManager *imageManage = [[PHCachingImageManager alloc] init];
     
     [imageManage requestImageForAsset:imageAsset targetSize:_albumImage.frame.size contentMode:PHImageContentModeDefault options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-      _albumImage.image = result;
+      weakSelf.albumImage.image = result;
     }];
   }
 }
 
 - (void)setDataWithAlbumResult:(PHFetchResult *)albumFetchResult {
   _albumTittle.text = @"相机胶卷";
-  
+  kWEAKSELF
   PHFetchResult *albumImagaAssert = albumFetchResult;
   
   if (albumImagaAssert.count > 0) {
@@ -48,7 +49,7 @@
                            targetSize:_albumImage.frame.size
                           contentMode:PHImageContentModeDefault
                               options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-      _albumImage.image = result;
+      weakSelf.albumImage.image = result;
     }];
   }
 }

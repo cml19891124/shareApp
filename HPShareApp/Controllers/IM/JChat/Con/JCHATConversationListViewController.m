@@ -48,7 +48,7 @@
     if (!self.isDBMigrating) {
         [self addDelegate];
     } else {
-        NSLog(@"is DBMigrating don't get allconversations");
+        HPLog(@"is DBMigrating don't get allconversations");
         [HPProgressHUD alertMessage:@"正在升级数据库"];
     }
 }
@@ -175,7 +175,7 @@
 }
 
 - (void)dBMigrateFinish {
-    NSLog(@"Migrate is finish  and get allconversation");
+    HPLog(@"Migrate is finish  and get allconversation");
     JCHATMAINTHREAD(^{
 //        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     });
@@ -365,12 +365,12 @@
 - (void)getConversationList {
     
     if (isGetingAllConversation) {
-        NSLog(@"is loading conversation list");
+        HPLog(@"is loading conversation list");
         cacheCount++;
         return ;
     }
     
-    NSLog(@"get allConversation -- start");
+    HPLog(@"get allConversation -- start");
     isGetingAllConversation = YES;
     
     [self.addBgView setHidden:YES];
@@ -389,7 +389,7 @@
                 self->_conversationArr = nil;
             }
             [self.chatTableView reloadData];
-            NSLog(@"get allConversation -- end");
+            HPLog(@"get allConversation -- end");
             self->isGetingAllConversation = NO;
             [self checkCacheGetAllConversationAction];
         });
@@ -397,7 +397,7 @@
 }
 - (void)checkCacheGetAllConversationAction {
     if (cacheCount > 0) {
-        NSLog(@"is have cache ,once again get all conversation");
+        HPLog(@"is have cache ,once again get all conversation");
         cacheCount = 0;
         [self getConversationList];
     }
@@ -471,10 +471,12 @@ NSInteger sortType(id object1,id object2,void *cha) {
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0) {
+        
     } else if (buttonIndex == 1)
     {
         if ([[alertView textFieldAtIndex:0].text isEqualToString:@""]) {
-            [HPProgressHUD alertMessage:@"请输入用户名"];
+
+            [HUD HUDWithString:@"请输入用户名"];
             return;
         }
         
@@ -483,7 +485,8 @@ NSInteger sortType(id object1,id object2,void *cha) {
         sendMessageCtl.superViewController = self;
         sendMessageCtl.hidesBottomBarWhenPushed = YES;
         [[alertView textFieldAtIndex:0] resignFirstResponder];
-        [HPProgressHUD alertWithLoadingText:@"正在添加用户..."];
+        [HUD HUDNotHidden:@"正在添加用户..."];
+
         kWEAKSELF
         [JMSGConversation createSingleConversationWithUsername:[alertView textFieldAtIndex:0].text appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
             
@@ -494,10 +497,11 @@ NSInteger sortType(id object1,id object2,void *cha) {
                 sendMessageCtl.conversation = resultObject;
                 
                 [strongSelf.navigationController pushViewController:sendMessageCtl animated:YES];
+                [HUD HUDHidden];
             } else {
                 HPLog(@"createSingleConversationWithUsername fail");
-                
-                [HPProgressHUD alertMessage:@"添加的用户不存在"];
+                [HUD HUDWithString:@"添加的用户不存在" Delay:2.0];
+
             }
         }];
     }
@@ -612,19 +616,6 @@ NSInteger sortType(id object1,id object2,void *cha) {
     
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     
 }

@@ -101,7 +101,7 @@
 
 - (void)switchAction:(id)sender {
     UISwitch *switchButton = (UISwitch*)sender;
-    BOOL isButtonOn = [switchButton isOn];
+//    BOOL isButtonOn = [switchButton isOn];
     [_delegate switchDisturb];
 }
 

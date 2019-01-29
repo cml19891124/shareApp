@@ -90,12 +90,13 @@
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
 {
     if (error) {
-        [HPProgressHUD alertMessage:@"保存失败"];
+        [HUD HUDWithString:@"保存失败"];
     } else {
         MJPhoto *photo = _photos[_currentPhotoIndex];
         photo.save = YES;
         _saveImageBtn.enabled = NO;
-        [HPProgressHUD alertWithFinishText:@"成功保存到相册"];
+        [HUD HUDWithString:@"成功保存到相册"];
+
     }
 }
 

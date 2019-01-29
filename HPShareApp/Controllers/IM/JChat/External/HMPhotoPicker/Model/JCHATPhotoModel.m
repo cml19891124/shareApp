@@ -22,7 +22,7 @@
 - (void)setDatawithAsset:(ALAsset *)asset {
   _asset = asset;
   _imgURL = asset.defaultRepresentation.url;
-  CGSize imgSize;
+//  CGSize imgSize;
   if (_isOriginPhoto) {
     
   } else {
@@ -49,23 +49,24 @@
 
 - (void)setIsSelected:(BOOL)isSelected {
   _isSelected = isSelected;
-  
+  kWEAKSELF
   if (isSelected) {
     if (_asset == nil) {
       CGSize originSize = CGSizeMake(_photoAsset.pixelHeight/2, _photoAsset.pixelWidth/2);//改一下 720 width
       _largeImageSize = originSize;
       PHImageRequestOptions *options = [[PHImageRequestOptions alloc]init];
       options.synchronous  = YES;
+        
       [_cachingManager requestImageForAsset:_photoAsset
                                  targetSize:[self fetchImageSizeWithOriginSize:originSize]
                                 contentMode:PHImageContentModeAspectFill
                                     options:options
                               resultHandler:^(UIImage *result, NSDictionary *info) {
-                                _largeImage = result;
+                                weakSelf.largeImage = result;
                               }];//rename
     } else {
       [[[ALAssetsLibrary alloc]init] assetForURL:_imgURL resultBlock:^(ALAsset *asset)  {
-        _largeImage = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]];
+        weakSelf.largeImage = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]];
       }failureBlock:^(NSError *error) {
         NSLog(@"error=%@",error);
       }];
@@ -77,7 +78,7 @@
 
 - (void)setIsOriginPhoto:(BOOL)isOriginPhoto {
   _isOriginPhoto = isOriginPhoto;
-  
+  kWEAKSELF
   if (_isSelected) {
     if (_asset == nil) {
       CGSize originSize = CGSizeMake(_photoAsset.pixelWidth, _photoAsset.pixelHeight);
@@ -89,7 +90,7 @@
                                 contentMode:PHImageContentModeDefault
                                     options:options
                               resultHandler:^(UIImage *result, NSDictionary *info) {
-                                _largeImage = result;
+                                weakSelf.largeImage = result;
                               }];
     }
   }

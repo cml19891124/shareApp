@@ -7,7 +7,7 @@
 //
 
 #import "JCHATAlbumModel.h"
-
+#import "Macro.h"
 #define kAlbumImageSize CGSizeMake(55, 54)
 @implementation JCHATAlbumModel
 
@@ -22,13 +22,13 @@
   _albumCollection = albumCollection;
   _albumTittle = albumCollection.localizedTitle;
   PHFetchResult *albumImagaAssert = [PHAsset fetchAssetsInAssetCollection:(PHAssetCollection *)albumCollection options:nil];
-  
+  kWEAKSELF
   if (albumImagaAssert.count > 0) {
     PHAsset *imageAsset = albumImagaAssert[albumImagaAssert.count - 1];
     PHCachingImageManager *imageManage = [[PHCachingImageManager alloc] init];
     
     [imageManage requestImageForAsset:imageAsset targetSize:kAlbumImageSize contentMode:PHImageContentModeDefault options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-      _albumImage = result;
+      weakSelf.albumImage = result;
     }];
   }
 }
@@ -36,7 +36,7 @@
 - (void)setDataWithAlbumResult:(PHFetchResult *)albumFetchResult {
   _albumFetchResult = albumFetchResult;
   _albumTittle = @"相机胶卷";
-  
+  kWEAKSELF
   if (_albumFetchResult.count > 0) {
     PHAsset *imageAsset = _albumFetchResult[_albumFetchResult.count - 1];
     PHCachingImageManager *imageManage = [[PHCachingImageManager alloc] init];
@@ -44,7 +44,7 @@
                            targetSize:kAlbumImageSize
                           contentMode:PHImageContentModeDefault
                               options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-                                _albumImage = result;
+                                weakSelf.albumImage = result;
                               }];
   }
 }

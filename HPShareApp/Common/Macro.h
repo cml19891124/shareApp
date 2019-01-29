@@ -207,6 +207,7 @@
 #import <AMapLocationKit/AMapLocationKit.h>
 #import <AMapSearchKit/AMapSearchKit.h>
 #import "ViewUtil.h"
+#import "HUD.h"
 
 //自定义打印语句
 #ifdef DEBUG
