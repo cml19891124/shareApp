@@ -21,11 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *createTime;
 @property (nonatomic, copy) NSString *deleteTime;
 @property (nonatomic, copy) NSString *imgUrl;
+@property (nonatomic, copy) NSString *linkType;
+
 @property (nonatomic, copy) NSString *pictureId;
 @property (nonatomic, copy) NSString *sort;
 @property (nonatomic, copy) NSString *updateTime;
-
-//+(instancetype)homeBannerModelWithArray:(NSMutableArray *)array;
 
 @end
 

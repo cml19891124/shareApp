@@ -18,6 +18,7 @@
 #import "HPCustomerServiceModalView.h"
 #import "LEEAlert.h"
 #import "HPQueryproductersModel.h"
+#import "HPTextDialogView.h"
 
 typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoPortrait = 0,
@@ -34,6 +35,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 };
 
 @interface HPConfigCenterController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate,TZImagePickerControllerDelegate,UITextFieldDelegate>
+
+@property (nonatomic, strong) HPTextDialogView *textDialogView;
 @property (nonatomic, strong) UIView *accountInfoPanel;
 @property (nonatomic, weak) UIImageView *portraitView;
 @property (nonatomic, strong) UIView *professDetailPanel;
@@ -661,21 +664,21 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 - (void)onClickGotoCtrl:(UIControl *)ctrl {
     switch (ctrl.tag) {
         case HPConfigGotoPortrait:
-            NSLog(@"HPConfigGotoPortrait");
+            HPLog(@"HPConfigGotoPortrait");
             [self.alertSheet show:YES];
             break;
             
         case HPConfigGotoFullName:
-            NSLog(@"HPConfigGotoFullName");
+            HPLog(@"HPConfigGotoFullName");
 
             break;
             
         case HPConfigGotoCompany:
-            NSLog(@"HPConfigGotoCompany");
+            HPLog(@"HPConfigGotoCompany");
             break;
             
         case HPConfigGotoContact:
-            NSLog(@"HPConfigGotoContact");
+            HPLog(@"HPConfigGotoContact");
             break;
             
         case HPConfigGotoUserName:
@@ -683,7 +686,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
             break;
             
         case HPConfigGotoMail:
-//            NSLog(@"HPConfigGotoMail");
+//            HPLog(@"HPConfigGotoMail");
             [self pushVCByClassName:@"HPConfigUserNameController" withParam:@{@"title":@"设置您的用户名"}];
 
             break;
@@ -693,21 +696,22 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
             break;
         
         case HPConfigGotoPassword:
-            NSLog(@"HPConfigGotoPassword");
+            HPLog(@"HPConfigGotoPassword");
             [self pushVCByClassName:@"HPForgetPasswordController" withParam:@{@"isForget":@"1"}];
             break;
             
         case HPConfigGotoAddBtn:
-            NSLog(@"HPConfigGotoAddBtn");
+            HPLog(@"HPConfigGotoAddBtn");
             [self getProfessionalDetailView:ctrl];
             break;
             
         case HPConfigGotoVersion:
-            NSLog(@"HPConfigGotoVersion");
+            HPLog(@"HPConfigGotoVersion");
+            [self updateAppVersionInfo];
             break;
             
         case HPConfigGotoCache:
-            NSLog(@"HPConfigGotoCache");
+            HPLog(@"HPConfigGotoCache");
             [self setUpAlertViewForWarning];
             break;
             
@@ -759,12 +763,12 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     //默认只有标题 没有操作的按钮:添加操作的按钮 UIAlertAction
     
     UIAlertAction *cancelBtn = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        NSLog(@"取消");
+        HPLog(@"取消");
         [self dismissViewControllerAnimated:YES completion:NULL];
     }];
     //添加确定
     UIAlertAction *sureBtn = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull   action) {
-        NSLog(@"确定");
+        HPLog(@"确定");
         HPClearCacheTool *tool = [HPClearCacheTool new];
         [tool clearFile];
         CGFloat cashSize = [HPClearCacheTool readCacheSize];
@@ -976,5 +980,71 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         }
     }
     return YES;
+}
+
+#pragma mark - 检测版本更新信息
+- (void)updateAppVersionInfo
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // 耗时的操作
+        
+        //获取本地版本号
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+        NSString *newVersion = [NSString stringWithFormat:@"%@", version];
+        NSArray *currentVersionArr = [newVersion componentsSeparatedByString:@"."];
+        NSString *currentVersion =@"";
+        for (int i = 0;i < currentVersionArr.count; i++) {
+            currentVersion = [currentVersion stringByAppendingString:currentVersionArr[i]];
+        }
+        //获取appStore网络版本号
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@", kAppleId]];
+        NSString * file =  [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
+        
+        NSRange substr = [file rangeOfString:@"\"version\":\""];
+        NSRange range1 = NSMakeRange(substr.location+substr.length,10);
+        NSRange substr2 = [file rangeOfString:@"\"" options:NSCaseInsensitiveSearch  range:range1];
+        NSRange range2 = NSMakeRange(substr.location+substr.length, substr2.location-substr.location-substr.length);
+        NSString *appStoreVersion =[file substringWithRange:range2];
+        NSArray *appStoreVersionArr = [appStoreVersion componentsSeparatedByString:@"."];
+        NSString *onlineVersion = @"";
+        for (int i = 0;i < appStoreVersionArr.count; i++) {
+            onlineVersion = [onlineVersion stringByAppendingString:appStoreVersionArr[i]];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 更新界面
+            //如果不一样去更新
+            if([currentVersion intValue] < [onlineVersion intValue])
+            {
+                [self showAlert];
+            }else{
+                [self setText:@"已是最新版本" ofBtnWithType:HPConfigGotoVersion];
+            }
+        });
+    });
+    
+}
+
+/**
+ *  检查新版本更新弹框
+ */
+-(void)showAlert
+{
+    if (_textDialogView == nil) {
+        HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
+        [textDialogView setText:@"有新的版本啦"];
+        [textDialogView setModalTop:279.f * g_rateHeight];
+        [textDialogView setCanecelBtnTitle:@"暂不更新"];
+        [textDialogView setConfirmBtnTitle:@"前往更新"];
+        _textDialogView = textDialogView;
+    }
+    
+    [_textDialogView setConfirmCallback:^{
+        // 此处加入应用在app store的地址，方便用户去更新，一种实现方式如下：
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/us/app/id%@?ls=1&mt=8", kAppleId]];
+        [[UIApplication sharedApplication] openURL:url];
+    }];
+    
+    [_textDialogView show:YES];
 }
 @end

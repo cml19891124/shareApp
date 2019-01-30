@@ -109,7 +109,7 @@
 //    [self regiestJMessage];
     
     //登录极光IM
-//    [self loginJMessage];
+    [self loginJMessage];
     
     //注册腾讯bugly
     [Bugly startWithAppId:kAppleId];
