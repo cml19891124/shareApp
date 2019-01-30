@@ -7,7 +7,7 @@
 //
 
 #import "HPBaseTableViewCell.h"
-#import "HPBannerView.h"
+#import "HPHomeBannerView.h"
 #import "HPPageControl.h"
 #import "HPPageControlFactory.h"
 #import "HPHomeBannerModel.h"
@@ -19,13 +19,13 @@ typedef void (^BannerClickTypeBlock)(HPHomeBannerModel *model,NSInteger index);
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPTopMenuItemCell : HPBaseTableViewCell<HPBannerViewDelegate>
+@interface HPTopMenuItemCell : HPBaseTableViewCell<HPHomeBannerViewDelegate>
 
 @property (nonatomic, strong) UIView *bannerView;
 
 @property (nonatomic, copy) SelectItemInICarouselBlock selectItemInICarouselBlock;
 
-@property (strong, nonatomic) HPBannerView *pageView;
+@property (strong, nonatomic) HPHomeBannerView *pageView;
 @property (nonatomic, strong) HPPageControl *pageControl;
 @property (strong, nonatomic) NSMutableArray *bannerImageArr;
 

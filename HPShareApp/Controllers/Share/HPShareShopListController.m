@@ -48,7 +48,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [_bannerView startAutoScrollWithInterval:2.0];
+    [_bannerView startAutoScrollWithInterval:6.0];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -57,19 +57,12 @@
     [_bannerView stopAutoScroll];
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
     NSString *title = self.param[@"title"];
+    if (!title) {
+        title = @"店铺拼租";
+    }
     UIView *navigationView = [self setupNavigationBarWithTitle:title];
     _navigationView = navigationView;
     
@@ -103,6 +96,7 @@
     [bannerView setImageContentMode:UIViewContentModeCenter];
     [headerView addSubview:bannerView];
     _bannerView = bannerView;
+
     [bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(headerView);
         make.top.equalTo(headerView);

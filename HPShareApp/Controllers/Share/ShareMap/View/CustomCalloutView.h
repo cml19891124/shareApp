@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <AMapSearchKit/AMapCommonObj.h>
+#import "HPShareListModel.h"
 
 @protocol CustomCalloutViewTapDelegate <NSObject>
 
 - (void)didDetailButtonTapped:(NSInteger)index;
+- (void)didSelectedIndexpathinRowTapped:(HPShareListModel *)model andIndex:(NSInteger)index;
 
 @end
 

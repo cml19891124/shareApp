@@ -8,7 +8,6 @@
 
 #import "CustomCalloutView.h"
 #import "ClusterTableViewCell.h"
-#import "HPShareListModel.h"
 #import "ClusterAnnotation.h"
 
 const NSInteger kArrorHeight = 10;
@@ -63,6 +62,17 @@ const NSInteger kCellHeight = 44;
     return self.poiArray.count;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    HPShareListModel *model = [self.poiArray objectAtIndex:indexPath.row];
+
+    if ([self.delegate respondsToSelector:@selector(didSelectedIndexpathinRowTapped:andIndex:)])
+    {
+        [self.delegate didSelectedIndexpathinRowTapped:model andIndex:indexPath.row];
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *identifier = @"ClusterCell";
@@ -79,6 +89,7 @@ const NSInteger kCellHeight = 44;
     cell.detailTextLabel.text = model.address;
     cell.tapBtn.tag = indexPath.row;
     cell.tapBtn.userInteractionEnabled = YES;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell.tapBtn addTarget:self action:@selector(detailBtnTap:) forControlEvents:UIControlEventTouchUpInside];
     
     return cell;

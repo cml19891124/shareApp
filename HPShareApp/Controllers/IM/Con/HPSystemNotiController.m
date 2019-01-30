@@ -14,6 +14,9 @@
 @interface HPSystemNotiController ()<UITableViewDelegate,UITableViewDataSource,HPSystemNotiCellDelegate,HPBaseViewControllerDelegate>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *systemNotiArray;
+
+@property (nonatomic, strong) NSMutableArray *finalSystemNotiArray;
+
 @end
 
 @implementation HPSystemNotiController
@@ -30,20 +33,25 @@ static NSString *systemNotiCell = @"systemNotiCell";
     [self setupNavigationBarWithTitle:@"系统通知"];
     [self setupRightBarbuttonBtn:@"一键已读"];
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
-    
-    NSArray *interArray = @[@{@"photo":@"system notification",@"title":@"系统通知",@"subtitle":@"暂无数据"//@"注册成功，欢迎进入“合店站”"
-                              }];
-//    NSArray *systemNotiArray = self.param[@"data"];//@[@{@"createTime":@"1495453213",@"title":@"版本更新",@"message":@"合店站1.1.0版本更新。新版本中'人力共享'功能正式上线，店主可以通过该板块招募短工，降低招募正式员工的人力成本。同时用户也可以发…"},
+    _finalSystemNotiArray = [NSMutableArray array];
+//    NSArray *interArray = @[@{@"photo":@"system notification",@"title":@"系统通知",@"subtitle":@"暂无数据"//@"注册成功，欢迎进入“合店站”"
+//                              }];
+    NSArray *systemNotiArray = self.param[@"data"];//@[@{@"createTime":@"1495453213",@"title":@"版本更新",@"message":@"合店站1.1.0版本更新。新版本中'人力共享'功能正式上线，店主可以通过该板块招募短工，降低招募正式员工的人力成本。同时用户也可以发…"},
 //                               @{@"createTime":@"1495453229",@"title":@"注册成功",@"message":@"尊敬的用户，恭喜您成为“合店站”会员，赶紧去制作你的专属名片，开启共享之旅吧!"}];
-    _systemNotiArray = [HPInterActiveModel mj_objectArrayWithKeyValuesArray:interArray];
-    HPInterActiveModel *model = self.param[@"data"][0];
-    if ([model.subtitle isEqualToString:@"暂无数据"]) {
+    _systemNotiArray = [HPInterActiveModel mj_objectArrayWithKeyValuesArray:systemNotiArray];
+//    HPInterActiveModel *model = _systemNotiArray[0];
+    for (HPInterActiveModel *model in _systemNotiArray) {
+        if ([model.title isEqualToString:@"登录成功"]||[model.title isEqualToString:@"注册成功"]) {
+            [_finalSystemNotiArray addObject:model];
+        }
+    }
+    if (_finalSystemNotiArray.count == 0) {
         self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
         self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_collect");
         self.tableView.refreshNoDataView.tipLabel.text = @"暂无数据最新系统信息";
         self.tableView.refreshNoDataView.tipBtn.hidden = YES;
     }else{
-        [self loadPartyCenterData:_systemNotiArray];
+        [self loadPartyCenterData:_finalSystemNotiArray];
     }
 }
 
@@ -91,11 +99,11 @@ static NSString *systemNotiCell = @"systemNotiCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _systemNotiArray.count;
+    return _finalSystemNotiArray.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    HPInterActiveModel *model = _systemNotiArray[indexPath.row];
+    HPInterActiveModel *model = _finalSystemNotiArray[indexPath.row];
     HPSystemNotiCell *cell = [tableView dequeueReusableCellWithIdentifier:systemNotiCell];
     cell.model = model;
     cell.delegate = self;

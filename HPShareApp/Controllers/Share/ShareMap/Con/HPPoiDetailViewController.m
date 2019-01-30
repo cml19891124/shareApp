@@ -38,7 +38,7 @@
             case 2 : title = @"经纬度";          break;
             case 3 : title = @"地址";            break;
             case 4 : title = @"电话";            break;
-            default: title = @"距中心点距离";     break;
+            default: title = @"";     break;
         }
     }
     else
@@ -83,7 +83,10 @@
             case 2 : subTitle = [NSString stringWithFormat:@"%.2lf,%.2lf",self.poi.longitude,self.poi.latitude];    break;
             case 3 : subTitle = self.poi.address;                   break;
             case 4 : subTitle = self.poi.contactMobile;                       break;
-            default: subTitle = [NSString stringWithFormat:@"%@(米)", @"25"];                                                   break;
+//            default: subTitle = [NSString stringWithFormat:@"%@(米)", @"25"];
+            default: subTitle = @"";
+
+                break;
                 
         }
     }
@@ -123,7 +126,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return section == 0 ? 6 : 17;
+    return section == 0 ? 5 : 17;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

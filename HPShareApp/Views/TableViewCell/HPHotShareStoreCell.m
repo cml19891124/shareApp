@@ -59,7 +59,7 @@
         [self.areaImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(getWidth(15.f) + (areaW + getWidth(110.f)) * i);
             make.size.mas_equalTo(CGSizeMake(getWidth(110.f), getWidth(70.f)));
-            make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(getWidth(14.f));
+            make.top.mas_equalTo(self.titleLabel.mas_bottom);
         }];
     }
     
@@ -111,7 +111,7 @@
         make.left.mas_equalTo(getWidth(15.f));
         make.right.mas_equalTo(getWidth(-15.f));
         make.height.mas_equalTo(getWidth(48.f));
-        make.top.mas_equalTo(self);
+        make.top.mas_equalTo(getWidth(15.f));
     }];
 
     [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {

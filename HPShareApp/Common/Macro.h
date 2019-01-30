@@ -36,6 +36,8 @@
 #define COLOR_GRAY_DADADA [UIColor colorWithHexString:@"#DADADA"]
 
 #define COLOR_RED_EA0000 [UIColor colorWithHexString:@"#EA0000"]
+#define COLOR_RED_4fa4f8 [UIColor colorWithHexString:@"#4fa4f8"]
+
 #define COLOR_BLACK_000000 [UIColor colorWithHexString:@"#000000"]
 #define COLOR_RED_FF0000 [UIColor colorWithHexString:@"#FF0000"]
 #define COLOR_YELLOW_FFBA15 [UIColor colorWithHexString:@"#FFBA15"]

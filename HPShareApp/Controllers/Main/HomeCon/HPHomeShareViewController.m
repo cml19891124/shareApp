@@ -276,16 +276,15 @@ static NSString *shareListCell = @"shareListCell";
 {
     HPTopMenuItemCell *cell = [tableView dequeueReusableCellWithIdentifier:topMenuItemCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    HPLoginModel *account = [HPUserTool account];
+    kWEAKSELF
     //广告点击跳转block
     [cell setBannerClickTypeBlock:^(HPHomeBannerModel *model,NSInteger index) {
-        if (!account.token) {
-            [HPProgressHUD alertMessage:@"请前往登录"];
-        }else{
-            if (index && model.link) {
-                
-            }
-            
+        if (model.linkType && [model.linkType isEqualToString:@"shopList"]) {
+            [weakSelf pushVCByClassName:@"HPShareShopListController"];
+        }else if (index && model.linkType && [model.linkType isEqualToString:@"article"]) {
+            [weakSelf pushVCByClassName:@"HPIdeaController"];
+        }else if (index && model.linkType && [model.linkType isEqualToString:@"playShare"]) {
+            [weakSelf pushVCByClassName:@"HPGetherRentViewController"];
         }
         
     }];
@@ -299,14 +298,14 @@ static NSString *shareListCell = @"shareListCell";
 {
     HPMenuItemCell *cell = [tableView dequeueReusableCellWithIdentifier:menuItemCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    HPLoginModel *account = [HPUserTool account];
+//    HPLoginModel *account = [HPUserTool account];
 
     //    kWeakSelf(weakSlef);
     [cell setClickMenuItemBlock:^(NSInteger HPHomeShareMenuItem,NSString *menuString) {
-        if (!account.token) {
-            [HPProgressHUD alertMessage:@"请前往登录"];
-            return ;
-        }
+//        if (!account.token) {
+//            [HPProgressHUD alertMessage:@"请前往登录"];
+//            return ;
+//        }
         switch (HPHomeShareMenuItem) {
             case HPHome_page_store_sharing:
                 [self pushVCByClassName:@"HPShareShopListController" withParam:@{@"title":menuString}];
@@ -425,7 +424,7 @@ static NSString *shareListCell = @"shareListCell";
             return getWidth(132.f);
             break;
         case 1:
-            return getWidth(208.f)/2;
+            return getWidth(96.f);
             break;
         case 2:
             return getWidth(165.f);
@@ -483,10 +482,12 @@ static NSString *shareListCell = @"shareListCell";
     else if (y > 0.f) {
         [self.openView.sloganImageView setAlpha:0.f];
         [self.headerView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(getWidth(225.f));
+//            make.width.mas_equalTo(getWidth(225.f));
+            make.left.mas_equalTo(self.openView.cityBtn.mas_right).offset(getWidth(15.f));
+            make.right.mas_equalTo(self.openView.mas_right).offset(getWidth(-30.f));
             make.height.mas_equalTo(getWidth(30.f));
             make.centerY.mas_equalTo(self.openView.cityBtn).offset(0.f);
-            make.centerX.mas_equalTo(self.tableView);
+//            make.centerX.mas_equalTo(self.tableView);
         }];
     }
     

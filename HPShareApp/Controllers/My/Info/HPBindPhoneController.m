@@ -168,7 +168,7 @@
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"发送成功"];
-            weakSelf.codeTextField.text = responseObject[@"data"];
+//            weakSelf.codeTextField.text = responseObject[@"data"];
         }else{
             [HPProgressHUD alertMessage:MSG];
         }

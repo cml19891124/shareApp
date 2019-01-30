@@ -24,7 +24,7 @@
     [titleLabel setText:@"免费发布拼租信息"];
     [view addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(view).with.offset(50.f * g_rateHeight);
+        make.top.equalTo(view).with.offset(60.f * g_rateHeight);
         make.left.equalTo(view).with.offset(33.f * g_rateWidth);
         make.height.mas_equalTo(titleLabel.font.pointSize);
     }];

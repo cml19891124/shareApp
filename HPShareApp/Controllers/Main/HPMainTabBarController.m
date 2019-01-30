@@ -48,7 +48,7 @@
     
     self.tabBar.layer.shadowColor = COLOR_GRAY_E6E5E5.CGColor;
     self.tabBar.layer.shadowOffset = CGSizeMake(0, -2);
-    self.tabBar.layer.shadowOpacity = 0.82f;
+    self.tabBar.layer.shadowOpacity = 0.4f;
 
     HPHomeShareViewController *shareController = [[HPHomeShareViewController alloc] init];
     shareController.tabBarItem.title = @"合店";

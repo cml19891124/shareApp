@@ -47,7 +47,13 @@
     UIView *statusBar = [self setupStatusbar];
     
     UIView *navigationBar = [[UIView alloc] init];
-    [navigationBar setBackgroundColor:COLOR_RED_EA0000];
+    if ([title isEqualToString:@"什么是店铺拼租"]) {
+        [navigationBar setBackgroundColor:COLOR_RED_4fa4f8];
+        [statusBar setBackgroundColor:COLOR_RED_4fa4f8];
+
+    }else{
+        [navigationBar setBackgroundColor:COLOR_RED_EA0000];
+    }
     [self.view addSubview:navigationBar];
     [navigationBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(self.view);

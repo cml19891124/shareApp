@@ -26,7 +26,7 @@
 }
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect{
-    return kRect((buttonW - getWidth(39.f))/2,0, getWidth(39.f), getWidth(39.f));
+    return kRect((buttonW - getWidth(39.f))/2,getWidth(7.f), getWidth(39.f), getWidth(39.f));
 }
 
 - (CGRect)titleRectForContentRect:(CGRect)contentRect

@@ -701,7 +701,7 @@
             
             // 调整位置
             self.customCalloutView.center = CGPointMake(CGRectGetMidX(view.bounds), -CGRectGetMidY(self.customCalloutView.bounds) - CGRectGetMidY(view.bounds) - kCalloutViewMargin);
-            
+            self.customCalloutView.delegate = self;
             [view addSubview:self.customCalloutView];
             
         } else {
@@ -717,7 +717,8 @@
             [self.mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
             // 调整位置
             self.customCalloutView.center = CGPointMake(CGRectGetMidX(view.bounds), -CGRectGetMidY(self.customCalloutView.bounds) - CGRectGetMidY(view.bounds) - 2 * kCalloutViewMargin);
-            
+            self.customCalloutView.delegate = self;
+
             [view addSubview:self.customCalloutView];
             
 //            [self.mapView deselectAnnotation:annotation animated:YES];//设置为非选中状态
@@ -779,4 +780,9 @@
     [self pushVCByClassName:@"HPPoiDetailViewController" withParam:@{@"poi":poi}];
 }
 
+- (void)didSelectedIndexpathinRowTapped:(HPShareListModel *)model andIndex:(NSInteger)index
+{
+    HPShareListModel *poi = self.selectedPoiArray[index];
+    [self pushVCByClassName:@"HPPoiDetailViewController" withParam:@{@"poi":poi}];
+}
 @end

@@ -647,7 +647,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         if (_titleField.text.length) {
             self.infoDict[@"storeName"] = _titleField.text;
         }
-        self.ratio = [NSString stringWithFormat:@"%.2f%%",self.infoDict.allValues.count/15.00];
+        self.ratio = [NSString stringWithFormat:@"%.2f%%",self.infoDict.allValues.count/15.00 * 100];
         self.ratioLabel.text = [NSString stringWithFormat:@"%@",self.ratio.length>0?self.ratio:@"0"];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             HPReviseReleaseInfoViewController *shareInfoVC = [HPReviseReleaseInfoViewController new];
@@ -735,7 +735,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
             [areaPickerView setConfirmCallBack:^(NSInteger parentIndex, NSInteger childIndex, NSObject *model) {
                 HPDistrictModel *districtModel = (HPDistrictModel *)model;
                 NSString *areaName = [HPCommonData getAreaNameById:districtModel.areaId];
-                NSLog(@"Pick district: %@-%@", areaName, districtModel.name);
+                HPLog(@"Pick district: %@-%@", areaName, districtModel.name);
                 NSString *areaTitle = [NSString stringWithFormat:@"%@-%@", areaName, districtModel.name];
                 CGFloat areaW = BoundWithSize(areaTitle, kScreenWidth, 13.f).size.width + 15;
                [self.areaBtn setTitle:areaTitle forState:UIControlStateNormal];
@@ -757,7 +757,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
                 HPIndustryModel *industryModel = (HPIndustryModel *)model;
                 NSString *industryName = [HPCommonData getIndustryNameById:industryModel.pid];
 
-                NSLog(@"Pick industryTitle: %@-%@", industryName, industryModel.industryName);
+                HPLog(@"Pick industryTitle: %@-%@", industryName, industryModel.industryName);
                 NSString *industryTitle = [NSString stringWithFormat:@"%@-%@", industryName, industryModel.industryName];
                 CGFloat industryW = BoundWithSize(industryTitle, kScreenWidth, 13.f).size.width + 15;
                 [self.industryBtn setTitle:industryTitle forState:UIControlStateNormal];

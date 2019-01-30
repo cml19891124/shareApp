@@ -71,10 +71,10 @@
     return _bannerView;
 }
 
-- (HPBannerView *)pageView
+- (HPHomeBannerView *)pageView
 {
     if (!_pageView) {
-        _pageView = [[HPBannerView alloc] init];
+        _pageView = [[HPHomeBannerView alloc] init];
         if (self.bannerImageArr && self.bannerImageArr.count) {
             [_pageView setImages:self.bannerImageArr];
 
@@ -84,14 +84,14 @@
             [_pageView setImages:bannerImageArr];
 
         }
-        
+        _pageView.showImagePagerEnabled = YES;
         [_pageView setImageContentMode:UIViewContentModeScaleToFill];
         [_pageView setPageSpace:getWidth(15.f)];//space + width = 每次滑动到距离
         [_pageView setPageMarginLeft:getWidth(25.f)];//距离屏幕左边的宽度
         [_pageView setPageWidth:getWidth(325.f)];
         [_pageView setPageItemSize:CGSizeMake(getWidth(325.f), getWidth(120.f))];//轮播里面卡片控件的大小。默认与width相等
         [_pageView setBannerViewDelegate:self];
-        [_pageView startAutoScrollWithInterval:2];
+        [_pageView startAutoScrollWithInterval:6];
         _pageView.backgroundColor = [[UIColor clearColor] colorWithAlphaComponent:0.001];
     }
     return _pageView;
@@ -122,10 +122,20 @@
 
 #pragma mark - HPBannerViewDelegate
 
-- (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
+- (void)bannerView:(HPHomeBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
     [_pageControl setCurrentPage:index];
     _pageView.tag = 60 + index;
     
+}
+
+#pragma mark - HPPageViewDelegate
+
+- (void)pageView:(HPPageView *)pageView didClickPageItem:(UIView *)item atIndex:(NSInteger)index
+{
+    HPHomeBannerModel *model = self.bannerModelsArr[index];
+    if (self.bannerClickTypeBlock) {
+        self.bannerClickTypeBlock(model, index);
+    }
 }
 
 - (void)getHomeBannerDataList

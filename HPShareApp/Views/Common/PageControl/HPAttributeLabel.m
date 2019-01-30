@@ -7,6 +7,7 @@
 //
 
 #import "HPAttributeLabel.h"
+#import "Macro.h"
 
 @implementation HPAttributeLabel
 
@@ -20,7 +21,7 @@
     NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithString:title];
     [attributeStr addAttribute:NSForegroundColorAttributeName value:fromColor range:fromRange];
     [attributeStr addAttribute:NSFontAttributeName value:fromFont range:fromRange];
-    [attributeStr addAttribute:NSForegroundColorAttributeName value:toColor range:toRange];
+    [attributeStr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_EA0000 range:toRange];
     [attributeStr addAttribute:NSFontAttributeName value:toFont range:toRange];
     
     //设置行间距

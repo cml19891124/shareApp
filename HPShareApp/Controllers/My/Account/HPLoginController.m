@@ -342,8 +342,9 @@
 }
 
 - (void)onClickCodeBtn:(UIButton *)btn {
-    NSLog(@"onClickCodeBtn");
-    if (_phoneNumTextField.text.length != 11) {
+    HPLog(@"onClickCodeBtn");
+
+    if (_phoneNumTextField.text.length < 11) {
         [HPProgressHUD alertMessage:@"请输入正确的手机号"];
     }else{
         [self getCodeNumber];
@@ -364,7 +365,7 @@
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"发送成功"];
-            weakSelf.codeTextField.text = responseObject[@"data"];
+//            weakSelf.codeTextField.text = responseObject[@"data"];
         }else{
             [HPProgressHUD alertMessage:MSG];
         }
@@ -384,13 +385,13 @@
 
 - (void)onClickThirdPartBtn:(UIButton *)btn {
     if (btn.tag == 0) {
-        NSLog(@"onClickThirdPartBtn: QQ");
+        HPLog(@"onClickThirdPartBtn: QQ");
     }
     else if (btn.tag == 1) {
-        NSLog(@"onClickThirdPartBtn: WeChat");
+        HPLog(@"onClickThirdPartBtn: WeChat");
     }
     else if (btn.tag == 2) {
-        NSLog(@"onClickThirdPartBtn: Sina");
+        HPLog(@"onClickThirdPartBtn: Sina");
     }
     
     [self pushVCByClassName:@"HPLoginByPasswordController"];
@@ -427,7 +428,7 @@
     if (textField == self.phoneNumTextField) {
         if (textField.text.length >= 11) {
 //            [HPProgressHUD alertMessage:@"请输入11位手机号"];
-            self.phoneNumTextField.text = [textField.text substringToIndex:11];
+            self.phoneNumTextField.text = [self.phoneNumTextField.text substringToIndex:10];
             //[textField resignFirstResponder];
 //            [self.codeTextField becomeFirstResponder];
             _isValidate = [HPValidatePhone validateContactNumber:textField.text];

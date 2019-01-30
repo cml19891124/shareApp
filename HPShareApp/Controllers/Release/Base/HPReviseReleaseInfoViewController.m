@@ -182,7 +182,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
         self.infoDict[@"leaves"] = _leavesInfo;
     }
     
-    self.ratio = [NSString stringWithFormat:@"%.2f%%",self.infoDict.allValues.count/15.00];
+    self.ratio = [NSString stringWithFormat:@"%.2f%%",self.infoDict.allValues.count/15.00 * 100];
     if ([self.ratio isEqualToString:@"1.00%"]) {
         self.ratio = @"100%";
     }

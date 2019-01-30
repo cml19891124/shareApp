@@ -49,7 +49,7 @@
   
   imageManager = [[PHCachingImageManager alloc] init];
 
-  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+//  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
 //  [defaultCenter addObserver:self selector:@selector(didSelectStatusChange:) name:kSelectStatusChange object:nil];
 //  [defaultCenter addObserver:self selector:@selector(finshToSelectPhoto:) name:kFinishToSelectPhoto object:nil];
   [self setUpCollectionView];

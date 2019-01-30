@@ -56,7 +56,7 @@
         [menuBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(getWidth(26.f) + (getWidth(52.f) + margin) * col);
             make.top.mas_equalTo(getWidth(25.f) + (getWidth(77.f) + getWidth(21.f)) * row);
-            make.size.mas_equalTo(CGSizeMake(getWidth(52.f), getWidth(77.f)));
+            make.size.mas_equalTo(CGSizeMake(getWidth(52.f), getWidth(64.f)));
         }];
     }
     

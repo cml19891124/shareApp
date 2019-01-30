@@ -82,7 +82,7 @@
     _bgView = bgView;
     [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.and.centerY.equalTo(self);
-        make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 115.f * g_rateWidth));
+        make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 107.f * g_rateWidth));
     }];
     
     UIImageView *photoView = [[UIImageView alloc] init];

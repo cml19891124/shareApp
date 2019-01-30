@@ -50,7 +50,7 @@
         make.left.mas_equalTo(getWidth(15.f));
         make.right.mas_equalTo(getWidth(-15.f));
         make.height.mas_equalTo(getWidth(48.f));
-        make.top.mas_equalTo(self);
+        make.top.mas_equalTo(getWidth(15.f));
     }];
     
     [self.fatherView mas_makeConstraints:^(MASConstraintMaker *make) {
