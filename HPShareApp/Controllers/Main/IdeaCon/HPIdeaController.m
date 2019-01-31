@@ -122,7 +122,7 @@ static NSString *headerCell = @"headerCell";
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_WHITE_FAF9FE];
     
-    _navTitleView = [self setupNavigationBarWithTitle:@"享法"];
+    _navTitleView = [self setupNavigationBarWithTitle:@"拼法"];
     [self.view addSubview:self.tableView];
 
 }
