@@ -16,6 +16,8 @@
 #import "HPCommonData.h"
 #import "HPCommonBannerData.h"
 
+#import "AvoidCrash.h"
+
 #import "HPSingleton.h"
 #import "Bugly/Bugly.h"
 #import <JMessage/JMessage.h>
@@ -101,11 +103,18 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    //启动防止崩溃功能(注意区分becomeEffective和makeAllEffective的区别)
+    //具体区别请看 AvoidCrash.h中的描述
+    //建议在didFinishLaunchingWithOptions最初始位置调用 上面的方法
+    
+    [AvoidCrash makeAllEffective];
+    
     //极光推送
     [self setUpJPushAndMessageConfigWithOptions:launchOptions];
     
     //注册极光IM
+    
 //    [self regiestJMessage];
     
     //登录极光IM
@@ -155,14 +164,18 @@
 #pragma mark - 登录im
 - (void)loginJMessage
 {
-    [JMSGUser loginWithUsername:@"cml19891124" password:@"cml16875" completionHandler:^(id resultObject, NSError *error) {
+    HPLoginModel *account = [HPUserTool account];
+
+    NSString *password = [kUserDefaults objectForKey:@"password"]?:@"aaa123";
+
+    [JMSGUser loginWithUsername:account.userInfo.username password:password completionHandler:^(id resultObject, NSError *error) {
         if (!error) {
             //登录成功
-            [HPProgressHUD alertMessage:@"登录极光IM成功！"];
+//            [HPProgressHUD alertMessage:@"登录极光IM成功！"];
         } else {
             //登录失败
-            [HPProgressHUD alertMessage:@"登录极光IM失败！"];
-
+//            [HPProgressHUD alertMessage:@"登录极光IM失败！"];
+            HPLog(@"登录极光失败");
         }
     }];
 }

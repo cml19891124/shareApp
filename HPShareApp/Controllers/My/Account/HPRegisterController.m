@@ -9,6 +9,7 @@
 #import "HPRegisterController.h"
 #import "HPValidatePhone.h"
 #import "EBBannerView.h"
+#import <JMessage/JMessage.h>
 
 @interface HPRegisterController ()<UITextFieldDelegate>
 @property (nonatomic, strong) UITextField *codeTextField;
@@ -259,10 +260,13 @@
     dic[@"code"] = self.codeTextField.text;
     dic[@"mobile"] = self.phoneNumTextField.text;
     dic[@"password"] = self.passwordTextField.text;
-    
+    kWEAKSELF
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/register" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"注册成功"];
+            //注册极光
+            [weakSelf regiestJMessage];
+            
             //⭐️5.iOS 11 style (iOS 11 样式)
             EBBannerView *banner = [EBBannerView bannerWithBlock:^(EBBannerViewMaker *make) {
                 make.style = 11;
@@ -282,6 +286,26 @@
 
     }];
 }
+
+#pragma mark - 注册im
+- (void)regiestJMessage
+{
+    HPLoginModel *account = [HPUserTool account];
+    JMSGUserInfo *userInfo = [JMSGUserInfo new];
+    userInfo.nickname = account.userInfo.username;
+    userInfo.signature = account.cardInfo.signature;
+    [JMSGUser registerWithUsername:account.userInfo.username password:self.passwordTextField.text completionHandler:^(id resultObject, NSError *error) {
+        if (!error) {
+            //极光注册成功
+            [kUserDefaults setObject:self.passwordTextField.text forKey:@"password"];
+            [kUserDefaults synchronize];
+        } else {
+            //极光注册失败
+        }
+    }];
+}
+
+
 - (void)onClickSwitchBtn:(UIButton *)btn {
     [self.navigationController popViewControllerAnimated:YES];
 }

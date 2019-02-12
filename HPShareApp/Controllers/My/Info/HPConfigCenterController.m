@@ -19,6 +19,7 @@
 #import "LEEAlert.h"
 #import "HPQueryproductersModel.h"
 #import "HPTextDialogView.h"
+#import <JMessage/JMessage.h>
 
 typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoPortrait = 0,
@@ -343,6 +344,13 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/logOut" isNeedToken:YES paraments:@{} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPUserTool deleteAccount];
+            [JMSGUser logout:^(id resultObject, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error == nil) {
+                        HPLog(@"Action logout success");
+                    }
+                });
+            }];
             [self.navigationController popViewControllerAnimated:YES];
         }else
         {
