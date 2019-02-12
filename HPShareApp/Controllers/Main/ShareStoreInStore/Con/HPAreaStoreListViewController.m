@@ -33,6 +33,15 @@
 @property (nonatomic, strong) HPAreaStoreItemListViewController *testVC;
 
 @property (nonatomic, strong) NSMutableArray *itemVCs;
+
+/**
+ 优选热门区域
+ */
+@property (nonatomic, strong) UILabel *hotAreaLabel;
+/**
+ 优选热门区域-en
+ */
+@property (nonatomic, strong) UILabel *hotArea_EN_Label;
 @end
 
 @implementation HPAreaStoreListViewController
@@ -67,6 +76,9 @@
     //配置headerView
     [self.managerView configHeaderView:^UIView * _Nullable{
         [weakSelf.headerView addSubview:weakSelf.headerImageView];
+        [weakSelf.headerView addSubview:weakSelf.hotAreaLabel];
+        [weakSelf.headerView addSubview:weakSelf.hotArea_EN_Label];
+
         return weakSelf.headerView;
     }];
     
@@ -111,6 +123,31 @@
     
 }
 
+- (UILabel *)hotAreaLabel
+{
+    if (!_hotAreaLabel) {
+        _hotAreaLabel = [UILabel new];
+        _hotAreaLabel.frame = kRect((kScreenWidth - getWidth(107.f))/2, getWidth(36.f), getWidth(107.f), getWidth(17.f));
+        _hotAreaLabel.textAlignment = NSTextAlignmentCenter;
+        _hotAreaLabel.textColor = COLOR_GRAY_FFFFFF;
+        _hotAreaLabel.font = kFont_Bold(17.f);
+        _hotAreaLabel.text = @"优选热门区域";
+    }
+    return _hotAreaLabel;
+}
+
+- (UILabel *)hotArea_EN_Label
+{
+    if (!_hotArea_EN_Label) {
+        _hotArea_EN_Label = [UILabel new];
+        _hotArea_EN_Label.frame = kRect((kScreenWidth - getWidth(149.f))/2,CGRectGetMaxY(self.hotAreaLabel.frame) +  getWidth(7.f), getWidth(149.f), getWidth(12.f));
+        _hotArea_EN_Label.textAlignment = NSTextAlignmentCenter;
+        _hotArea_EN_Label.textColor = COLOR_GRAY_FFFFFF;
+        _hotArea_EN_Label.font = kFont_Medium(12.f);
+        _hotArea_EN_Label.text = @"Optimizing Hot Areas";
+    }
+    return _hotArea_EN_Label;
+}
 
 -(void)tapGesture:(UITapGestureRecognizer *)gesture {
     HPLog(@"tapGesture");

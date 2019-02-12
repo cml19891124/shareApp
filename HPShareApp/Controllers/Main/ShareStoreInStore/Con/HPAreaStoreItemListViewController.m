@@ -126,8 +126,7 @@ static NSString *shareListCell = @"shareListCell";
     kWEAKSELF
     [HPHTTPSever HPGETServerWithMethod:@"/v1/space/list" isNeedToken:NO paraments:param complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
-//            [weakSelf.dataArray removeAllObjects];
-
+            
             NSArray *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
             if (models) {
                 if (isReload) {
