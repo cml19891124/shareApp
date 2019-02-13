@@ -41,6 +41,8 @@
  选中的留言类型
  */
 @property (nonatomic, strong) UIButton *currentLeavesBtn;
+
+@property (nonatomic, strong) NSMutableArray *leavesArray;
 @end
 
 @implementation HPStoreLeavesViewController
@@ -54,6 +56,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _leavesArray = [NSMutableArray array];
+
     UIView *navTilteView = [self setupNavigationBarWithTitle:@"完善店铺共享信息"];
     self.view.backgroundColor = COLOR_GRAY_FFFFFF;
     [self.view addSubview:self.leavesLabel];
@@ -160,19 +164,28 @@
 - (void)selectedLeavesItem:(UIButton *)button
 {
     self.leavesPlaceView.placehText = @"";
-    self.selectedBtn.selected = NO;
-    button.selected = YES;
-    self.selectedBtn = button;
-    NSMutableArray *leavesArray = [NSMutableArray array];
-    if (![leavesArray containsObject:button.currentTitle]) {
-        [leavesArray addObject:button.currentTitle];
+//    self.selectedBtn.selected = NO;
+//    button.selected = YES;
+//    self.selectedBtn = button;
+    button.selected = !button.selected;
+    if (button.selected) {
+        if (![_leavesArray containsObject:button.currentTitle]) {
+            [_leavesArray addObject:button.currentTitle];
+        }
     }else{
-        [leavesArray removeObject:button.currentTitle];
+        if ([_leavesArray containsObject:button.currentTitle]) {
+            [_leavesArray removeObject:button.currentTitle];
+        }
     }
+//    if (![leavesArray containsObject:button.currentTitle]) {
+//        [leavesArray addObject:button.currentTitle];
+//    }else{
+//        [leavesArray removeObject:button.currentTitle];
+//    }
     if (self.leavesPlaceView.text.length == 0) {
-        self.leavesPlaceView.text = [leavesArray componentsJoinedByString:@","];
+        self.leavesPlaceView.text = [_leavesArray componentsJoinedByString:@","];
     }else{
-        self.leavesPlaceView.text = [self.leavesPlaceView.text stringByAppendingString:button.currentTitle];
+        self.leavesPlaceView.text = [_leavesArray componentsJoinedByString:@";"];//[self.leavesPlaceView.text stringByAppendingString:[NSString stringWithFormat:@";%@",button.currentTitle]];
     }
 }
 - (void)setUpLeavesSubviewsFrame
