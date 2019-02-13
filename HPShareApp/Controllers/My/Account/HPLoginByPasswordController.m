@@ -11,10 +11,13 @@
 #import "HPMainTabBarController.h"
 #import "EBBannerView.h"
 
+
 @interface HPLoginByPasswordController ()<UITextFieldDelegate>
 @property (strong, nonatomic) UITextField *passwordTextField;
 @property (strong, nonatomic) UITextField *phoneNumTextField;
 @property (assign, nonatomic) BOOL isValidate;
+
+
 @end
 
 @implementation HPLoginByPasswordController
@@ -277,6 +280,7 @@
             HPLoginModel *model = [HPLoginModel AccountStatusWithDict:responseObject[@"data"]];
             [HPUserTool saveAccount:model];
             [HPProgressHUD alertMessage:@"登录成功"];
+            
             //⭐️5.iOS 11 style (iOS 11 样式)
             EBBannerView *banner = [EBBannerView bannerWithBlock:^(EBBannerViewMaker *make) {
                 make.style = 11;

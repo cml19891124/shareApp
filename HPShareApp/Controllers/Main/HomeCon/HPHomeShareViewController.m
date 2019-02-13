@@ -61,6 +61,7 @@ static NSString *shareListCell = @"shareListCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     [self.view addSubview:self.openView];
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     

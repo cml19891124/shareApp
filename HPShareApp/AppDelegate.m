@@ -16,6 +16,8 @@
 #import "HPCommonData.h"
 #import "HPCommonBannerData.h"
 
+#import "AvoidCrash.h"
+
 #import "HPSingleton.h"
 #import "Bugly/Bugly.h"
 #import <JMessage/JMessage.h>
@@ -101,15 +103,15 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    //启动防止崩溃功能(注意区分becomeEffective和makeAllEffective的区别)
+    //具体区别请看 AvoidCrash.h中的描述
+    //建议在didFinishLaunchingWithOptions最初始位置调用 上面的方法
+    
+    [AvoidCrash makeAllEffective];
+    
     //极光推送
     [self setUpJPushAndMessageConfigWithOptions:launchOptions];
-    
-    //注册极光IM
-//    [self regiestJMessage];
-    
-    //登录极光IM
-//    [self loginJMessage];
     
     //注册腾讯bugly
     [Bugly startWithAppId:kAppleId];
@@ -135,37 +137,6 @@
     return YES;
 }
 
-#pragma mark - 注册im
-- (void)regiestJMessage
-{
-    HPLoginModel *account = [HPUserTool account];
-    JMSGUserInfo *userInfo = [JMSGUserInfo new];
-    userInfo.nickname = account.userInfo.username;
-    userInfo.signature = account.cardInfo.signature;
-    [JMSGUser registerWithUsername:account.userInfo.username password:account.userInfo.userId completionHandler:^(id resultObject, NSError *error) {
-        if (!error) {
-            //注册成功
-            
-        } else {
-            //注册失败
-        }
-    }];
-}
-
-#pragma mark - 登录im
-- (void)loginJMessage
-{
-    [JMSGUser loginWithUsername:@"cml19891124" password:@"cml16875" completionHandler:^(id resultObject, NSError *error) {
-        if (!error) {
-            //登录成功
-            [HPProgressHUD alertMessage:@"登录极光IM成功！"];
-        } else {
-            //登录失败
-            [HPProgressHUD alertMessage:@"登录极光IM失败！"];
-
-        }
-    }];
-}
 
 - (void)configureAMapKey {
     if ([AMAP_KEY length] == 0)
@@ -266,7 +237,7 @@
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
     //Optional
-    NSLog(@"did Fail To Register For Remote Notifications With Error: %@", error);
+    HPLog(@"did Fail To Register For Remote Notifications With Error: %@", error);
 }
 
 #pragma mark- JPUSHRegisterDelegate

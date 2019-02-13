@@ -90,12 +90,12 @@
 //        [_progress addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew context:nil];
 //        [JMSGMessageManager getMetaImageFromMessage:messageModel withConversation:_conversation withProgress:_progress succeedBlock:^(NSData *image) {
 //            JPIMMessageModel * model = [_conversation getMessage:photo.messageId];
-//            NSLog(@"download img successs %@,",model.content);
+//            HPLog(@"download img successs %@,",model.content);
 //            [_photos removeObjectAtIndex:_currentPhotoIndex];
 //            [_photos insertObject:[[self jsonStringToDictionary:messageModel.content] objectForKey:kimgresource] atIndex:_currentPhotoIndex];
 //            [self setCurrentPhotoIndex:_currentPhotoIndex];
 //        } failBlock:^(NSError *error) {
-//            NSLog(@"download img error");
+//            HPLog(@"download img error");
 //        }];
 //    }
 }
@@ -116,8 +116,8 @@
 }
 
 - (void)DeleteThisImage:(NSInteger)ThisImageIndex {
-    NSLog(@"ThisImageIndex---%ld", (long)ThisImageIndex );
-    NSLog(@"_currentPhotoIndex---%lu", (unsigned long)_currentPhotoIndex );
+    HPLog(@"ThisImageIndex---%ld", (long)ThisImageIndex );
+    HPLog(@"_currentPhotoIndex---%lu", (unsigned long)_currentPhotoIndex );
     if ( ThisImageIndex == 0 ) {
         _currentPhotoIndex = 1;
     } else if ( ThisImageIndex == _currentPhotoIndex ) {

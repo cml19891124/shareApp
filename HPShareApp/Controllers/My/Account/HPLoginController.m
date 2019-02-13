@@ -19,8 +19,6 @@
 @property (nonatomic, strong) UITextField *phoneNumTextField;
 @property (nonatomic, strong) UITextField *codeTextField;
 
-
-
 /**
  手机号是否有效
  */
@@ -310,12 +308,14 @@
     dic[@"code"] = _codeTextField.text;
     dic[@"mobile"] = _phoneNumTextField.text;
     dic[@"state"] = @"0";
-
+    
+    kWEAKSELF
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/login" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
             [HPUserTool saveAccount:model];
             [HPProgressHUD alertMessage:@"登录成功"];
+            
             //⭐️5.iOS 11 style (iOS 11 样式)
             EBBannerView *banner = [EBBannerView bannerWithBlock:^(EBBannerViewMaker *make) {
                 make.style = 11;
@@ -345,6 +345,7 @@
     HPLog(@"onClickCodeBtn");
 
     if (_phoneNumTextField.text.length < 11) {
+
         [HPProgressHUD alertMessage:@"请输入正确的手机号"];
     }else{
         [self getCodeNumber];

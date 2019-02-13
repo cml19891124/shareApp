@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
 #import "JCHATPhotoSelectViewController.h"
+#import "Macro.h"
 @interface JCHATAlbumViewController : UIViewController
 @property (weak, nonatomic)id<JCHATPhotoPickerViewControllerDelegate> photoDelegate;
 @end

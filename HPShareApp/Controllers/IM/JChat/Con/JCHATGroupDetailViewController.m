@@ -242,7 +242,7 @@ UITabBarDelegate> {
         [self createGroupWithAlertView:alertView];
       } else {
         __weak __typeof(self)weakSelf = self;
-          [HPProgressHUD alertWithLoadingText:@"获取成员信息"];
+          [HUD HUDNotHidden:@"获取成员信息"];
         [((JMSGGroup *)(self.conversation.target)) addMembersWithUsernameArray:@[[alertView textFieldAtIndex:0].text] appKey:JPushAppKey
                                                              completionHandler:^(id resultObject, NSError *error) {
 //                                                               [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
@@ -251,7 +251,8 @@ UITabBarDelegate> {
                                                                  [strongSelf refreshMemberGrid];
                                                                } else {
                                                                  HPLog(@"addMembersFromUsernameArray fail with error %@",error);
-                                                                   [HPProgressHUD alertWithFinishText:@"添加成员失败"];
+                                                                   [HUD HUDHidden];
+                                                                   [HUD HUDWithString:@"添加成员失败"  Delay:1.0];
                                                                }
                                                              }];
       }
@@ -261,25 +262,28 @@ UITabBarDelegate> {
     {
       if (buttonIndex ==1) {
 //        __weak __typeof(self)weakSelf = self;
-          [HPProgressHUD alertWithLoadingText:@"正在退出群组！"];
+          [HUD HUDNotHidden:@"正在退出群组！"];
         JMSGGroup *deletedGroup = ((JMSGGroup *)(self.conversation.target));
         
         [deletedGroup exit:^(id resultObject, NSError *error) {
 //          [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
           if (error == nil) {
-              [HPProgressHUD alertWithFinishText:@"退出群组成功"];
+              [HUD HUDHidden];
+              [HUD HUDWithString:@"退出群组成功"  Delay:1.0];
+              
             [JMSGConversation deleteGroupConversationWithGroupId:deletedGroup.gid];
             [self.navigationController popToViewController:self.sendMessageCtl.superViewController animated:YES];
           } else {
-            
-              [HPProgressHUD alertWithFinishText:@"退出群组失败"];
+              [HUD HUDHidden];
+              [HUD HUDWithString:@"退出群组失败"  Delay:1.0];
           }
         }];
       }
     }
       break;
     default:
-          [HPProgressHUD alertMessage:@"更新群组名称"];
+          [HUD HUDNotHidden:@"更新群组名称"];
+
       JMSGGroup *needUpdateGroup = (JMSGGroup *)(self.conversation.target);
       
       [JMSGGroup updateGroupInfoWithGroupId:needUpdateGroup.gid
@@ -289,11 +293,12 @@ UITabBarDelegate> {
 //                            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                             
                             if (error == nil) {
-                                [HPProgressHUD alertWithFinishText:@"更新群组名称成功"];
-
+                                [HUD HUDHidden];
+                                [HUD HUDWithString:@"更新群组名称成功"  Delay:1.0];
                                 [self refreshMemberGrid];
                             } else {
-                                [HPProgressHUD alertWithFinishText:@"更新群组名称成功"];
+                                [HUD HUDHidden];
+                                [HUD HUDWithString:@"更新群组名称成功"  Delay:1.0];
                             }
                           }];
       break;
@@ -303,7 +308,7 @@ UITabBarDelegate> {
 
 - (void)createGroupWithAlertView:(UIAlertView *)alertView {
   {
-      [HPProgressHUD alertWithLoadingText:@"加好友进群组"];
+      [HUD HUDNotHidden:@"加好友进群组"];
     __block JMSGGroup *tmpgroup =nil;
     typeof(self) __weak weakSelf = self;
     [JMSGGroup createGroupWithName:@"" desc:@"" memberArray:@[((JMSGUser *)self.conversation.target).username,[alertView textFieldAtIndex:0].text] completionHandler:^(id resultObject, NSError *error) {
@@ -314,7 +319,9 @@ UITabBarDelegate> {
       if (error == nil) {
         [JMSGConversation createGroupConversationWithGroupId:tmpgroup.gid completionHandler:^(id resultObject, NSError *error) {
           if (error == nil) {
-              [HPProgressHUD alertWithFinishText:@"创建群成功"];
+              
+              [HUD HUDWithString:@"创建群成功"  Delay:1.0];
+              
             JMSGConversation *groupConversation = (JMSGConversation *)resultObject;
             strongSelf.sendMessageCtl.conversation = groupConversation;
             strongSelf.sendMessageCtl.isConversationChange = YES;
@@ -330,7 +337,7 @@ UITabBarDelegate> {
           }
         }];
       } else {
-          [HPProgressHUD alertMessage:[JCHATStringUtils errorAlert:error]];
+          [HUD HUDWithString:[JCHATStringUtils errorAlert:error] Delay:1.0];
       }
     }];
   }
@@ -385,19 +392,18 @@ UITabBarDelegate> {
   if ([_memberArr count] == 1) {
     return;
   }
-  
-    [HPProgressHUD alertWithLoadingText:@"正在删除好友！"];
+    [HUD HUDNotHidden:@"正在删除好友！"];
     [((JMSGGroup *)(self.conversation.target)) removeMembersWithUsernameArray:@[userName] appKey:JPushAppKey
                                                           completionHandler:^(id resultObject, NSError *error) {
                                                             
                                                             if (error == nil) {
-//                                                              [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                                                                [HPProgressHUD alertWithFinishText:@"删除成员成功！"];
+                                                                [HUD HUDHidden];
+                                                                [HUD HUDWithString:@"删除成员成功！" Delay:1.0];
                                                               [self refreshMemberGrid];
                                                             } else {
                                                               HPLog(@"JCHATGroupSettingCtl   fail to removeMembersFromUsernameArrary");
-//                                                              [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                                                                [HPProgressHUD alertWithFinishText:@"删除成员错误！"];
+                                                                [HUD HUDHidden];
+                                                                [HUD HUDWithString:@"删除成员错误！" Delay:1.0];
                                                             }
                                                           }];
 }
@@ -414,8 +420,7 @@ UITabBarDelegate> {
 }
 
 - (void)switchDisturb {
-    [HPProgressHUD alertWithLoadingText:@"正在修改免打扰"];
-  
+    [HUD HUDNotHidden:@"正在修改免打扰"];
   if (_conversation.conversationType == kJMSGConversationTypeSingle) {
     JMSGUser * user = _conversation.target;
       __weak JMSGUser *weakUser = user;
@@ -425,11 +430,12 @@ UITabBarDelegate> {
           self->_isNoDisturb = !self->_isNoDisturb;
         if (weakUser.isNoDisturb) {
           HPLog(@"is no disturb");
-            [HPProgressHUD alertWithLoadingText:@"免打扰成功"];
+            [HUD HUDHidden];
+            [HUD HUDWithString:@"免打扰成功" Delay:1.0];
         } else {
           HPLog(@"is disturb");
-            [HPProgressHUD alertWithLoadingText:@"打扰成功"];
-
+            [HUD HUDHidden];
+            [HUD HUDWithString:@"打开" Delay:1.0];
         }
       }
     }];

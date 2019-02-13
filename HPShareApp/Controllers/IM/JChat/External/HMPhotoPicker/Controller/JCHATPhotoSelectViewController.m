@@ -193,7 +193,8 @@
   if ([[[UIDevice currentDevice]systemVersion] floatValue]>= 8) {
     if (selectedPhotoDic[model.photoAsset] == nil) {
       if (selectedPhotoDic.count > 8) {
-          [HPProgressHUD alertMessage:@"最多选择9张图片"];
+          [HUD HUDWithString:@"最多选择9张图片"  Delay:1.0];
+          
         return;
       }
       [selectedPhotoDic setObject:model forKey:model.photoAsset];
@@ -203,8 +204,7 @@
   } else {
     if (selectedPhotoDic[model.asset] == nil) {
       if (selectedPhotoDic.count > 8) {
-        
-          [HPProgressHUD alertMessage:@"最多选择9张图片"];
+          [HUD HUDWithString:@"最多选择9张图片"  Delay:1.0];
 
         return;
       }
@@ -264,7 +264,4 @@ didSelectItemAtIndexPath:(NSIndexPath * _Nonnull)indexPath {
   [self.navigationController pushViewController:photoBrowserVC animated:YES];
 }
 
-- (void)didReceiveMemoryWarning {
-  [super didReceiveMemoryWarning];
-}
 @end

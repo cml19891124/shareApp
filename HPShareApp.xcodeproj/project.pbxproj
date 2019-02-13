@@ -190,6 +190,9 @@
 		E66F1CB221D3481D00C2DEEF /* HPGamesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E66F1CB121D3481D00C2DEEF /* HPGamesCell.m */; };
 		E66F1CB521D3569000C2DEEF /* HPHotShareStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E66F1CB421D3569000C2DEEF /* HPHotShareStoreCell.m */; };
 		E66F1CB821D3625D00C2DEEF /* HPHotImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = E66F1CB721D3625D00C2DEEF /* HPHotImageView.m */; };
+		E66F28BE22003054000E0206 /* GetCurrentViewcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = E66F28BB22003054000E0206 /* GetCurrentViewcontroller.m */; };
+		E66F28BF22003054000E0206 /* HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = E66F28BC22003054000E0206 /* HUD.m */; };
+		E66F28C222003163000E0206 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = E66F28C122003163000E0206 /* UIView+Toast.m */; };
 		E677C7CB21FAA1910099E2C9 /* HPMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E677C7CA21FAA1910099E2C9 /* HPMenuItemCell.m */; };
 		E677C7D421FABE950099E2C9 /* HPAreaItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = E677C7D321FABE950099E2C9 /* HPAreaItemView.m */; };
 		E677C7D721FAE6250099E2C9 /* HPPlusBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = E677C7D621FAE6250099E2C9 /* HPPlusBtn.m */; };
@@ -360,6 +363,17 @@
 		E6D75F8521B65AAD00B2067C /* HPFeedbackController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F8421B65AAD00B2067C /* HPFeedbackController.m */; };
 		E6D75F8821B68A4D00B2067C /* HPCustomerServiceModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F8721B68A4D00B2067C /* HPCustomerServiceModalView.m */; };
 		E6D75F8B21B69D0D00B2067C /* HPShareMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F8A21B69D0D00B2067C /* HPShareMapController.m */; };
+		E6E89D1B2212A08A00D04F34 /* NSArray+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E89D042212A08A00D04F34 /* NSArray+AvoidCrash.m */; };
+		E6E89D1C2212A08A00D04F34 /* NSString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E89D062212A08A00D04F34 /* NSString+AvoidCrash.m */; };
+		E6E89D1D2212A08A00D04F34 /* NSDictionary+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E89D072212A08A00D04F34 /* NSDictionary+AvoidCrash.m */; };
+		E6E89D1E2212A08A00D04F34 /* NSMutableDictionary+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E89D0A2212A08A00D04F34 /* NSMutableDictionary+AvoidCrash.m */; };
+		E6E89D1F2212A08A00D04F34 /* NSMutableString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E89D0C2212A08A00D04F34 /* NSMutableString+AvoidCrash.m */; };
+		E6E89D202212A08A00D04F34 /* NSObject+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E89D0D2212A08A00D04F34 /* NSObject+AvoidCrash.m */; };
+		E6E89D212212A08A00D04F34 /* NSMutableArray+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E89D0E2212A08A00D04F34 /* NSMutableArray+AvoidCrash.m */; };
+		E6E89D222212A08A00D04F34 /* NSMutableAttributedString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E89D0F2212A08A00D04F34 /* NSMutableAttributedString+AvoidCrash.m */; };
+		E6E89D232212A08A00D04F34 /* NSAttributedString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E89D102212A08A00D04F34 /* NSAttributedString+AvoidCrash.m */; };
+		E6E89D242212A08A00D04F34 /* AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E89D132212A08A00D04F34 /* AvoidCrash.m */; };
+		E6E89D252212A08A00D04F34 /* AvoidCrashStubProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E89D162212A08A00D04F34 /* AvoidCrashStubProxy.m */; };
 		E6F14A2921E5CEE100631005 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A2821E5CEE100631005 /* CFNetwork.framework */; };
 		E6F14A2B21E5CEED00631005 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A2A21E5CEED00631005 /* CoreFoundation.framework */; };
 		E6F14A2D21E5CEFA00631005 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F14A2C21E5CEFA00631005 /* CoreTelephony.framework */; };
@@ -770,6 +784,12 @@
 		E66F1CB421D3569000C2DEEF /* HPHotShareStoreCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHotShareStoreCell.m; sourceTree = "<group>"; };
 		E66F1CB621D3625D00C2DEEF /* HPHotImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHotImageView.h; sourceTree = "<group>"; };
 		E66F1CB721D3625D00C2DEEF /* HPHotImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHotImageView.m; sourceTree = "<group>"; };
+		E66F28BA22003054000E0206 /* HUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUD.h; sourceTree = "<group>"; };
+		E66F28BB22003054000E0206 /* GetCurrentViewcontroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetCurrentViewcontroller.m; sourceTree = "<group>"; };
+		E66F28BC22003054000E0206 /* HUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HUD.m; sourceTree = "<group>"; };
+		E66F28BD22003054000E0206 /* GetCurrentViewcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetCurrentViewcontroller.h; sourceTree = "<group>"; };
+		E66F28C022003162000E0206 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
+		E66F28C122003163000E0206 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
 		E677C7C921FAA1910099E2C9 /* HPMenuItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPMenuItemCell.h; sourceTree = "<group>"; };
 		E677C7CA21FAA1910099E2C9 /* HPMenuItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPMenuItemCell.m; sourceTree = "<group>"; };
 		E677C7D221FABE950099E2C9 /* HPAreaItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaItemView.h; sourceTree = "<group>"; };
@@ -1078,6 +1098,29 @@
 		E6D75F8721B68A4D00B2067C /* HPCustomerServiceModalView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCustomerServiceModalView.m; sourceTree = "<group>"; };
 		E6D75F8921B69D0D00B2067C /* HPShareMapController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareMapController.h; sourceTree = "<group>"; };
 		E6D75F8A21B69D0D00B2067C /* HPShareMapController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareMapController.m; sourceTree = "<group>"; };
+		E6E89D042212A08A00D04F34 /* NSArray+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+AvoidCrash.m"; sourceTree = "<group>"; };
+		E6E89D052212A08A00D04F34 /* AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvoidCrash.h; sourceTree = "<group>"; };
+		E6E89D062212A08A00D04F34 /* NSString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+AvoidCrash.m"; sourceTree = "<group>"; };
+		E6E89D072212A08A00D04F34 /* NSDictionary+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+AvoidCrash.m"; sourceTree = "<group>"; };
+		E6E89D082212A08A00D04F34 /* NSAttributedString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+AvoidCrash.h"; sourceTree = "<group>"; };
+		E6E89D092212A08A00D04F34 /* AvoidCrashStubProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvoidCrashStubProxy.h; sourceTree = "<group>"; };
+		E6E89D0A2212A08A00D04F34 /* NSMutableDictionary+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+AvoidCrash.m"; sourceTree = "<group>"; };
+		E6E89D0B2212A08A00D04F34 /* AvoidCrashProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvoidCrashProtocol.h; sourceTree = "<group>"; };
+		E6E89D0C2212A08A00D04F34 /* NSMutableString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString+AvoidCrash.m"; sourceTree = "<group>"; };
+		E6E89D0D2212A08A00D04F34 /* NSObject+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+AvoidCrash.m"; sourceTree = "<group>"; };
+		E6E89D0E2212A08A00D04F34 /* NSMutableArray+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+AvoidCrash.m"; sourceTree = "<group>"; };
+		E6E89D0F2212A08A00D04F34 /* NSMutableAttributedString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+AvoidCrash.m"; sourceTree = "<group>"; };
+		E6E89D102212A08A00D04F34 /* NSAttributedString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+AvoidCrash.m"; sourceTree = "<group>"; };
+		E6E89D112212A08A00D04F34 /* NSDictionary+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+AvoidCrash.h"; sourceTree = "<group>"; };
+		E6E89D122212A08A00D04F34 /* NSString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+AvoidCrash.h"; sourceTree = "<group>"; };
+		E6E89D132212A08A00D04F34 /* AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvoidCrash.m; sourceTree = "<group>"; };
+		E6E89D142212A08A00D04F34 /* NSArray+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+AvoidCrash.h"; sourceTree = "<group>"; };
+		E6E89D152212A08A00D04F34 /* NSMutableDictionary+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+AvoidCrash.h"; sourceTree = "<group>"; };
+		E6E89D162212A08A00D04F34 /* AvoidCrashStubProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvoidCrashStubProxy.m; sourceTree = "<group>"; };
+		E6E89D172212A08A00D04F34 /* NSObject+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+AvoidCrash.h"; sourceTree = "<group>"; };
+		E6E89D182212A08A00D04F34 /* NSMutableString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+AvoidCrash.h"; sourceTree = "<group>"; };
+		E6E89D192212A08A00D04F34 /* NSMutableAttributedString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+AvoidCrash.h"; sourceTree = "<group>"; };
+		E6E89D1A2212A08A00D04F34 /* NSMutableArray+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+AvoidCrash.h"; sourceTree = "<group>"; };
 		E6F14A2821E5CEE100631005 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		E6F14A2A21E5CEED00631005 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		E6F14A2C21E5CEFA00631005 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -2029,6 +2072,8 @@
 		E661B0FB21A28D7F00C86CF5 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				E6E89D032212A08A00D04F34 /* AvoidCrash */,
+				E66F28B622002E8D000E0206 /* Hud */,
 				E620646921DF81BA00E37568 /* LEEAlert */,
 				E6B4CECC21C5286E00429C11 /* SDCycleScrollView */,
 				E622A9AF21C33989007C35BC /* YYLrefresh */,
@@ -2119,6 +2164,19 @@
 				E661B14921A6986B00C86CF5 /* StyledPageControl.m */,
 			);
 			path = StyledPageControl;
+			sourceTree = "<group>";
+		};
+		E66F28B622002E8D000E0206 /* Hud */ = {
+			isa = PBXGroup;
+			children = (
+				E66F28C022003162000E0206 /* UIView+Toast.h */,
+				E66F28C122003163000E0206 /* UIView+Toast.m */,
+				E66F28BD22003054000E0206 /* GetCurrentViewcontroller.h */,
+				E66F28BB22003054000E0206 /* GetCurrentViewcontroller.m */,
+				E66F28BA22003054000E0206 /* HUD.h */,
+				E66F28BC22003054000E0206 /* HUD.m */,
+			);
+			path = Hud;
 			sourceTree = "<group>";
 		};
 		E677C7CC21FAB4BA0099E2C9 /* ShareStoreInStore */ = {
@@ -2728,6 +2786,36 @@
 			path = Base;
 			sourceTree = "<group>";
 		};
+		E6E89D032212A08A00D04F34 /* AvoidCrash */ = {
+			isa = PBXGroup;
+			children = (
+				E6E89D042212A08A00D04F34 /* NSArray+AvoidCrash.m */,
+				E6E89D052212A08A00D04F34 /* AvoidCrash.h */,
+				E6E89D062212A08A00D04F34 /* NSString+AvoidCrash.m */,
+				E6E89D072212A08A00D04F34 /* NSDictionary+AvoidCrash.m */,
+				E6E89D082212A08A00D04F34 /* NSAttributedString+AvoidCrash.h */,
+				E6E89D092212A08A00D04F34 /* AvoidCrashStubProxy.h */,
+				E6E89D0A2212A08A00D04F34 /* NSMutableDictionary+AvoidCrash.m */,
+				E6E89D0B2212A08A00D04F34 /* AvoidCrashProtocol.h */,
+				E6E89D0C2212A08A00D04F34 /* NSMutableString+AvoidCrash.m */,
+				E6E89D0D2212A08A00D04F34 /* NSObject+AvoidCrash.m */,
+				E6E89D0E2212A08A00D04F34 /* NSMutableArray+AvoidCrash.m */,
+				E6E89D0F2212A08A00D04F34 /* NSMutableAttributedString+AvoidCrash.m */,
+				E6E89D102212A08A00D04F34 /* NSAttributedString+AvoidCrash.m */,
+				E6E89D112212A08A00D04F34 /* NSDictionary+AvoidCrash.h */,
+				E6E89D122212A08A00D04F34 /* NSString+AvoidCrash.h */,
+				E6E89D132212A08A00D04F34 /* AvoidCrash.m */,
+				E6E89D142212A08A00D04F34 /* NSArray+AvoidCrash.h */,
+				E6E89D152212A08A00D04F34 /* NSMutableDictionary+AvoidCrash.h */,
+				E6E89D162212A08A00D04F34 /* AvoidCrashStubProxy.m */,
+				E6E89D172212A08A00D04F34 /* NSObject+AvoidCrash.h */,
+				E6E89D182212A08A00D04F34 /* NSMutableString+AvoidCrash.h */,
+				E6E89D192212A08A00D04F34 /* NSMutableAttributedString+AvoidCrash.h */,
+				E6E89D1A2212A08A00D04F34 /* NSMutableArray+AvoidCrash.h */,
+			);
+			path = AvoidCrash;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -3039,6 +3127,7 @@
 				E654C7DE21BFE58E0066C506 /* HPFansListModel.m in Sources */,
 				E68A77DF21F321BD00083A90 /* JCHATPhotoBrowserCollectionViewCell.m in Sources */,
 				E622A9BD21C33989007C35BC /* YYLRefreshNoDataView.m in Sources */,
+				E6E89D212212A08A00D04F34 /* NSMutableArray+AvoidCrash.m in Sources */,
 				E68A76FD21F2D2F200083A90 /* JCHATFileManager.m in Sources */,
 				E681447221F067890052A93F /* HPSingleton.m in Sources */,
 				E661B12921A28E8500C86CF5 /* JTVerticalCalendarView.m in Sources */,
@@ -3103,6 +3192,7 @@
 				E68A76CE21F2C84200083A90 /* JCHATChatTable.m in Sources */,
 				E68DDE0921EDBABA00742D49 /* ClusterTableViewCell.m in Sources */,
 				E68A76D421F2C9C600083A90 /* ViewUtil.m in Sources */,
+				E6E89D1B2212A08A00D04F34 /* NSArray+AvoidCrash.m in Sources */,
 				E68A76BA21F2C6D100083A90 /* JCHATLoadMessageTableViewCell.m in Sources */,
 				E68A77DE21F321BD00083A90 /* JCHATAlbumTableViewCell.m in Sources */,
 				E68A771021F2FC1100083A90 /* XHVoiceCommonHelper.m in Sources */,
@@ -3128,6 +3218,7 @@
 				E68A780E21F327A000083A90 /* JCHATFootTableCollectionReusableView.m in Sources */,
 				E6D75F5C21B119BC00B2067C /* HPBaseShareListController.m in Sources */,
 				E6D75F3621AE250300B2067C /* HPKeepController.m in Sources */,
+				E6E89D232212A08A00D04F34 /* NSAttributedString+AvoidCrash.m in Sources */,
 				E61B5EB421CCB7F100DC8A59 /* HPJudgingLoginView.m in Sources */,
 				7A54485A21C16A48001301F3 /* HPPartyCenterModel.m in Sources */,
 				E6BC6001220153FC0075C744 /* HPHomeBannerView.m in Sources */,
@@ -3136,7 +3227,9 @@
 				E63352A321F1C99300999BE7 /* PPGetAddressBook.m in Sources */,
 				E6D75F7921B54E7900B2067C /* HPShareShopListController.m in Sources */,
 				E68A76DA21F2CBFD00083A90 /* JCHATSelectFriendsCtl.m in Sources */,
+				E6E89D222212A08A00D04F34 /* NSMutableAttributedString+AvoidCrash.m in Sources */,
 				69165D0021C355E500593D25 /* HPImagePager.m in Sources */,
+				E6E89D1D2212A08A00D04F34 /* NSDictionary+AvoidCrash.m in Sources */,
 				E6B4CECB21C51A4400429C11 /* HPGuideViewController.m in Sources */,
 				69165CFD21C2625300593D25 /* HPTagView.m in Sources */,
 				E68A771A21F2FCA000083A90 /* NSDate+Utilities.m in Sources */,
@@ -3157,6 +3250,7 @@
 				E68A772421F31A6200083A90 /* JCHATConversationViewController.m in Sources */,
 				E68DDE0C21EDCEE400742D49 /* HPPoiDetailViewController.m in Sources */,
 				E66F1CB521D3569000C2DEEF /* HPHotShareStoreCell.m in Sources */,
+				E6E89D252212A08A00D04F34 /* AvoidCrashStubProxy.m in Sources */,
 				E68A77E221F321BD00083A90 /* JCHATSelectImgCollectionView.m in Sources */,
 				E661B0B3219C2B1300C86CF5 /* HPTextDialogView.m in Sources */,
 				E661B09A219BADB200C86CF5 /* HPInteractiveController.m in Sources */,
@@ -3194,6 +3288,7 @@
 				6993AD4C21CE97D40019506C /* HPShareTempGoodsController.m in Sources */,
 				6993AD2B21C688B30019506C /* HPSubTableView.m in Sources */,
 				E68A77FA21F3226D00083A90 /* JCHATGroupSettingCtl.m in Sources */,
+				E6E89D1F2212A08A00D04F34 /* NSMutableString+AvoidCrash.m in Sources */,
 				E68A76B021F2C6D100083A90 /* JCHATSelectFriendCell.m in Sources */,
 				E61F710D21C1328400932708 /* HPSystemNotiModel.m in Sources */,
 				E68A781321F327DB00083A90 /* JCHATFootTableViewCell.m in Sources */,
@@ -3208,11 +3303,13 @@
 				E661B13D21A3DFD600C86CF5 /* HPReleaseModalView.m in Sources */,
 				E677C7CB21FAA1910099E2C9 /* HPMenuItemCell.m in Sources */,
 				E661B12C21A28E8500C86CF5 /* JTCalendarWeekView.m in Sources */,
+				E6E89D1E2212A08A00D04F34 /* NSMutableDictionary+AvoidCrash.m in Sources */,
 				E6B4CEDE21C5286F00429C11 /* SDCollectionViewCell.m in Sources */,
 				E61B5EC721CCF70800DC8A59 /* CDZPicker.m in Sources */,
 				E68A76FE21F2D2F200083A90 /* JCHATAlertToSendImage.m in Sources */,
 				E68A772A21F31B9F00083A90 /* JCHATToolBar.m in Sources */,
 				E68A77C121F321BD00083A90 /* ChatImageBubble.m in Sources */,
+				E66F28BE22003054000E0206 /* GetCurrentViewcontroller.m in Sources */,
 				E661B12621A28E8500C86CF5 /* JTCalendarScrollManager.m in Sources */,
 				E6D75F1E21ABEAB900B2067C /* HPIdeaExampleItem.m in Sources */,
 				E661B0DC219D49D000C86CF5 /* HPStartUpCardDefineController.m in Sources */,
@@ -3239,10 +3336,12 @@
 				E68A77DA21F321BD00083A90 /* JCHATPhotoSelectViewController.m in Sources */,
 				E622A9BF21C33989007C35BC /* YYLRefreshNoNetworkView.m in Sources */,
 				E68A76DD21F2CFB100083A90 /* JCHATMessageContentView.m in Sources */,
+				E66F28C222003163000E0206 /* UIView+Toast.m in Sources */,
 				E6B4CEDF21C5286F00429C11 /* TADotView.m in Sources */,
 				69165CC621BDFB4100593D25 /* HPBaseReleaseController.m in Sources */,
 				7AAFF3C521EA3ACF0049D175 /* HPIdeaDetailViewController.m in Sources */,
 				69165D0B21C4AC5D00593D25 /* HPSortSelectModalView.m in Sources */,
+				E6E89D202212A08A00D04F34 /* NSObject+AvoidCrash.m in Sources */,
 				7A54485D21C16BF3001301F3 /* HPPartyCenterCell.m in Sources */,
 				E661B12821A28E8500C86CF5 /* JTCalendarManager.m in Sources */,
 				E6D75F8221B646B000B2067C /* HPShareManageController.m in Sources */,
@@ -3254,6 +3353,7 @@
 				7AAFF36521CD2EC20049D175 /* HPTimeRentView.m in Sources */,
 				E6B4CEDD21C5286F00429C11 /* UIView+SDExtension.m in Sources */,
 				69165CD421BF69C700593D25 /* HPIndustryModel.m in Sources */,
+				E66F28BF22003054000E0206 /* HUD.m in Sources */,
 				E61CB23D21C772460076540E /* HPMyCardController.m in Sources */,
 				69165CEA21C0D0E500593D25 /* HPAddressModel.m in Sources */,
 				E661B0DF219D4C8E00C86CF5 /* HPLinkageData.m in Sources */,
@@ -3290,11 +3390,13 @@
 				E68A77B921F321BD00083A90 /* MJPhotoView.m in Sources */,
 				E6F551E121B911DF0086094F /* HPInterActiveModel.m in Sources */,
 				E61E27A421C8D68000CD5288 /* EBBannerViewMaker.m in Sources */,
+				E6E89D242212A08A00D04F34 /* AvoidCrash.m in Sources */,
 				E68C856D21E9ED9400AF259C /* HPIdeaListCell.m in Sources */,
 				E63C73F421EED2D7003D35E0 /* HPHomeBannerModel.m in Sources */,
 				E6B8987521D0D53900FD443B /* HPStoreLeavesViewController.m in Sources */,
 				E6D75F8521B65AAD00B2067C /* HPFeedbackController.m in Sources */,
 				E61E27AD21C8D68000CD5288 /* EBBannerViewController.m in Sources */,
+				E6E89D1C2212A08A00D04F34 /* NSString+AvoidCrash.m in Sources */,
 				E68A76B721F2C6D100083A90 /* JCHATGroupSettingCell.m in Sources */,
 				6993AD2721C685470019506C /* HPParentScrollView.m in Sources */,
 				E6D75F6721B230FC00B2067C /* HPPageControlFactory.m in Sources */,
