@@ -16,6 +16,7 @@
 #import "HPImageUtil.h"
 #import "JCHATConversationListViewController.h"
 #import "HPNavGationViewController.h"
+#import "JCHATStringUtils.h"
 
 #define JCHATMAINTHREAD(block) dispatch_async(dispatch_get_main_queue(), block)
 #define kDBMigrateFinishNotification @"DBMigrateFinishNotification"
@@ -415,17 +416,17 @@ static NSString *conversationListCell = @"conversationListCell";
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (iPhone5) {
-        if (indexPath.section == 1) {
-            return kScreenHeight - g_navigationBarHeight - g_tabBarHeight - 20.f * g_rateWidth - 120.f * g_rateWidth;
-        }else{
-            return 60.f;
-        }
-    }else{
-        if (indexPath.section == 1) {
-            return 75.f * g_rateWidth;
-        }
-    }
+//    if (iPhone5) {
+//        if (indexPath.section == 1) {
+//            return kScreenHeight - g_navigationBarHeight - g_tabBarHeight - 20.f * g_rateWidth - 120.f * g_rateWidth;
+//        }else{
+//            return 60.f;
+//        }
+//    }else{
+//        if (indexPath.section == 1) {
+//            return 75.f * g_rateWidth;
+//        }
+//    }
     return 75.f * g_rateWidth;
 }
 
@@ -466,11 +467,65 @@ static NSString *conversationListCell = @"conversationListCell";
     }
     
     if (indexPath.section == 1) {
-        JCHATConversationListViewController *listvc = [JCHATConversationListViewController new];
-        HPNavGationViewController *nav = [[HPNavGationViewController alloc] initWithRootViewController:listvc];
-        self.isPop = YES;
-        [self.navigationController presentViewController:nav animated:NO completion:NULL];
+        
+        
+        //登录极光IM
+        [self loginJMessage];
+        
     }
+}
+
+
+#pragma mark - 登录im
+- (void)loginJMessage
+{
+    HPLoginModel *account = [HPUserTool account];
+    if (!account.token) {
+        [HPProgressHUD alertMessage:@"请登录"];
+        return;
+    }
+    NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
+
+    [JMSGUser loginWithUsername:imAccount password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
+        if (!error) {
+            //登录成功
+            
+            JCHATConversationListViewController *listvc = [JCHATConversationListViewController new];
+            HPNavGationViewController *nav = [[HPNavGationViewController alloc] initWithRootViewController:listvc];
+            self.isPop = YES;
+            [self.navigationController presentViewController:nav animated:NO completion:NULL];
+        } else {
+            //登录失败
+            NSString * errorStr = [JCHATStringUtils errorAlert:error];
+            if ([errorStr isEqualToString:@"用户名不合法"]||[errorStr isEqualToString:@"用户名还没有被注册过"]) {
+                HPLog(@"登录极光失败");
+
+                [self regiestJMessage];
+            }
+        }
+    }];
+}
+
+#pragma mark - 注册im
+- (void)regiestJMessage
+{
+    HPLoginModel *account = [HPUserTool account];
+    JMSGUserInfo *userInfo = [JMSGUserInfo new];
+    userInfo.nickname = account.userInfo.username;
+    userInfo.signature = account.cardInfo.signature;
+    NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
+    kWEAKSELF
+    [JMSGUser registerWithUsername:imAccount password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
+        if (!error) {
+            //极光注册成功
+            [kUserDefaults setObject:@"aaa123" forKey:@"password"];
+            [kUserDefaults synchronize];
+            [weakSelf loginJMessage];
+        } else {
+            //极光注册失败
+            [HPProgressHUD alertMessage:@"注册极光失败"];
+        }
+    }];
 }
 
 #pragma mark - TouchTableViewDelegate

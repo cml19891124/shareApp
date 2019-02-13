@@ -294,10 +294,10 @@
     JMSGUserInfo *userInfo = [JMSGUserInfo new];
     userInfo.nickname = account.userInfo.username;
     userInfo.signature = account.cardInfo.signature;
-    [JMSGUser registerWithUsername:account.userInfo.username password:self.passwordTextField.text completionHandler:^(id resultObject, NSError *error) {
+    [JMSGUser registerWithUsername:account.userInfo.username password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
         if (!error) {
             //极光注册成功
-            [kUserDefaults setObject:self.passwordTextField.text forKey:@"password"];
+            [kUserDefaults setObject:@"aaa123" forKey:@"password"];
             [kUserDefaults synchronize];
         } else {
             //极光注册失败

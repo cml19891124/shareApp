@@ -67,9 +67,9 @@
 
     HPLoginModel *account = [HPUserTool account];
     //登录极光
-//    if (account.token) {
+    if (account.token) {
         [self loginJMessage];
-//    }
+    }
 }
 - (void)dealloc
 {
@@ -649,20 +649,17 @@
     JMSGUserInfo *userInfo = [JMSGUserInfo new];
     userInfo.nickname = account.userInfo.username;
     userInfo.signature = account.cardInfo.signature;
-    NSString *password = [kUserDefaults objectForKey:@"password"]?:@"aaa123";
-    if (!password) {
-//        [HPProgressHUD alertMessage:@"请注册极光"];
-        [self gotoRegiestIM];
-        return;
-    }
-    [JMSGUser loginWithUsername:userInfo.nickname password:password completionHandler:^(id resultObject, NSError *error) {
+    NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
+
+    [JMSGUser loginWithUsername:imAccount password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
         if (!error) {
             //登录成功
-            //            [HPProgressHUD alertMessage:@"登录极光IM成功！"];
-        } else {
-            //登录失败
-            [HPProgressHUD alertMessage:[JCHATStringUtils errorAlert:error]];
             
+        } else {
+            NSString * errorStr = [JCHATStringUtils errorAlert:error];
+            if ([errorStr isEqualToString:@"用户名不合法"]||[errorStr isEqualToString:@"用户名还没有被注册过"]) {
+                [self regiestJMessage];
+            }
         }
     }];
 }
@@ -672,22 +669,23 @@
  */
 -(void)gotoRegiestIM
 {
-    if (_textDialogView == nil) {
-        HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
-        [textDialogView setText:@"前往注册极光"];
-        [textDialogView setModalTop:279.f * g_rateHeight];
-        [textDialogView setCanecelBtnTitle:@"暂不注册"];
-        [textDialogView setConfirmBtnTitle:@"前往注册"];
-        _textDialogView = textDialogView;
-    }
-    
-    kWEAKSELF
-    [_textDialogView setConfirmCallback:^{
-        // 此处加入注册极光的api
-        [weakSelf regiestJMessage];
-    }];
-
-    [_textDialogView show:YES];
+//    if (_textDialogView == nil) {
+//        HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
+//        [textDialogView setText:@"前往注册极光"];
+//        [textDialogView setModalTop:279.f * g_rateHeight];
+//        [textDialogView setCanecelBtnTitle:@"暂不注册"];
+//        [textDialogView setConfirmBtnTitle:@"前往注册"];
+//        _textDialogView = textDialogView;
+//    }
+//
+//    kWEAKSELF
+//    [_textDialogView setConfirmCallback:^{
+//        // 此处加入注册极光的api
+//        [weakSelf regiestJMessage];
+//    }];
+//
+//    [_textDialogView show:YES];
+    [self regiestJMessage];
 }
 
 #pragma mark - 注册im
@@ -697,8 +695,10 @@
     JMSGUserInfo *userInfo = [JMSGUserInfo new];
     userInfo.nickname = account.userInfo.username;
     userInfo.signature = account.cardInfo.signature;
+    NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
+
     kWEAKSELF
-    [JMSGUser registerWithUsername:account.userInfo.username password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
+    [JMSGUser registerWithUsername:imAccount password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
         if (!error) {
             //极光注册成功
             [kUserDefaults setObject:@"aaa123" forKey:@"password"];
