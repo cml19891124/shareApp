@@ -26,7 +26,7 @@ static MBProgressHUD *Hud = nil;
             Hud.label.text = message;
     Hud.removeFromSuperViewOnHide = YES;
     Hud.bezelView.color = [UIColor whiteColor];
-    Hud.bezelView.color = COLOR(0, 0, 0, 0.8);
+    Hud.bezelView.color = COLOR(0, 0, 0, 0.4);
         });
 }
 
@@ -62,7 +62,7 @@ static MBProgressHUD *Hud = nil;
         HUD.label.text = message;
         HUD.removeFromSuperViewOnHide = YES;
         HUD.bezelView.color = [UIColor whiteColor];
-        HUD.bezelView.color = COLOR(0, 0, 0, 0.9);
+        HUD.bezelView.color = COLOR(0, 0, 0, 0.4);
         [Hud hideAnimated:YES afterDelay:1];
     });
     
@@ -85,7 +85,7 @@ static MBProgressHUD *Hud = nil;
         HUD.label.text = message;
         HUD.removeFromSuperViewOnHide = YES;
         HUD.bezelView.color = [UIColor whiteColor];
-        HUD.bezelView.color = COLOR(0, 0, 0, 0.9);
+        HUD.bezelView.color = COLOR(0, 0, 0, 0.4);
         [HUD hideAnimated:YES afterDelay:delay];
         
     });
@@ -101,7 +101,7 @@ static MBProgressHUD *Hud = nil;
         HUD.label.text = message;
         HUD.removeFromSuperViewOnHide = YES;
         HUD.bezelView.color = [UIColor whiteColor];
-        HUD.bezelView.color = COLOR(0, 0, 0, 0.9);
+        HUD.bezelView.color = COLOR(0, 0, 0, 0.4);
         [HUD hideAnimated:YES afterDelay:1];
         
     });
@@ -115,7 +115,7 @@ static MBProgressHUD *Hud = nil;
         HUD.label.text = message;
         HUD.removeFromSuperViewOnHide = YES;
         HUD.bezelView.color = [UIColor whiteColor];
-        HUD.bezelView.color = COLOR(0, 0, 0, 0.9);
+        HUD.bezelView.color = COLOR(0, 0, 0, 0.4);
         [Hud hideAnimated:YES afterDelay:1];
 
     });
