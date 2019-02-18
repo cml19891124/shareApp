@@ -49,6 +49,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if (self.isPop) {
+        [self getCollectionsListDataReload:YES];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -97,6 +100,8 @@
             HPCollectListModel *collectListModel = [HPCollectListModel mj_objectWithKeyValues:DATA];
             
             if (collectListModel.total == 0) {
+                self.tableView.refreshNoDataView.hidden = NO;
+
                 self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
                 self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_collect");
                 self.tableView.refreshNoDataView.tipLabel.text = @"收藏夹孤单很久了，快去逛逛吧！";
@@ -106,7 +111,8 @@
                 if (collectListModel.list.count < collectListModel.pageSize) {
                     [self.tableView.mj_footer endRefreshingWithNoMoreData];
                 }
-                
+                self.tableView.refreshNoDataView.hidden = YES;
+
                 if (isReload) {
                     [self.dataArray removeAllObjects];
                 }
@@ -114,7 +120,6 @@
                 NSArray<HPShareListModel *> *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:collectListModel.list];
                 [self.dataArray addObjectsFromArray:models];
             }
-            
             [self.tableView reloadData];
         }else{
             [HPProgressHUD alertMessage:MSG];
@@ -240,9 +245,9 @@
             [kAppdelegateWindow addSubview:view];
             _bottomDeleteView = view;
             [view mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.equalTo(self.view).with.offset(- g_bottomSafeAreaHeight);
+                make.top.equalTo(self.view).with.offset(kScreenHeight - g_bottomSafeAreaHeight - getWidth(55.f));
                 make.left.and.width.equalTo(self.view);
-                make.height.mas_equalTo(55.f * g_rateWidth);
+                make.height.mas_equalTo(55.f * g_rateWidth + g_bottomSafeAreaHeight);
             }];
             
             UIImage *normalImage = [HPImageUtil getRectangleByStrokeColor:COLOR_GRAY_BCC1CF fillColor:UIColor.whiteColor borderWidth:1.f cornerRadius:10.f inRect:CGRectMake(0.f, 0.f, 19.f, 19.f)];
@@ -258,7 +263,7 @@
             _allCheckBtn = allCheckBtn;
             [allCheckBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(view).with.offset(30.f * g_rateWidth);
-                make.centerY.equalTo(view);
+                make.centerY.equalTo(view).offset(getWidth(-g_bottomSafeAreaHeight/2));
             }];
             
             UIButton *deleteBtn = [[UIButton alloc] init];
@@ -271,7 +276,7 @@
             [view addSubview:deleteBtn];
             [deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.right.equalTo(view).with.offset(-20.f * g_rateWidth);
-                make.centerY.equalTo(view);
+                make.centerY.equalTo(view).offset(getWidth(-g_bottomSafeAreaHeight/2));
                 make.size.mas_equalTo(CGSizeMake(90.f, 35.f));
             }];
             
@@ -279,6 +284,7 @@
         }
         
         [_bottomDeleteView setHidden:NO];
+
     }
     else {
         [_editBtn setImage:[UIImage imageNamed:@"collection_edit"] forState:UIControlStateNormal];
@@ -289,6 +295,7 @@
         [_bottomDeleteView setHidden:YES];
         [self setAllCellChecked:NO];
         [_allCheckBtn setSelected:NO];
+
     }
 }
 
@@ -328,6 +335,9 @@
                     if (weakSelf.dataArray.count == 0) {
                         [weakSelf.allCheckBtn setSelected:NO];
                     }
+                    
+                    [self getCollectionsListDataReload:NO];
+
                 }else{
                     [HPProgressHUD alertMessage:MSG];
                 }

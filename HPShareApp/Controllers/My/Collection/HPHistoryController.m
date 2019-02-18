@@ -14,8 +14,12 @@
 #import "HPCollectListModel.h"
 #import "HPShareListParam.h"
 #import "HPHistoryListData.h"
+#import "HPImageUtil.h"
+#import "HPTextDialogView.h"
 
 @interface HPHistoryController () <YYLRefreshNoDataViewDelegate>
+
+@property (nonatomic, weak) UIButton *editBtn;
 
 @property (nonatomic, strong) JTDateHelper *dateHelper;
 
@@ -27,6 +31,13 @@
 
 @property (nonatomic, strong) NSMutableArray<HPHistoryListData *> *histroyDataList;
 
+@property (nonatomic, weak) UIView *bottomDeleteView;
+
+@property (nonatomic, assign) BOOL isEdited;
+
+@property (nonatomic, weak) UIButton *allCheckBtn;
+
+@property (nonatomic, weak) HPTextDialogView *textDialogView;
 @end
 
 @implementation HPHistoryController
@@ -41,6 +52,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _isEdited = NO;
     
     _dateHelper = [[JTDateHelper alloc] initWithLocale:[NSLocale currentLocale] andTimeZone:[NSTimeZone localTimeZone]];
     _dateFormatter = [_dateHelper createDateFormatter];
@@ -54,6 +66,19 @@
     _histroyDataList = [[NSMutableArray alloc] init];
     
     [self setupUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self getBrowseListDataReload:YES];
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [_bottomDeleteView removeFromSuperview];
 }
 
 #pragma mark - 上下啦刷新控件
@@ -95,6 +120,8 @@
             
             HPCollectListModel *collectListModel = [HPCollectListModel mj_objectWithKeyValues:DATA];
             if (collectListModel.total == 0) {
+                self.tableView.refreshNoDataView.hidden = NO;
+
                 self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
                 self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"empty_list_history");
                 self.tableView.refreshNoDataView.tipLabel.text = @"历史足迹啥都没有，快去逛逛吧！";
@@ -104,7 +131,8 @@
                 if (collectListModel.list.count < collectListModel.pageSize) {
                     [self.tableView.mj_footer endRefreshingWithNoMoreData];
                 }
-                
+                self.tableView.refreshNoDataView.hidden = YES;
+
                 if (isReload) {
                     [self.histroyDataList removeAllObjects];
                 }
@@ -126,19 +154,26 @@
     }];
     
 }
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
     UIView *navigationView = [self setupNavigationBarWithTitle:@"浏览历史"];
+    
+    UIButton *editBtn = [[UIButton alloc] init];
+    [editBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
+    [editBtn setTitleColor:UIColor.whiteColor forState:UIControlStateSelected];
+    [editBtn setImage:[UIImage imageNamed:@"collection_edit"] forState:UIControlStateNormal];
+    [editBtn setTitle:@"完成" forState:UIControlStateSelected];
+    [editBtn addTarget:self action:@selector(onClickEditBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [editBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+    [editBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, -20.f * g_rateWidth, 0.f, 20.f * g_rateWidth)];
+    [editBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -20.f * g_rateWidth, 0.f, 20.f * g_rateWidth)];
+    [navigationView addSubview:editBtn];
+    _editBtn = editBtn;
+    [editBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.and.bottom.and.right.equalTo(navigationView);
+        make.width.mas_equalTo(40.f);
+    }];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectNull style:UITableViewStyleGrouped];;
     [tableView setBackgroundColor:UIColor.clearColor];
@@ -235,7 +270,33 @@
     HPShareListModel *model = data.items[indexPath.row];
     [cell setModel:model];
     
+    [cell setCheckEnabled:_isEdited];
+    [cell setChecked:model.selected];
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (!_isEdited) {
+        [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+        return;
+    }
+    
+    HPHistoryListData *data = _histroyDataList[indexPath.section];
+    HPShareListModel *model = data.items[indexPath.row];
+    model.selected = !model.selected;//默认选一种，不可不选
+
+    HPShareListCell *cell = (HPShareListCell *)[tableView cellForRowAtIndexPath:indexPath];
+    [cell setChecked:model.selected];
+    
+    for (HPShareListModel *model in self.dataArray) {
+        if (!model.selected) {
+            [_allCheckBtn setSelected:NO];
+            return;
+        }
+    }
+    
+    [_allCheckBtn setSelected:YES];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -249,6 +310,154 @@
     }
     else
         return 0;
+}
+
+#pragma mark - OnClick
+
+- (void)onClickEditBtn:(UIButton *)btn {
+    if (!_isEdited) {
+        [_editBtn setImage:nil forState:UIControlStateNormal];
+        [_editBtn setSelected:YES];
+        _isEdited = YES;
+        [self.tableView reloadData];
+        
+        if (_bottomDeleteView == nil) {
+            UIView *view = [[UIView alloc] init];
+            [view.layer setShadowColor:COLOR_GRAY_AAAAAA.CGColor];
+            [view.layer setShadowOffset:CGSizeMake(0.f, -2.f)];
+            [view.layer setShadowRadius:12.f];
+            [view.layer setShadowOpacity:0.1f];
+            [view setBackgroundColor:UIColor.whiteColor];
+            [kAppdelegateWindow addSubview:view];
+            _bottomDeleteView = view;
+            [view mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.view).with.offset(kScreenHeight - g_bottomSafeAreaHeight - getWidth(55.f));
+                make.left.and.width.equalTo(self.view);
+                make.height.mas_equalTo(55.f * g_rateWidth + g_bottomSafeAreaHeight);
+            }];
+            
+            UIImage *normalImage = [HPImageUtil getRectangleByStrokeColor:COLOR_GRAY_BCC1CF fillColor:UIColor.whiteColor borderWidth:1.f cornerRadius:10.f inRect:CGRectMake(0.f, 0.f, 19.f, 19.f)];
+            UIButton *allCheckBtn = [[UIButton alloc] init];
+            [allCheckBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
+            [allCheckBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+            [allCheckBtn setImage:normalImage forState:UIControlStateNormal];
+            [allCheckBtn setImage:[UIImage imageNamed:@"collection_selection"] forState:UIControlStateSelected];
+            [allCheckBtn setTitle:@"全选" forState:UIControlStateNormal];
+            [allCheckBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 10.f, 0.f, -10.f)];
+            [allCheckBtn addTarget:self action:@selector(onClickAllCheckBtn:) forControlEvents:UIControlEventTouchUpInside];
+            [view addSubview:allCheckBtn];
+            _allCheckBtn = allCheckBtn;
+            [allCheckBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(view).with.offset(30.f * g_rateWidth);
+                make.centerY.equalTo(view).offset(getWidth(-g_bottomSafeAreaHeight/2));
+            }];
+            
+            UIButton *deleteBtn = [[UIButton alloc] init];
+            [deleteBtn.layer setCornerRadius:18.f];
+            [deleteBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:15.f]];
+            [deleteBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+            [deleteBtn setTitle:@"删除" forState:UIControlStateNormal];
+            [deleteBtn setBackgroundColor:COLOR_RED_FF3C5E];
+            [deleteBtn addTarget:self action:@selector(onClickDeleteBtn:) forControlEvents:UIControlEventTouchUpInside];
+            [view addSubview:deleteBtn];
+            [deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.right.equalTo(view).with.offset(-20.f * g_rateWidth);
+                make.centerY.equalTo(view).offset(getWidth(-g_bottomSafeAreaHeight/2));
+                make.size.mas_equalTo(CGSizeMake(90.f, 35.f));
+            }];
+            
+            _bottomDeleteView = view;
+        }
+        
+        [_bottomDeleteView setHidden:NO];
+    }
+    else {
+        [_editBtn setImage:[UIImage imageNamed:@"collection_edit"] forState:UIControlStateNormal];
+        [_editBtn setSelected:NO];
+        _isEdited = NO;
+        [self.tableView reloadData];
+        
+        [_bottomDeleteView setHidden:YES];
+        [self setAllCellChecked:NO];
+        [_allCheckBtn setSelected:NO];
+    }
+}
+
+- (void)onClickAllCheckBtn:(UIButton *)btn {
+    [self setAllCellChecked:!btn.isSelected];
+    [btn setSelected:!btn.isSelected];
+}
+
+
+#pragma mark - CheckCell
+
+- (void)setAllCellChecked:(BOOL)isChecked {
+    for (HPShareListCell *cell in self.tableView.visibleCells) {
+        [cell setChecked:isChecked];
+    }
+    
+    for (int i = 0; i < self.histroyDataList.count; i ++) {
+        HPHistoryListData *listData = self.histroyDataList[i];
+        for (int j = 0; j < listData.items.count; j++) {
+            HPShareListModel *model = listData.items[j];
+            [model setSelected:isChecked];
+        }
+    }
+}
+
+- (void)onClickDeleteBtn:(UIButton *)btn {
+    if (_textDialogView == nil) {
+        HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
+        [textDialogView setModalTop:279.f * g_rateHeight];
+        [textDialogView setText:@"确定删除这些信息？"];
+        kWeakSelf(weakSelf);
+        
+        [textDialogView setConfirmCallback:^{
+            NSMutableArray *spaceIds = [NSMutableArray array];
+            NSMutableArray *deleteRowIndexPaths = [[NSMutableArray alloc] init];
+            NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+            
+            for (int i = 0; i < weakSelf.histroyDataList.count; i ++) {
+                HPHistoryListData *listData = weakSelf.histroyDataList[i];
+                for (int j = 0; j < listData.items.count; j++) {
+                    HPShareListModel *model = listData.items[j];
+                    if (model.selected) {
+                        [deleteRowIndexPaths addObject:[NSIndexPath indexPathForRow:j inSection:0]];
+                        [indexSet addIndex:j];
+                        [spaceIds addObject:model.spaceId];
+                    }
+                    
+                    if (spaceIds.count == 0 || !spaceIds) {
+                        [HPProgressHUD alertMessage:@"请选择历史记录"];
+                        return ;
+                    }
+                }
+                
+            }
+            
+            
+            [HPHTTPSever HPPostServerWithMethod:@"/v1/browseHistory/cancelHistorys" paraments:@{@"spaceIds":spaceIds} needToken:YES complete:^(id  _Nonnull responseObject) {
+                if (CODE == 200) {
+                    [HPProgressHUD alertMessage:MSG];
+                    
+//                    [weakSelf.dataArray removeObjectsAtIndexes:indexSet];
+//                    [weakSelf.tableView deleteRowsAtIndexPaths:deleteRowIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+                    
+                    if (weakSelf.dataArray.count == 0) {
+                        [weakSelf.allCheckBtn setSelected:NO];
+                    }
+                }else{
+                    [HPProgressHUD alertMessage:MSG];
+                }
+            } Failure:^(NSError * _Nonnull error) {
+                ErrorNet
+            }];
+        }];
+        
+        _textDialogView = textDialogView;
+    }
+    
+    [_textDialogView show:YES];
 }
 
 @end
