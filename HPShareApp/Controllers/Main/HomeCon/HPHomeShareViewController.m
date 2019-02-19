@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, HPDisplaycellIndexpath) {
     HPDisplaycellIndexpathMenu = 50
 };
 
-@interface HPHomeShareViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>
+@interface HPHomeShareViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,HPSearchBarDelegate>
 
 @property (nonatomic, strong) HPMenuOpenStoreView *openView;
 
@@ -230,7 +230,7 @@ static NSString *shareListCell = @"shareListCell";
         _searchBar.layer.shadowOpacity = 1.f;
         _searchBar.layer.shadowOffset = CGSizeMake(0, 2);
         _searchBar.layer.shadowRadius = 17;
-        
+        _searchBar.delegate = self;
     }
     return _searchBar;
 }
@@ -493,4 +493,10 @@ static NSString *shareListCell = @"shareListCell";
     
 }
 
+#pragma mark - searchBar.delegate
+
+- (void)clickTextfieldJumpToSearchResultVC
+{
+    [self pushVCByClassName:@"HPSearchResultViewController"];
+}
 @end

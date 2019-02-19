@@ -178,7 +178,8 @@
                 [self.navigationController popToRootViewControllerAnimated:YES];
             });
         }else{
-            [HPProgressHUD alertMessage:MSG];
+            
+            [HPProgressHUD alertMessage:@"修改失败，请稍后重试"];//只能有汉字
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet

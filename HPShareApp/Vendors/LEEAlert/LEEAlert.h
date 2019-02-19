@@ -71,7 +71,7 @@
 
 /** 关闭 */
 
-+ (void)closeWithCompletionBlock:(void (^)())completionBlock;
++ (void)closeWithCompletionBlock:(void (^)(void))completionBlock;
 
 @end
 
@@ -258,7 +258,7 @@
 @property (nonatomic , assign ) BOOL isClickNotClose;
 
 /** action点击事件回调Block */
-@property (nonatomic , copy ) void (^clickBlock)();
+@property (nonatomic , copy ) void (^clickBlock)(void);
 
 - (void)update;
 

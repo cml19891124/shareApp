@@ -14,6 +14,7 @@ PODS:
   - AFNetworking/Serialization (3.2.1)
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
+  - AlipaySDK-iOS (0.0.1)
   - AMap3DMap (6.3.0):
     - AMapFoundation (~> 1.5)
   - AMapFoundation (1.5.3)
@@ -39,9 +40,11 @@ PODS:
     - SDWebImage/Core (= 4.4.1)
   - SDWebImage/Core (4.4.1)
   - TZImagePickerController (2.1.6)
+  - WechatOpenSDK (1.8.2)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.2.1)
+  - AlipaySDK-iOS
   - AMap3DMap (~> 6.3.0)
   - AMapLocation
   - AMapSearch
@@ -56,10 +59,12 @@ DEPENDENCIES:
   - MJRefresh (~> 3.1.15.3)
   - SDWebImage (~> 4.4.1)
   - TZImagePickerController
+  - WechatOpenSDK
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
+    - AlipaySDK-iOS
     - AMap3DMap
     - AMapFoundation
     - AMapLocation
@@ -76,9 +81,11 @@ SPEC REPOS:
     - MJRefresh
     - SDWebImage
     - TZImagePickerController
+    - WechatOpenSDK
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  AlipaySDK-iOS: 144af370f7665f2d311b5528e2c5d9a6738bf6fd
   AMap3DMap: 1bb48f98ecb46682f145881692e7b06adcd06a93
   AMapFoundation: 58f883c80754c659cf626deb3150936bfe8f1772
   AMapLocation: 55116a2c8956eab7550cbb56e989aa5cdcc424e3
@@ -95,7 +102,8 @@ SPEC CHECKSUMS:
   MJRefresh: b48380ae2b927b46c4ef000de9adb8dc748e1df7
   SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   TZImagePickerController: bc25e933c9d970a622d052f0d4de16202bbcd863
+  WechatOpenSDK: 676feec516a11173eafd1fe64b10d27babf28701
 
-PODFILE CHECKSUM: c5526f0f51fe310207fe4f1619aa522aee64bac3
+PODFILE CHECKSUM: f63125c9426bff3552bd3a1190d61063166552be
 
 COCOAPODS: 1.5.3

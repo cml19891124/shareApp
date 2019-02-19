@@ -11,7 +11,14 @@
 #import "Macro.h"
 #import "HPGlobalVariable.h"
 typedef void(^SearchClickBtnBlock) (NSString *model);
+@protocol HPSearchBarDelegate <NSObject>
 
+/**
+ 点击跳转搜索界面
+ */
+- (void)clickTextfieldJumpToSearchResultVC;
+
+@end
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPSearchBar : UIView<UITextFieldDelegate>
@@ -25,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UITextField *searchField;
 @property (nonatomic, copy) SearchClickBtnBlock searchClickBtnBlock;
 
+@property (nonatomic, weak) id<HPSearchBarDelegate> delegate;
 @end
 
 NS_ASSUME_NONNULL_END

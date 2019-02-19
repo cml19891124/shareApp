@@ -29,7 +29,11 @@
 // 如果需要使用 idfa 功能所需要引入的头文件（可选）
 #import <AdSupport/AdSupport.h>
 
-@interface AppDelegate ()<UNUserNotificationCenterDelegate,JPUSHRegisterDelegate>
+#import "WXApi.h"
+#import <AlipaySDK/AlipaySDK.h>
+#import "WXApiManager.h"
+
+@interface AppDelegate ()<UNUserNotificationCenterDelegate,JPUSHRegisterDelegate,WXApiDelegate>
 @property (nonatomic, weak) HPTextDialogView *textDialogView;
 @property (nonatomic, strong) HPMainTabBarController *mainTabBarController;
 @end
@@ -105,6 +109,8 @@
     //极光推送
     [self setUpJPushAndMessageConfigWithOptions:launchOptions];
     
+    //微信注册
+    [WXApi registerApp:WeiXinKey];
     //注册极光IM
 //    [self regiestJMessage];
     
@@ -316,5 +322,67 @@
 
     // Required, For systems with less than or equal to iOS 6
     [JPUSHService handleRemoteNotification:userInfo];
+}
+
+
+#pragma mark - IOS9.0以后废弃了这两个方法的调用  改用上边这个方法了，请注意、
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    //这里判断是否发起的请求为微信支付，如果是的话，用WXApi的方法调起微信客户端的支付页面（://pay 之前的那串字符串就是你的APPID，）
+    if ([[NSString stringWithFormat:@"%@",url] rangeOfString:[NSString stringWithFormat:@"%@://pay",kAppleId]].location != NSNotFound) {
+        return  [WXApi handleOpenURL:url delegate:self];
+        //不是上面的情况的话，就正常用shareSDK调起相应的分享页面
+    }else{
+        return NO;
+    }
+}
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation
+{
+    
+    //这里判断是否发起的请求为微信支付，如果是的话，用WXApi的方法调起微信客户端的支付页面（://pay 之前的那串字符串就是你的APPID，）
+    if ([[NSString stringWithFormat:@"%@",url] rangeOfString:[NSString stringWithFormat:@"%@://pay",kAppleId]].location != NSNotFound) {
+        return  [WXApi handleOpenURL:url delegate:self];
+    }else
+    {
+        //不是上面的情况的话，就正常用shareSDK调起相应的分享页面
+        return NO;
+    }
+}
+
+// NOTE: 9.0以后使用新API接口
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
+{
+    if ([url.host isEqualToString:@"safepay"]) {
+        // 支付跳转支付宝钱包进行支付，处理支付结果
+        [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:notice_AliPayReturnData object:resultDic];
+        }];
+        
+        // 授权跳转支付宝钱包进行支付，处理支付结果
+        [[AlipaySDK defaultService] processAuth_V2Result:url standbyCallback:^(NSDictionary *resultDic) {
+            HPLog(@"result = %@",resultDic);
+            // 解析 auth code
+            NSString *result = resultDic[@"result"];
+            NSString *authCode = nil;
+            if (result.length>0) {
+                NSArray *resultArr = [result componentsSeparatedByString:@"&"];
+                for (NSString *subResult in resultArr) {
+                    if (subResult.length > 10 && [subResult hasPrefix:@"auth_code="]) {
+                        authCode = [subResult substringFromIndex:10];
+                        break;
+                    }
+                }
+            }
+            HPLog(@"授权结果 authCode = %@", authCode?:@"");
+        }];
+    }
+    
+    if([[url absoluteString] containsString:WeiXinKey]){
+        return [WXApi handleOpenURL:url delegate:[WXApiManager sharedManager]];
+    }
+    return YES;
 }
 @end
