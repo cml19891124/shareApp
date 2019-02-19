@@ -127,7 +127,7 @@
 {
     if (!_hotAreaLabel) {
         _hotAreaLabel = [UILabel new];
-        _hotAreaLabel.frame = kRect((kScreenWidth - getWidth(107.f))/2, getWidth(36.f), getWidth(107.f), getWidth(17.f));
+        _hotAreaLabel.frame = kRect((kScreenWidth - getWidth(137.f))/2, getWidth(36.f), getWidth(137.f), getWidth(17.f));
         _hotAreaLabel.textAlignment = NSTextAlignmentCenter;
         _hotAreaLabel.textColor = COLOR_GRAY_FFFFFF;
         _hotAreaLabel.font = kFont_Bold(17.f);
