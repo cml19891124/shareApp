@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *longitude;
 
+@property (nonatomic, copy) NSString *keywords;//关键字搜索
 @end
 
 NS_ASSUME_NONNULL_END

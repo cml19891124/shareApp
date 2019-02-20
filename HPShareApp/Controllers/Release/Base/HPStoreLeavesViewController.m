@@ -123,16 +123,16 @@
     [testArray addObject:@"长租需要签约"];
     [testArray addObject:@"有意向可实地面聊"];
     
-    CGFloat startX = 10;
-    CGFloat startY = getWidth(15.f);
-    CGFloat buttonHeight = getWidth(25.f);
+    CGFloat startX = 15;
+    CGFloat startY = 0;
+    CGFloat buttonHeight = getWidth(31.f);
     
     for(int i = 0; i < testArray.count; i++)
     {
         UIButton *btn = [[UIButton alloc]init];
-        [btn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_GRAY_F6F6F6] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_GRAY_F1F1F1] forState:UIControlStateNormal];
         [btn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_EA0000] forState:UIControlStateSelected];
-        btn.layer.cornerRadius = 5.f;
+        btn.layer.cornerRadius = 2.f;
         btn.layer.masksToBounds = YES;
         btn.titleLabel.font = kFont_Regular(12.f);
         [btn setTitle:testArray[i] forState:UIControlStateNormal];
@@ -144,7 +144,7 @@
         titleSize.height = 20;
         titleSize.width += 20;
         
-        if(startX + titleSize.width > [UIScreen mainScreen].bounds.size.width - getWidth(41.f)){
+        if(startX + titleSize.width > kScreenWidth - getWidth(41.f)){
             startX = 10;
             startY = startY + buttonHeight + 10;
         }

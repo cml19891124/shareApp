@@ -11,10 +11,11 @@
 #import "HPPageControlFactory.h"
 #import "HPParentScrollView.h"
 #import "HPSubTableView.h"
+#import "AJSearchBar.h"
 
 #define BANNER_SEPARATOR_HEIGHT 150.f * g_rateWidth + 10.f
 
-@interface HPShareShopListController () <HPBannerViewDelegate>
+@interface HPShareShopListController () <HPBannerViewDelegate,SearchDelegate>
 
 @property (nonatomic, weak) UIView *navigationView;
 
@@ -30,6 +31,11 @@
 
 @property (nonatomic, assign) CGFloat headerHeight;
 
+@property (nonatomic, strong) AJSearchBar *searchBar;
+
+@property (nonatomic, strong) UIView *navTitleView;
+
+@property (nonatomic, strong) UIView *filterBar;
 @end
 
 @implementation HPShareShopListController
@@ -39,10 +45,54 @@
     // Do any additional setup after loading the view.
     
     [self setupUI];
+
+}
+
+#pragma mark - 初始化控件
+- (AJSearchBar *)searchBar
+{
+    if (!_searchBar) {
+        _searchBar = [AJSearchBar new];
+    }
+    return _searchBar;
+}
+
+#pragma mark - SearchDelegate
+
+- (void)searchWithStr:(NSString *)text
+{
+    HPLog(@"这里在搜索");
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    if ([self.param.allKeys containsObject:@"text"]) {
+        _bannerView.hidden = YES;
+        self.shareListParam.keywords = self.param[@"text"];
+        self.shareListParam.page = 1;
+        self.shareListParam.pageSize = 20;
+        [_bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+
+        [_navTitleView addSubview:self.searchBar];
+        self.searchBar.SearchDelegate = self;
+        
+//        [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(getWidth(42.f));
+//            make.right.mas_equalTo(getWidth(-15.f));
+//            make.centerY.mas_equalTo(self.navTitleView);
+//            make.height.mas_equalTo(getWidth(32.f));
+//        }];
+//        self.searchBar.hidden = YES;
+    }else{
+        NSString *title = self.param[@"title"];
+        if (!title) {
+            title = @"店铺拼租";
+        }
+        UIView *navigationView = [self setupNavigationBarWithTitle:title];
+        _navigationView = navigationView;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -58,7 +108,9 @@
 }
 
 - (void)setupUI {
+    
     [self.view setBackgroundColor:UIColor.whiteColor];
+    
     NSString *title = self.param[@"title"];
     if (!title) {
         title = @"店铺拼租";
@@ -78,7 +130,7 @@
     _parentScrollView = parentScrollView;
     [parentScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(self.view);
-        make.top.equalTo(navigationView.mas_bottom);
+        make.top.equalTo(self.navigationView.mas_bottom);
         make.bottom.equalTo(self.mas_bottomLayoutGuideTop);
     }];
     
@@ -134,6 +186,7 @@
     
     UIView *filterBar = [self setupFilterBar];
     [parentScrollView addSubview:filterBar];
+    _filterBar = filterBar;
     [filterBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(parentScrollView);
         make.top.equalTo(headerView.mas_bottom);

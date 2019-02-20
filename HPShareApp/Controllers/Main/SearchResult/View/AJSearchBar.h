@@ -21,5 +21,21 @@
 
 @property(nonatomic,strong)UIColor *AJCursorColor;
 
+@property (nonatomic, strong) NSMutableArray *historyArray;
+
+@property (nonatomic, strong) UIView *remenView;
+
 @property(nonatomic,weak) id<SearchDelegate> SearchDelegate;
+
+/*! 输入框 */
+@property(nonatomic,strong)UITextField *textField;
+
+@property (nonatomic, strong) UIView *lineView;
+
+/*! 取消按钮 */
+@property(nonatomic,strong)UIButton *cancelButton;
+
+@property (nonatomic, assign) BOOL hidden;
+- (void)clear;
+
 @end

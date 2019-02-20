@@ -6,15 +6,17 @@
 //  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPSearchResultViewController.h"
+#import "HPSearchViewController.h"
 #import "AJSearchBar.h"
 #import "Masonry.h"
 #import "HPGlobalVariable.h"
 #import "HPHistoryViewCell.h"
-#import "SearchCollectionView.h"
 #import "SearchFlowLayout.h"
+#import "HPSearchHeaderView.h"
+#import "HPSearchVerbBtnView.h"
 
-@interface HPSearchResultViewController ()<UITableViewDelegate,UITableViewDataSource,historyDelegate,SearchDelegate>
+@interface HPSearchViewController ()<UITableViewDelegate,UITableViewDataSource,SearchDelegate,UITextFieldDelegate>
+
 
 @property (nonatomic, strong) AJSearchBar *searchBar;
 
@@ -22,14 +24,16 @@
 
 @property (nonatomic, strong) UITableView *tableView;
 
-@property (nonatomic, strong) NSMutableArray *historyArray;
 
-@property (nonatomic, strong) SearchCollectionView *collectionView;
 /*! 布局 */
 @property(nonatomic,strong) SearchFlowLayout *searchFlowLayout;
+
+@property (nonatomic, strong) HPSearchHeaderView *headerView;
+
+@property (nonatomic, strong) HPSearchVerbBtnView *searchBtnView;
 @end
 
-@implementation HPSearchResultViewController
+@implementation HPSearchViewController
 
 static NSString *historyViewCell = @"historyViewCell";
 
@@ -37,10 +41,17 @@ static NSString *historyViewCell = @"historyViewCell";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = COLOR_GRAY_FFFFFF;
-    _historyArray = [NSMutableArray array];
+    
+    if (self.searchBar.historyArray.count == 0) {
+        
+    }else{
+        [self.tableView reloadData];
+    }
     [self setUpUi];
     [self setUpUiMasonry];
+
 }
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -53,7 +64,7 @@ static NSString *historyViewCell = @"historyViewCell";
     [self.view addSubview:self.searchBar];
     
     self.searchBar.SearchDelegate = self;
-    
+
     [self.view addSubview:self.tableView];
 }
 
@@ -61,8 +72,8 @@ static NSString *historyViewCell = @"historyViewCell";
 {
     [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(getWidth(15.f));
-        make.top.mas_equalTo(getWidth(25.f));
-        make.height.mas_equalTo(getWidth(32.f));
+        make.top.mas_equalTo(g_statusBarHeight);
+        make.height.mas_equalTo(getWidth(39.f));
         make.right.mas_equalTo(self.view);
     }];
     
@@ -81,6 +92,16 @@ static NSString *historyViewCell = @"historyViewCell";
     return _searchBar;
 }
 
+- (HPSearchHeaderView *)headerView
+{
+    if (!_headerView) {
+        _headerView = [HPSearchHeaderView new];
+        _headerView.backgroundColor = COLOR_GRAY_F7F7F7;
+        
+    }
+    return _headerView;
+}
+
 - (UITableView *)tableView
 {
     if (!_tableView) {
@@ -94,16 +115,18 @@ static NSString *historyViewCell = @"historyViewCell";
     return _tableView;
 }
 
-- (SearchCollectionView *)collectionView{
-    if (!_collectionView) {
-//        row = [_searchVM rowForCollection:[_searchVM readHistory]];
-//        HPLog(@"row = %li",(long)row);
-        NSArray *array = @[@"动画风格",@"发广告",@"风格"];
-        _searchFlowLayout = [[SearchFlowLayout alloc]init];
-        _collectionView = [[SearchCollectionView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, (5 * 45)+64) collectionViewLayout:_searchFlowLayout array:[array mutableCopy]];
-        _collectionView.historyDelegate = self;
+- (HPSearchVerbBtnView *)searchBtnView
+{
+    if (!_searchBtnView) {
+        kWEAKSELF
+        _searchBtnView = [HPSearchVerbBtnView new];
+        _searchBtnView.searchBlock = ^(NSString *searchStr) {
+            HPLog(@"搜索。。。");
+            [weakSelf pushVCByClassName:@"HPShareShopListController" withParam:@{@"text":searchStr}];
+
+        };
     }
-    return _collectionView;
+    return _searchBtnView;
 }
 
 - (void)clickPopToHomeVC
@@ -114,7 +137,7 @@ static NSString *historyViewCell = @"historyViewCell";
 - (void)searchWithStr:(NSString *)text
 {
     HPLog(@"搜索的是。。。。。。");
-    
+    [self pushVCByClassName:@"HPShareShopListController" withParam:@{@"text":text}];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -127,12 +150,46 @@ static NSString *historyViewCell = @"historyViewCell";
     if (section == 0) {
         return 1.f;
     }else{
-        return 5.f;//self.historyArray.count;
+        return self.searchBar.historyArray.count;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 38.f;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    _headerView = [[HPSearchHeaderView alloc] initWithFrame:kRect(0, 0, kScreenWidth, getWidth(38.f))];
+    kWEAKSELF
+    _headerView.block = ^{//删除历史
+        [weakSelf.searchBar clear];
+        [weakSelf.tableView reloadData];
+    };
+    
+    if (section == 0) {
+        self.headerView.leftImage.hidden = NO;
+        self.headerView.headerLab.text = @"热门搜索";
+        self.headerView.deleteBtn.hidden = YES;
+
+        return _headerView;
+    }else{
+        self.headerView.headerLab.text = @"历史记录";
+        self.headerView.leftImage.hidden = YES;
+        self.headerView.deleteBtn.hidden = NO;
+        self.headerView.hidden = YES;
+        return _headerView;
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
+    if (section == 1) {
+        return CGFLOAT_MIN;
+    }else{
+        return 8.f;
+    }
     return 8.f;
 }
 
@@ -150,7 +207,13 @@ static NSString *historyViewCell = @"historyViewCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        return getWidth(240.f);
+        if (kScreenHeight >= 812.f) {
+            return getWidth(84.f);
+        }else if (!iPhone5) {
+            return getWidth(84.f);
+        }else{
+            return getWidth(128.f);
+        }
     }else{
         return getWidth(40.f);
     }
@@ -161,11 +224,29 @@ static NSString *historyViewCell = @"historyViewCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     HPHistoryViewCell *cell = [tableView dequeueReusableCellWithIdentifier:historyViewCell];
+    if (indexPath.section == 0) {
+        [cell.contentView removeFromSuperview];
+
+        [cell addSubview:self.searchBtnView];
+        [self.searchBtnView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsZero);
+        }];
+    }
+    else{
+        if (!_searchBar.historyArray.count) {
+            cell.historyLabel.text = @"无历史记录";
+        }else{
+            cell.historyLabel.text = _searchBar.historyArray[indexPath.row];
+        }
+    }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self pushVCByClassName:@"HPShareShopListController" withParam:@{@"text":_searchBar.historyArray[indexPath.row]}];
+
 }
+
 @end

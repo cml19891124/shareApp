@@ -23,23 +23,42 @@ static NSInteger space = 15;
 @property(nonatomic,strong)UILabel *placeholderLabel;
 /*! 方法镜图片 */
 @property(nonatomic,strong)UIImageView *searchImage;
-/*! 取消按钮 */
-@property(nonatomic,strong)UIButton *cancelButton;
-/*! 输入框 */
-@property(nonatomic,strong)UITextField *textField;
+
 /*! label文字大小 */
 @property(nonatomic,assign)CGSize size;
+
 @end;
 
 @implementation AJSearchBar
 
+- (void)setHidden:(BOOL)hidden
+{
+    _hidden = hidden;
+    [self layoutIfNeeded];
+    [self.textField mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self);
+    }];
+    self.lineView.hidden = YES;
+}
+
 -(instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
+        
+        //读取数组NSArray类型的数据
+        NSArray *myArray = [[NSArray alloc] initWithArray:[kUserDefaults arrayForKey:@"historyArray"]];
+        // NSArray --> NSMutableArray
+        _historyArray = [NSMutableArray array];
+        _historyArray = [myArray mutableCopy];
+        if (_historyArray.count > 0) {
+            [self searchHistory:_historyArray];
+        }
         
         [self addSubview:self.textField];
         [_textField addSubview:self.placeholderLabel];
         [_textField addSubview:self.searchImage];
+        _textField.delegate = self;
         [self addSubview:self.cancelButton];
+        [self addSubview:self.lineView];
         [self setAllFrame];
 
     }
@@ -80,7 +99,7 @@ static NSInteger space = 15;
     if (!_placeholderLabel) {
         _placeholderLabel = [[UILabel alloc] init];
         _placeholderLabel.text = @"搜索你心仪的店名/位置/行业";
-        _placeholderLabel.textColor = COLOR_GRAY_F4F4F4;
+        _placeholderLabel.textColor = COLOR_GRAY_999999;
         _placeholderLabel.font = kFont_Regular(14.f);
     }
     return _placeholderLabel;
@@ -105,13 +124,30 @@ static NSInteger space = 15;
     return _cancelButton;
 }
 
+- (UIView *)lineView
+{
+    if (!_lineView) {
+        _lineView = [UIView new];
+        _lineView.backgroundColor = COLOR_GRAY_EBEBEB;
+    }
+    return _lineView;
+}
+
+- (UIView *)remenView
+{
+    if (!_remenView) {
+        _remenView = [UIView new];
+    }
+    return _remenView;
+}
+
 #pragma mark --- 设置尺寸
 - (void)setAllFrame{
-    _size = [_placeholderLabel.text boundingRectWithSize:CGSizeMake(500, 44) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : kFont_Medium(12.f)} context:nil].size;
+    _size = [_placeholderLabel.text boundingRectWithSize:CGSizeMake(600, 44) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : kFont_Medium(12.f)} context:nil].size;
     [_placeholderLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.textField).offset(0);
-        make.size.mas_equalTo(CGSizeMake(self.size.width, self.size.height));
-        make.centerX.equalTo(self.textField);
+        make.size.mas_equalTo(CGSizeMake(self.size.width + 100, self.size.height));
+        make.centerX.equalTo(self.textField).offset(getWidth(50.f));
+        make.centerY.mas_equalTo(self.textField);
     }];
     
     [_searchImage mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -121,13 +157,21 @@ static NSInteger space = 15;
     }];
     
     [_textField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.bottom.mas_equalTo(self);
+        make.left.top.mas_equalTo(self);
+        make.height.mas_equalTo(getWidth(32.f));
         make.right.mas_equalTo(self).offset(getWidth(-55.f));
     }];
     
     [_cancelButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.textField.mas_right);
-        make.top.bottom.right.mas_equalTo(self);
+        make.top.right.mas_equalTo(self);
+        make.bottom.mas_equalTo(self.textField);
+    }];
+    
+    [_lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(kScreenWidth, getWidth(1.f)));
+        make.bottom.mas_equalTo(self).offset(getWidth(1.f));
+        make.centerX.mas_equalTo(self);
     }];
 }
 #pragma mark --- 取消按钮点击事件
@@ -160,7 +204,7 @@ static NSInteger space = 15;
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
     /*! _placeholderLabel移动到关标右边*/
     [_placeholderLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.textField).offset(-self.textField.frame.size.width/2 + leftViewWidth + self.size.width/2 + 5);
+        make.centerX.mas_equalTo(self.textField).offset(-self.textField.frame.size.width/2 + leftViewWidth + self.size.width/2 + 55);
     }];
     /*! _searchImage移动到关标左边 */
     [_searchImage mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -174,15 +218,22 @@ static NSInteger space = 15;
 }
 /*! 输入框结束编辑 */
 - (void)textFieldDidEndEditing:(UITextField *)textField{
+    if (textField.text.length == 0) {
+        [HPProgressHUD alertMessage:@"请输入搜索内容"];
+            }
     if (textField.text.length>0) {
         HPLog(@"进行搜索");
-        [_SearchDelegate searchWithStr:textField.text];
+//        [_SearchDelegate searchWithStr:textField.text];
     }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [_textField resignFirstResponder];
+    if (textField.text.length == 0) {
+        [HPProgressHUD alertMessage:@"请输入搜索内容"];
+    }
     [_SearchDelegate searchWithStr:textField.text];
+    [self searchText:textField.text];
     HPLog(@"点击了搜索");
     return YES;
 }
@@ -205,5 +256,97 @@ static NSInteger space = 15;
     HPLog(@"%@ 已经dealloc",NSStringFromClass(self.class));
 }
 
+//键盘搜索按钮或者搜索历史的按钮执行的方法.
 
+-(void)searchText:(NSString *)seaTxt
+{
+    // 把键盘隐藏掉
+    [self endEditing:YES];
+    // 搜索 进行服务器请求
+    [ self getData:seaTxt];
+    
+    // 去除字符串两边的空格
+    NSString *removeBlackStr = [seaTxt stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    //读取数组NSArray类型的数据
+    NSArray *myArray = [[NSArray alloc] initWithArray:[kUserDefaults arrayForKey:@"historyArray"]];
+    _historyArray = [myArray mutableCopy];
+    
+    BOOL isEqualTo1,isEqualTo2;
+    isEqualTo1 = NO;
+    isEqualTo2 = NO;
+    
+    if (_historyArray.count > 0) {
+        isEqualTo2 = YES;
+        //判断搜索内容是否存在，存在的话放到数组第一位，不存在的话添加。
+        for (NSString * str in myArray) {
+            if ([removeBlackStr isEqualToString:str]) {
+                //获取指定对象的索引
+                NSUInteger index = [myArray indexOfObject:removeBlackStr];
+                [_historyArray removeObjectAtIndex:index];
+                if (removeBlackStr != nil && ![removeBlackStr isEqualToString:@""]) {
+                    [_historyArray insertObject:removeBlackStr atIndex:0];
+                }
+                isEqualTo1 = YES;
+                break;
+            }
+        }
+    }
+    
+    if (!isEqualTo1 || !isEqualTo2) {
+        if (removeBlackStr != nil && ![removeBlackStr isEqualToString:@""]) {
+            [_historyArray insertObject:removeBlackStr atIndex:0];
+        }
+    }
+    
+    if(_historyArray.count > 10)
+    {
+        [_historyArray removeObjectAtIndex:_historyArray.count - 1];
+    }
+    //将上述数据全部存储到NSUserDefaults中
+    [kUserDefaults setObject:_historyArray forKey:@"historyArray"];
+    [[self.remenView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    self.remenView.backgroundColor = UIColorFromRGB(0xF2F2F2);
+    [self searchHistory:_historyArray];
+}
+
+//清空搜索历史
+
+- (void)clear{
+    
+    [_historyArray removeAllObjects];
+    //将数据全部从NSUserDefaults中移除
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:nil forKey:@"historyArray"];
+    [[self.remenView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    self.remenView.backgroundColor = UIColorFromRGB(0xF2F2F2);
+}
+
+//监听输入框的文字变化
+
+-(void)textfiledChange:(NSNotification *)obj{
+    
+    [self changeSet];
+}
+
+-(void)changeSet
+{
+    if (_textField.text.length > 0) {
+        
+    }else
+    {
+        
+    }
+}
+
+
+- (void)getData:(NSString *)data
+{
+    
+}
+
+
+- (void)searchHistory:(NSMutableArray *)arrcy
+{
+    
+}
 @end

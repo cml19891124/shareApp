@@ -497,6 +497,6 @@ static NSString *shareListCell = @"shareListCell";
 
 - (void)clickTextfieldJumpToSearchResultVC
 {
-    [self pushVCByClassName:@"HPSearchResultViewController"];
+    [self pushVCByClassName:@"HPSearchViewController"];
 }
 @end
