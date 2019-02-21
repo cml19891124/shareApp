@@ -2424,7 +2424,6 @@
 		E67EFE37221BD59C008BDA1D /* SearchResult */ = {
 			isa = PBXGroup;
 			children = (
-				E67EFE3D221BE1B8008BDA1D /* Model */,
 				E67EFE3C221BE1B1008BDA1D /* View */,
 				E67EFE3B221BE1A9008BDA1D /* Con */,
 			);
@@ -2457,13 +2456,6 @@
 				E6ED6933221CFD9D00389CBA /* HPSearchVerbBtnView.m */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		E67EFE3D221BE1B8008BDA1D /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		E68A769221F2C67F00083A90 /* JChat */ = {
