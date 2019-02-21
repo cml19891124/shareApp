@@ -11,7 +11,6 @@
 #import "Masonry.h"
 #import "HPGlobalVariable.h"
 #import "HPHistoryViewCell.h"
-#import "SearchFlowLayout.h"
 #import "HPSearchHeaderView.h"
 #import "HPSearchVerbBtnView.h"
 
@@ -24,13 +23,10 @@
 
 @property (nonatomic, strong) UITableView *tableView;
 
-
-/*! 布局 */
-@property(nonatomic,strong) SearchFlowLayout *searchFlowLayout;
-
 @property (nonatomic, strong) HPSearchHeaderView *headerView;
 
 @property (nonatomic, strong) HPSearchVerbBtnView *searchBtnView;
+
 @end
 
 @implementation HPSearchViewController
@@ -245,7 +241,9 @@ static NSString *historyViewCell = @"historyViewCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self pushVCByClassName:@"HPShareShopListController" withParam:@{@"text":_searchBar.historyArray[indexPath.row]}];
+    if (indexPath.section == 1) {
+        [self pushVCByClassName:@"HPShareShopListController" withParam:@{@"text":_searchBar.historyArray[indexPath.row]}];
+    }
 
 }
 

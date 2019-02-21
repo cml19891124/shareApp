@@ -36,9 +36,11 @@ static NSInteger space = 15;
     _hidden = hidden;
     [self layoutIfNeeded];
     [self.textField mas_updateConstraints:^(MASConstraintMaker *make) {
+        [make.right uninstall];
         make.right.mas_equalTo(self);
     }];
     self.lineView.hidden = YES;
+    self.cancelButton.hidden = YES;
 }
 
 -(instancetype)initWithFrame:(CGRect)frame{
@@ -49,9 +51,6 @@ static NSInteger space = 15;
         // NSArray --> NSMutableArray
         _historyArray = [NSMutableArray array];
         _historyArray = [myArray mutableCopy];
-        if (_historyArray.count > 0) {
-            [self searchHistory:_historyArray];
-        }
         
         [self addSubview:self.textField];
         [_textField addSubview:self.placeholderLabel];
@@ -131,14 +130,6 @@ static NSInteger space = 15;
         _lineView.backgroundColor = COLOR_GRAY_EBEBEB;
     }
     return _lineView;
-}
-
-- (UIView *)remenView
-{
-    if (!_remenView) {
-        _remenView = [UIView new];
-    }
-    return _remenView;
 }
 
 #pragma mark --- 设置尺寸
@@ -223,7 +214,6 @@ static NSInteger space = 15;
             }
     if (textField.text.length>0) {
         HPLog(@"进行搜索");
-//        [_SearchDelegate searchWithStr:textField.text];
     }
 }
 
@@ -262,8 +252,6 @@ static NSInteger space = 15;
 {
     // 把键盘隐藏掉
     [self endEditing:YES];
-    // 搜索 进行服务器请求
-    [ self getData:seaTxt];
     
     // 去除字符串两边的空格
     NSString *removeBlackStr = [seaTxt stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -304,9 +292,7 @@ static NSInteger space = 15;
     }
     //将上述数据全部存储到NSUserDefaults中
     [kUserDefaults setObject:_historyArray forKey:@"historyArray"];
-    [[self.remenView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    self.remenView.backgroundColor = UIColorFromRGB(0xF2F2F2);
-    [self searchHistory:_historyArray];
+    [kUserDefaults synchronize];
 }
 
 //清空搜索历史
@@ -317,36 +303,7 @@ static NSInteger space = 15;
     //将数据全部从NSUserDefaults中移除
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:nil forKey:@"historyArray"];
-    [[self.remenView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    self.remenView.backgroundColor = UIColorFromRGB(0xF2F2F2);
+    [userDefaults synchronize];
 }
 
-//监听输入框的文字变化
-
--(void)textfiledChange:(NSNotification *)obj{
-    
-    [self changeSet];
-}
-
--(void)changeSet
-{
-    if (_textField.text.length > 0) {
-        
-    }else
-    {
-        
-    }
-}
-
-
-- (void)getData:(NSString *)data
-{
-    
-}
-
-
-- (void)searchHistory:(NSMutableArray *)arrcy
-{
-    
-}
 @end

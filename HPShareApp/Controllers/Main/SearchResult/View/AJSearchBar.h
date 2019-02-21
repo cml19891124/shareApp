@@ -23,8 +23,6 @@
 
 @property (nonatomic, strong) NSMutableArray *historyArray;
 
-@property (nonatomic, strong) UIView *remenView;
-
 @property(nonatomic,weak) id<SearchDelegate> SearchDelegate;
 
 /*! 输入框 */

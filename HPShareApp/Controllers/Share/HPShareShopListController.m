@@ -33,8 +33,6 @@
 
 @property (nonatomic, strong) AJSearchBar *searchBar;
 
-@property (nonatomic, strong) UIView *navTitleView;
-
 @property (nonatomic, strong) UIView *filterBar;
 @end
 
@@ -43,8 +41,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     [self setupUI];
+
+    [self setUpNavTitleView];
 
 }
 
@@ -62,10 +61,13 @@
 - (void)searchWithStr:(NSString *)text
 {
     HPLog(@"这里在搜索");
+    self.shareListParam.keywords = self.searchBar.textField.text;
+
+    [self loadTableViewFreshUI];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)setUpNavTitleView{
+    
     if ([self.param.allKeys containsObject:@"text"]) {
         _bannerView.hidden = YES;
         self.shareListParam.keywords = self.param[@"text"];
@@ -74,17 +76,21 @@
         [_bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
-
-        [_navTitleView addSubview:self.searchBar];
+        
+        UIView *navigationView = [self setupNavigationBarWithTitle:@""];
+        _navigationView = navigationView;
+        
+        [_navigationView addSubview:self.searchBar];
         self.searchBar.SearchDelegate = self;
         
-//        [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.left.mas_equalTo(getWidth(42.f));
-//            make.right.mas_equalTo(getWidth(-15.f));
-//            make.centerY.mas_equalTo(self.navTitleView);
-//            make.height.mas_equalTo(getWidth(32.f));
-//        }];
-//        self.searchBar.hidden = YES;
+        [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(getWidth(42.f));
+            make.right.mas_equalTo(getWidth(-15.f));
+            make.centerY.mas_equalTo(self.navigationView);
+            make.height.mas_equalTo(getWidth(32.f));
+        }];
+        self.searchBar.hidden = YES;
+
     }else{
         NSString *title = self.param[@"title"];
         if (!title) {

@@ -20,60 +20,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/Main/SearchResult/Con/HPSearchResultViewController.m"
-            timestampString = "572354139.679376"
+            timestampString = "572406994.810329"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "517"
             endingLineNumber = "517"
             landmarkName = "-getShareListData:reload:"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[HPSearchResultViewController getShareListData:reload:]"
-                  moduleName = "HPShareApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hp/Desktop/Xcode/HPShareApp/HPShareApp/Controllers/Main/SearchResult/Con/HPSearchResultViewController.m"
-                  timestampString = "572354139.869563"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "517"
-                  endingLineNumber = "517"
-                  offsetFromSymbolStart = "112">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__56-[HPSearchResultViewController getShareListData:reload:]_block_invoke"
-                  moduleName = "HPShareApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hp/Desktop/Xcode/HPShareApp/HPShareApp/Controllers/Main/SearchResult/Con/HPSearchResultViewController.m"
-                  timestampString = "572354139.872219"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "517"
-                  endingLineNumber = "517"
-                  offsetFromSymbolStart = "19">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__destroy_helper_block_.432"
-                  moduleName = "HPShareApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hp/Desktop/Xcode/HPShareApp/HPShareApp/Controllers/Main/SearchResult/Con/HPSearchResultViewController.m"
-                  timestampString = "572354139.874428"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "517"
-                  endingLineNumber = "517"
-                  offsetFromSymbolStart = "16">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -83,7 +36,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HPShareApp/Controllers/Main/SearchResult/Con/HPSearchResultViewController.m"
-            timestampString = "572354139.679466"
+            timestampString = "572406994.810406"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "96"
