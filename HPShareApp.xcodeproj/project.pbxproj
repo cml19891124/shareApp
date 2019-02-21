@@ -343,6 +343,8 @@
 		E6B4CEE021C5286F00429C11 /* TAPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED621C5286F00429C11 /* TAPageControl.m */; };
 		E6B4CEE121C5286F00429C11 /* TAAnimatedDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED721C5286F00429C11 /* TAAnimatedDotView.m */; };
 		E6B4CEE221C5286F00429C11 /* TAAbstractDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED821C5286F00429C11 /* TAAbstractDotView.m */; };
+		E6B63B91221E51F100337830 /* HPUpdateVersionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B63B90221E51F100337830 /* HPUpdateVersionView.m */; };
+		E6B63B94221E835200337830 /* HPUpdateVersionTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B63B93221E835200337830 /* HPUpdateVersionTool.m */; };
 		E6B8987521D0D53900FD443B /* HPStoreLeavesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */; };
 		E6BC6001220153FC0075C744 /* HPHomeBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC6000220153FC0075C744 /* HPHomeBannerView.m */; };
 		E6BC600422019DEB0075C744 /* HPGetherRentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC600322019DEB0075C744 /* HPGetherRentViewController.m */; };
@@ -1134,6 +1136,10 @@
 		E6B4CED921C5286F00429C11 /* TADotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TADotView.h; sourceTree = "<group>"; };
 		E6B4CEDA21C5286F00429C11 /* TAAnimatedDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAAnimatedDotView.h; sourceTree = "<group>"; };
 		E6B4CEDB21C5286F00429C11 /* TAPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TAPageControl.h; sourceTree = "<group>"; };
+		E6B63B8F221E51F100337830 /* HPUpdateVersionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPUpdateVersionView.h; sourceTree = "<group>"; };
+		E6B63B90221E51F100337830 /* HPUpdateVersionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUpdateVersionView.m; sourceTree = "<group>"; };
+		E6B63B92221E835200337830 /* HPUpdateVersionTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPUpdateVersionTool.h; sourceTree = "<group>"; };
+		E6B63B93221E835200337830 /* HPUpdateVersionTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUpdateVersionTool.m; sourceTree = "<group>"; };
 		E6B8987321D0D53900FD443B /* HPStoreLeavesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPStoreLeavesViewController.h; sourceTree = "<group>"; };
 		E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPStoreLeavesViewController.m; sourceTree = "<group>"; };
 		E6BC5FFF220153FC0075C744 /* HPHomeBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHomeBannerView.h; sourceTree = "<group>"; };
@@ -2116,6 +2122,10 @@
 				6979CA8021D6220700B1518C /* HPBotomPickerModalView.m */,
 				E6A8108121D700CE0048AA01 /* HPSearchBar.h */,
 				E6A8108221D700CE0048AA01 /* HPSearchBar.m */,
+				E6B63B8F221E51F100337830 /* HPUpdateVersionView.h */,
+				E6B63B90221E51F100337830 /* HPUpdateVersionView.m */,
+				E6B63B92221E835200337830 /* HPUpdateVersionTool.h */,
+				E6B63B93221E835200337830 /* HPUpdateVersionTool.m */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -3547,6 +3557,7 @@
 				E657A2E821F6E762008198C9 /* HPNavGationViewController.m in Sources */,
 				E661B0C4219CFE6D00C86CF5 /* HPCheckTableCell.m in Sources */,
 				E6D75F3B21AEA15400B2067C /* HPConfigCenterController.m in Sources */,
+				E6B63B91221E51F100337830 /* HPUpdateVersionView.m in Sources */,
 				E68A76FF21F2D2F200083A90 /* JCHATTimeOutManager.m in Sources */,
 				E6B4CEDC21C5286F00429C11 /* SDCycleScrollView.m in Sources */,
 				E68A76B621F2C6D100083A90 /* JCHATDetailTableViewCell.m in Sources */,
@@ -3605,6 +3616,7 @@
 				E661B0AD219C1CE100C86CF5 /* HPBaseDialogView.m in Sources */,
 				69165CF421C1FA8700593D25 /* HPShareListModel.m in Sources */,
 				7AAFF3BB21E390D80049D175 /* HPShareMapAnnotationView.m in Sources */,
+				E6B63B94221E835200337830 /* HPUpdateVersionTool.m in Sources */,
 				E661B0A7219C0B9800C86CF5 /* HPBaseControl.m in Sources */,
 				E661B0B6219C2C0400C86CF5 /* HPCheckDialogView.m in Sources */,
 				E622A9D021C3A6B3007C35BC /* HPCardDetailsModel.m in Sources */,

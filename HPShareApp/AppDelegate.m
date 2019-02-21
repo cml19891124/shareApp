@@ -11,7 +11,7 @@
 #import "Macro.h"
 #import "HPMainTabBarController.h"
 #import <AMapFoundationKit/AMapFoundationKit.h>
-#import "HPTextDialogView.h"
+#import "HPUpdateVersionView.h"
 #import "HPGuideViewController.h"
 #import "HPCommonData.h"
 #import "HPCommonBannerData.h"
@@ -32,9 +32,10 @@
 #import "WXApi.h"
 #import <AlipaySDK/AlipaySDK.h>
 #import "WXApiManager.h"
+#import "HPUpdateVersionTool.h"
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate,JPUSHRegisterDelegate,WXApiDelegate>
-@property (nonatomic, weak) HPTextDialogView *textDialogView;
+@property (nonatomic, weak) HPUpdateVersionView *updateView;
 @property (nonatomic, strong) HPMainTabBarController *mainTabBarController;
 @end
 
@@ -59,26 +60,36 @@
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@", kAppleId]];
         NSString * file =  [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
         
-        NSRange substr = [file rangeOfString:@"\"version\":\""];
-        NSRange range1 = NSMakeRange(substr.location+substr.length,10);
-        NSRange substr2 = [file rangeOfString:@"\"" options:NSCaseInsensitiveSearch  range:range1];
-        NSRange range2 = NSMakeRange(substr.location+substr.length, substr2.location-substr.location-substr.length);
-        NSString *appStoreVersion =[file substringWithRange:range2];
-        NSArray *appStoreVersionArr = [appStoreVersion componentsSeparatedByString:@"."];
+        NSData *data = [file dataUsingEncoding:NSUTF8StringEncoding];
+        // 判断是否取到信息
+        if (![data isKindOfClass:[NSData class]]) {
+            return ;
+        }
+        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        //获得上线版本号
+        NSString *getVersion = [[[dic objectForKey:@"results"]firstObject]objectForKey:@"version"];
+        NSArray *appStoreVersionArr = [getVersion componentsSeparatedByString:@"."];
         NSString *onlineVersion = @"";
         for (int i = 0;i < appStoreVersionArr.count; i++) {
             onlineVersion = [onlineVersion stringByAppendingString:appStoreVersionArr[i]];
         }
+        kWEAKSELF
         dispatch_async(dispatch_get_main_queue(), ^{
             // 更新界面
             //如果不一样去更新
             if([currentVersion intValue] < [onlineVersion intValue])
             {
                 [self showAlert];
+//                weakSelf.mainTabBarController.view.alpha = 0.7f;
+//                weakSelf.mainTabBarController.view.backgroundColor = COLOR_BLACK_333333;
             }
         });
     });
 
+//    BOOL isupdate = [HPUpdateVersionTool updateAppVersionTool];
+//    if (isupdate) {
+//        [self showAlert];
+//    }
 }
 
 /**
@@ -86,22 +97,25 @@
  */
 -(void)showAlert
 {
-    if (_textDialogView == nil) {
-        HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
-        [textDialogView setText:@"有新的版本啦"];
-        [textDialogView setModalTop:279.f * g_rateHeight];
-        [textDialogView setCanecelBtnTitle:@"暂不更新"];
-        [textDialogView setConfirmBtnTitle:@"前往更新"];
-        _textDialogView = textDialogView;
+    if (_updateView == nil) {
+        kWEAKSELF
+//        self.mainTabBarController.view.alpha = 1.f;
+//        self.mainTabBarController.view.backgroundColor = COLOR_GRAY_FFFFFF;
+        HPUpdateVersionView *updateView = [[HPUpdateVersionView alloc] init];
+        [updateView setUpdateBlock:^{
+            // 此处加入应用在app store的地址，方便用户去更新，一种实现方式如下：
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/us/app/id%@?ls=1&mt=8", kAppleId]];
+            [[UIApplication sharedApplication] openURL:url];
+            
+        }];
+        
+        [updateView setCloseBlcok:^{
+            [weakSelf.updateView removeFromSuperview];
+        }];
+        _updateView = updateView;
     }
     
-    [_textDialogView setConfirmCallback:^{
-        // 此处加入应用在app store的地址，方便用户去更新，一种实现方式如下：
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/us/app/id%@?ls=1&mt=8", kAppleId]];
-        [[UIApplication sharedApplication] openURL:url];
-    }];
-    
-    [_textDialogView show:YES];
+    [_updateView show:YES];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -120,7 +134,6 @@
     //注册腾讯bugly
     [Bugly startWithAppId:kAppleId];
     
-    [self updateAppVersionInfo];
     [HPGlobalVariable initVariable];
     [HPCommonData getAreaData];
     [HPCommonData getIndustryData];
@@ -138,6 +151,8 @@
     }else{
         self.window.rootViewController = guidevc;
     }
+    [self updateAppVersionInfo];
+
     return YES;
 }
 
