@@ -11,11 +11,12 @@
 #import "HPProgressHUD.h"
 #import "HPMyCardController.h"
 #import "HPCustomerServiceModalView.h"
-#import "HPUploadImageHandle.h"
 #import "HPTimeString.h"
 #import "HPUploadImageHandle.h"
 #import "HPPersonCenterModel.h"
 #import "UIButton+WebCache.h"
+#import "HPUpdateVersionView.h"
+
 
 @interface HPMyController ()
 
@@ -44,6 +45,9 @@
  共享管理条数
  */
 @property (nonatomic, strong) UILabel *spacenum;
+
+@property (nonatomic, weak) HPUpdateVersionView *updateView;
+
 @end
 
 @implementation HPMyController
@@ -58,6 +62,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [self updateAppVersionInfo];
+
     [self getUserInfosListData];
 }
 - (void)dealloc
@@ -628,6 +635,82 @@
     }else if ([btn.text isEqualToString:@"关于我们"]){
         [self pushVCByClassName:@"HPAboutUsViewController"];
     }
+}
+
+
+#pragma mark - 检测版本更新信息
+- (void)updateAppVersionInfo
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // 耗时的操作
+        
+        //获取本地版本号
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+        NSString *newVersion = [NSString stringWithFormat:@"%@", version];
+        NSArray *currentVersionArr = [newVersion componentsSeparatedByString:@"."];
+        NSString *currentVersion =@"";
+        for (int i = 0;i < currentVersionArr.count; i++) {
+            currentVersion = [currentVersion stringByAppendingString:currentVersionArr[i]];
+        }
+        //获取appStore网络版本号
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@", kAppleId]];
+        NSString * file =  [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
+        
+        NSData *data = [file dataUsingEncoding:NSUTF8StringEncoding];
+        // 判断是否取到信息
+        if (![data isKindOfClass:[NSData class]]) {
+            return ;
+        }
+        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        //获得上线版本号
+        NSString *getVersion = [[[dic objectForKey:@"results"]firstObject]objectForKey:@"version"];
+        NSArray *appStoreVersionArr = [getVersion componentsSeparatedByString:@"."];
+        NSString *onlineVersion = @"";
+        for (int i = 0;i < appStoreVersionArr.count; i++) {
+            onlineVersion = [onlineVersion stringByAppendingString:appStoreVersionArr[i]];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 更新界面
+            //如果不一样去更新
+            if([currentVersion intValue] < [onlineVersion intValue])
+            {
+                [self showAlert];
+            }
+        });
+    });
+    
+    //    BOOL isupdate = [HPUpdateVersionTool updateAppVersionTool];
+    //    if (isupdate) {
+    //        [self showAlert];
+    //    }
+}
+
+/**
+ *  检查新版本更新弹框
+ */
+-(void)showAlert
+{
+    if (_updateView == nil) {
+        kWEAKSELF
+        HPUpdateVersionView *updateView = [[HPUpdateVersionView alloc] initWithParent:self.tabBarController.view];
+        
+        [updateView setUpdateBlock:^{
+            // 此处加入应用在app store的地址，方便用户去更新，一种实现方式如下：
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/us/app/id%@?ls=1&mt=8", kAppleId]];
+            [[UIApplication sharedApplication] openURL:url];
+            
+        }];
+        
+        [updateView setCloseBlcok:^{
+            [weakSelf.updateView removeFromSuperview];
+        }];
+        _updateView = updateView;
+    }
+    
+    [_updateView show:YES];
+    
 }
 
 @end

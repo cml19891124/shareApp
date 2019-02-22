@@ -11,6 +11,14 @@
 
 @implementation HPUpdateVersionView
 
+//默认情况下，UitextView显示,文字不是从开头显示的，我们希望看到的是，进入第一眼看到的是第一行文字，滚动条应该在顶部,加上如下代码
+- (void)layoutMarginsDidChange
+{
+    [super layoutMarginsDidChange];
+    [self.desLabel setContentOffset:CGPointZero animated:NO];
+
+}
+
 - (void)setupModalView:(UIView *)view
 {
     [self setBackgroundColor:[UIColor.blackColor colorWithAlphaComponent:0.7f]];
@@ -128,6 +136,7 @@
         _desLabel.font = kFont_Medium(12.f);
         _desLabel.userInteractionEnabled = NO;
         _desLabel.showsVerticalScrollIndicator = NO;
+        _desLabel.showsHorizontalScrollIndicator = NO;
     }
     return _desLabel;
 }
@@ -189,7 +198,7 @@
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.bgView.mas_top).offset(getWidth(143.f));
-        make.left.right.mas_equalTo(self.bgView);
+        make.left.right.mas_equalTo(self.bgImageView);
         make.height.mas_equalTo(getWidth(14.f));
     }];
     
@@ -233,4 +242,11 @@
         self.closeBlcok();
     }
 }
+
+//- (void)show:(BOOL)isShow
+//{
+//    if ([self.delegate respondsToSelector:@selector(setUpdateView)]) {
+//        [self.delegate setUpdateView];
+//    }
+//}
 @end
