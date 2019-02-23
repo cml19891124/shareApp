@@ -48,9 +48,10 @@
 - (void)setUpSubviewsUI
 {
     [self.view addSubview:self.webView];
+    self.webView.scalesPageToFit = YES;
     
     [self.view addSubview:self.readNumLabel];
-//    _readNumLabel.hidden = YES;
+    _readNumLabel.hidden = YES;
 
 }
 
@@ -59,8 +60,8 @@
     [self.webView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.navTitleView.mas_bottom);
-        make.height.mas_equalTo(kScreenHeight - g_statusBarHeight - 44.f - 49.f);
-//        make.bottom.mas_equalTo(self.view);
+//        make.height.mas_equalTo(kScreenHeight - g_statusBarHeight - 44.f - 49.f);
+        make.bottom.mas_equalTo(self.view);
     }];
     
     [self.readNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -255,18 +256,18 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     CGFloat webViewHeight = [[self.webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] floatValue];
-//    [self.webView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.height.mas_equalTo(webViewHeight * 0.5);
-//        [make.bottom uninstall];
-//    }];
-//
-//    [self.readNumLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.webView.mas_bottom);
+    [self.webView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(webViewHeight * 0.5);
+        [make.bottom uninstall];
+    }];
+
+    [self.readNumLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.webView.mas_bottom);
 //        make.height.mas_equalTo(49.f);
-//
-//    }];
-//    self.readNumLabel.backgroundColor = COLOR_GRAY_FFFFFF;
-//    self.readNumLabel.hidden = NO;
-//    [self.view layoutIfNeeded];
+
+    }];
+    self.readNumLabel.backgroundColor = COLOR_GRAY_FFFFFF;
+    self.readNumLabel.hidden = NO;
+    [self.view layoutIfNeeded];
 }
 @end

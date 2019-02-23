@@ -321,6 +321,7 @@
 		E68C856A21E9EC2B00AF259C /* HPHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C856921E9EC2B00AF259C /* HPHeaderCell.m */; };
 		E68C856D21E9ED9400AF259C /* HPIdeaListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C856C21E9ED9400AF259C /* HPIdeaListCell.m */; };
 		E68C857121E9EDFB00AF259C /* HPIdeaListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C857021E9EDFB00AF259C /* HPIdeaListModel.m */; };
+		E68C99C022214DB400F68E6A /* HPLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99BF22214DB400F68E6A /* HPLabel.m */; };
 		E68D07C921EC2D26007558CC /* HPIdeaDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E68D07C821EC2D26007558CC /* HPIdeaDetailModel.m */; };
 		E68DDE0621EDBA2B00742D49 /* CustomCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = E68DDE0521EDBA2B00742D49 /* CustomCalloutView.m */; };
 		E68DDE0921EDBABA00742D49 /* ClusterTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68DDE0721EDBABA00742D49 /* ClusterTableViewCell.m */; };
@@ -1092,6 +1093,8 @@
 		E68C856C21E9ED9400AF259C /* HPIdeaListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaListCell.m; sourceTree = "<group>"; };
 		E68C856F21E9EDFB00AF259C /* HPIdeaListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaListModel.h; sourceTree = "<group>"; };
 		E68C857021E9EDFB00AF259C /* HPIdeaListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaListModel.m; sourceTree = "<group>"; };
+		E68C99BE22214DB400F68E6A /* HPLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPLabel.h; sourceTree = "<group>"; };
+		E68C99BF22214DB400F68E6A /* HPLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPLabel.m; sourceTree = "<group>"; };
 		E68D07C721EC2D26007558CC /* HPIdeaDetailModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaDetailModel.h; sourceTree = "<group>"; };
 		E68D07C821EC2D26007558CC /* HPIdeaDetailModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaDetailModel.m; sourceTree = "<group>"; };
 		E68DDE0421EDBA2B00742D49 /* CustomCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCalloutView.h; sourceTree = "<group>"; };
@@ -2006,6 +2009,8 @@
 				7AAFF36721CD2F680049D175 /* HPTimeRentButton.m */,
 				E67B778C21CDEEB1007AC636 /* HPRentAmountItemView.h */,
 				E67B778D21CDEEB1007AC636 /* HPRentAmountItemView.m */,
+				E68C99BE22214DB400F68E6A /* HPLabel.h */,
+				E68C99BF22214DB400F68E6A /* HPLabel.m */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -3442,6 +3447,7 @@
 				E68A770A21F2D61E00083A90 /* JCHATPersonInfoCell.m in Sources */,
 				E661B13321A2C4F500C86CF5 /* HPCalendarView.m in Sources */,
 				E67EFE36221BA187008BDA1D /* WXApiManager.m in Sources */,
+				E68C99C022214DB400F68E6A /* HPLabel.m in Sources */,
 				69165D0F21C4D77100593D25 /* HPLinkageView.m in Sources */,
 				E68A77C021F321BD00083A90 /* ChatBubbleLayer.m in Sources */,
 				E657A2E421F6B670008198C9 /* JCHATConversationListViewController.m in Sources */,
