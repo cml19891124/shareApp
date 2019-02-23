@@ -149,7 +149,7 @@
 #define FONT_MEDIUM @"PingFangSC-Medium"
 #define FONT_REGULAR @"PingFangSC-Regular"
 #define FONT_LIGHT @"PingFangSC-Light"
-#define ImageNamed(_pointer) ([UIImage imageNamed:_pointer])
+#define ImageNamed(name) ([UIImage imageNamed:name])
 /* 平方-中号 */
 #define kFont_Medium(font)  [UIFont fontWithName:@"PingFangSC-Medium"size:font]
 /* 平方-粗体 */

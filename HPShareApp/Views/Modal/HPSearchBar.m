@@ -40,7 +40,7 @@
     }];
     
     [self.searchField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(getWidth(100.f));
+        make.width.mas_equalTo(getWidth(150.f));
         make.left.mas_equalTo(self.searchImage.mas_right).offset(getWidth(10.f));
         make.centerY.mas_equalTo(self);
         make.top.mas_equalTo(0);
@@ -77,7 +77,7 @@
 {
     if (!_searchField) {
         _searchField = [UITextField new];
-        _searchField.placeholder = @"你想在哪开店？";
+        _searchField.placeholder = @"快速搜索心仪拼租店铺";
         [_searchField setValue:COLOR_GRAY_CCCCCC forKeyPath:@"_placeholderLabel.textColor"];
         [_searchField setValue:kFont_Medium(13.f) forKeyPath:@"_placeholderLabel.font"];
         _searchField.textColor = COLOR_BLACK_333333;

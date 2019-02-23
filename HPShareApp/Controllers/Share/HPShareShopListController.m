@@ -67,37 +67,35 @@
 }
 
 - (void)setUpNavTitleView{
+    _bannerView.hidden = YES;
+    [_bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(0);
+    }];
     
+    UIView *navigationView = [self setupNavigationBarWithTitle:@""];
+    _navigationView = navigationView;
+    
+    [_navigationView addSubview:self.searchBar];
+    self.searchBar.SearchDelegate = self;
+    
+    [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(52.f));
+        make.right.mas_equalTo(getWidth(-15.f));
+        make.centerY.mas_equalTo(self.navigationView);
+        make.height.mas_equalTo(getWidth(32.f));
+    }];
+    self.searchBar.hidden = YES;
+
     if ([self.param.allKeys containsObject:@"text"]) {
-        _bannerView.hidden = YES;
         self.shareListParam.keywords = self.param[@"text"];
         self.shareListParam.page = 1;
         self.shareListParam.pageSize = 20;
+        
+    }else{
+
         [_bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
-        
-        UIView *navigationView = [self setupNavigationBarWithTitle:@""];
-        _navigationView = navigationView;
-        
-        [_navigationView addSubview:self.searchBar];
-        self.searchBar.SearchDelegate = self;
-        
-        [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(getWidth(42.f));
-            make.right.mas_equalTo(getWidth(-15.f));
-            make.centerY.mas_equalTo(self.navigationView);
-            make.height.mas_equalTo(getWidth(32.f));
-        }];
-        self.searchBar.hidden = YES;
-
-    }else{
-        NSString *title = self.param[@"title"];
-        if (!title) {
-            title = @"店铺拼租";
-        }
-        UIView *navigationView = [self setupNavigationBarWithTitle:title];
-        _navigationView = navigationView;
     }
 }
 

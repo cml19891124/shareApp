@@ -25,10 +25,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) HPShareListParam *shareListParam;
 
+/**
+ 顶部搜索条件菜单栏
+ */
 - (UIView *)setupFilterBar;
 
+/**
+ 店铺请求数据
+ */
 - (void)getShareListData:(HPShareListParam *)param reload:(BOOL)isReload;
 
+/**
+ 加载请求店铺接口数据
+ */
 - (void)loadTableViewFreshUI;
 
 @end

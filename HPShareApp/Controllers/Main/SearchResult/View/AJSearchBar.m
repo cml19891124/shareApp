@@ -45,12 +45,12 @@ static NSInteger space = 15;
 
 -(instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
-        
+        _historyArray = [NSMutableArray array];
+
         //读取数组NSArray类型的数据
         NSArray *myArray = [[NSArray alloc] initWithArray:[kUserDefaults arrayForKey:@"historyArray"]];
         // NSArray --> NSMutableArray
-        _historyArray = [NSMutableArray array];
-        _historyArray = [myArray mutableCopy];
+        [_historyArray addObjectsFromArray:[myArray mutableCopy]];
         
         [self addSubview:self.textField];
         [_textField addSubview:self.placeholderLabel];
@@ -97,7 +97,7 @@ static NSInteger space = 15;
 - (UILabel *)placeholderLabel{
     if (!_placeholderLabel) {
         _placeholderLabel = [[UILabel alloc] init];
-        _placeholderLabel.text = @"搜索你心仪的店名/位置/行业";
+        _placeholderLabel.text = @"输入店名/位置/行业精确搜索";
         _placeholderLabel.textColor = COLOR_GRAY_999999;
         _placeholderLabel.font = kFont_Regular(14.f);
     }
@@ -285,11 +285,11 @@ static NSInteger space = 15;
             [_historyArray insertObject:removeBlackStr atIndex:0];
         }
     }
-    
-    if(_historyArray.count > 10)
-    {
-        [_historyArray removeObjectAtIndex:_historyArray.count - 1];
-    }
+    //暂时不设置上限
+//    if(_historyArray.count > 10)
+//    {
+//        [_historyArray removeObjectAtIndex:_historyArray.count - 1];
+//    }
     //将上述数据全部存储到NSUserDefaults中
     [kUserDefaults setObject:_historyArray forKey:@"historyArray"];
     [kUserDefaults synchronize];
@@ -301,9 +301,8 @@ static NSInteger space = 15;
     
     [_historyArray removeAllObjects];
     //将数据全部从NSUserDefaults中移除
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:nil forKey:@"historyArray"];
-    [userDefaults synchronize];
+    [kUserDefaults setObject:nil forKey:@"historyArray"];
+    [kUserDefaults synchronize];
 }
 
 @end

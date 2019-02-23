@@ -7,13 +7,20 @@
 //
 
 #import "HPBaseTableViewCell.h"
-
+typedef void (^SearchTapHistoryBlock)(NSString *keyword);
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPHistoryViewCell : HPBaseTableViewCell
 
-@property (nonatomic, strong) UILabel *historyLabel;
+@property (nonatomic, strong) UIButton *historyBtn;
 
+@property (nonatomic, strong) NSArray<NSString *> *historyArray;
+
+@property (nonatomic, copy) SearchTapHistoryBlock keywordBlcok;
+
++ (CGFloat)historyCellHeightWithData:(NSArray *)historyArray;
+
+- (void)setHistroyViewWithArray:(NSArray *)historyArray;
 @end
 
 NS_ASSUME_NONNULL_END

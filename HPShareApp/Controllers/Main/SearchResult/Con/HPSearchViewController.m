@@ -11,8 +11,9 @@
 #import "Masonry.h"
 #import "HPGlobalVariable.h"
 #import "HPHistoryViewCell.h"
+#import "HPHotKeywordCell.h"
 #import "HPSearchHeaderView.h"
-#import "HPSearchVerbBtnView.h"
+#import "HPKeywordsModel.h"
 
 @interface HPSearchViewController ()<UITableViewDelegate,UITableViewDataSource,SearchDelegate,UITextFieldDelegate>
 
@@ -25,24 +26,22 @@
 
 @property (nonatomic, strong) HPSearchHeaderView *headerView;
 
-@property (nonatomic, strong) HPSearchVerbBtnView *searchBtnView;
+@property (nonatomic, strong) NSMutableArray<NSString *> *hotSearchArray;
 
 @end
 
 @implementation HPSearchViewController
 
+static NSString *defaultCell = @"defaultCell";
 static NSString *historyViewCell = @"historyViewCell";
+static NSString *hotKeywordCell = @"hotKeywordCell";
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = COLOR_GRAY_FFFFFF;
-    
-    if (self.searchBar.historyArray.count == 0) {
-        
-    }else{
-        [self.tableView reloadData];
-    }
+
     [self setUpUi];
     [self setUpUiMasonry];
 
@@ -53,7 +52,32 @@ static NSString *historyViewCell = @"historyViewCell";
 {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
+    
+    if (_searchBar.historyArray) {
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationLeft];
+        
+    }
+    self.hotSearchArray = [NSMutableArray array];
+    [self getHotKeywordsData];
 }
+
+
+- (void)getHotKeywordsData
+{
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/hotWord/queryHotWordList" isNeedToken:NO paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            NSArray *hotSearchArray = [HPKeywordsModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+            for (HPKeywordsModel *hotModel in hotSearchArray) {
+                [self.hotSearchArray addObject:hotModel.keyword];
+            }
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationLeft];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+
 
 - (void)setUpUi
 {
@@ -106,23 +130,10 @@ static NSString *historyViewCell = @"historyViewCell";
         _tableView.dataSource = self;
         _tableView.separatorColor = COLOR_GRAY_EBEBEB;
         [_tableView registerClass:HPHistoryViewCell.class forCellReuseIdentifier:historyViewCell];
+        [_tableView registerClass:HPHotKeywordCell.class forCellReuseIdentifier:hotKeywordCell];
         _tableView.tableFooterView = [UIView new];
     }
     return _tableView;
-}
-
-- (HPSearchVerbBtnView *)searchBtnView
-{
-    if (!_searchBtnView) {
-        kWEAKSELF
-        _searchBtnView = [HPSearchVerbBtnView new];
-        _searchBtnView.searchBlock = ^(NSString *searchStr) {
-            HPLog(@"搜索。。。");
-            [weakSelf pushVCByClassName:@"HPShareShopListController" withParam:@{@"text":searchStr}];
-
-        };
-    }
-    return _searchBtnView;
 }
 
 - (void)clickPopToHomeVC
@@ -143,11 +154,8 @@ static NSString *historyViewCell = @"historyViewCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0) {
-        return 1.f;
-    }else{
-        return self.searchBar.historyArray.count;
-    }
+    return 1.f;
+
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -158,6 +166,7 @@ static NSString *historyViewCell = @"historyViewCell";
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     _headerView = [[HPSearchHeaderView alloc] initWithFrame:kRect(0, 0, kScreenWidth, getWidth(38.f))];
+    _headerView.backgroundColor = COLOR_GRAY_FFFFFF;
     kWEAKSELF
     _headerView.block = ^{//删除历史
         [weakSelf.searchBar clear];
@@ -203,15 +212,9 @@ static NSString *historyViewCell = @"historyViewCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        if (kScreenHeight >= 812.f) {
-            return getWidth(84.f);
-        }else if (!iPhone5) {
-            return getWidth(84.f);
-        }else{
-            return getWidth(128.f);
-        }
+        return [HPHotKeywordCell hotCellHeightWithData:self.hotSearchArray];
     }else{
-        return getWidth(40.f);
+        return [HPHistoryViewCell historyCellHeightWithData:self.searchBar.historyArray];
     }
     return getWidth(40.f);
 
@@ -219,31 +222,47 @@ static NSString *historyViewCell = @"historyViewCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    HPHistoryViewCell *cell = [tableView dequeueReusableCellWithIdentifier:historyViewCell];
-    if (indexPath.section == 0) {
-        [cell.contentView removeFromSuperview];
-
-        [cell addSubview:self.searchBtnView];
-        [self.searchBtnView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsZero);
-        }];
-    }
-    else{
-        if (!_searchBar.historyArray.count) {
-            cell.historyLabel.text = @"无历史记录";
-        }else{
-            cell.historyLabel.text = _searchBar.historyArray[indexPath.row];
-        }
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:defaultCell];
+    switch (indexPath.section) {
+        case 0:
+            return [self setUpHotSearchCell:tableView];
+            break;
+        case 1:
+            return [self setUpHistoryCell:tableView];
+            break;
+        default:
+            break;
     }
     return cell;
 }
-
+    
+- (HPHotKeywordCell *)setUpHotSearchCell:(UITableView *)tableView
+{
+    HPHotKeywordCell *cell = [tableView dequeueReusableCellWithIdentifier:hotKeywordCell];
+    [cell setHotViewWithArray:self.hotSearchArray];
+    kWEAKSELF
+    cell.hotSearchBlock = ^(NSString *keyword) {
+        [weakSelf pushVCByClassName:@"HPShareShopListController" withParam:@{@"text":keyword}];
+    };
+    return cell;
+}
+    
+- (HPHistoryViewCell *)setUpHistoryCell:(UITableView *)tableView
+{
+    HPHistoryViewCell *cell = [tableView dequeueReusableCellWithIdentifier:historyViewCell];
+    if (_searchBar.historyArray.count || _searchBar.historyArray) {
+        [cell setHistroyViewWithArray:_searchBar.historyArray];
+    }
+    kWEAKSELF
+    cell.keywordBlcok = ^(NSString *keyword) {
+        [weakSelf pushVCByClassName:@"HPShareShopListController" withParam:@{@"text":keyword}];
+        
+    };
+    return cell;
+}
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 1) {
-        [self pushVCByClassName:@"HPShareShopListController" withParam:@{@"text":_searchBar.historyArray[indexPath.row]}];
-    }
 
 }
 

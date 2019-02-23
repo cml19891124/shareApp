@@ -32,7 +32,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = COLOR_GRAY_FFFFFF;
-//    HPIdeaListModel *model = self.param[@"model"];
+
     _navTitleView = [self setupNavigationBarWithTitle:@"合店头条"];
     
     [self setUpSubviewsUI];
@@ -50,6 +50,8 @@
     [self.view addSubview:self.webView];
     
     [self.view addSubview:self.readNumLabel];
+//    _readNumLabel.hidden = YES;
+
 }
 
 - (void)setUpSubviewsUIMasonry
@@ -250,4 +252,21 @@
     
 }
 
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    CGFloat webViewHeight = [[self.webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] floatValue];
+//    [self.webView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.height.mas_equalTo(webViewHeight * 0.5);
+//        [make.bottom uninstall];
+//    }];
+//
+//    [self.readNumLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.webView.mas_bottom);
+//        make.height.mas_equalTo(49.f);
+//
+//    }];
+//    self.readNumLabel.backgroundColor = COLOR_GRAY_FFFFFF;
+//    self.readNumLabel.hidden = NO;
+//    [self.view layoutIfNeeded];
+}
 @end
