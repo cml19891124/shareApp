@@ -321,6 +321,17 @@
 		E68C856A21E9EC2B00AF259C /* HPHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C856921E9EC2B00AF259C /* HPHeaderCell.m */; };
 		E68C856D21E9ED9400AF259C /* HPIdeaListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C856C21E9ED9400AF259C /* HPIdeaListCell.m */; };
 		E68C857121E9EDFB00AF259C /* HPIdeaListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C857021E9EDFB00AF259C /* HPIdeaListModel.m */; };
+		E68C9A022223C96800F68E6A /* NSArray+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99EB2223C96800F68E6A /* NSArray+AvoidCrash.m */; };
+		E68C9A032223C96800F68E6A /* NSString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99ED2223C96800F68E6A /* NSString+AvoidCrash.m */; };
+		E68C9A042223C96800F68E6A /* NSDictionary+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99EE2223C96800F68E6A /* NSDictionary+AvoidCrash.m */; };
+		E68C9A052223C96800F68E6A /* NSMutableDictionary+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99F12223C96800F68E6A /* NSMutableDictionary+AvoidCrash.m */; };
+		E68C9A062223C96800F68E6A /* NSMutableString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99F32223C96800F68E6A /* NSMutableString+AvoidCrash.m */; };
+		E68C9A072223C96800F68E6A /* NSObject+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99F42223C96800F68E6A /* NSObject+AvoidCrash.m */; };
+		E68C9A082223C96800F68E6A /* NSMutableArray+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99F52223C96800F68E6A /* NSMutableArray+AvoidCrash.m */; };
+		E68C9A092223C96800F68E6A /* NSMutableAttributedString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99F62223C96800F68E6A /* NSMutableAttributedString+AvoidCrash.m */; };
+		E68C9A0A2223C96800F68E6A /* NSAttributedString+AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99F72223C96800F68E6A /* NSAttributedString+AvoidCrash.m */; };
+		E68C9A0B2223C96800F68E6A /* AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99FA2223C96800F68E6A /* AvoidCrash.m */; };
+		E68C9A0C2223C96800F68E6A /* AvoidCrashStubProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C99FD2223C96800F68E6A /* AvoidCrashStubProxy.m */; };
 		E68D07C921EC2D26007558CC /* HPIdeaDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E68D07C821EC2D26007558CC /* HPIdeaDetailModel.m */; };
 		E68DDE0621EDBA2B00742D49 /* CustomCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = E68DDE0521EDBA2B00742D49 /* CustomCalloutView.m */; };
 		E68DDE0921EDBABA00742D49 /* ClusterTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68DDE0721EDBABA00742D49 /* ClusterTableViewCell.m */; };
@@ -1092,6 +1103,29 @@
 		E68C856C21E9ED9400AF259C /* HPIdeaListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaListCell.m; sourceTree = "<group>"; };
 		E68C856F21E9EDFB00AF259C /* HPIdeaListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaListModel.h; sourceTree = "<group>"; };
 		E68C857021E9EDFB00AF259C /* HPIdeaListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaListModel.m; sourceTree = "<group>"; };
+		E68C99EB2223C96800F68E6A /* NSArray+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+AvoidCrash.m"; sourceTree = "<group>"; };
+		E68C99EC2223C96800F68E6A /* AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvoidCrash.h; sourceTree = "<group>"; };
+		E68C99ED2223C96800F68E6A /* NSString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+AvoidCrash.m"; sourceTree = "<group>"; };
+		E68C99EE2223C96800F68E6A /* NSDictionary+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+AvoidCrash.m"; sourceTree = "<group>"; };
+		E68C99EF2223C96800F68E6A /* NSAttributedString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+AvoidCrash.h"; sourceTree = "<group>"; };
+		E68C99F02223C96800F68E6A /* AvoidCrashStubProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvoidCrashStubProxy.h; sourceTree = "<group>"; };
+		E68C99F12223C96800F68E6A /* NSMutableDictionary+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+AvoidCrash.m"; sourceTree = "<group>"; };
+		E68C99F22223C96800F68E6A /* AvoidCrashProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvoidCrashProtocol.h; sourceTree = "<group>"; };
+		E68C99F32223C96800F68E6A /* NSMutableString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString+AvoidCrash.m"; sourceTree = "<group>"; };
+		E68C99F42223C96800F68E6A /* NSObject+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+AvoidCrash.m"; sourceTree = "<group>"; };
+		E68C99F52223C96800F68E6A /* NSMutableArray+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+AvoidCrash.m"; sourceTree = "<group>"; };
+		E68C99F62223C96800F68E6A /* NSMutableAttributedString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+AvoidCrash.m"; sourceTree = "<group>"; };
+		E68C99F72223C96800F68E6A /* NSAttributedString+AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+AvoidCrash.m"; sourceTree = "<group>"; };
+		E68C99F82223C96800F68E6A /* NSDictionary+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+AvoidCrash.h"; sourceTree = "<group>"; };
+		E68C99F92223C96800F68E6A /* NSString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+AvoidCrash.h"; sourceTree = "<group>"; };
+		E68C99FA2223C96800F68E6A /* AvoidCrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvoidCrash.m; sourceTree = "<group>"; };
+		E68C99FB2223C96800F68E6A /* NSArray+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+AvoidCrash.h"; sourceTree = "<group>"; };
+		E68C99FC2223C96800F68E6A /* NSMutableDictionary+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+AvoidCrash.h"; sourceTree = "<group>"; };
+		E68C99FD2223C96800F68E6A /* AvoidCrashStubProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvoidCrashStubProxy.m; sourceTree = "<group>"; };
+		E68C99FE2223C96800F68E6A /* NSObject+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+AvoidCrash.h"; sourceTree = "<group>"; };
+		E68C99FF2223C96800F68E6A /* NSMutableString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+AvoidCrash.h"; sourceTree = "<group>"; };
+		E68C9A002223C96800F68E6A /* NSMutableAttributedString+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+AvoidCrash.h"; sourceTree = "<group>"; };
+		E68C9A012223C96800F68E6A /* NSMutableArray+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+AvoidCrash.h"; sourceTree = "<group>"; };
 		E68D07C721EC2D26007558CC /* HPIdeaDetailModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaDetailModel.h; sourceTree = "<group>"; };
 		E68D07C821EC2D26007558CC /* HPIdeaDetailModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaDetailModel.m; sourceTree = "<group>"; };
 		E68DDE0421EDBA2B00742D49 /* CustomCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCalloutView.h; sourceTree = "<group>"; };
@@ -2180,6 +2214,7 @@
 		E661B0FB21A28D7F00C86CF5 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				E68C99EA2223C96800F68E6A /* AvoidCrash */,
 				E620646921DF81BA00E37568 /* LEEAlert */,
 				E6B4CECC21C5286E00429C11 /* SDCycleScrollView */,
 				E622A9AF21C33989007C35BC /* YYLrefresh */,
@@ -2806,6 +2841,36 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		E68C99EA2223C96800F68E6A /* AvoidCrash */ = {
+			isa = PBXGroup;
+			children = (
+				E68C99EB2223C96800F68E6A /* NSArray+AvoidCrash.m */,
+				E68C99EC2223C96800F68E6A /* AvoidCrash.h */,
+				E68C99ED2223C96800F68E6A /* NSString+AvoidCrash.m */,
+				E68C99EE2223C96800F68E6A /* NSDictionary+AvoidCrash.m */,
+				E68C99EF2223C96800F68E6A /* NSAttributedString+AvoidCrash.h */,
+				E68C99F02223C96800F68E6A /* AvoidCrashStubProxy.h */,
+				E68C99F12223C96800F68E6A /* NSMutableDictionary+AvoidCrash.m */,
+				E68C99F22223C96800F68E6A /* AvoidCrashProtocol.h */,
+				E68C99F32223C96800F68E6A /* NSMutableString+AvoidCrash.m */,
+				E68C99F42223C96800F68E6A /* NSObject+AvoidCrash.m */,
+				E68C99F52223C96800F68E6A /* NSMutableArray+AvoidCrash.m */,
+				E68C99F62223C96800F68E6A /* NSMutableAttributedString+AvoidCrash.m */,
+				E68C99F72223C96800F68E6A /* NSAttributedString+AvoidCrash.m */,
+				E68C99F82223C96800F68E6A /* NSDictionary+AvoidCrash.h */,
+				E68C99F92223C96800F68E6A /* NSString+AvoidCrash.h */,
+				E68C99FA2223C96800F68E6A /* AvoidCrash.m */,
+				E68C99FB2223C96800F68E6A /* NSArray+AvoidCrash.h */,
+				E68C99FC2223C96800F68E6A /* NSMutableDictionary+AvoidCrash.h */,
+				E68C99FD2223C96800F68E6A /* AvoidCrashStubProxy.m */,
+				E68C99FE2223C96800F68E6A /* NSObject+AvoidCrash.h */,
+				E68C99FF2223C96800F68E6A /* NSMutableString+AvoidCrash.h */,
+				E68C9A002223C96800F68E6A /* NSMutableAttributedString+AvoidCrash.h */,
+				E68C9A012223C96800F68E6A /* NSMutableArray+AvoidCrash.h */,
+			);
+			path = AvoidCrash;
+			sourceTree = "<group>";
+		};
 		E692144221D4800D00ED6B5C /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -3397,6 +3462,7 @@
 				E68A76BD21F2C6D100083A90 /* JCHATShowTimeCell.m in Sources */,
 				E6D75F7F21B6463400B2067C /* HPShareManageCell.m in Sources */,
 				E661B14621A68BE300C86CF5 /* HPRoundedRectPageControl.m in Sources */,
+				E68C9A042223C96800F68E6A /* NSDictionary+AvoidCrash.m in Sources */,
 				E67EFE35221BA187008BDA1D /* payRequsestHandler.mm in Sources */,
 				7AAFF3A721E390540049D175 /* LineDashPolyline.m in Sources */,
 				E68A770321F2D54000083A90 /* JCHATFriendDetailViewController.m in Sources */,
@@ -3426,6 +3492,7 @@
 				E6D75F4121AFEAD600B2067C /* HPConfigUserNameController.m in Sources */,
 				E617887921BE5BC70092BFA3 /* HPEditPersonOInfoController.m in Sources */,
 				E68A773121F31C4C00083A90 /* JCHATMoreView.m in Sources */,
+				E68C9A0A2223C96800F68E6A /* NSAttributedString+AvoidCrash.m in Sources */,
 				E68A76CE21F2C84200083A90 /* JCHATChatTable.m in Sources */,
 				E68DDE0921EDBABA00742D49 /* ClusterTableViewCell.m in Sources */,
 				E68A76D421F2C9C600083A90 /* ViewUtil.m in Sources */,
@@ -3481,8 +3548,10 @@
 				E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */,
 				E69E0E8E21F95F2D0094837A /* HPAttributeLabel.m in Sources */,
 				E6D75F2821AD463000B2067C /* HPLoginByPasswordController.m in Sources */,
+				E68C9A062223C96800F68E6A /* NSMutableString+AvoidCrash.m in Sources */,
 				E68A77BD21F321BD00083A90 /* MJPhotoProgressView.m in Sources */,
 				E63352A521F1C99300999BE7 /* HPAddressBookViewController.m in Sources */,
+				E68C9A032223C96800F68E6A /* NSString+AvoidCrash.m in Sources */,
 				E6D75F6421B2301600B2067C /* HPCirclePageControl.m in Sources */,
 				E68A772421F31A6200083A90 /* JCHATConversationViewController.m in Sources */,
 				E68DDE0C21EDCEE400742D49 /* HPPoiDetailViewController.m in Sources */,
@@ -3528,7 +3597,9 @@
 				E68A76B021F2C6D100083A90 /* JCHATSelectFriendCell.m in Sources */,
 				E61F710D21C1328400932708 /* HPSystemNotiModel.m in Sources */,
 				E68A781321F327DB00083A90 /* JCHATFootTableViewCell.m in Sources */,
+				E68C9A0C2223C96800F68E6A /* AvoidCrashStubProxy.m in Sources */,
 				7AAFF3AB21E390540049D175 /* MANaviAnnotation.m in Sources */,
+				E68C9A092223C96800F68E6A /* NSMutableAttributedString+AvoidCrash.m in Sources */,
 				E68A77B821F321BD00083A90 /* MJPhotoLoadingView.m in Sources */,
 				E6830E4B21D20184000E0F39 /* HPHomeShareViewController.m in Sources */,
 				E67EFE43221BE233008BDA1D /* UITextField+TextLeftOffset_ffset.m in Sources */,
@@ -3598,6 +3669,7 @@
 				E6292144219AA83A00BEF16C /* main.m in Sources */,
 				7AAFF3BA21E390D80049D175 /* HPShareMapAnnotation.m in Sources */,
 				E68A76CD21F2C84200083A90 /* JCHATMessageTextView.m in Sources */,
+				E68C9A072223C96800F68E6A /* NSObject+AvoidCrash.m in Sources */,
 				E6D75F5621B0D24D00B2067C /* HPHistoryController.m in Sources */,
 				E6D75F6A21B253D000B2067C /* HPPageView.m in Sources */,
 				E661B14321A679E200C86CF5 /* UIScrollView+GestureConflict.m in Sources */,
@@ -3617,7 +3689,9 @@
 				E68A773521F31CDE00083A90 /* XHVoiceRecordHUD.m in Sources */,
 				E69D0A502220E07A0085B591 /* HPKeywordsModel.m in Sources */,
 				E692144521D4802700ED6B5C /* HPUploadButton.m in Sources */,
+				E68C9A0B2223C96800F68E6A /* AvoidCrash.m in Sources */,
 				E6D75F8821B68A4D00B2067C /* HPCustomerServiceModalView.m in Sources */,
+				E68C9A052223C96800F68E6A /* NSMutableDictionary+AvoidCrash.m in Sources */,
 				E661B0C0219CFDEA00C86CF5 /* HPBaseTableViewCell.m in Sources */,
 				E661B0AD219C1CE100C86CF5 /* HPBaseDialogView.m in Sources */,
 				69165CF421C1FA8700593D25 /* HPShareListModel.m in Sources */,
@@ -3646,8 +3720,10 @@
 				E62C84D121C20CBA00D7DFB3 /* HPSignInfoController.m in Sources */,
 				E661B0BA219C2C6300C86CF5 /* HPCheckDialogLayout.m in Sources */,
 				E68A77DB21F321BD00083A90 /* JCHATPhotoPickerViewController.m in Sources */,
+				E68C9A022223C96800F68E6A /* NSArray+AvoidCrash.m in Sources */,
 				E693E90721E8331E0063797A /* ClusterAnnotationView.m in Sources */,
 				7AAFF3BC21E390D80049D175 /* HPShareAnnotationView.m in Sources */,
+				E68C9A082223C96800F68E6A /* NSMutableArray+AvoidCrash.m in Sources */,
 				E6D75F6121B22EC700B2067C /* HPPageControl.m in Sources */,
 				7AAFF3A821E390540049D175 /* MANaviRoute.m in Sources */,
 				E64B727321D24DAC00DCA29A /* HPMenuCellbutton.m in Sources */,

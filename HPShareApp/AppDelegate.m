@@ -31,6 +31,7 @@
 #import <AlipaySDK/AlipaySDK.h>
 #import "WXApiManager.h"
 #import "HPUpdateVersionTool.h"
+#import "AvoidCrash.h"
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate,JPUSHRegisterDelegate,WXApiDelegate>
 
@@ -46,6 +47,8 @@
     //极光推送
     [self setUpJPushAndMessageConfigWithOptions:launchOptions];
     
+    //防止崩溃
+    [AvoidCrash makeAllEffective];
     //微信注册
     [WXApi registerApp:WeiXinKey];
     //注册极光IM
