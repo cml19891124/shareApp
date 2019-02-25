@@ -70,7 +70,11 @@ static NSString *hotKeywordCell = @"hotKeywordCell";
             for (HPKeywordsModel *hotModel in hotSearchArray) {
                 [self.hotSearchArray addObject:hotModel.keyword];
             }
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationLeft];
+            if (self.hotSearchArray.count == 0 || !self.hotSearchArray) {
+                [HPProgressHUD alertMessage:@"暂无数据"];
+            }else{
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationLeft];
+            }
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet

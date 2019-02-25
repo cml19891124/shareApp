@@ -298,14 +298,9 @@ static NSString *shareListCell = @"shareListCell";
 {
     HPMenuItemCell *cell = [tableView dequeueReusableCellWithIdentifier:menuItemCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//    HPLoginModel *account = [HPUserTool account];
 
-    //    kWeakSelf(weakSlef);
     [cell setClickMenuItemBlock:^(NSInteger HPHomeShareMenuItem,NSString *menuString) {
-//        if (!account.token) {
-//            [HPProgressHUD alertMessage:@"请前往登录"];
-//            return ;
-//        }
+
         switch (HPHomeShareMenuItem) {
             case HPHome_page_store_sharing:
                 [self pushVCByClassName:@"HPShareShopListController" withParam:@{@"title":menuString}];
@@ -375,7 +370,7 @@ static NSString *shareListCell = @"shareListCell";
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     kWEAKSELF
     [cell setClickMoreBtnBlock:^{
-//        HPLog(@"MoreBtn");
+
         weakSelf.shareListParam.areaIds = @"9,7,1";
         [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area": weakSelf.shareListParam}];
     }];

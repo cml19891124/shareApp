@@ -13,7 +13,6 @@
 #import "HPLocateHistory.h"
 #import "HPTextDialogView.h"
 #import "HPSearchPOICell.h"
-#import "HPLabel.h"
 
 #define CELL_HISTORY @"cell_history"
 #define CELL_POI @"cell_POI"
@@ -38,7 +37,15 @@
 
 @property (nonatomic, strong) NSMutableArray *searchPOIs;
 
-@property (nonatomic, strong) HPLabel *testLabel;
+@property (nonatomic, strong) UIButton *flowerButton;
+
+@property (nonatomic, strong) NSThread *thread;
+
+/**
+ 要展示的文字
+ */
+@property (nonatomic, copy) NSString *showStr;
+
 @end
 
 @implementation HPShareAddressController
@@ -100,25 +107,21 @@
         make.size.mas_equalTo(CGSizeMake(getWidth(345.f), getWidth(35.f)));
     }];
     
-    _testLabel = [[HPLabel alloc] initWithFrame:CGRectMake(0, 200, 320, 60)];
-    _testLabel.text = @"Hello, DPLabel";
-    _testLabel.backgroundColor = [UIColor whiteColor];
-    _testLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:_testLabel];
-    
-    UIButton *locateBtn = [[UIButton alloc] init];
-    [locateBtn.titleLabel setFont:kFont_Medium(15.f)];
-    [locateBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-    [locateBtn setImage:[UIImage imageNamed:@"location"] forState:UIControlStateNormal];
-    [locateBtn setTitle:@"点击定位当前位置" forState:UIControlStateNormal];
-    [locateBtn setTitle:@"定位中..." forState:UIControlStateDisabled];
-    [locateBtn setTitle:@"定位成功" forState:UIControlStateSelected];
-    [locateBtn setTitle:@"定位成功" forState:UIControlStateSelected|UIControlStateHighlighted];
-    [locateBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 9.f, 0.f, -9.f)];
-    [locateBtn setBackgroundColor:UIColor.whiteColor];
-    [locateBtn addTarget:self action:@selector(onClickLocateBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:locateBtn];
-    [locateBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    _flowerButton = [[UIButton alloc] init];
+    [_flowerButton setTitle:@"点击定位当前位置" forState:UIControlStateNormal];
+    [_flowerButton setTitle:@"定位成功" forState:UIControlStateSelected];
+    [_flowerButton setTitle:@"定位成功" forState:UIControlStateSelected|UIControlStateHighlighted];
+    [_flowerButton.titleLabel setFont:kFont_Medium(15.f)];
+    [_flowerButton setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+    [_flowerButton setImage:[UIImage imageNamed:@"location"] forState:UIControlStateNormal];
+    _flowerButton.backgroundColor = COLOR_GRAY_FFFFFF;
+    _flowerButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    [_flowerButton setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 9.f, 0.f, -9.f)];
+    [_flowerButton addTarget:self action:@selector(onClickLocateBtn:) forControlEvents:UIControlEventTouchUpInside];
+    _showStr = @"定位中...";
+    [self.view addSubview:_flowerButton];
+
+    [_flowerButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(self.view);
         make.top.equalTo(inputRow.mas_bottom).with.offset(getWidth(15.f));
         make.height.mas_equalTo(getWidth(45.f));
@@ -129,7 +132,7 @@
     [self.view addSubview:historyRow];
     [historyRow mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(self.view);
-        make.top.equalTo(locateBtn.mas_bottom).with.offset(getWidth(15.f));
+        make.top.equalTo(self.flowerButton.mas_bottom).with.offset(getWidth(15.f));
         make.height.mas_equalTo(getWidth(40.f));
     }];
     [self setupHistoryRow:historyRow];
@@ -157,6 +160,43 @@
         make.bottom.equalTo(self.view);
     }];
 }
+
+#pragma mark  --- 实现线程的代码体，执行休眠---文字逐字跳动显示
+
+-(void)animationShowText
+
+{
+    
+    for (int i=0; i<_showStr.length; i++) {
+        
+        //每次给Label显示的文字是从最前边到i+1个
+        
+        [self performSelectorOnMainThread:@selector(refreshUI:) withObject:[_showStr substringWithRange:NSMakeRange(0, i+1)] waitUntilDone:YES];
+        
+        [NSThread sleepForTimeInterval:0.3];
+        if (i == _showStr.length - 1) {
+            // 主线程执行：
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // something
+                [self.flowerButton setTitle:@"" forState:UIControlStateNormal];
+            });
+            [self animationShowText];
+        }
+        
+    }
+    
+}
+
+#pragma mark  --- 执行主线程修改UI，每次显示一个文字都要更新一次UI
+
+-(void)refreshUI:(NSString *)contentStr
+
+{
+    
+    [self.flowerButton setTitle:contentStr forState:UIControlStateNormal];
+    
+}
+
 
 - (void)setupHistoryRow:(UIView *)view {
     UIImageView *icon = [[UIImageView alloc] init];
@@ -289,6 +329,14 @@
 }
 
 - (void)onClickLocateBtn:(UIButton *)btn {
+    
+    //开启线程
+    
+    _thread = [[NSThread alloc]initWithTarget:self selector:@selector(animationShowText) object:nil];
+    
+    //初始化字符串，为我们最后显示内容
+    [_thread start];
+    
     [btn setEnabled:NO];
     [btn setSelected:NO];
     
@@ -307,7 +355,8 @@
                 HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
                 self.textDialogView = textDialogView;
             }
-            
+            [self.flowerButton setTitle:@"定位成功" forState:UIControlStateSelected|UIControlStateHighlighted];
+
             NSString *text = [NSString stringWithFormat:@"定位到 “%@”，确定使用？", regeocode.formattedAddress];
             [self.textDialogView setText:text];
             kWeakSelf(weakSelf);
@@ -320,7 +369,7 @@
         else {
             [btn setEnabled:YES];
             [HPProgressHUD alertMessage:@"定位失败"];
-            NSLog(@"error: %@", error);
+            HPLog(@"error: %@", error);
         }
     }];
 }
