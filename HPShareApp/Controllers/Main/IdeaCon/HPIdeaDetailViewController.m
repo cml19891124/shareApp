@@ -32,6 +32,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = COLOR_GRAY_FFFFFF;
+    if (IPHONE_HAS_NOTCH) {//iPhone X出现后，除了对屏幕做各种适配，在跳转到webview的过程中发现底部出现一个黑色区域，其他机型则没有
+        
+       if (@available(iOS 11.0, *)) {
+            
+       self.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+           
+           } else {
+
+               }
+    }
 
     _navTitleView = [self setupNavigationBarWithTitle:@"合店头条"];
     
@@ -48,11 +58,15 @@
 - (void)setUpSubviewsUI
 {
     [self.view addSubview:self.webView];
+    
     self.webView.backgroundColor = COLOR_GRAY_FFFFFF;
+    
+    self.webView.scrollView.contentInset = UIEdgeInsetsMake(0, 0, getWidth(30.f), 0);
+    
     self.webView.scrollView.backgroundColor = COLOR_GRAY_FFFFFF;
 
-    self.webView.scrollView.contentInset = UIEdgeInsetsMake(0, 0, getWidth(30.f), 0);
     [self.webView.scrollView addSubview:self.readNumLabel];
+    
     //自动对页面进行缩放以适应屏幕
     self.webView.scalesPageToFit = NO;
 }
@@ -62,7 +76,7 @@
     [self.webView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.navTitleView.mas_bottom);
-        make.bottom.mas_equalTo(self.view).offset(g_bottomSafeAreaHeight);
+        make.bottom.mas_equalTo(self.view).offset(-0);
     }];
     
     [self.readNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
