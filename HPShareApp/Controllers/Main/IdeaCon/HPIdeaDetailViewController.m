@@ -48,11 +48,13 @@
 - (void)setUpSubviewsUI
 {
     [self.view addSubview:self.webView];
-    
-    self.webView.scalesPageToFit = YES;
-    
-    [self.view addSubview:self.readNumLabel];
-//    _readNumLabel.hidden = YES;
+    self.webView.backgroundColor = COLOR_GRAY_FFFFFF;
+    self.webView.scrollView.backgroundColor = COLOR_GRAY_FFFFFF;
+
+    self.webView.scrollView.contentInset = UIEdgeInsetsMake(0, 0, getWidth(30.f), 0);
+    [self.webView.scrollView addSubview:self.readNumLabel];
+    //自动对页面进行缩放以适应屏幕
+    self.webView.scalesPageToFit = NO;
 }
 
 - (void)setUpSubviewsUIMasonry
@@ -60,16 +62,17 @@
     [self.webView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.navTitleView.mas_bottom);
-        make.height.mas_equalTo(kScreenHeight - g_statusBarHeight - 44.f - 49.f);
-//        make.bottom.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.view).offset(g_bottomSafeAreaHeight);
     }];
     
     [self.readNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(15.f));
-        make.top.mas_equalTo(self.webView.mas_bottom);
-        make.bottom.mas_equalTo(self.view);
-        make.width.mas_equalTo(kScreenWidth/3);
+        make.left.mas_equalTo(self.webView.scrollView).offset(getWidth(15.f));
+        make.right.mas_equalTo(self.webView.scrollView.mas_right).offset(getWidth(-15.f));
+        make.width.mas_equalTo(kScreenWidth);
+        make.height.mas_equalTo(getWidth(30.f));
+        make.bottom.mas_equalTo(self.webView.scrollView);
     }];
+    
 }
 
 #pragma mark - 获取文章详情信息
@@ -83,7 +86,7 @@
             
             [self.webView loadHTMLString:[self adaptWebViewForHtml:self.model.context] baseURL:nil];
             
-            self.readNumLabel.text = [NSString stringWithFormat:@"阅读 %@",self.model.readingQuantity];
+            self.readNumLabel.text = [NSString stringWithFormat:@"阅读量 %@",self.model.readingQuantity];
             
         }else{
             [HPProgressHUD alertMessage:MSG];
@@ -165,18 +168,13 @@
     
 }
 
+//注意：使用这个方法时要把UIWebView的scalesPageToFit设成NO
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     CGFloat webViewHeight = [[self.webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] floatValue];
-    [self.webView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(webViewHeight * 0.5);
-        [make.bottom uninstall];
-    }];
 
     [self.readNumLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.webView.mas_bottom);
-//        make.height.mas_equalTo(49.f);
-
+        make.top.mas_equalTo(webViewHeight + getWidth(16.f));
     }];
     self.readNumLabel.backgroundColor = COLOR_GRAY_FFFFFF;
     [self.view layoutIfNeeded];

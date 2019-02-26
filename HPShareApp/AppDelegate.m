@@ -71,6 +71,7 @@
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:_mainTabBarController];
     navigationController.navigationBarHidden = YES;
     [navigationController.interactivePopGestureRecognizer setDelegate:_mainTabBarController];
+    
     NSString *isFirst = [kUserDefaults objectForKey:@"isFirst"];
     if ([isFirst isEqualToString:@"isFirst"]) {
         self.window.rootViewController = navigationController;
