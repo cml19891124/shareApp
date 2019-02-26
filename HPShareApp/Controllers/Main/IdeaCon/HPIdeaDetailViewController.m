@@ -32,7 +32,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = COLOR_GRAY_FFFFFF;
-    if (IPHONE_HAS_NOTCH) {//iPhone X出现后，除了对屏幕做各种适配，在跳转到webview的过程中发现底部出现一个黑色区域，其他机型则没有
+    if (IPHONE_HAS_NOTCH) {//iPhone X出现后，除了对屏幕做各种适配，在跳转到webview的过程中发现底部出现一个黑色区域，其他机型则没有---在iphoneX的时候设置webview.scrollview.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;这个方法目前我感觉是最靠谱，直接让webview放弃适配安全区域，当然写上了这个，在webview滑到底部的时候就不会顶上来了
         
        if (@available(iOS 11.0, *)) {
             
