@@ -307,6 +307,9 @@
 		E68C856A21E9EC2B00AF259C /* HPHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C856921E9EC2B00AF259C /* HPHeaderCell.m */; };
 		E68C856D21E9ED9400AF259C /* HPIdeaListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C856C21E9ED9400AF259C /* HPIdeaListCell.m */; };
 		E68C857121E9EDFB00AF259C /* HPIdeaListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C857021E9EDFB00AF259C /* HPIdeaListModel.m */; };
+		E68C9A0E2223F93B00F68E6A /* libjcore-ios-1.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68C9A0D2223F93B00F68E6A /* libjcore-ios-1.2.0.a */; };
+		E68C9A102223F94700F68E6A /* libjpush-ios-3.0.9.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68C9A0F2223F94700F68E6A /* libjpush-ios-3.0.9.a */; };
+		E68C9A122223F95300F68E6A /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68C9A112223F95300F68E6A /* libWeChatSDK.a */; };
 		E68D07C921EC2D26007558CC /* HPIdeaDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E68D07C821EC2D26007558CC /* HPIdeaDetailModel.m */; };
 		E68DDE0621EDBA2B00742D49 /* CustomCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = E68DDE0521EDBA2B00742D49 /* CustomCalloutView.m */; };
 		E68DDE0921EDBABA00742D49 /* ClusterTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68DDE0721EDBABA00742D49 /* ClusterTableViewCell.m */; };
@@ -985,6 +988,9 @@
 		E68C856C21E9ED9400AF259C /* HPIdeaListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaListCell.m; sourceTree = "<group>"; };
 		E68C856F21E9EDFB00AF259C /* HPIdeaListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaListModel.h; sourceTree = "<group>"; };
 		E68C857021E9EDFB00AF259C /* HPIdeaListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaListModel.m; sourceTree = "<group>"; };
+		E68C9A0D2223F93B00F68E6A /* libjcore-ios-1.2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libjcore-ios-1.2.0.a"; path = "Pods/JCore/libjcore-ios-1.2.0.a"; sourceTree = "<group>"; };
+		E68C9A0F2223F94700F68E6A /* libjpush-ios-3.0.9.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libjpush-ios-3.0.9.a"; path = "Pods/JPush/libjpush-ios-3.0.9.a"; sourceTree = "<group>"; };
+		E68C9A112223F95300F68E6A /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWeChatSDK.a; path = Pods/WechatOpenSDK/WechatSDK1.8.2/libWeChatSDK.a; sourceTree = "<group>"; };
 		E68D07C721EC2D26007558CC /* HPIdeaDetailModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaDetailModel.h; sourceTree = "<group>"; };
 		E68D07C821EC2D26007558CC /* HPIdeaDetailModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdeaDetailModel.m; sourceTree = "<group>"; };
 		E68DDE0421EDBA2B00742D49 /* CustomCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCalloutView.h; sourceTree = "<group>"; };
@@ -1148,6 +1154,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E68C9A122223F95300F68E6A /* libWeChatSDK.a in Frameworks */,
+				E68C9A102223F94700F68E6A /* libjpush-ios-3.0.9.a in Frameworks */,
+				E68C9A0E2223F93B00F68E6A /* libjcore-ios-1.2.0.a in Frameworks */,
 				E6F14A3F21E5CF5800631005 /* libresolv.tbd in Frameworks */,
 				E6F14A3D21E5CF4C00631005 /* UserNotifications.framework in Frameworks */,
 				E6F14A3B21E5CF4100631005 /* AdSupport.framework in Frameworks */,
@@ -1365,6 +1374,9 @@
 		D29D226676E10B1AF5705590 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E68C9A112223F95300F68E6A /* libWeChatSDK.a */,
+				E68C9A0F2223F94700F68E6A /* libjpush-ios-3.0.9.a */,
+				E68C9A0D2223F93B00F68E6A /* libjcore-ios-1.2.0.a */,
 				E6F14A3E21E5CF5800631005 /* libresolv.tbd */,
 				E6F14A3C21E5CF4C00631005 /* UserNotifications.framework */,
 				E6F14A3A21E5CF4100631005 /* AdSupport.framework */,
@@ -3620,6 +3632,9 @@
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Pods/JCore\"",
 					"\"$(SRCROOT)/Pods/JPush\"",
+					"$(PROJECT_DIR)/Pods/JCore",
+					"$(PROJECT_DIR)/Pods/JPush",
+					"$(PROJECT_DIR)/Pods/WechatOpenSDK/WechatSDK1.8.2",
 				);
 				OTHER_CFLAGS = (
 					"$(inherited)",
@@ -3682,6 +3697,9 @@
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Pods/JCore\"",
 					"\"$(SRCROOT)/Pods/JPush\"",
+					"$(PROJECT_DIR)/Pods/JCore",
+					"$(PROJECT_DIR)/Pods/JPush",
+					"$(PROJECT_DIR)/Pods/WechatOpenSDK/WechatSDK1.8.2",
 				);
 				OTHER_CFLAGS = (
 					"$(inherited)",
