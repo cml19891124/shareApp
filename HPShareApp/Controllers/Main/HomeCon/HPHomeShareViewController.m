@@ -20,8 +20,10 @@
 
 #define slideRatio fabs(y/71.0f)
 
-typedef NS_ENUM(NSInteger, HPDisplaycellIndexpath) {
-    HPDisplaycellIndexpathMenu = 50
+typedef NS_ENUM(NSInteger, HPAreaidsCellIndexpath) {
+    HPAreaidsBaoan = 2,
+    HPAreaidsLonghua = 8,
+    HPAreaidsNanShan = 1
 };
 
 @interface HPHomeShareViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,HPSearchBarDelegate>
@@ -75,7 +77,7 @@ static NSString *shareListCell = @"shareListCell";
     _shareListParam.page = 1;
     _shareListParam.createTimeOrderType = @"0";
     
-    _shareListParam.areaIds = [NSString stringWithFormat:@"9,7,1"]; //宝安，龙华，南山
+    _shareListParam.areaIds = [NSString stringWithFormat:@"%ld,%ld,%ld",HPAreaidsBaoan,HPAreaidsLonghua,HPAreaidsNanShan]; //宝安，龙华，南山
     
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         [self getShareListDataReload:NO];
@@ -349,11 +351,9 @@ static NSString *shareListCell = @"shareListCell";
     [cell setTapClickImageViewBlcok:^(NSInteger tap) {
         switch (tap) {
             case HPGamesCellIndexNinePointNine:
-//                HPLog(@"HPGamesCellIndexNinePointNine");
                 [HPProgressHUD alertMessage:@"一大波活动正拼命赶来～"];
                 break;
             case HPGamesCellIndexpfrofessionalGoods:
-//                HPLog(@"HPGamesCellIndexpfrofessionalGoods");
                 [HPProgressHUD alertMessage:@"一大波活动正拼命赶来～"];
 
                 break;
@@ -371,24 +371,24 @@ static NSString *shareListCell = @"shareListCell";
     kWEAKSELF
     [cell setClickMoreBtnBlock:^{
 
-        weakSelf.shareListParam.areaIds = @"9,7,1";
+        weakSelf.shareListParam.areaIds = self.shareListParam.areaIds;
         [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area": weakSelf.shareListParam}];
     }];
     
     [cell setTapHotImageViewBlock:^(NSInteger tag) {
         switch (tag) {
             case HPStoresShareAreaIndexBaoan:
-                weakSelf.shareListParam.areaIds = @"9";
+                weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"%ld",HPAreaidsBaoan];
                 [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;
             case HPStoresShareAreaIndexLonghua:
-                weakSelf.shareListParam.areaIds = @"7";
+                weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"%ld",HPAreaidsLonghua];
                 [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;
             case HPStoresShareAreaIndexNanshan:
-                weakSelf.shareListParam.areaIds = @"1";
+                weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"%ld",HPAreaidsNanShan];
                 [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;

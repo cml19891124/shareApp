@@ -48,7 +48,7 @@
     [self setUpJPushAndMessageConfigWithOptions:launchOptions];
     
     //防止崩溃
-    [AvoidCrash makeAllEffective];
+//    [AvoidCrash makeAllEffective];
     //微信注册
     [WXApi registerApp:WeiXinKey];
     //注册极光IM
