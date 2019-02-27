@@ -61,11 +61,19 @@
     
     self.webView.backgroundColor = COLOR_GRAY_FFFFFF;
     
-    self.webView.scrollView.contentInset = UIEdgeInsetsMake(0, 0, getWidth(30.f), 0);
+    float bottomHeight = 0;
+    if (IPHONE_HAS_NOTCH) {
+        bottomHeight = g_bottomSafeAreaHeight;
+    }else{
+        bottomHeight = getWidth(30.f);
+    }
+    self.webView.scrollView.contentInset = UIEdgeInsetsMake(0, 0,bottomHeight, 0);
     
     self.webView.scrollView.backgroundColor = COLOR_GRAY_FFFFFF;
 
     [self.webView.scrollView addSubview:self.readNumLabel];
+    //设置是否透明属性来去掉加载webview时底部的g_bottomSafeAreaHeight高度的黑色
+    _webView.opaque = NO;
     
     //自动对页面进行缩放以适应屏幕
     self.webView.scalesPageToFit = NO;
@@ -76,7 +84,7 @@
     [self.webView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.navTitleView.mas_bottom);
-        make.bottom.mas_equalTo(self.view).offset(-0);
+        make.bottom.mas_equalTo(self.view);
     }];
     
     [self.readNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -191,7 +199,7 @@
         make.top.mas_equalTo(webViewHeight + getWidth(16.f));
     }];
     self.readNumLabel.backgroundColor = COLOR_GRAY_FFFFFF;
-    [self.view layoutIfNeeded];
+//    [self.view layoutIfNeeded];
     [HPProgressHUD alertWithFinishText:@"加载完成"];
 
 }
