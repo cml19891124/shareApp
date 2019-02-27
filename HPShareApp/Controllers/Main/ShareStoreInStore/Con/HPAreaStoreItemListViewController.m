@@ -16,7 +16,6 @@
 
 @interface HPAreaStoreItemListViewController () <UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, strong) NSMutableArray *dataArray;
 
 @end
 
@@ -119,7 +118,7 @@ static NSString *shareListCell = @"shareListCell";
 - (void)getAreaShareListDataReload:(BOOL)isReload {
     
     if (isReload) {
-        _shareListParam.page = 1;
+        [self.tableView scrollsToTop];
     }
     [HPProgressHUD alertWithLoadingText:@"加载数据中..."];
     NSMutableDictionary *param = _shareListParam.mj_keyValues;

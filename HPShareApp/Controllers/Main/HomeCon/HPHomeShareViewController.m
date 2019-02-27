@@ -370,8 +370,6 @@ static NSString *shareListCell = @"shareListCell";
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     kWEAKSELF
     [cell setClickMoreBtnBlock:^{
-
-        weakSelf.shareListParam.areaIds = self.shareListParam.areaIds;
         [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area": weakSelf.shareListParam}];
     }];
     
@@ -379,16 +377,19 @@ static NSString *shareListCell = @"shareListCell";
         switch (tag) {
             case HPStoresShareAreaIndexBaoan:
                 weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"%ld",HPAreaidsBaoan];
+                weakSelf.shareListParam.page = 1;
                 [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;
             case HPStoresShareAreaIndexLonghua:
                 weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"%ld",HPAreaidsLonghua];
+                weakSelf.shareListParam.page = 1;
                 [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;
             case HPStoresShareAreaIndexNanshan:
                 weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"%ld",HPAreaidsNanShan];
+                weakSelf.shareListParam.page = 1;
                 [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area":weakSelf.shareListParam}];
 
                 break;

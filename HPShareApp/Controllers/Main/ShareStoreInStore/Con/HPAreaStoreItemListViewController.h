@@ -9,6 +9,9 @@
 @property(strong, nonatomic) UITableView *tableView;
 
 @property (nonatomic, strong) HPShareListParam *shareListParam;
+
+@property (nonatomic, strong) NSMutableArray *dataArray;
+
 #pragma mark - network - 共享发布数据
 
 - (void)getAreaShareListDataReload:(BOOL)isReload;

@@ -279,6 +279,7 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
             HPLinkageData *linkageData = [[HPLinkageData alloc] initWithModels:models];
             [linkageData setParentNameKey:@"name"];
             [linkageData setChildNameKey:@"name"];
+            [linkageData addChildrenAllModelWithParentIdKey:@"areaId" childParentIdKey:@"areaId"];
             [linkageData addParentAllModel];
             HPLinkageTopModalView *linkageView = [[HPLinkageTopModalView alloc] initWithData:linkageData];
             [linkageView setDelegate:self];

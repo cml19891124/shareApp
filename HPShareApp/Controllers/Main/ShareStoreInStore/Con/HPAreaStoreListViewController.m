@@ -30,7 +30,7 @@
 @property(assign, nonatomic) CGFloat currentProgress;
 @property (nonatomic, strong) HPShareListParam *shareListParam;
 
-@property (nonatomic, strong) HPAreaStoreItemListViewController *testVC;
+@property (nonatomic, strong) HPAreaStoreItemListViewController *itemVC;
 
 @property (nonatomic, strong) NSMutableArray *itemVCs;
 
@@ -61,7 +61,6 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     _shareListParam = self.param[@"area"];
     
-    self.testVC.shareListParam = self.shareListParam;    
     [self setupNavigationBarWithTitle:@"热门店铺推荐"];
     [self setupSubViews];
 }
@@ -81,32 +80,38 @@
 
         return weakSelf.headerView;
     }];
-    
-    if ([_shareListParam.areaIds isEqualToString:@"9"]) {
+
+    if ([_shareListParam.areaIds isEqualToString:@"2"]) {
         [self.managerView scrollToIndexWithIndex:0]; //宝安
-    }else if ([_shareListParam.areaIds isEqualToString:@"7"]){
+    }else if ([_shareListParam.areaIds isEqualToString:@"8"]){
         [self.managerView scrollToIndexWithIndex:1];//龙华区
     }else if ([_shareListParam.areaIds isEqualToString:@"1"]){
         [self.managerView scrollToIndexWithIndex:2]; //南山区
-    }else if ([_shareListParam.areaIds isEqualToString:@"9,7,1"]){
+    }else if ([_shareListParam.areaIds isEqualToString:@"2,8,1"]){
+        self.shareListParam.areaIds = [NSString stringWithFormat:@"2,8,1"];
+
         [self.managerView scrollToIndexWithIndex:0]; //宝安\龙华区\南山区
     }
-    self.testVC.shareListParam = self.shareListParam;
 
     //pageView点击事件
     [self.managerView didSelectIndexHandle:^(NSInteger index) {
         HPLog(@"点击了 -> %ld", index);
         if (index == 0) {
-            weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"9"]; //宝安
+            weakSelf.shareListParam.page = 1;
+
+            weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"2"]; //宝安
         }else if (index == 1){
-            weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"7"]; //龙华
+            weakSelf.shareListParam.page = 1;
+            weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"8"]; //龙华
         }else if (index == 2){
+            weakSelf.shareListParam.page = 1;
             weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"1"]; //南山
         }
-        weakSelf.testVC = weakSelf.itemVCs[index];
-        weakSelf.testVC.shareListParam = weakSelf.shareListParam;
-        [weakSelf.testVC getAreaShareListDataReload:NO];
-        [weakSelf.testVC.tableView reloadData];
+        weakSelf.itemVC = weakSelf.itemVCs[index];
+        weakSelf.itemVC.shareListParam = weakSelf.shareListParam;
+        [weakSelf.itemVC getAreaShareListDataReload:YES];
+        [weakSelf.itemVC.tableView reloadData];
+
     }];
     
     //控制器刷新事件
@@ -118,7 +123,7 @@
 //                HPLog(@"对应控制器的刷新自己玩吧，这里就不做处理了🙂-----%ld", index);
 //                [strongScrollView.mj_header endRefreshing];
 //            });
-//        }];
+//        }];weakSelf.shareListParam.page = 1;
 //    }];
     
 }
@@ -241,6 +246,10 @@
     kWEAKSELF
     [self.titles enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         HPAreaStoreItemListViewController *itemVC = [[HPAreaStoreItemListViewController alloc] init];
+        weakSelf.shareListParam.page = 1;
+        weakSelf.shareListParam.type = @"1";
+        weakSelf.itemVC = itemVC;
+        weakSelf.itemVC.shareListParam = weakSelf.shareListParam;
         [weakSelf.itemVCs addObject:itemVC];
     }];
     return _itemVCs.copy;
