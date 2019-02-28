@@ -214,7 +214,6 @@
 		E67EFE43221BE233008BDA1D /* UITextField+TextLeftOffset_ffset.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE41221BE233008BDA1D /* UITextField+TextLeftOffset_ffset.m */; };
 		E67EFE46221BE256008BDA1D /* BigSizeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE44221BE256008BDA1D /* BigSizeButton.m */; };
 		E67EFE52221BEF8C008BDA1D /* HPHistoryViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE51221BEF8C008BDA1D /* HPHistoryViewCell.m */; };
-		E681446F21F05C3B0052A93F /* HPCommonBannerData.m in Sources */ = {isa = PBXBuildFile; fileRef = E681446E21F05C3B0052A93F /* HPCommonBannerData.m */; };
 		E681447221F067890052A93F /* HPSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = E681447121F067890052A93F /* HPSingleton.m */; };
 		E6830E4821D1D0B3000E0F39 /* HPIntentionListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E6830E4721D1D0B3000E0F39 /* HPIntentionListModel.m */; };
 		E6830E4B21D20184000E0F39 /* HPHomeShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6830E4A21D20184000E0F39 /* HPHomeShareViewController.m */; };
@@ -922,8 +921,6 @@
 		E67EFE45221BE256008BDA1D /* BigSizeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigSizeButton.h; sourceTree = "<group>"; };
 		E67EFE50221BEF8C008BDA1D /* HPHistoryViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHistoryViewCell.h; sourceTree = "<group>"; };
 		E67EFE51221BEF8C008BDA1D /* HPHistoryViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHistoryViewCell.m; sourceTree = "<group>"; };
-		E681446D21F05C3B0052A93F /* HPCommonBannerData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCommonBannerData.h; sourceTree = "<group>"; };
-		E681446E21F05C3B0052A93F /* HPCommonBannerData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCommonBannerData.m; sourceTree = "<group>"; };
 		E681447021F067890052A93F /* HPSingleton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSingleton.h; sourceTree = "<group>"; };
 		E681447121F067890052A93F /* HPSingleton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSingleton.m; sourceTree = "<group>"; };
 		E6830E4621D1D0B3000E0F39 /* HPIntentionListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIntentionListModel.h; sourceTree = "<group>"; };
@@ -1881,8 +1878,6 @@
 				69165CF621C221C000593D25 /* HPCommonData.m */,
 				E622A9C221C34E1C007C35BC /* HPClearCacheTool.h */,
 				E622A9C321C34E1C007C35BC /* HPClearCacheTool.m */,
-				E681446D21F05C3B0052A93F /* HPCommonBannerData.h */,
-				E681446E21F05C3B0052A93F /* HPCommonBannerData.m */,
 				E681447021F067890052A93F /* HPSingleton.h */,
 				E681447121F067890052A93F /* HPSingleton.m */,
 			);
@@ -3655,7 +3650,6 @@
 				E6D75F8221B646B000B2067C /* HPShareManageController.m in Sources */,
 				E68DDE0621EDBA2B00742D49 /* CustomCalloutView.m in Sources */,
 				E661B0EA219EBF3600C86CF5 /* HPShareRecommendCard.m in Sources */,
-				E681446F21F05C3B0052A93F /* HPCommonBannerData.m in Sources */,
 				E63352A021F1C99300999BE7 /* YXTableViewIndexView.m in Sources */,
 				E692144121D46CB300ED6B5C /* HPOwnnerReleaseViewController.m in Sources */,
 				7AAFF36521CD2EC20049D175 /* HPTimeRentView.m in Sources */,

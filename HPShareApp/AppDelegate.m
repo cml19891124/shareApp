@@ -13,7 +13,6 @@
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import "HPGuideViewController.h"
 #import "HPCommonData.h"
-#import "HPCommonBannerData.h"
 
 #import "Bugly/Bugly.h"
 #import <JMessage/JMessage.h>

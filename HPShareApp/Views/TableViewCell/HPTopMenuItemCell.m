@@ -7,7 +7,6 @@
 //
 
 #import "HPTopMenuItemCell.h"
-#import "HPCommonBannerData.h"
 
 @implementation HPTopMenuItemCell
 
