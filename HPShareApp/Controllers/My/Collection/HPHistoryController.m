@@ -62,6 +62,7 @@
     [self.shareListParam setPageSize:10];
     [self.shareListParam setUserId:account.userInfo.userId];
     [self.shareListParam setPage:1];
+    [self.shareListParam setType:@"1" ];
     
     _histroyDataList = [[NSMutableArray alloc] init];
     
@@ -71,6 +72,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.shareListParam.page = 1;
+    self.shareListParam.type = @"1";
     [self getBrowseListDataReload:YES];
 
 }
@@ -87,11 +90,15 @@
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         
         self.shareListParam.page = 1;
+        self.shareListParam.type = @"1";
+
         [self getBrowseListDataReload:YES];
     }];
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         
         self.shareListParam.page ++;
+        self.shareListParam.type = @"1";
+
         [self getBrowseListDataReload:NO];
     }];
     
@@ -296,7 +303,7 @@
         }
     }
     
-    [_allCheckBtn setSelected:YES];
+//    [_allCheckBtn setSelected:YES];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -446,6 +453,7 @@
                     if (weakSelf.dataArray.count == 0) {
                         [weakSelf.allCheckBtn setSelected:NO];
                     }
+                    [self getBrowseListDataReload:YES];
                 }else{
                     [HPProgressHUD alertMessage:MSG];
                 }

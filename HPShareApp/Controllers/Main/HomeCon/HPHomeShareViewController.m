@@ -70,6 +70,12 @@ static NSString *shareListCell = @"shareListCell";
     [self.view addSubview:[self createHeaderView]];
     [self.headerView addSubview:self.searchBar];
     
+    self.searchBar.backgroundColor = COLOR_GRAY_FFFFFF;
+    
+    self.searchBar.textField.backgroundColor = COLOR_GRAY_FFFFFF;
+    
+    self.searchBar.textField.borderStyle = UITextBorderStyleNone;
+
     self.searchBar.SearchDelegate = self;
     
     self.searchBar.hidden = YES;
@@ -79,6 +85,7 @@ static NSString *shareListCell = @"shareListCell";
     _shareListParam = [HPShareListParam new];
     _shareListParam.pageSize = 10;
     _shareListParam.page = 1;
+    _shareListParam.type = @"1";
     _shareListParam.createTimeOrderType = @"0";
     
     _shareListParam.areaIds = [NSString stringWithFormat:@"%ld,%ld,%ld",HPAreaidsBaoan,HPAreaidsLonghua,HPAreaidsNanShan]; //宝安，龙华，南山
@@ -123,7 +130,7 @@ static NSString *shareListCell = @"shareListCell";
 //    HPLog(@"deltaY : %f", deltaY);
 }
 
-#pragma mark - 共享发布数据
+#pragma mark - 拼租发布数据
 
 - (void)getShareListDataReload:(BOOL)isReload {
     
@@ -186,8 +193,16 @@ static NSString *shareListCell = @"shareListCell";
         make.centerY.mas_equalTo(self.openView.mas_bottom);
         make.centerX.mas_equalTo(self.tableView);
     }];
+    
+    float slideHeight = 0.00;
+    if (IPHONE_HAS_NOTCH) {
+        slideHeight = getWidth(7.f/2);
+    }else{
+        slideHeight = getWidth(8.f);
+    }
     [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.top.mas_equalTo(self.headerView);
+        make.left.right.bottom.mas_equalTo(self.headerView);
+        make.top.mas_equalTo(self.headerView).offset(slideHeight);
     }];
 }
 
@@ -222,7 +237,7 @@ static NSString *shareListCell = @"shareListCell";
         [_tableView registerClass:HPShareListCell.class forCellReuseIdentifier:shareListCell];
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.contentInset = UIEdgeInsetsMake(getWidth(71.f), 0, 0, 0);
-        [_tableView setContentOffset:CGPointMake(0, getWidth(-71.f)) animated:YES];
+        [_tableView setContentOffset:CGPointMake(0, getWidth(-79.f)) animated:YES];
     }
     return _tableView;
 }
@@ -231,6 +246,7 @@ static NSString *shareListCell = @"shareListCell";
 {
     if (!_searchBar) {
         _searchBar = [HPSearchBar new];
+        _searchBar.backgroundColor = COLOR_GRAY_FFFFFF;
         _searchBar.layer.cornerRadius = 2.5f;
         _searchBar.layer.shadowColor = COLOR_BLACK_333333.CGColor;
         _searchBar.layer.shadowOpacity = 0.3f;
@@ -367,7 +383,7 @@ static NSString *shareListCell = @"shareListCell";
     }];
     return cell;
 }
-#pragma mark - 热门共享店铺
+#pragma mark - 热门拼租店铺
 - (HPHotShareStoreCell *)setUpHotShareCell:(UITableView *)tableView
 {
     HPHotShareStoreCell *cell = [tableView dequeueReusableCellWithIdentifier:hotShareStoreCell];
@@ -404,7 +420,7 @@ static NSString *shareListCell = @"shareListCell";
     return cell;
 }
 
-#pragma mark - 共享店铺列表
+#pragma mark - 拼租店铺列表
 - (HPShareListCell *)setUpShareListCell:(UITableView *)tableView withIndexpath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 4) {
@@ -470,7 +486,7 @@ static NSString *shareListCell = @"shareListCell";
             make.centerX.mas_equalTo(self.tableView);
         }];
     }
-    else if (y <= -71.f) {
+    else if (y <= -71.f) {//最下面的y值
         [self.openView.sloganImageView setAlpha:1.f];
         [self.headerView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(getWidth(325.f));
@@ -479,15 +495,13 @@ static NSString *shareListCell = @"shareListCell";
             make.centerX.mas_equalTo(self.tableView);
         }];
     }
-    else if (y > 0.f) {
+    else if (y > 0.f) {//最上面的y值
         [self.openView.sloganImageView setAlpha:0.f];
         [self.headerView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.width.mas_equalTo(getWidth(225.f));
             make.left.mas_equalTo(self.openView.cityBtn.mas_right).offset(getWidth(15.f));
             make.right.mas_equalTo(self.openView.mas_right).offset(getWidth(-30.f));
             make.height.mas_equalTo(getWidth(30.f));
-            make.centerY.mas_equalTo(self.openView.cityBtn).offset(0.f);
-//            make.centerX.mas_equalTo(self.tableView);
+            make.centerY.mas_equalTo(self.openView.cityBtn).offset(-getWidth(8.f));
         }];
     }
     

@@ -54,7 +54,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    UIView *navTilteView = [self setupNavigationBarWithTitle:@"完善店铺共享信息"];
+    UIView *navTilteView = [self setupNavigationBarWithTitle:@"完善店铺拼租信息"];
     self.view.backgroundColor = COLOR_GRAY_FFFFFF;
     [self.view addSubview:self.leavesLabel];
     [self.leavesLabel mas_makeConstraints:^(MASConstraintMaker *make) {

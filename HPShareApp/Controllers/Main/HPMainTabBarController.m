@@ -190,7 +190,7 @@
                         vc = [[HPStartUpCardDefineController alloc] init];
                     }
                     else if (type == HPReleaseCardTypeGoods) {
-#warning TODO---有货共享界面
+#warning TODO---有货拼租界面
                         vc = [[HPStartUpCardDefineController alloc] init];
                     }
                     

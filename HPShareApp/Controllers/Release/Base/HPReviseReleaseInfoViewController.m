@@ -132,7 +132,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
 }
 
 - (void)setupUI {
-    [self setupNavigationBarWithTitle:@"完善店铺共享信息"];
+    [self setupNavigationBarWithTitle:@"完善店铺拼租信息"];
     for (int i = 0; i < 7; i++) {
         [self setupPanelAtIndex:i ofView:self.scrollView];
     }
@@ -294,7 +294,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
         }];
         
     }else if (index == 4){
-        //共享类型
+        //拼租类型
         [panel addRowView:[self setupRentTypeRowView] withHeight:123.f * g_rateWidth];
         [panel addRowView:[self setUpTimeRentView] withHeight:getWidth(77.f)];
         UIView *lastPanel = view.subviews[index - 1];
@@ -307,7 +307,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
         [panel shrinkFrom:1 to:1];
         _rentModelPanel = panel;
     }else if (index == 5) {
-        //共享租金
+        //拼租租金
         [panel addRowView:[self setupRentAmountRowView] withHeight:getWidth(137.f)];
         [panel addRowView:[self setupRentAmountItemRowView] withHeight:getWidth(91.f)];
 
@@ -470,7 +470,7 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickShareGotoButton:)];
     [rentView setTag:HPShareGotoBtnTagRect];
     [rentView addGestureRecognizer:tap];
-    [self setupTitleLabelWithText:@"我期望的共享租金" ofView:rentView];
+    [self setupTitleLabelWithText:@"我期望的拼租租金" ofView:rentView];
     HPRightImageButton *rectBtn = [self setupGotoBtnWithTitle:@""];
 //    [rectBtn setTag:HPShareGotoViewTagRect];
 //    [rectBtn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];

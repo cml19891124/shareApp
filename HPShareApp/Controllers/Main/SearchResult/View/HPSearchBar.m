@@ -70,14 +70,14 @@ static NSInteger space = 15;
     if (!_textField) {
         _textField = [[UITextField alloc]init];
         /*! 边框处理 */
-        _textField.layer.borderColor = COLOR_GRAY_F4F4F4.CGColor;
+//        _textField.layer.borderColor = COLOR_GRAY_F4F4F4.CGColor;
         _textField.backgroundColor = COLOR_GRAY_F4F4F4;
-        _textField.layer.borderWidth = 1;
+//        _textField.layer.borderWidth = 1;
         _textField.layer.cornerRadius = 2.f;
         _textField.layer.masksToBounds = YES;
         /*! 字体其他 */
         _textField.font = kFont_Regular(14.f);
-        _textField.tintColor = COLOR_GRAY_F4F4F4;
+        _textField.tintColor = COLOR_RED_EA0000;
         _textField.keyboardType = UIKeyboardTypeDefault;
         _textField.delegate =self;
         /*! 设置键盘return样式为搜索样式 */
@@ -240,8 +240,9 @@ static NSInteger space = 15;
     //页面跳转的相关代码
     if ([self.SearchDelegate respondsToSelector:@selector(clickSearchView:JumpToSearchResultVCInTextfield:)]) {
         [self.SearchDelegate clickSearchView:self JumpToSearchResultVCInTextfield:self.textField];
+        return NO;
     }
-    return NO;
+    return YES;
 }
 
 - (void)isHiddenLabel:(UITextField *)textField{

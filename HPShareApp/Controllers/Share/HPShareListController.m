@@ -25,7 +25,7 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_WHITE_F9FCFF];
-    [self setupNavigationBarWithTitle:@"共享"];
+    [self setupNavigationBarWithTitle:@"拼租"];
     UIView *filterBar = [self setupFilterBar];
     [self.view addSubview:filterBar];
     [filterBar mas_makeConstraints:^(MASConstraintMaker *make) {

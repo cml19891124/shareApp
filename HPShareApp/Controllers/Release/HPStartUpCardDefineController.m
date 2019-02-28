@@ -31,9 +31,9 @@
 
 @property (nonatomic, weak) UIButton *districtBtn; //期望区域
 
-@property (nonatomic, weak) UIButton *shareTimeBtn; //共享时段
+@property (nonatomic, weak) UIButton *shareTimeBtn; //拼租时段
 
-@property (nonatomic, weak) UIButton *shareDateBtn; //共享日期
+@property (nonatomic, weak) UIButton *shareDateBtn; //拼租日期
 
 @property (nonatomic, weak) UITextField *intentSpaceField;//意向空间
 
@@ -216,7 +216,7 @@
     UIView *view = [[UIView alloc] init];
     
     [self setupTitleLabelWithText:@"发布标题" ofView:view];
-    _titleField = [self setupTextFieldWithPlaceholder:@"例：优品小店深圳急求共享铺位" ofView:view rightTo:view];
+    _titleField = [self setupTextFieldWithPlaceholder:@"例：优品小店深圳急求拼租铺位" ofView:view rightTo:view];
     
     return view;
 }
@@ -352,7 +352,7 @@
 - (UIView *)setupShareTimeRowView {
     UIView *view = [[UIView alloc] init];
     
-    [self setupTitleLabelWithText:@"共享时段" ofView:view];
+    [self setupTitleLabelWithText:@"拼租时段" ofView:view];
     UIImageView *downIcon = [self setupDownIconOfView:view];
     
     UIButton *valueBtn = [[UIButton alloc] init];
@@ -377,7 +377,7 @@
 - (UIView *)setupShareDateRowView {
     UIView *view = [[UIView alloc] init];
     
-    [self setupTitleLabelWithText:@"共享日期" ofView:view];
+    [self setupTitleLabelWithText:@"拼租日期" ofView:view];
     
     UIButton *calendarBtn = [[UIButton alloc] init];
     [calendarBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:14.f]];
@@ -604,7 +604,7 @@
         return;
     }
     else if ([shareDays isEqualToString:@""]) {
-        [HPProgressHUD alertMessage:@"请选择共享日期"];
+        [HPProgressHUD alertMessage:@"请选择拼租日期"];
         _canRelease = YES;
         return;
     }

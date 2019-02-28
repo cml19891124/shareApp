@@ -539,7 +539,7 @@ static int selectBtn_tag = -1;
     if (!_rightLabel) {
         _rightLabel = [UILabel new];
         _rightLabel.textColor = COLOR_GRAY_FFFFFF;
-        _rightLabel.text = @"共享空间照片";
+        _rightLabel.text = @"拼租空间照片";
         _rightLabel.textAlignment = NSTextAlignmentCenter;
         _rightLabel.font = kFont_Medium(11.f);
         _rightLabel.backgroundColor = COLOR_BLACK_000000;

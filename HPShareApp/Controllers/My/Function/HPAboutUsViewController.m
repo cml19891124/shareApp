@@ -127,7 +127,7 @@
         [_themeSBLabel setFont:kFont_Regular(13.f)];
         [_themeSBLabel setTextColor:COLOR_BLACK_666666];
         _themeSBLabel.textAlignment = NSTextAlignmentCenter;
-        [_themeSBLabel setText:@"共享人货场信息的新零售平台"];
+        [_themeSBLabel setText:@"打造全球空间拼租、短租第一平台"];
     }
     return _themeSBLabel;
 }

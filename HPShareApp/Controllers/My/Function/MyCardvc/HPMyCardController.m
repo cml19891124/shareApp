@@ -417,7 +417,7 @@ typedef NS_ENUM(NSInteger, HPMyCardType) {
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
     [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setText:@"共享发布"];
+    [titleLabel setText:@"拼租发布"];
     [view addSubview:titleLabel];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(21.f * g_rateWidth);
@@ -599,7 +599,7 @@ typedef NS_ENUM(NSInteger, HPMyCardType) {
             [HPProgressHUD alertMessage:@"暂无数据"];
             //            self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
             //            self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"list_default_page");
-            //            self.tableView.refreshNoDataView.tipLabel.text = @"店铺共享，你是第一个吃螃蟹的人！！";
+            //            self.tableView.refreshNoDataView.tipLabel.text = @"店铺拼租，你是第一个吃螃蟹的人！！";
             //            [self.tableView.refreshNoDataView.tipBtn setTitle:@"立即发布" forState:UIControlStateNormal];
             //            self.tableView.refreshNoDataView.delegate = self;
         }

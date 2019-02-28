@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *shareTime;
 
 /**
- 共享天数，后台检验格式：2018-11-12,2018-12-12. 建议用英语逗号拼接，方便你们后续处理
+ 拼租天数，后台检验格式：2018-11-12,2018-12-12. 建议用英语逗号拼接，方便你们后续处理
  */
 @property (nonatomic, copy) NSString *shareDays;
 

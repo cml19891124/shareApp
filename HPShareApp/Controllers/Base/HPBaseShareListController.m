@@ -481,7 +481,7 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
             [HPProgressHUD alertMessage:@"暂无数据"];
 //            self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
 //            self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"list_default_page");
-//            self.tableView.refreshNoDataView.tipLabel.text = @"店铺共享，你是第一个吃螃蟹的人！！";
+//            self.tableView.refreshNoDataView.tipLabel.text = @"店铺拼租，你是第一个吃螃蟹的人！！";
 //            [self.tableView.refreshNoDataView.tipBtn setTitle:@"立即发布" forState:UIControlStateNormal];
 //            self.tableView.refreshNoDataView.delegate = self;
         }

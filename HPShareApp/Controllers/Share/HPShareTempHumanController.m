@@ -34,14 +34,14 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"人力共享"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"人力拼租"];
     
     UITableView *tableView = [[UITableView alloc] init];
     [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [tableView setBounces:NO];
     tableView.loadErrorType = YYLLoadErrorTypeNoData;
     tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"list_default_page");
-    tableView.refreshNoDataView.tipLabel.text = @"人力共享即将开启，敬请期待～";
+    tableView.refreshNoDataView.tipLabel.text = @"人力拼租即将开启，敬请期待～";
     [tableView.refreshNoDataView.tipBtn setHidden:YES];
     [self.view addSubview:tableView];
     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -131,7 +131,7 @@
     UILabel *priceDescLabel = [[UILabel alloc] init];
     [priceDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:11.f]];
     [priceDescLabel setTextColor:COLOR_GRAY_999999];
-    [priceDescLabel setText:@"共享价格"];
+    [priceDescLabel setText:@"拼租价格"];
     [bgView addSubview:priceDescLabel];
     _priceDescLabel = priceDescLabel;
     [priceDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -79,7 +79,7 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_GRAY_FAF9FE];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"共享地址"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"拼租地址"];
     
     UIView *inputRow = [[UIView alloc] init];
     [inputRow setBackgroundColor:UIColor.whiteColor];

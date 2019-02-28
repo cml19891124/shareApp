@@ -59,7 +59,7 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:UIColor.whiteColor];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"货品共享"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"货品拼租"];
     _navigationView = navigationView;
     
     //    HPBannerView *bannerView = [[HPBannerView alloc] init];

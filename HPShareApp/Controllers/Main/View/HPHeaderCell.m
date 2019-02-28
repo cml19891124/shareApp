@@ -151,7 +151,7 @@
 //    UILabel *questionLabel = [[UILabel alloc] init];
 //    [questionLabel setFont:[UIFont fontWithName:FONT_BOLD size:13.f]];
 //    [questionLabel setTextColor:COLOR_BLACK_4A4A4B];
-//    [questionLabel setText:@"共享经济已死？"];
+//    [questionLabel setText:@"拼租经济已死？"];
 //    [view addSubview:questionLabel];
 //    [questionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
 //        make.left.equalTo(titleLabel);

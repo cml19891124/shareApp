@@ -70,7 +70,6 @@
         [_themeSBLabel setFont:kFont_Medium(16.f)];
         [_themeSBLabel setTextColor:COLOR_GRAY_666666];
         _themeSBLabel.textAlignment = NSTextAlignmentCenter;
-//        [_themeSBLabel setText:@"让店铺每平米空间都能增值"];
         [themeSBLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(enterBtn.mas_top).with.offset(getWidth(-39.f));
             make.height.mas_equalTo(themeSBLabel.font.pointSize);
@@ -85,7 +84,6 @@
         [_themeLabel setFont:kFont_Bold(24.f)];
         [_themeLabel setTextColor:COLOR_BLACK_333333];
         _themeLabel.textAlignment = NSTextAlignmentCenter;
-//        [_themeLabel setText:@"共享店铺"];
         [themeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.themeSBLabel.mas_top).with.offset(getWidth(-22.f));
             make.size.mas_equalTo(CGSizeMake(kScreenWidth/2, getWidth(23.f)));

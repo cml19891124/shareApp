@@ -122,7 +122,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)getTradeList;
 
-//子类重写，编辑共享管理填充数据
+//子类重写，编辑拼租管理填充数据
 
 - (void)loadData:(HPShareDetailModel *)model;
 

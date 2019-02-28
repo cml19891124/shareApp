@@ -80,7 +80,7 @@
         _titleLabel.textColor = COLOR_BLACK_333333;
         _titleLabel.font = kFont_Medium(20.f);
         _titleLabel.textAlignment = NSTextAlignmentLeft;
-        _titleLabel.text = @"热门共享店铺";
+        _titleLabel.text = @"热门拼租店铺";
     }
     return _titleLabel;
 }

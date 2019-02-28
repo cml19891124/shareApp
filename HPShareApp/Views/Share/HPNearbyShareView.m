@@ -32,7 +32,7 @@
 
     }];
     UILabel *titleLabel = [UILabel new];
-    titleLabel.text = @"金嘉味黄金铺位共享";
+    titleLabel.text = @"金嘉味黄金铺位拼租";
     titleLabel.font = [UIFont fontWithName:FONT_BOLD size:14];
     titleLabel.textColor = COLOR_BLACK_333333;
     [self addSubview:titleLabel];
@@ -63,7 +63,7 @@
     futureLabel.attributedText = attr;
     
     UILabel *distanceLabel = [UILabel new];
-    distanceLabel.text = @"该共享空间距您 50m";
+    distanceLabel.text = @"该拼租空间距您 50m";
     [self addSubview:distanceLabel];
     [distanceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(getWidth(15.f));

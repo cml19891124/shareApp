@@ -125,7 +125,7 @@
 }
 
 - (void)setupUI {
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"共享地图"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"拼租地图"];
     
     MAMapView *mapView = [[MAMapView alloc] init];
     mapView.showsUserLocation = YES;
@@ -213,7 +213,7 @@
     UILabel *countLabel = [[UILabel alloc] init];
     [countLabel setFont:[UIFont fontWithName:FONT_BOLD size:12.f]];
     [countLabel setTextColor:COLOR_BLACK_666666];
-    [countLabel setText:@"0个铺位可共享"];
+    [countLabel setText:@"0个铺位可拼租"];
     [headerView addSubview:countLabel];
     _countLabel = countLabel;
     [countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -277,7 +277,7 @@
 }
 
 - (void)setCount:(NSInteger)count {
-    NSString *str = [NSString stringWithFormat:@"%ld个铺位可共享",(long)count];
+    NSString *str = [NSString stringWithFormat:@"%ld个铺位可拼租",(long)count];
     [_countLabel setText:str];
 }
 

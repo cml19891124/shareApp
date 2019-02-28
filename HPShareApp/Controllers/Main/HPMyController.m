@@ -42,7 +42,7 @@
 @property (nonatomic, strong) HPPersonCenterModel *infoModel;
 
 /**
- 共享管理条数
+ 拼租管理条数
  */
 @property (nonatomic, strong) UILabel *spacenum;
 
@@ -215,7 +215,7 @@
     UIButton *descLabel = [[UIButton alloc] init];
     [descLabel.titleLabel setFont:[UIFont fontWithName:FONT_REGULAR size:12.f]];
     [descLabel.titleLabel setTextColor:COLOR_PINK_FFC5C4];
-    [descLabel setTitle:@"登录即可免费发布共享信息" forState:UIControlStateNormal];
+    [descLabel setTitle:@"登录即可免费发布拼租信息" forState:UIControlStateNormal];
     [descLabel addTarget:self action:@selector(onClickConfigBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:descLabel];
     _descLabel = descLabel;
@@ -228,7 +228,7 @@
     UIButton *certificateBtn = [[UIButton alloc] init];
     [certificateBtn.titleLabel setFont:[UIFont fontWithName:FONT_REGULAR size:12.f]];
     [certificateBtn setTitleColor:COLOR_PINK_FFC5C4 forState:UIControlStateNormal];
-    [certificateBtn setTitle:@"完成实名认证，提高共享成功率" forState:UIControlStateNormal];
+    [certificateBtn setTitle:@"完成实名认证，提高拼租成功率" forState:UIControlStateNormal];
     [certificateBtn setImage:[UIImage imageNamed:@"personal_center_towards_the_right"] forState:UIControlStateNormal];
     [certificateBtn setImageEdgeInsets:UIEdgeInsetsMake(0.f, 176.f, 0.f, -176.f)];
     [certificateBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, -5.f, 0.f, 5.f)];
@@ -470,7 +470,7 @@
     
     CGFloat xSpace = 61.f * g_rateWidth;
     CGFloat ySpace = 36.f * g_rateWidth;
-    UIView *shareManagementItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_sharing_management"] title:@"共享管理" desc:@"0条"];
+    UIView *shareManagementItem = [self setupFunctionItemWithIcon:[UIImage imageNamed:@"personal_center_sharing_management"] title:@"拼租管理" desc:@"0条"];
     [centerView addSubview:shareManagementItem];
     [shareManagementItem mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.top.equalTo(centerView);
@@ -613,7 +613,7 @@
         if ([btn.text isEqualToString:@"我的名片"]) {
             [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":account.userInfo.userId}];
         }
-        else if ([btn.text isEqualToString:@"共享管理"]) {
+        else if ([btn.text isEqualToString:@"拼租管理"]) {
             [self pushVCByClassName:@"HPShareManageController"];
         }
     }

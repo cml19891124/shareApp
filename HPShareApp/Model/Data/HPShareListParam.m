@@ -14,6 +14,7 @@
     self = [super init];
     if (self) {
         _pageSize = 20;
+        _type = @"1";
     }
     return self;
 }

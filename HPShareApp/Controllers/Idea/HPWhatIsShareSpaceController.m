@@ -297,7 +297,7 @@
     [customerFitDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:14.f]];
     [customerFitDescLabel setTextColor:COLOR_BLACK_666666];
     [customerFitDescLabel setNumberOfLines:0];
-    [customerFitDescLabel setText:@"租赁方与承租方拥有相似的客群画像，可以共享客群流量"];
+    [customerFitDescLabel setText:@"租赁方与承租方拥有相似的客群画像，可以拼租客群流量"];
     [view addSubview:customerFitDescLabel];
     [customerFitDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(customerFitTitleView);

@@ -70,9 +70,9 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 
 @property (nonatomic, weak) UIButton *districtBtn; //期望区域
 
-@property (nonatomic, weak) UIButton *shareTimeBtn; //共享时段
+@property (nonatomic, weak) UIButton *shareTimeBtn; //拼租时段
 
-@property (nonatomic, weak) UIButton *shareDateBtn; //共享日期
+@property (nonatomic, weak) UIButton *shareDateBtn; //拼租日期
 
 @property (nonatomic, weak) UITextField *intentSpaceField;//意向行业/产品
 

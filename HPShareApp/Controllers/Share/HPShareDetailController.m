@@ -72,7 +72,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 
 
 /**
- 共享模式view
+ 拼租模式view
  */
 @property (nonatomic, strong) UIView *shareModeView;
 /**
@@ -91,13 +91,13 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 
 
 /**
- 共享出租模式
+ 拼租出租模式
  */
 @property (nonatomic, strong) HPTimeRentView *rentModeView;
 
 
 /**
- 共享模式标题
+ 拼租模式标题
  */
 @property (nonatomic, strong) UILabel *modeTitlelabel;
 
@@ -325,7 +325,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 {
     if (!_modeTitlelabel) {
         _modeTitlelabel = [UILabel new];
-        _modeTitlelabel.text = @"共享模式";
+        _modeTitlelabel.text = @"拼租模式";
         _modeTitlelabel.textColor = COLOR_BLACK_333333;
         _modeTitlelabel.textAlignment = NSTextAlignmentLeft;
         _modeTitlelabel.font = kFont_Medium(16.f);
@@ -424,7 +424,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         make.top.mas_equalTo(self.shareInfoLine.mas_bottom).offset(getWidth(141.f));
     }];
     
-    //共享模式 父视图
+    //拼租模式 父视图
     [self.shareModeView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.titleRegion);
         make.top.mas_equalTo(self.baseInfoLine.mas_bottom);
@@ -437,7 +437,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         make.height.mas_equalTo(self.modeTitlelabel.font.pointSize);
     }];
     
-    //共享模式 子视图
+    //拼租模式 子视图
     [self.rentModeView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(self.shareModeView);
         make.top.mas_equalTo(self.modeTitlelabel.mas_bottom).offset(getWidth(19.f)/2);;
@@ -471,7 +471,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_WHITE_FAF9FE];
-    UIView *navView = [self setupNavigationBarWithTitle:@"店铺共享"];
+    UIView *navView = [self setupNavigationBarWithTitle:@"店铺拼租"];
     UIScrollView *scrollView = [[UIScrollView alloc] init];
     [scrollView setBackgroundColor:COLOR_WHITE_FAF9FE];
     scrollView.showsVerticalScrollIndicator = NO;
@@ -606,7 +606,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [view addSubview:shareBtn];
     _shareBtn = shareBtn;
     
-    //共享子控件
+    //拼租子控件
     [self setupShareInfoView:view];
     
     [view addSubview:self.shareInfoLine];
@@ -632,7 +632,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [self.mapSuperView addSubview:self.mapView];
 }
 
-#pragma mark - 共享信息UI
+#pragma mark - 拼租信息UI
 - (void)setupShareInfoView:(UIView *)view
 {
     NSInteger firstLocation;
@@ -1074,7 +1074,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     }else{
         intentString = [NSString stringWithFormat:@"合作意向  面议"];
     }
-//    _intentionLabel = [HPAttributeLabel getTitle:intentString andFromFont:kFont_Medium(12.f) andToFont:kFont_Medium(17.f) andFromColor:COLOR_GRAY_999999 andToColor:COLOR_RED_EA0000 andFromRange:NSMakeRange(0, 4) andToRange:NSMakeRange(4, intentString.length - 4) andLineSpace:12.f andNumbersOfLine:0 andTextAlignment:NSTextAlignmentLeft andLineBreakMode:NSLineBreakByWordWrapping];
 
     _intentionLabel.textAlignment = NSTextAlignmentLeft;
     _intentionLabel.numberOfLines = 0;
@@ -1116,9 +1115,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     }
     else{
         [_areaLabel setText:[NSString stringWithFormat:@"拼租面积\n不限"]];
-//        NSString *areaStr = [NSString stringWithFormat:@"拼租面积\n不限"];
-//        _areaLabel = [HPAttributeLabel getTitle:areaStr andFromFont:kFont_Medium(12.f) andToFont:kFont_Medium(17.f) andFromColor:COLOR_GRAY_999999 andToColor:COLOR_RED_EA0000 andFromRange:NSMakeRange(0, 4) andToRange:NSMakeRange(4, areaStr.length - 4) andLineSpace:12.f andNumbersOfLine:0 andTextAlignment:NSTextAlignmentLeft andLineBreakMode:NSLineBreakByWordWrapping];
-
     }
     _areaLabel.textAlignment = NSTextAlignmentLeft;
     _areaLabel.numberOfLines = 0;
@@ -1136,28 +1132,26 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [areaattr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_EA0000 range:NSMakeRange(4, _areaLabel.text.length - 4)];
     _areaLabel.attributedText = areaattr;
     
-//    NSString *rentAmount;
-    if (model.rent && ![model.rent isEqualToString:@"1"]) {
+    if (model.rent.length != 0 && model.type == 1) {
+        if ([model.rent isEqualToString:@"0"]) {
+            [_priceLabel setText:[NSString stringWithFormat:@"拼租参考价\n面议"]];
+            return;
+        }
         if (model.rentType == 1) {
             [_priceLabel setText:[NSString stringWithFormat:@"拼租参考价\n%@ %@",model.rent,@"元/小时"]];
-//            rentAmount = [NSString stringWithFormat:@"拼租参考价\n%@ %@",model.rent,@"元/小时"];
             
         }else if (model.rentType == 2){
             [_priceLabel setText:[NSString stringWithFormat:@"拼租参考价\n%@ %@",model.rent,@"元/天"]];
-//            rentAmount = [NSString stringWithFormat:@"拼租参考价\n%@ %@",model.rent,@"元/天"];
 
         }else if (model.rentType == 3){
             [_priceLabel setText:[NSString stringWithFormat:@"拼租参考价\n%@ %@",model.rent,@"元/月"]];
-//            rentAmount = [NSString stringWithFormat:@"拼租参考价\n%@ %@",model.rent,@"元/月"];
 
         }else if (model.rentType == 4){
             [_priceLabel setText:[NSString stringWithFormat:@"拼租参考价\n%@ %@",model.rent,@"元/年"]];
-//            rentAmount = [NSString stringWithFormat:@"拼租参考价\n%@ %@",model.rent,@"元/年"];
-
+            
         }else {
             [_priceLabel setText:[NSString stringWithFormat:@"拼租参考价\n面议"]];
-//            rentAmount = [NSString stringWithFormat:@"拼租参考价\n%@ %@",model.rent,@"元/面议"];
-
+            
         }
         
         _priceLabel.textAlignment = NSTextAlignmentLeft;

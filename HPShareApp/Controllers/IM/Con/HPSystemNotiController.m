@@ -36,8 +36,8 @@ static NSString *systemNotiCell = @"systemNotiCell";
     _finalSystemNotiArray = [NSMutableArray array];
 //    NSArray *interArray = @[@{@"photo":@"system notification",@"title":@"系统通知",@"subtitle":@"暂无数据"//@"注册成功，欢迎进入“合店站”"
 //                              }];
-    NSArray *systemNotiArray = self.param[@"data"];//@[@{@"createTime":@"1495453213",@"title":@"版本更新",@"message":@"合店站1.1.0版本更新。新版本中'人力共享'功能正式上线，店主可以通过该板块招募短工，降低招募正式员工的人力成本。同时用户也可以发…"},
-//                               @{@"createTime":@"1495453229",@"title":@"注册成功",@"message":@"尊敬的用户，恭喜您成为“合店站”会员，赶紧去制作你的专属名片，开启共享之旅吧!"}];
+    NSArray *systemNotiArray = self.param[@"data"];//@[@{@"createTime":@"1495453213",@"title":@"版本更新",@"message":@"合店站1.1.0版本更新。新版本中'人力拼租'功能正式上线，店主可以通过该板块招募短工，降低招募正式员工的人力成本。同时用户也可以发…"},
+//                               @{@"createTime":@"1495453229",@"title":@"注册成功",@"message":@"尊敬的用户，恭喜您成为“合店站”会员，赶紧去制作你的专属名片，开启拼租之旅吧!"}];
     _systemNotiArray = [HPInterActiveModel mj_objectArrayWithKeyValuesArray:systemNotiArray];
 //    HPInterActiveModel *model = _systemNotiArray[0];
     for (HPInterActiveModel *model in _systemNotiArray) {

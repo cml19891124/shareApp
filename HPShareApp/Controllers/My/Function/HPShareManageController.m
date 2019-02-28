@@ -75,7 +75,7 @@
 
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_WHITE_FCFDFF];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"共享管理"];
+    UIView *navigationView = [self setupNavigationBarWithTitle:@"拼租管理"];
     
     UITableView *tableView = [[UITableView alloc] init];
     [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -241,7 +241,7 @@
         if (self.dataArray.count == 0) {
             self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
             self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"list_default_page");
-            self.tableView.refreshNoDataView.tipLabel.text = @"店铺共享，你是第一个吃螃蟹的人！！";
+            self.tableView.refreshNoDataView.tipLabel.text = @"店铺拼租，你是第一个吃螃蟹的人！！";
             [self.tableView.refreshNoDataView.tipBtn setTitle:@"立即发布" forState:UIControlStateNormal];
             self.tableView.refreshNoDataView.delegate = self;
         }

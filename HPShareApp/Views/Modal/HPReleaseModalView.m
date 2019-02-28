@@ -75,7 +75,7 @@
     UILabel *goodsDescLabel = [[UILabel alloc] init];
     [goodsDescLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:20.f]];
     [goodsDescLabel setTextColor:COLOR_BLACK_333333];
-    [goodsDescLabel setText:@"货品共享"];
+    [goodsDescLabel setText:@"货品拼租"];
     [view addSubview:goodsDescLabel];
     [goodsDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).offset(getWidth(35.f));

@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) NSMutableArray *dataArray;
 
-#pragma mark - network - 共享发布数据
+#pragma mark - network - 拼租发布数据
 
 - (void)getAreaShareListDataReload:(BOOL)isReload;
 @end
