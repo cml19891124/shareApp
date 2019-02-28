@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+@class HPSearchBar;
 
 @protocol SearchDelegate <NSObject>
 
@@ -19,9 +20,15 @@
  点击取消返回
  */
 - (void)clickPopToHomeVC;
+
+/**
+ 点击跳转搜索界面
+ */
+- (void)clickSearchView:(HPSearchBar *)searchBar JumpToSearchResultVCInTextfield:(UITextField *)textfield;
+
 @end
 
-@interface AJSearchBar : UIView
+@interface HPSearchBar : UIView
 
 /**
  搜索文字占位符字符串

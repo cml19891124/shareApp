@@ -7,7 +7,7 @@
 //
 
 #import "HPSearchViewController.h"
-#import "AJSearchBar.h"
+#import "HPSearchBar.h"
 #import "Masonry.h"
 #import "HPGlobalVariable.h"
 #import "HPHistoryViewCell.h"
@@ -18,7 +18,7 @@
 @interface HPSearchViewController ()<UITableViewDelegate,UITableViewDataSource,SearchDelegate,UITextFieldDelegate>
 
 
-@property (nonatomic, strong) AJSearchBar *searchBar;
+@property (nonatomic, strong) HPSearchBar *searchBar;
 
 @property (nonatomic, strong) UIButton *cancelBtn;
 
@@ -108,10 +108,10 @@ static NSString *hotKeywordCell = @"hotKeywordCell";
 }
 
 #pragma mark - 初始化控件
-- (AJSearchBar *)searchBar
+- (HPSearchBar *)searchBar
 {
     if (!_searchBar) {
-        _searchBar = [AJSearchBar new];
+        _searchBar = [HPSearchBar new];
     }
     return _searchBar;
 }

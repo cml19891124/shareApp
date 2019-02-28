@@ -6,7 +6,7 @@
 //  Copyright © 2017年 zhundao. All rights reserved.
 //
 
-#import "AJSearchBar.h"
+#import "HPSearchBar.h"
 #import "UITextField+TextLeftOffset_ffset.h"
 #import "Macro.h"
 #import "Masonry.h"
@@ -17,7 +17,7 @@ static NSInteger leftViewWidth = 35 ;
 /*! 图片和label的间距 */
 static NSInteger space = 15;
 
-@interface AJSearchBar()<UITextFieldDelegate>
+@interface HPSearchBar()<UITextFieldDelegate>
 
 /*! 默认文字 默认居中存在 */
 @property(nonatomic,strong)UILabel *placeholderLabel;
@@ -29,7 +29,7 @@ static NSInteger space = 15;
 
 @end;
 
-@implementation AJSearchBar
+@implementation HPSearchBar
 
 - (void)setHidden:(BOOL)hidden
 {
@@ -233,6 +233,15 @@ static NSInteger space = 15;
 
 - (void)textFieldDidEditing:(UITextField *)textField{
     [self isHiddenLabel:textField];
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    //页面跳转的相关代码
+    if ([self.SearchDelegate respondsToSelector:@selector(clickSearchView:JumpToSearchResultVCInTextfield:)]) {
+        [self.SearchDelegate clickSearchView:self JumpToSearchResultVCInTextfield:self.textField];
+    }
+    return NO;
 }
 
 - (void)isHiddenLabel:(UITextField *)textField{

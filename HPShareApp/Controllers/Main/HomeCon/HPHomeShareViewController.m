@@ -26,7 +26,7 @@ typedef NS_ENUM(NSInteger, HPAreaidsCellIndexpath) {
     HPAreaidsNanShan = 1
 };
 
-@interface HPHomeShareViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,HPSearchBarDelegate>
+@interface HPHomeShareViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,SearchDelegate>
 
 @property (nonatomic, strong) HPMenuOpenStoreView *openView;
 
@@ -69,6 +69,10 @@ static NSString *shareListCell = @"shareListCell";
     [self.view insertSubview:self.tableView aboveSubview:self.openView];
     [self.view addSubview:[self createHeaderView]];
     [self.headerView addSubview:self.searchBar];
+    
+    self.searchBar.SearchDelegate = self;
+    
+    self.searchBar.hidden = YES;
     
     _dataArray = [NSMutableArray array];
     
@@ -227,12 +231,12 @@ static NSString *shareListCell = @"shareListCell";
 {
     if (!_searchBar) {
         _searchBar = [HPSearchBar new];
-        _searchBar.layer.cornerRadius = 3.f;
-        _searchBar.layer.shadowColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:0.08].CGColor;
-        _searchBar.layer.shadowOpacity = 1.f;
-        _searchBar.layer.shadowOffset = CGSizeMake(0, 2);
-        _searchBar.layer.shadowRadius = 17;
-        _searchBar.delegate = self;
+        _searchBar.layer.cornerRadius = 2.5f;
+        _searchBar.layer.shadowColor = COLOR_BLACK_333333.CGColor;
+        _searchBar.layer.shadowOpacity = 0.3f;
+        _searchBar.layer.shadowOffset = CGSizeMake(0, 2.5);
+        _searchBar.layer.shadowRadius = 2.5f;
+        _searchBar.SearchDelegate = self;
     }
     return _searchBar;
 }
@@ -491,7 +495,7 @@ static NSString *shareListCell = @"shareListCell";
 
 #pragma mark - searchBar.delegate
 
-- (void)clickTextfieldJumpToSearchResultVC
+- (void)clickSearchView:(HPSearchBar *)searchBar JumpToSearchResultVCInTextfield:(UITextField *)textfield
 {
     [self pushVCByClassName:@"HPSearchViewController"];
 }

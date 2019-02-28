@@ -11,7 +11,7 @@
 #import "HPPageControlFactory.h"
 #import "HPParentScrollView.h"
 #import "HPSubTableView.h"
-#import "AJSearchBar.h"
+#import "HPSearchBar.h"
 
 #define BANNER_SEPARATOR_HEIGHT 150.f * g_rateWidth + 10.f
 
@@ -31,7 +31,7 @@
 
 @property (nonatomic, assign) CGFloat headerHeight;
 
-@property (nonatomic, strong) AJSearchBar *searchBar;
+@property (nonatomic, strong) HPSearchBar *searchBar;
 
 @property (nonatomic, strong) UIView *filterBar;
 @end
@@ -48,10 +48,10 @@
 }
 
 #pragma mark - 初始化控件
-- (AJSearchBar *)searchBar
+- (HPSearchBar *)searchBar
 {
     if (!_searchBar) {
-        _searchBar = [AJSearchBar new];
+        _searchBar = [HPSearchBar new];
     }
     return _searchBar;
 }

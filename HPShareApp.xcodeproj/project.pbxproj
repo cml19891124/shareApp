@@ -210,7 +210,7 @@
 		E67EFE35221BA187008BDA1D /* payRequsestHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE2B221BA187008BDA1D /* payRequsestHandler.mm */; };
 		E67EFE36221BA187008BDA1D /* WXApiManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE2C221BA187008BDA1D /* WXApiManager.m */; };
 		E67EFE3A221BD5E0008BDA1D /* HPSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE39221BD5E0008BDA1D /* HPSearchViewController.m */; };
-		E67EFE40221BE214008BDA1D /* AJSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE3F221BE213008BDA1D /* AJSearchBar.m */; };
+		E67EFE40221BE214008BDA1D /* HPSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE3F221BE213008BDA1D /* HPSearchBar.m */; };
 		E67EFE43221BE233008BDA1D /* UITextField+TextLeftOffset_ffset.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE41221BE233008BDA1D /* UITextField+TextLeftOffset_ffset.m */; };
 		E67EFE46221BE256008BDA1D /* BigSizeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE44221BE256008BDA1D /* BigSizeButton.m */; };
 		E67EFE52221BEF8C008BDA1D /* HPHistoryViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE51221BEF8C008BDA1D /* HPHistoryViewCell.m */; };
@@ -346,7 +346,6 @@
 		E69D0A502220E07A0085B591 /* HPKeywordsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E69D0A4F2220E07A0085B591 /* HPKeywordsModel.m */; };
 		E69E0E8E21F95F2D0094837A /* HPAttributeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = E69E0E8D21F95F2D0094837A /* HPAttributeLabel.m */; };
 		E6A5388422212C1600BFEE02 /* HPHotKeywordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A5388322212C1600BFEE02 /* HPHotKeywordCell.m */; };
-		E6A8108321D700CE0048AA01 /* HPSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A8108221D700CE0048AA01 /* HPSearchBar.m */; };
 		E6B4CECB21C51A4400429C11 /* HPGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CECA21C51A4400429C11 /* HPGuideViewController.m */; };
 		E6B4CEDC21C5286F00429C11 /* SDCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED021C5286E00429C11 /* SDCycleScrollView.m */; };
 		E6B4CEDD21C5286F00429C11 /* UIView+SDExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED121C5286F00429C11 /* UIView+SDExtension.m */; };
@@ -913,8 +912,8 @@
 		E67EFE2D221BA187008BDA1D /* WXUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXUtil.h; sourceTree = "<group>"; };
 		E67EFE38221BD5E0008BDA1D /* HPSearchViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSearchViewController.h; sourceTree = "<group>"; };
 		E67EFE39221BD5E0008BDA1D /* HPSearchViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSearchViewController.m; sourceTree = "<group>"; };
-		E67EFE3E221BE213008BDA1D /* AJSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJSearchBar.h; sourceTree = "<group>"; };
-		E67EFE3F221BE213008BDA1D /* AJSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AJSearchBar.m; sourceTree = "<group>"; };
+		E67EFE3E221BE213008BDA1D /* HPSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPSearchBar.h; sourceTree = "<group>"; };
+		E67EFE3F221BE213008BDA1D /* HPSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPSearchBar.m; sourceTree = "<group>"; };
 		E67EFE41221BE233008BDA1D /* UITextField+TextLeftOffset_ffset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+TextLeftOffset_ffset.m"; sourceTree = "<group>"; };
 		E67EFE42221BE233008BDA1D /* UITextField+TextLeftOffset_ffset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+TextLeftOffset_ffset.h"; sourceTree = "<group>"; };
 		E67EFE44221BE256008BDA1D /* BigSizeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigSizeButton.m; sourceTree = "<group>"; };
@@ -1153,8 +1152,6 @@
 		E69E0E8D21F95F2D0094837A /* HPAttributeLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAttributeLabel.m; sourceTree = "<group>"; };
 		E6A5388222212C1500BFEE02 /* HPHotKeywordCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHotKeywordCell.h; sourceTree = "<group>"; };
 		E6A5388322212C1600BFEE02 /* HPHotKeywordCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHotKeywordCell.m; sourceTree = "<group>"; };
-		E6A8108121D700CE0048AA01 /* HPSearchBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSearchBar.h; sourceTree = "<group>"; };
-		E6A8108221D700CE0048AA01 /* HPSearchBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSearchBar.m; sourceTree = "<group>"; };
 		E6B4CEC521C4DD5200429C11 /* HPShareApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HPShareApp.entitlements; sourceTree = "<group>"; };
 		E6B4CEC921C51A4400429C11 /* HPGuideViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPGuideViewController.h; sourceTree = "<group>"; };
 		E6B4CECA21C51A4400429C11 /* HPGuideViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPGuideViewController.m; sourceTree = "<group>"; };
@@ -2152,8 +2149,6 @@
 				E66F1CB721D3625D00C2DEEF /* HPHotImageView.m */,
 				6979CA7F21D6220700B1518C /* HPBotomPickerModalView.h */,
 				6979CA8021D6220700B1518C /* HPBotomPickerModalView.m */,
-				E6A8108121D700CE0048AA01 /* HPSearchBar.h */,
-				E6A8108221D700CE0048AA01 /* HPSearchBar.m */,
 				E6B63B8F221E51F100337830 /* HPUpdateVersionView.h */,
 				E6B63B90221E51F100337830 /* HPUpdateVersionView.m */,
 				E6B63B92221E835200337830 /* HPUpdateVersionTool.h */,
@@ -2480,8 +2475,8 @@
 				E67EFE44221BE256008BDA1D /* BigSizeButton.m */,
 				E67EFE42221BE233008BDA1D /* UITextField+TextLeftOffset_ffset.h */,
 				E67EFE41221BE233008BDA1D /* UITextField+TextLeftOffset_ffset.m */,
-				E67EFE3E221BE213008BDA1D /* AJSearchBar.h */,
-				E67EFE3F221BE213008BDA1D /* AJSearchBar.m */,
+				E67EFE3E221BE213008BDA1D /* HPSearchBar.h */,
+				E67EFE3F221BE213008BDA1D /* HPSearchBar.m */,
 				E67EFE50221BEF8C008BDA1D /* HPHistoryViewCell.h */,
 				E67EFE51221BEF8C008BDA1D /* HPHistoryViewCell.m */,
 				E6ED692F221CE66600389CBA /* HPSearchHeaderView.h */,
@@ -3469,7 +3464,7 @@
 				E661B0AA219C1AE800C86CF5 /* HPBaseModalView.m in Sources */,
 				7A54485721C169AE001301F3 /* HPPartyCenterController.m in Sources */,
 				E67B778E21CDEEB1007AC636 /* HPRentAmountItemView.m in Sources */,
-				E67EFE40221BE214008BDA1D /* AJSearchBar.m in Sources */,
+				E67EFE40221BE214008BDA1D /* HPSearchBar.m in Sources */,
 				E620646721DEFC5700E37568 /* HPInfoModel.m in Sources */,
 				E68A76C021F2C6D100083A90 /* JCHATSetDisturbTableViewCell.m in Sources */,
 				E661B0D6219D436900C86CF5 /* HPAlertSheet.m in Sources */,
@@ -3678,7 +3673,6 @@
 				E67EFE46221BE256008BDA1D /* BigSizeButton.m in Sources */,
 				E68A76B521F2C6D100083A90 /* JCHATConversationListCell.m in Sources */,
 				E693E90421E8331E0063797A /* ClusterAnnotation.m in Sources */,
-				E6A8108321D700CE0048AA01 /* HPSearchBar.m in Sources */,
 				E61E27A321C8D68000CD5288 /* EBBannerView.m in Sources */,
 				E68A773521F31CDE00083A90 /* XHVoiceRecordHUD.m in Sources */,
 				E69D0A502220E07A0085B591 /* HPKeywordsModel.m in Sources */,
