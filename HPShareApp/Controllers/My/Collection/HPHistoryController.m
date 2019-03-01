@@ -424,24 +424,20 @@
             NSMutableArray *deleteRowIndexPaths = [[NSMutableArray alloc] init];
             NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
             
-            for (int i = 0; i < weakSelf.histroyDataList.count; i ++) {
-                HPHistoryListData *listData = weakSelf.histroyDataList[i];
-                for (int j = 0; j < listData.items.count; j++) {
-                    HPShareListModel *model = listData.items[j];
+            HPHistoryListData *listData = weakSelf.histroyDataList[0];
+            for (int i = 0; i < listData.items.count; i ++) {
+                    HPShareListModel *model = listData.items[i];
                     if (model.selected) {
-                        [deleteRowIndexPaths addObject:[NSIndexPath indexPathForRow:j inSection:0]];
-                        [indexSet addIndex:j];
+                        [deleteRowIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+                        [indexSet addIndex:i];
                         [spaceIds addObject:model.spaceId];
                     }
-                    
-                    if (spaceIds.count == 0 || !spaceIds) {
-                        [HPProgressHUD alertMessage:@"请选择历史记录"];
-                        return ;
-                    }
-                }
-                
             }
             
+            if (spaceIds.count == 0 || !spaceIds) {
+                [HPProgressHUD alertMessage:@"请选择历史记录"];
+                return ;
+            }
             
             [HPHTTPSever HPPostServerWithMethod:@"/v1/browseHistory/cancelHistorys" paraments:@{@"spaceIds":spaceIds} needToken:YES complete:^(id  _Nonnull responseObject) {
                 if (CODE == 200) {

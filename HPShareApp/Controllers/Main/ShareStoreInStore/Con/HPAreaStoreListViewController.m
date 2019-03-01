@@ -60,7 +60,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
     _shareListParam = self.param[@"area"];
-    
+
     [self setupNavigationBarWithTitle:@"热门店铺推荐"];
     [self setupSubViews];
 }
@@ -87,11 +87,12 @@
         [self.managerView scrollToIndexWithIndex:1];//龙华区
     }else if ([_shareListParam.areaIds isEqualToString:@"1"]){
         [self.managerView scrollToIndexWithIndex:2]; //南山区
-    }else if ([_shareListParam.areaIds isEqualToString:@"2,8,1"]){
-        self.shareListParam.areaIds = [NSString stringWithFormat:@"2,8,1"];
-
-        [self.managerView scrollToIndexWithIndex:0]; //宝安\龙华区\南山区
     }
+//    else if ([_shareListParam.areaIds isEqualToString:@"2,8,1"]){
+//        self.shareListParam.areaIds = [NSString stringWithFormat:@"2,8,1"];
+//
+//        [self.managerView scrollToIndexWithIndex:0]; //宝安\龙华区\南山区
+//    }
 
     //pageView点击事件
     [self.managerView didSelectIndexHandle:^(NSInteger index) {

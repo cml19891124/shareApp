@@ -124,6 +124,13 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 @property (strong, nonatomic) NSMutableArray *cityArray,*disArray,*streetArray;
 @property (strong, nonatomic) NSMutableDictionary *streetDic;
 
+@property (nonatomic, weak) UIView *contactView;
+
+@property (nonatomic, weak) UITextField *textField;
+
+@property (nonatomic, weak) UILabel *countLabel;
+
+@property (nonatomic, strong) UIButton *coverBtn;
 @end
 
 @implementation HPOwnerCardDefineController
@@ -140,6 +147,21 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     _canRelease = YES;
     [self setupUI];
     
+}
+
+- (UIButton *)coverBtn
+{
+    if (!_coverBtn) {
+        _coverBtn = [UIButton new];
+        _coverBtn.backgroundColor = COLOR_BLACK_TRANS_1111119b;
+        [_coverBtn addTarget:self action:@selector(removeCover:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _coverBtn;
+}
+
+- (void)removeCover:(UIButton*)button
+{
+    [self.coverBtn removeFromSuperview];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -175,7 +197,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         make.size.mas_equalTo(CGSizeMake(kScreenWidth, getWidth(83.f) + g_bottomSafeAreaHeight));
     }];
     
-    NSString *title = self.param[@"spaceId"] ? @"确认修改":@"确认发布";
+//    NSString *title = self.param[@"spaceId"] ? @"确认修改":@"确认发布";
     UIButton *releaseBtn = [[UIButton alloc] init];
     [releaseBtn.layer setCornerRadius:7.f];
     [releaseBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
@@ -308,6 +330,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [self setupTitleLabelWithText:@"店铺简称" ofView:view];
     _titleField = [self setupTextFieldWithPlaceholder:@"请填写店铺简称" ofView:view rightTo:view];
     _titleField.font = kFont_Regular(13.f);
+    
     return view;
 }
 
@@ -533,6 +556,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     UITextField *textField = [self setupTextFieldWithPlaceholder:@"完善信息，生成标题更满意" ofView:view rightTo:birthBtn];
     textField.textColor = COLOR_BLACK_333333;
     textField.font = kFont_Regular(13.f);
+    textField.delegate = self;
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
     _convertTitleField = textField;
     
@@ -784,11 +808,20 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self.textField resignFirstResponder];
+
+    [self queryUserOfSalesmanByMobile];
+    return YES;
+}
+
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
 {
     if (textField == _phoneNumField) {
+
         // 使用一个变量接收自定义的输入框对象 以便于在其他位置调用
-        
+        /*
         __block UITextField *inputField = nil;
         kWeakSelf(weakSelf);
         [LEEAlert alert].config.LeeAddTextField(^(UITextField *textField) {
@@ -812,20 +845,146 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         .LeeShow(); // 设置完成后 别忘记调用Show来显示
         return NO;
 
+        }*/
+        if (_contactView == nil) {
+            [self.view addSubview:self.coverBtn];
+            [self.coverBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.edges.mas_equalTo(UIEdgeInsetsZero);
+            }];
+            UIView *view = [[UIView alloc] init];
+            [view.layer setCornerRadius:8.f];
+            [view setBackgroundColor:UIColor.whiteColor];
+            [self.coverBtn addSubview:view];
+            [view mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.and.centerY.equalTo(self.coverBtn);
+                make.size.mas_equalTo(CGSizeMake(300.f * g_rateWidth, 125.f * g_rateWidth));
+            }];
+            
+            UILabel *countLabel = [[UILabel alloc] init];
+            [countLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];
+            [countLabel setTextColor:COLOR_GRAY_CCCCCC];
+            [countLabel setText:@"0/11"];
+            [view addSubview:countLabel];
+            _countLabel = countLabel;
+            [countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.right.equalTo(view).with.offset(-39.f * g_rateWidth);
+                make.top.equalTo(view).with.offset(26.f * g_rateWidth);
+                make.height.mas_equalTo(countLabel.font.pointSize);
+                make.width.mas_equalTo(45.f);
+            }];
+            
+            UITextField *textField = [[UITextField alloc] init];
+            [textField setFont:[UIFont fontWithName:FONT_MEDIUM size:17.f]];
+            [textField setTextColor:COLOR_BLACK_333333];
+            [textField setTintColor:COLOR_RED_FF3C5E];
+            [textField setReturnKeyType:UIReturnKeyDone];
+            [textField setDelegate:self];
+            textField.placeholder = @"请输入用户手机号";
+            [view addSubview:textField];
+            _textField = textField;
+            [textField mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(view).with.offset(25.f * g_rateWidth);
+                make.centerY.equalTo(countLabel);
+                make.right.equalTo(countLabel.mas_left).with.offset(-10.f);
+            }];
+            
+            UIView *lineV = [UIView new];
+            lineV.backgroundColor = COLOR_GRAY_BBBBBB;
+            [view addSubview:lineV];
+            [lineV mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.right.mas_equalTo(view);
+                make.top.mas_equalTo(textField.mas_bottom).offset(getWidth(10.f));
+                make.height.mas_equalTo(0.5);
+            }];
+            
+            UIButton *confirmBtn = [[UIButton alloc] init];
+            [confirmBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:17.f]];
+            [confirmBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+            [confirmBtn setTitle:@"好" forState:UIControlStateNormal];
+            [confirmBtn addTarget:self action:@selector(onClickOKBtn) forControlEvents:UIControlEventTouchUpInside];
+            [view addSubview:confirmBtn];
+            [confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.right.equalTo(view).with.offset(-44.f * g_rateWidth);
+                make.bottom.equalTo(view).with.offset(-20.f * g_rateWidth);
+            }];
+            
+            UIButton *cancelBtn = [[UIButton alloc] init];
+            [cancelBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:17.f]];
+            [cancelBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+            [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+            [cancelBtn addTarget:self action:@selector(onClickHideBtn) forControlEvents:UIControlEventTouchUpInside];
+            [view addSubview:cancelBtn];
+            [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.right.equalTo(confirmBtn.mas_left).with.offset(-40.f * g_rateWidth);
+                make.centerY.equalTo(confirmBtn);
+            }];
+            
+            _contactView = view;
         }
+        self.coverBtn.hidden = NO;
+
+        [_textField setText:@""];
+        [_countLabel setText:@"0/11"];
+        [_contactView setHidden:NO];
+        return NO;
+    }
     return YES;
 
     }
 
 }
 
+- (void)onClickHideBtn
+{
+    [_contactView setHidden:YES];
+
+    self.coverBtn.hidden = YES;
+}
+
+- (void)onClickOKBtn
+{
+    [self queryUserOfSalesmanByMobile];
+}
+
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (textField == _titleField) {
+        if (textField.text.length >= 12) {
+            textField.text = [textField.text substringToIndex:textField.text.length -1];
+            [HPProgressHUD alertMessage:@"店铺简称不得超过12位"];
+        }
+    }else if (textField == _convertTitleField){
+        if (textField.text.length >= 30) {
+            textField.text = [textField.text substringToIndex:textField.text.length -1];
+            [HPProgressHUD alertMessage:@"输入长度不得超过30位"];
+        }
+    }else if (textField == _textField){
+//        HPLog(@"_textField:%ld",_textField.text.length);
+        _countLabel.text = [NSString stringWithFormat:@"%ld/11",textField.text.length + 1];
+
+        if (textField.text.length >= 11) {
+            textField.text = [textField.text substringToIndex:textField.text.length];
+
+            [HPProgressHUD alertMessage:@"输入长度不得超过11位"];
+        }
+    }
+    return YES;
+}
+
 #pragma mark - 通过电话查询是否是特定业务员的客户
 - (void)queryUserOfSalesmanByMobile
 {
+    if (self.textField.text.length == 0) {
+        [HPProgressHUD alertMessage:@"请输入手机号"];
+        return;
+    }
     HPLoginModel *account = [HPUserTool account];
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/salesman/queryUserOfSalesmanByMobile" isNeedToken:YES paraments:@{@"mobile":self.inputField.text,@"salesmanUserId":account.salesman.userId} complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/salesman/queryUserOfSalesmanByMobile" isNeedToken:YES paraments:@{@"mobile":self.textField.text,@"salesmanUserId":account.salesman.userId} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
-            self.phoneNumField.text = self.inputField.text;
+            self.phoneNumField.text = self.textField.text;
+            [self.contactView setHidden:YES];
+            self.coverBtn.hidden = YES;
         }else
         {
             [HPProgressHUD alertMessage:MSG];

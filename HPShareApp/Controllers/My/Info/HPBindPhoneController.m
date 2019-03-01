@@ -164,7 +164,6 @@
     dic[@"mobile"] = model.userInfo.mobile;
     dic[@"state"] = @"-1";
     
-    kWeakSelf(weakSelf);
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"发送成功"];

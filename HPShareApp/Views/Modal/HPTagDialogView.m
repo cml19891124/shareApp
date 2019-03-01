@@ -30,6 +30,7 @@
 
 @property (nonatomic, strong) MASConstraint *topConstraint;
 
+
 @end
 
 @implementation HPTagDialogView
@@ -72,6 +73,7 @@
     [customBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).with.offset(33.f * g_rateWidth);
         make.top.equalTo(view).with.offset(21.f * g_rateWidth);
+        make.width.mas_equalTo(view.mas_width);
     }];
     
     UIScrollView *scrollView = [[UIScrollView alloc] init];
@@ -193,6 +195,15 @@
             make.left.equalTo(view).with.offset(25.f * g_rateWidth);
             make.centerY.equalTo(countLabel);
             make.right.equalTo(countLabel.mas_left).with.offset(-10.f);
+        }];
+        
+        UIView *lineV = [UIView new];
+        lineV.backgroundColor = COLOR_GRAY_BBBBBB;
+        [view addSubview:lineV];
+        [lineV mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(view);
+            make.top.mas_equalTo(textField.mas_bottom).offset(getWidth(10.f));
+            make.height.mas_equalTo(0.5);
         }];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didTextFieldChange:) name:UITextFieldTextDidChangeNotification object:textField];

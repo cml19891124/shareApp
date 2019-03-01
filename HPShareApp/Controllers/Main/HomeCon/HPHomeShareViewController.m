@@ -390,6 +390,9 @@ static NSString *shareListCell = @"shareListCell";
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     kWEAKSELF
     [cell setClickMoreBtnBlock:^{
+        weakSelf.shareListParam.page = 1;
+
+        weakSelf.shareListParam.areaIds = [NSString stringWithFormat:@"%ld",HPAreaidsBaoan];
         [self pushVCByClassName:@"HPAreaStoreListViewController" withParam:@{@"area": weakSelf.shareListParam}];
     }];
     

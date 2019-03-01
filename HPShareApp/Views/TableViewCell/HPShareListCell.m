@@ -101,7 +101,7 @@
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:14.f]];
     [titleLabel setTextColor:COLOR_BLACK_333333];
-    [titleLabel setNumberOfLines:0];
+    [titleLabel setNumberOfLines:2];
     [bgView addSubview:titleLabel];
     _titleLabel = titleLabel;
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
