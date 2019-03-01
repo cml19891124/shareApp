@@ -269,7 +269,7 @@
         return;
     }
     
-    [_photoView sd_setImageWithURL:[NSURL URLWithString:url]];
+    [_photoView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:ImageNamed(@"loading_logo_small")];
 }
 
 - (void)setModel:(HPShareListModel *)model {
@@ -277,7 +277,6 @@
     NSString *title = model.title;
     NSString *price = model.rent;
     NSInteger type = model.type;
-    NSInteger unitType = model.rentType;
     NSString *tagStr = model.tag;
     NSArray *tags;
     if (tagStr) {

@@ -7,7 +7,7 @@
 //
 
 #import "HPShareShopListController.h"
-#import "HPBannerView.h"
+
 #import "HPPageControlFactory.h"
 #import "HPParentScrollView.h"
 #import "HPSubTableView.h"
@@ -15,13 +15,9 @@
 
 #define BANNER_SEPARATOR_HEIGHT 150.f * g_rateWidth + 10.f
 
-@interface HPShareShopListController () <HPBannerViewDelegate,SearchDelegate>
+@interface HPShareShopListController () <SearchDelegate>
 
 @property (nonatomic, weak) UIView *navigationView;
-
-@property (nonatomic, weak) HPBannerView *bannerView;
-
-@property (nonatomic, weak) HPPageControl *pageControl;
 
 @property (nonatomic, weak) UIView *headerMaskView;
 
@@ -41,6 +37,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    if (IPHONE_HAS_NOTCH) {//iPhone X出现后，除了对屏幕做各种适配，在跳转到webview的过程中发现底部出现一个黑色区域，其他机型则没有---在iphoneX的时候设置scrollview.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;这个方法目前我感觉是最靠谱，直接让webview放弃适配安全区域，当然写上了这个，在webview滑到底部的时候就不会顶上来了
+        
+        if (@available(iOS 11.0, *)) {
+            
+            self.subTableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            
+        } else {
+            
+        }
+    }
     [self setupUI];
 
     [self setUpNavTitleView];
@@ -67,10 +73,6 @@
 }
 
 - (void)setUpNavTitleView{
-    _bannerView.hidden = YES;
-    [_bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(0);
-    }];
     
     UIView *navigationView = [self setupNavigationBarWithTitle:@""];
     _navigationView = navigationView;
@@ -93,22 +95,7 @@
         
     }else{
 
-        [_bannerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
     }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    [_bannerView startAutoScrollWithInterval:6.0];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    [_bannerView stopAutoScroll];
 }
 
 - (void)setupUI {
@@ -135,7 +122,7 @@
     [parentScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(self.view);
         make.top.equalTo(self.navigationView.mas_bottom);
-        make.bottom.equalTo(self.mas_bottomLayoutGuideTop);
+        make.bottom.equalTo(self.mas_bottomLayoutGuideTop).offset(g_bottomSafeAreaHeight);
     }];
     
     UIView *headerView = [[UIView alloc] init];
@@ -145,35 +132,11 @@
         make.top.equalTo(parentScrollView);
     }];
     
-    HPBannerView *bannerView = [[HPBannerView alloc] init];
-    [bannerView setImages:@[[UIImage imageNamed:@"banner_shop1"],
-                            [UIImage imageNamed:@"banner_shop2"]]];
-    [bannerView setBannerViewDelegate:self];
-    [bannerView setImageContentMode:UIViewContentModeCenter];
-    [headerView addSubview:bannerView];
-    _bannerView = bannerView;
-
-    [bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.width.equalTo(headerView);
-        make.top.equalTo(headerView);
-        make.height.mas_equalTo(150.f * g_rateWidth);
-    }];
-
-    HPPageControl *pageControl = [HPPageControlFactory createPageControlByStyle:HPPageControlStyleRoundedRect];
-    [pageControl setNumberOfPages:2];
-    [pageControl setCurrentPage:0];
-    [headerView addSubview:pageControl];
-    _pageControl = pageControl;
-    [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(headerView);
-        make.bottom.equalTo(bannerView).with.offset(-22.f * g_rateWidth);
-    }];
-
     UIView *separator = [[UIView alloc] init];
     [separator setBackgroundColor:COLOR_GRAY_F1F1F1];
     [headerView addSubview:separator];
     [separator mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(bannerView.mas_bottom);
+        make.top.equalTo(self.navigationView.mas_bottom);
         make.left.and.width.equalTo(headerView);
         make.height.mas_equalTo(10.f);
         make.bottom.equalTo(headerView);
@@ -210,14 +173,8 @@
     [subTableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(parentScrollView);
         make.top.equalTo(filterBar.mas_bottom);
-        make.bottom.equalTo(self.mas_bottomLayoutGuideTop);
+        make.bottom.equalTo(self.mas_bottomLayoutGuideTop).offset(g_bottomSafeAreaHeight);
     }];
-}
-
-#pragma mark - HPBannerViewDelegate
-
-- (void)bannerView:(HPBannerView *)bannerView didScrollAtIndex:(NSInteger)index {
-    [_pageControl setCurrentPage:index];
 }
 
 #pragma mark - UITableViewDelegate
