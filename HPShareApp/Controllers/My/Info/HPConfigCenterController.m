@@ -905,15 +905,17 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 查询绑定的业务员-----------业务员相关网络请求
 - (void)queryOnlineProducters
 {
+    [HPProgressHUD alertWithLoadingText:@"加载中..."];
     HPLoginModel *account = [HPUserTool account];
     [HPHTTPSever HPGETServerWithMethod:@"/v1/salesman/query" isNeedToken:YES paraments:@{@"userId":account.userInfo.userId} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
-//            [self layoutProfessionFrame];
+
             self.model = [HPQueryproductersModel mj_objectWithKeyValues:responseObject[@"data"]];
-            if (self.model) {
+            if (self.model.userId) {
                 [self.userIcon sd_setImageWithURL:[NSURL URLWithString:self.model.avatar] placeholderImage:ImageNamed(@"my_business_card_default_head_image")];
                 self.fessionnameLabel.text = self.model.salesmanName;
                 [self layoutProfessionFrame];
+                [HPProgressHUD alertWithFinishText:@"加载完成"];
             }else{
                 [HPProgressHUD alertMessage:@"请添加业务员"];
             }

@@ -518,7 +518,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         textField.text = account.userInfo.mobile?:@"";
         textField.textColor = COLOR_BLACK_333333;
         textField.font = kFont_Regular(13.f);
-        textField.userInteractionEnabled = NO;//不允许交互，固定为注册登录人的手机号
+        textField.userInteractionEnabled = YES;//不允许交互，固定为注册登录人的手机号
     }
     _phoneNumField = textField;
     return view;
@@ -926,6 +926,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         [_textField setText:@""];
         [_countLabel setText:@"0/11"];
         [_contactView setHidden:NO];
+        [_phoneNumField resignFirstResponder];
         return NO;
     }
     return YES;
@@ -979,12 +980,15 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         [HPProgressHUD alertMessage:@"请输入手机号"];
         return;
     }
+    [HPProgressHUD alertWithLoadingText:@"加载中..."];
+
     HPLoginModel *account = [HPUserTool account];
     [HPHTTPSever HPGETServerWithMethod:@"/v1/salesman/queryUserOfSalesmanByMobile" isNeedToken:YES paraments:@{@"mobile":self.textField.text,@"salesmanUserId":account.salesman.userId} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             self.phoneNumField.text = self.textField.text;
             [self.contactView setHidden:YES];
             self.coverBtn.hidden = YES;
+            [HPProgressHUD alertWithFinishText:@"加载完成"];
         }else
         {
             [HPProgressHUD alertMessage:MSG];
