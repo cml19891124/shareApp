@@ -485,6 +485,15 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 #pragma mark - 联系人
 - (UIView *)setupContactRowView {
     UIView *view = [[UIView alloc] init];
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [view addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
+    }];
+    
     [self setupTitleLabelWithText:@"联系人" ofView:view];
     _contactField = [self setupTextFieldWithPlaceholder:@"完善称呼交流更方便" ofView:view rightTo:view];
     _contactField.textColor = COLOR_BLACK_333333;
@@ -566,7 +575,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 #pragma mark - 生成按钮事件
 - (void)convertShareTitle:(UIButton *)button
 {
-    if (_cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _detailAddressBtn.currentTitle.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
+    if (_contactField.text.length != 0 && _cityBtn.currentTitle.length != 0 && _areaBtn.currentTitle.length != 0 && ![_areaBtn.currentTitle isEqualToString:@"请选择区域"] && _detailAddressBtn.currentTitle.length != 0 && _industryBtn.titleLabel.text.length != 0 && _phoneNumField.text.length != 0) {
         button.selected = !button.selected;
         if (button.selected) {
             [button setTitle:@"清空" forState:UIControlStateNormal];
@@ -605,7 +614,9 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     }else{
         areaString = self.areaBtn.currentTitle;
     }
-    NSString *titleString = [NSString stringWithFormat:@"%@%@店有%@空间可供出租",self.titleField.text,areaString?:@"",self.shareSpace?:@""];
+    
+    NSString *industryStr = [self.industryBtn.currentTitle componentsSeparatedByString:@"-"].lastObject;
+    NSString *titleString = [NSString stringWithFormat:@"%@%@%@店有%@空间可供出租",self.titleField.text,areaString?:@"",industryStr,self.shareSpace?:@""];
     self.convertTitleField.text = titleString;
     
 }
@@ -760,7 +771,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
                 HPDistrictModel *districtModel = (HPDistrictModel *)model;
                 NSString *areaName = [HPCommonData getAreaNameById:districtModel.areaId];
                 HPLog(@"Pick district: %@-%@", areaName, districtModel.name);
-                NSString *areaTitle = [NSString stringWithFormat:@"%@-%@", areaName, districtModel.name];
+                NSString *areaTitle = [NSString stringWithFormat:@"%@", districtModel.name];
                 CGFloat areaW = BoundWithSize(areaTitle, kScreenWidth, 13.f).size.width + 15;
                [self.areaBtn setTitle:areaTitle forState:UIControlStateNormal];
                 [self.areaBtn mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -810,9 +821,12 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [self.textField resignFirstResponder];
+    if (_phoneNumField.text.length) {
+        
+        [self queryUserOfSalesmanByMobile];
+    }
+    [textField resignFirstResponder];
 
-    [self queryUserOfSalesmanByMobile];
     return YES;
 }
 
