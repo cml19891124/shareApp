@@ -615,9 +615,15 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         areaString = self.areaBtn.currentTitle;
     }
     
-    NSString *industryStr = [self.industryBtn.currentTitle componentsSeparatedByString:@"-"].lastObject;
-    NSString *titleString = [NSString stringWithFormat:@"%@%@%@店有%@空间可供出租",self.titleField.text,areaString?:@"",industryStr,self.shareSpace?:@""];
-    self.convertTitleField.text = titleString;
+    if (self.titleField.text.length) {
+        NSString *titleString = [NSString stringWithFormat:@"%@%@有%@空间可供出租",self.titleField.text,areaString?:@"",self.shareSpace?:@""];
+        self.convertTitleField.text = titleString;
+    }else{
+        NSString *industryStr = [self.industryBtn.currentTitle componentsSeparatedByString:@"-"].lastObject;
+        NSString *titleString = [NSString stringWithFormat:@"%@%@%@有%@空间可供出租",self.titleField.text,areaString?:@"",industryStr,self.shareSpace?:@""];
+        self.convertTitleField.text = titleString;
+    }
+    
     
 }
 #pragma mark - UITextViewDelegate
