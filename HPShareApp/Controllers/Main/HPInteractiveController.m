@@ -486,7 +486,7 @@ static NSString *conversationListCell = @"conversationListCell";
     }
     NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
 
-    [JMSGUser loginWithUsername:imAccount password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
+    [JMSGUser loginWithUsername:imAccount password:@"hepai123" completionHandler:^(id resultObject, NSError *error) {
         if (!error) {
             //登录成功
             
@@ -515,10 +515,10 @@ static NSString *conversationListCell = @"conversationListCell";
     userInfo.signature = account.cardInfo.signature;
     NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
     kWEAKSELF
-    [JMSGUser registerWithUsername:imAccount password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
+    [JMSGUser registerWithUsername:imAccount password:@"hepai123" completionHandler:^(id resultObject, NSError *error) {
         if (!error) {
             //极光注册成功
-            [kUserDefaults setObject:@"aaa123" forKey:@"password"];
+            [kUserDefaults setObject:@"hepai123" forKey:@"password"];
             [kUserDefaults synchronize];
             [weakSelf loginJMessage];
         } else {

@@ -122,7 +122,7 @@
     [passwordTextField setKeyboardType:UIKeyboardTypeAlphabet];
     [passwordTextField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     passwordTextField.delegate = self;
-//    passwordTextField.text = @"aaa123";
+
     self.passwordTextField = passwordTextField;
     NSMutableAttributedString *passwordPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"请输入密码"];
     [passwordPlaceholder addAttribute:NSForegroundColorAttributeName

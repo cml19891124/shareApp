@@ -15,8 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *phone;
 /**
  设置电话号码
-
- @param phone <#phone description#>
  */
 - (void)setPhoneString:(NSString *)phone;
 @end

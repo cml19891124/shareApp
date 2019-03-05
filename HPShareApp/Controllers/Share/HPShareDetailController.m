@@ -24,12 +24,19 @@
 #import "HPShareMapAnnotationView.h"
 #import "HPAttributeLabel.h"
 
+#import "HPShareDialView.h"
+
 typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     HPShareDetailGotoShare = 180,
 };
 
 @interface HPShareDetailController () <HPBannerViewDelegate,MAMapViewDelegate>
 
+
+/**
+ 隐私号码
+ */
+@property (nonatomic, copy) NSString *privateStr;
 @property (nonatomic, copy) NSString *getTime;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIButton *backBtn;
@@ -156,6 +163,10 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 @property (strong, nonatomic) AMapLocationManager * locationManager;//定位用
 
 
+/**
+ 拨号弹框
+ */
+@property (nonatomic, strong) HPShareDialView *dialView;
 @end
 
 @implementation HPShareDetailController
@@ -351,6 +362,15 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         _mapSuperView = [UIView new];
     }
     return _mapSuperView;
+}
+
+- (HPShareDialView *)dialView
+{
+    if (!_dialView) {
+        _dialView = [HPShareDialView new];
+        
+    }
+    return _dialView;
 }
 
 #pragma mark - 所有子视图 masonry布局
@@ -843,15 +863,48 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     }
     HPShareDetailModel *model = self.param[@"model"];
 
-        if (_customerServiceModalView == nil) {
-            HPCustomerServiceModalView *customerServiceModalView = [[HPCustomerServiceModalView alloc] initWithParent:self.parentViewController.view];
-            customerServiceModalView.phone = model.contactMobile;
-            [customerServiceModalView setPhoneString:model.contactMobile];
-            _customerServiceModalView = customerServiceModalView;
-        }
+    [self.parentViewController.view addSubview:self.dialView];
+    //获取隐私电话号码
+    [self getPrivatePhoneData:model];
+    
+    [self.dialView show:YES];
+    
+    [self.dialView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
+    
+    kWEAKSELF
+    [self.dialView setBlock:^{
+        [weakSelf.dialView show:NO];
         
-        [_customerServiceModalView show:YES];
-        [self.parentViewController.view bringSubviewToFront:_customerServiceModalView];
+        NSString *telNumber = [NSString stringWithFormat:@"tel:%@", weakSelf.privateStr];
+        
+        NSURL *aURL = [NSURL URLWithString: telNumber];
+        
+        if ([[UIApplication sharedApplication] canOpenURL:aURL]) {
+            [[UIApplication sharedApplication] openURL:aURL];
+        }
+    }];
+}
+
+- (void)getPrivatePhoneData:(HPShareDetailModel *)model
+{
+    HPLoginModel *account = [HPUserTool account];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"phoneNoA"] = account.userInfo.mobile;
+    dic[@"phoneNoB"] = model.contactMobile;
+//    [HPProgressHUD alertWithLoadingText:@"加载中..."];
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/phone/secretNo" paraments:dic needToken:NO complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            self.privateStr = responseObject[@"data"][@"SecretNo"];
+            if (self.privateStr.length) {
+                [self.dialView setPhoneText:self.privateStr];
+            }
+//            [HPProgressHUD alertWithFinishText:@"加载完成"];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 #pragma mark - onClickBackBtn

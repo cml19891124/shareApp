@@ -223,6 +223,7 @@
 		E6830E4E21D20364000E0F39 /* HPTopMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6830E4D21D20364000E0F39 /* HPTopMenuItemCell.m */; };
 		E6830E5121D20594000E0F39 /* HPMenuOpenStoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6830E5021D20594000E0F39 /* HPMenuOpenStoreView.m */; };
 		E683295921E4559400C119FE /* HPQueryproductersModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E683295821E4559400C119FE /* HPQueryproductersModel.m */; };
+		E685895E222E5426009C38BA /* HPShareDialView.m in Sources */ = {isa = PBXBuildFile; fileRef = E685895D222E5426009C38BA /* HPShareDialView.m */; };
 		E68A76B021F2C6D100083A90 /* JCHATSelectFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68A769421F2C6D100083A90 /* JCHATSelectFriendCell.m */; };
 		E68A76B121F2C6D100083A90 /* JCHATDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E68A769521F2C6D100083A90 /* JCHATDetailTableViewCell.xib */; };
 		E68A76B221F2C6D100083A90 /* JCHATGroupMemberCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68A769621F2C6D100083A90 /* JCHATGroupMemberCollectionViewCell.m */; };
@@ -941,6 +942,8 @@
 		E6830E5021D20594000E0F39 /* HPMenuOpenStoreView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPMenuOpenStoreView.m; sourceTree = "<group>"; };
 		E683295721E4559400C119FE /* HPQueryproductersModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPQueryproductersModel.h; sourceTree = "<group>"; };
 		E683295821E4559400C119FE /* HPQueryproductersModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPQueryproductersModel.m; sourceTree = "<group>"; };
+		E685895C222E5426009C38BA /* HPShareDialView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareDialView.h; sourceTree = "<group>"; };
+		E685895D222E5426009C38BA /* HPShareDialView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareDialView.m; sourceTree = "<group>"; };
 		E68A769421F2C6D100083A90 /* JCHATSelectFriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCHATSelectFriendCell.m; sourceTree = "<group>"; };
 		E68A769521F2C6D100083A90 /* JCHATDetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JCHATDetailTableViewCell.xib; sourceTree = "<group>"; };
 		E68A769621F2C6D100083A90 /* JCHATGroupMemberCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCHATGroupMemberCollectionViewCell.m; sourceTree = "<group>"; };
@@ -1947,7 +1950,7 @@
 				6993AD2421C683AA0019506C /* ScrollView */,
 				6993AD2821C6887A0019506C /* TableView */,
 				E661B0C1219CFE1200C86CF5 /* TableViewCell */,
-				E661B0E3219E538800C86CF5 /* Modal */,
+				E661B0E3219E538800C86CF5 /* Model */,
 				E661B0E7219EBEAA00C86CF5 /* Share */,
 				E6D75F1B21ABEA7C00B2067C /* Idea */,
 				69165CC821BE094700593D25 /* Release */,
@@ -2159,7 +2162,7 @@
 			path = TableViewCell;
 			sourceTree = "<group>";
 		};
-		E661B0E3219E538800C86CF5 /* Modal */ = {
+		E661B0E3219E538800C86CF5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				E661B0E4219E53A500C86CF5 /* HPTagDialogView.h */,
@@ -2184,8 +2187,10 @@
 				E6B63B90221E51F100337830 /* HPUpdateVersionView.m */,
 				E6B63B92221E835200337830 /* HPUpdateVersionTool.h */,
 				E6B63B93221E835200337830 /* HPUpdateVersionTool.m */,
+				E685895C222E5426009C38BA /* HPShareDialView.h */,
+				E685895D222E5426009C38BA /* HPShareDialView.m */,
 			);
-			path = Modal;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		E661B0E7219EBEAA00C86CF5 /* Share */ = {
@@ -3627,6 +3632,7 @@
 				E68A76FA21F2D2F200083A90 /* JCHATSendMsgManager.m in Sources */,
 				E633529F21F1C99300999BE7 /* Aspects.m in Sources */,
 				E61FE0A021BA0F4A00555F3F /* HPNearbyShareView.m in Sources */,
+				E685895E222E5426009C38BA /* HPShareDialView.m in Sources */,
 				69165CCE21BE402E00593D25 /* HPTimePicker.m in Sources */,
 				6993AD4C21CE97D40019506C /* HPShareTempGoodsController.m in Sources */,
 				6993AD2B21C688B30019506C /* HPSubTableView.m in Sources */,
