@@ -16,6 +16,7 @@
 #import "HPImageUtil.h"
 #import "JCHATConversationListViewController.h"
 #import "HPNavGationViewController.h"
+#import "JCHATStringUtils.h"
 
 #define JCHATMAINTHREAD(block) dispatch_async(dispatch_get_main_queue(), block)
 #define kDBMigrateFinishNotification @"DBMigrateFinishNotification"
@@ -298,7 +299,6 @@ static NSString *conversationListCell = @"conversationListCell";
     });
     
     [self addDelegate];
-//    [self getConversationList];
 }
 
 #pragma mark --创建群成功Push group viewctl
@@ -355,9 +355,6 @@ static NSString *conversationListCell = @"conversationListCell";
     [kNotificationCenter removeObserver:self];
     [kNotificationCenter removeObserver:self];
     [kNotificationCenter removeObserver:self];
-//    [kNotificationCenter removeObserver:self];
-//    [kNotificationCenter removeObserver:self];
-//    [kNotificationCenter removeObserver:self];
 
 }
 - (void)setupUI {
@@ -391,7 +388,6 @@ static NSString *conversationListCell = @"conversationListCell";
         return [_interArray count];
     }else if (section == 1) {
         return 1.f;
-//        return _conversationArr.count;
     }
     return 0;
 }
@@ -406,40 +402,9 @@ static NSString *conversationListCell = @"conversationListCell";
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }else if (indexPath.section == 1) {
-//        if (_conversationArr.count == 0) {
-            [cell.contentView removeFromSuperview];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UIImage *image = ImageNamed(@"waiting");
-            UIImageView *waitingView = [[UIImageView alloc] init];
-            waitingView.image = image;
-            [cell addSubview:waitingView];
-            [waitingView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(72.f * g_rateWidth);
-                make.size.mas_equalTo(CGSizeMake(343.f * g_rateWidth, 197.f * g_rateWidth));
-                make.centerX.mas_equalTo(cell);
-            }];
 
-            UILabel *waitingLabel = [[UILabel alloc] init];
-            waitingLabel.text = @"在线互动即将开启，敬情期待 ~";
-            waitingLabel.font = [UIFont fontWithName:FONT_MEDIUM size:12];
-            waitingLabel.textColor = COLOR_GRAY_BBBBBB;
-            waitingLabel.textAlignment = NSTextAlignmentCenter;
-            [cell addSubview:waitingLabel];
-            [waitingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.mas_equalTo(cell);
-                make.top.mas_equalTo(waitingView.mas_top).offset(158.f * g_rateWidth);
-                make.width.mas_equalTo(kScreenWidth);
-            }];
-//            return cell;
-//        }else{
-//            JCHATConversationListCell *cell = (JCHATConversationListCell *)[tableView dequeueReusableCellWithIdentifier:conversationListCell];
-//
-//            JMSGConversation *conversation =[_conversationArr objectAtIndex:indexPath.row];
-//            [cell setCellDataWithConversation:conversation];
-//            return cell;
-//        }
-//        cell.titleLabel.text = @"合店在线";
-//        cell.subtitleLabel.text = @"暂无数据";
+        cell.titleLabel.text = @"合店在线";
+        cell.subtitleLabel.text = @"暂无数据";
     }
 
     return cell;
@@ -451,19 +416,17 @@ static NSString *conversationListCell = @"conversationListCell";
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (iPhone5) {
-        if (indexPath.section == 1) {
-            return kScreenHeight - g_navigationBarHeight - g_tabBarHeight - 20.f * g_rateWidth - 120.f * g_rateWidth;
-        }else{
-            return 60.f;
-        }
-    }else{
-        if (indexPath.section == 1) {
-            return kScreenHeight - g_navigationBarHeight - g_tabBarHeight - 20.f * g_rateWidth - 150.f;
-        }else{
-            return 75.f * g_rateWidth;
-        }
-    }
+//    if (iPhone5) {
+//        if (indexPath.section == 1) {
+//            return kScreenHeight - g_navigationBarHeight - g_tabBarHeight - 20.f * g_rateWidth - 120.f * g_rateWidth;
+//        }else{
+//            return 60.f;
+//        }
+//    }else{
+//        if (indexPath.section == 1) {
+//            return 75.f * g_rateWidth;
+//        }
+//    }
     return 75.f * g_rateWidth;
 }
 
@@ -504,11 +467,65 @@ static NSString *conversationListCell = @"conversationListCell";
     }
     
     if (indexPath.section == 1) {
-//        JCHATConversationListViewController *listvc = [JCHATConversationListViewController new];
-//        HPNavGationViewController *nav = [[HPNavGationViewController alloc] initWithRootViewController:listvc];
-//        self.isPop = YES;
-//        [self.navigationController presentViewController:nav animated:NO completion:NULL];
+        
+        
+        //登录极光IM
+        [self loginJMessage];
+        
     }
+}
+
+
+#pragma mark - 登录im
+- (void)loginJMessage
+{
+    HPLoginModel *account = [HPUserTool account];
+    if (!account.token) {
+        [HPProgressHUD alertMessage:@"请登录"];
+        return;
+    }
+    NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
+
+    [JMSGUser loginWithUsername:imAccount password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
+        if (!error) {
+            //登录成功
+            
+            JCHATConversationListViewController *listvc = [JCHATConversationListViewController new];
+            HPNavGationViewController *nav = [[HPNavGationViewController alloc] initWithRootViewController:listvc];
+            self.isPop = YES;
+            [self.navigationController presentViewController:nav animated:NO completion:NULL];
+        } else {
+            //登录失败
+            NSString * errorStr = [JCHATStringUtils errorAlert:error];
+            if ([errorStr isEqualToString:@"用户名不合法"]||[errorStr isEqualToString:@"用户名还没有被注册过"]) {
+                HPLog(@"登录极光失败");
+
+                [self regiestJMessage];
+            }
+        }
+    }];
+}
+
+#pragma mark - 注册im
+- (void)regiestJMessage
+{
+    HPLoginModel *account = [HPUserTool account];
+    JMSGUserInfo *userInfo = [JMSGUserInfo new];
+    userInfo.nickname = account.userInfo.username;
+    userInfo.signature = account.cardInfo.signature;
+    NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
+    kWEAKSELF
+    [JMSGUser registerWithUsername:imAccount password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
+        if (!error) {
+            //极光注册成功
+            [kUserDefaults setObject:@"aaa123" forKey:@"password"];
+            [kUserDefaults synchronize];
+            [weakSelf loginJMessage];
+        } else {
+            //极光注册失败
+            [HPProgressHUD alertMessage:@"注册极光失败"];
+        }
+    }];
 }
 
 #pragma mark - TouchTableViewDelegate
@@ -527,123 +544,6 @@ static NSString *conversationListCell = @"conversationListCell";
     self.tableView.contentOffset = offset;
 }
 
-#pragma mark - JPush IM
-/*
-- (void)addBtnClick:(UIButton *)btn {
-    
-    if (btn.selected) {
-        btn.selected=NO;
-        [self.addBgView setHidden:YES];
-    } else {
-        btn.selected=YES;
-        [self.addBgView setHidden:NO];
-    }
-    [self.view bringSubviewToFront:self.addBgView];
-}
-
-- (void)netWorkConnectClose {
-    HPLog(@"Action - netWorkConnectClose");
-    _titleLabel.text = @"未连接";
-    _titleActivity.hidden = YES;
-}
-
-- (void)netWorkConnectSetup {
-    HPLog(@"Action - netWorkConnectSetup");
-    
-    _titleLabel.text = @"收取中...";
-    _titleActivity.hidden = NO;
-}
-
-- (void)connectSucceed {
-    HPLog(@"Action - connectSucceed");
-    
-    _titleLabel.text = @"会话";
-    _titleActivity.hidden = YES;
-    
-}
-
-- (void)isConnecting {
-    HPLog(@"Action - isConnecting");
-    
-    _titleLabel.text = @"连接中...";
-    _titleActivity.hidden = NO;
-}
-
-
-#pragma mark JMSGMessageDelegate
-- (void)onReceiveMessage:(JMSGMessage *)message
-                   error:(NSError *)error {
-    HPLog(@"Action -- onReceivemessage %@",message.serverMessageId);
-    [self getConversationList];
-}
-
-- (void)onConversationChanged:(JMSGConversation *)conversation {
-    HPLog(@"Action -- onConversationChanged");
-    //    [self getConversationList];
-    [self onSyncReloadConversationListWithConversation:conversation];
-}
-
-- (void)onGroupInfoChanged:(JMSGGroup *)group {
-    HPLog(@"Action -- onGroupInfoChanged");
-    [self getConversationList];
-}
-
-- (void)onSyncOfflineMessageConversation:(JMSGConversation *)conversation
-                         offlineMessages:(NSArray<__kindof JMSGMessage *> *)offlineMessages {
-    HPLog(@"Action -- onSyncOfflineMessageConversation:offlineMessages:");
-    
-    //    [self getConversationList];
-    [self onSyncReloadConversationListWithConversation:conversation];
-}
-
-- (void)onSyncRoamingMessageConversation:(JMSGConversation *)conversation {
-    HPLog(@"Action -- onSyncRoamingMessageConversation:");
-    
-    //    [self getConversationList];
-    [self onSyncReloadConversationListWithConversation:conversation];
-}
-
-- (void)onSyncReloadConversationListWithConversation:(JMSGConversation *)conversation {
-    if (!conversation) {
-        return ;
-    }
-    BOOL isHave = NO;
-    if (conversation.conversationType == kJMSGConversationTypeSingle) {
-        JMSGUser *newUser = (JMSGUser *)conversation.target;
-        for (int i = 0; i < _conversationArr.count; i++) {
-            JMSGConversation *oldConversation = _conversationArr[i];
-            if (oldConversation.conversationType == kJMSGConversationTypeSingle) {
-                JMSGUser *oldUser = (JMSGUser *)oldConversation.target;
-                if ([newUser.username isEqualToString:oldUser.username] && [newUser.appKey isEqualToString:oldUser.appKey]) {
-                    [_conversationArr replaceObjectAtIndex:i withObject:conversation];
-                    isHave = YES;
-                    break ;
-                }
-            }
-        }
-    }else{
-        JMSGGroup *newGroup = (JMSGGroup *)conversation.target;
-        for (int i = 0; i < _conversationArr.count; i++) {
-            JMSGConversation *oldConversation = _conversationArr[i];
-            if (oldConversation.conversationType == kJMSGConversationTypeGroup) {
-                JMSGGroup *oldGroup = (JMSGGroup *)oldConversation.target;
-                if ([newGroup.gid isEqualToString:oldGroup.gid]) {
-                    [_conversationArr replaceObjectAtIndex:i withObject:conversation];
-                    isHave = YES;
-                    break ;
-                }
-            }
-        }
-    }
-    if (!isHave) {
-        [_conversationArr insertObject:conversation atIndex:0];
-    }
-    _conversationArr = [self sortConversation:_conversationArr];
-    _unreadCount = _unreadCount + [conversation.unreadCount integerValue];
-    [self saveBadge:_unreadCount];
-    [self.tableView reloadData];
-}*/
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -652,79 +552,4 @@ static NSString *conversationListCell = @"conversationListCell";
 
 }
 
-/*
-- (void)getConversationList {
-    
-    if (isGetingAllConversation) {
-        HPLog(@"is loading conversation list");
-        cacheCount++;
-        return ;
-    }
-    
-    HPLog(@"get allConversation -- start");
-    isGetingAllConversation = YES;
-    
-    [self.addBgView setHidden:YES];
-    [JMSGConversation allConversations:^(id resultObject, NSError *error) {
-        JCHATMAINTHREAD(^{
-            self->isGetingAllConversation = NO;
-            if (error == nil) {
-                self->_conversationArr = [self sortConversation:resultObject];
-                self->_unreadCount = 0;
-                for (NSInteger i=0; i < [self->_conversationArr count]; i++) {
-                    JMSGConversation *conversation = [self->_conversationArr objectAtIndex:i];
-                    self->_unreadCount = self->_unreadCount + [conversation.unreadCount integerValue];
-                }
-                [self saveBadge:self->_unreadCount];
-            } else {
-                self->_conversationArr = nil;
-            }
-            [self.tableView reloadData];
-            HPLog(@"get allConversation -- end");
-            self->isGetingAllConversation = NO;
-            [self checkCacheGetAllConversationAction];
-        });
-    }];
-}
-- (void)checkCacheGetAllConversationAction {
-    if (cacheCount > 0) {
-        NSLog(@"is have cache ,once again get all conversation");
-        cacheCount = 0;
-        [self getConversationList];
-    }
-}
-
-NSInteger sortType(id object1,id object2,void *cha) {
-    JMSGConversation *model1 = (JMSGConversation *)object1;
-    JMSGConversation *model2 = (JMSGConversation *)object2;
-    if([model1.latestMessage.timestamp integerValue] > [model2.latestMessage.timestamp integerValue]) {
-        return NSOrderedAscending;
-    } else if([model1.latestMessage.timestamp integerValue] < [model2.latestMessage.timestamp integerValue]) {
-        return NSOrderedDescending;
-    }
-    return NSOrderedSame;
-}
-
-#pragma mark --排序conversation
-- (NSMutableArray *)sortConversation:(NSMutableArray *)conversationArr {
-    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"latestMessage.timestamp" ascending:NO];
-    
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:firstDescriptor, nil];
-    
-    NSArray *sortedArray = [conversationArr sortedArrayUsingDescriptors:sortDescriptors];
-    
-    return [NSMutableArray arrayWithArray:sortedArray];
-    
-    //    NSArray *sortResultArr = [conversationArr sortedArrayUsingFunction:sortType context:nil];
-    //    return [NSMutableArray arrayWithArray:sortResultArr];
-}
-
-- (void)alreadyLoginClick {
-    [self getConversationList];
-}
-
-- (void)saveBadge:(NSInteger)badge {
-    [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%zd",badge] forKey:@"badge"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}*/
 @end

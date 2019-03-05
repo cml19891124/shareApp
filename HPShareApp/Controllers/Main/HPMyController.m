@@ -15,8 +15,9 @@
 #import "HPUploadImageHandle.h"
 #import "HPPersonCenterModel.h"
 #import "UIButton+WebCache.h"
+#import <JMessage/JMessage.h>
 #import "HPUpdateVersionView.h"
-
+#import "JCHATStringUtils.h"
 
 @interface HPMyController ()
 
@@ -66,6 +67,12 @@
     [self updateAppVersionInfo];
 
     [self getUserInfosListData];
+
+    HPLoginModel *account = [HPUserTool account];
+    //登录极光
+    if (account.token) {
+        [self loginJMessage];
+    }
 }
 - (void)dealloc
 {
@@ -637,7 +644,6 @@
     }
 }
 
-
 #pragma mark - 检测版本更新信息
 - (void)updateAppVersionInfo
 {
@@ -711,6 +717,59 @@
     
     [_updateView show:YES];
     
+}
+
+#pragma mark - 登录im------------
+- (void)loginJMessage
+{
+    HPLoginModel *account = [HPUserTool account];
+    JMSGUserInfo *userInfo = [JMSGUserInfo new];
+    userInfo.nickname = account.userInfo.username;
+    userInfo.signature = account.cardInfo.signature;
+    NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
+
+    [JMSGUser loginWithUsername:imAccount password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
+        if (!error) {
+            //登录成功
+            
+        } else {
+            NSString * errorStr = [JCHATStringUtils errorAlert:error];
+            if ([errorStr isEqualToString:@"用户名不合法"]||[errorStr isEqualToString:@"用户名还没有被注册过"]) {
+                [self regiestJMessage];
+            }
+        }
+    }];
+}
+
+/**
+ *  注册极光
+ */
+-(void)gotoRegiestIM
+{
+    [self regiestJMessage];
+}
+
+#pragma mark - 注册im
+- (void)regiestJMessage
+{
+    HPLoginModel *account = [HPUserTool account];
+    JMSGUserInfo *userInfo = [JMSGUserInfo new];
+    userInfo.nickname = account.userInfo.username;
+    userInfo.signature = account.cardInfo.signature;
+    NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
+
+    kWEAKSELF
+    [JMSGUser registerWithUsername:imAccount password:@"aaa123" completionHandler:^(id resultObject, NSError *error) {
+        if (!error) {
+            //极光注册成功
+            [kUserDefaults setObject:@"aaa123" forKey:@"password"];
+            [kUserDefaults synchronize];
+            [weakSelf loginJMessage];
+        } else {
+            //极光注册失败
+            [HPProgressHUD alertMessage:@"注册极光失败"];
+        }
+    }];
 }
 
 @end

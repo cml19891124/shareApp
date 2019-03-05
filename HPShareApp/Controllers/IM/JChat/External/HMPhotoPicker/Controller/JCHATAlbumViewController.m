@@ -94,28 +94,29 @@
 }
 
 - (void)prepareAlbumArrWithAssert {//ios 8 以前使用 AssetsLibrary
+    kWEAKSELF
   ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
   void (^assetsGroupsEnumerationBlock)(ALAssetsGroup *, BOOL *) = ^(ALAssetsGroup *assetsGroup, BOOL *stop) {
     if(assetsGroup) {
-      _getDataschedule --;
+      weakSelf.getDataschedule --;
       [assetsGroup setAssetsFilter:[ALAssetsFilter allPhotos]];
       if(assetsGroup.numberOfAssets > 0) {
         JCHATAlbumModel *model = [JCHATAlbumModel new];
         [model setDataWithAssets:assetsGroup];
-        [_albumArr addObject:model];
+        [weakSelf.albumArr addObject:model];
       }
-      if (_getDataschedule == 0) {
+      if (weakSelf.getDataschedule == 0) {
         [self.albumTable reloadData];//移出去
       }
     }
   };
   
   void (^assetsGroupsFailureBlock)(NSError *) = ^(NSError *error) {
-    _getDataschedule --;
-    if (_getDataschedule == 0) {
+    weakSelf.getDataschedule --;
+    if (weakSelf.getDataschedule == 0) {
       [self.albumTable reloadData];
     }
-    NSLog(@"Error: %@", [error localizedDescription]);
+    HPLog(@"Error: %@", [error localizedDescription]);
   };
   
   _getDataschedule = 4;
@@ -186,20 +187,5 @@
   selectPhotoVC.photoDelegate = _photoDelegate;
   [self.navigationController pushViewController:selectPhotoVC animated:NO];
 }
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -76,8 +76,8 @@ UIScrollViewDelegate> {
 
 - (void)hidenAllBar {
   [UIView animateWithDuration:0.2 animations:^{
-    topBar.hidden = !topBar.hidden;
-    bottomBar.hidden = !bottomBar.hidden;
+      self->topBar.hidden = !self->topBar.hidden;
+      self->bottomBar.hidden = !self->bottomBar.hidden;
   }];
 }
 
@@ -136,7 +136,5 @@ UIScrollViewDelegate> {
   currentPhotoModel.isOriginPhoto = !currentPhotoModel.isOriginPhoto;
   selectOriginImageBtn.selected = currentPhotoModel.isOriginPhoto;
 }
-
-//- (void)layoutB
 
 @end

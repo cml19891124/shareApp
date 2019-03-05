@@ -286,13 +286,13 @@
     if (_photo.srcImageView.clipsToBounds) {
         [self performSelector:@selector(reset) withObject:nil afterDelay:duration];
     }
-    
+    kWEAKSELF
     [UIView animateWithDuration:duration + 0.1 animations:^{
-        _imageView.frame = [_photo.srcImageView convertRect:_photo.srcImageView.bounds toView:nil];
+        self->_imageView.frame = [weakSelf.photo.srcImageView convertRect:weakSelf.photo.srcImageView.bounds toView:nil];
         
         // gif图片仅显示第0张
-        if (_imageView.image.images) {
-            _imageView.image = _imageView.image.images[0];
+        if (self->_imageView.image.images) {
+            self->_imageView.image = self->_imageView.image.images[0];
         }
         
         // 通知代理
@@ -301,7 +301,7 @@
         }
     } completion:^(BOOL finished) {
         // 设置底部的小图片
-        _photo.srcImageView.image = _photo.placeholder;
+        weakSelf.photo.srcImageView.image = weakSelf.photo.placeholder;
         
         // 通知代理
         if ([self.photoViewDelegate respondsToSelector:@selector(photoViewDidEndZoom:)]) {

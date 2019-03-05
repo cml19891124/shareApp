@@ -245,7 +245,7 @@ static const NSInteger RoutePlanningPaddingEdge                    = 20;
     
     else if ([annotation isKindOfClass:HPShareMapAnnotation.class]) {//目标位置点/地图中心点/店铺位置点
         HPShareMapAnnotationView *annotationView = [[HPShareMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"Share_Annotation"];
-        [annotationView setImage:ImageNamed(@"endPoint")];
+        [annotationView setImage:ImageNamed(@"gps_location")];
         annotationView.canShowCallout = NO;
         annotationView.callOutOffset = CGPointMake(0.f, -getWidth(50.f));
         if (_model && _model.title && _model.address) {

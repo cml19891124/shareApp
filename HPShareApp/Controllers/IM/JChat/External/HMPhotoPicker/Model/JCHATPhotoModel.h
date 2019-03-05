@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "Macro.h"
 
 @interface JCHATPhotoModel : NSObject
 @property(assign, nonatomic)NSInteger index;

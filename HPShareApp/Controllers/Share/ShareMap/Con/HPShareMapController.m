@@ -130,7 +130,9 @@
     MAMapView *mapView = [[MAMapView alloc] init];
     mapView.showsUserLocation = YES;
     mapView.userTrackingMode = MAUserTrackingModeFollow;
+
     mapView.zoomLevel = 11.f;
+
     [mapView setDelegate:self];
     //地图需要v4.5.0及以上版本才必须要打开此选项（v4.5.0以下版本，需要手动配置info.plist）
     [AMapServices sharedServices].enableHTTPS = YES;

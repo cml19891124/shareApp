@@ -521,7 +521,7 @@
       [HPProgressHUD alertWithLoadingText:@"正在退出登录！"];
     HPLog(@"Logout anyway.");
     
-    AppDelegate *appDelegate = (AppDelegate *) [UIApplication sharedApplication].delegate;
+//    AppDelegate *appDelegate = (AppDelegate *) [UIApplication sharedApplication].delegate;
       NSString *isFirst = [kUserDefaults objectForKey:@"isFirst"];
       if ([isFirst isEqualToString:@"isFirst"]) {
       [self.navigationController.navigationController popToViewController:[self.navigationController.navigationController.childViewControllers objectAtIndex:0] animated:YES];

@@ -97,16 +97,17 @@
 
 - (void)tapPhotoAction:(UITapGestureRecognizer *)tap{
   [UIView animateWithDuration:0.4 animations:^{
-    _largeImage.transform = CGAffineTransformIdentity;
-    _imageContent.contentSize = _largeImage.frame.size;
+    self.largeImage.transform = CGAffineTransformIdentity;
+    self.imageContent.contentSize = self.largeImage.frame.size;
 
-    _imageContent.contentOffset = CGPointZero;
+    self.imageContent.contentOffset = CGPointZero;
   }];
   
 }
 
 
 - (void)setDataWithModel:(JCHATPhotoModel *)model {
+    kWEAKSELF
   _photoModel = model;
   PHAsset *asset = model.photoAsset;
   _imageContent.frame = self.bounds;
@@ -121,17 +122,17 @@
                                    contentMode:PHImageContentModeAspectFill
                                        options:nil
                                  resultHandler:^(UIImage *result, NSDictionary *info) {
-                                   if ([_photoModel.photoAsset.localIdentifier isEqualToString:asset.localIdentifier]) {
-                                     _largeImage.image = result;
+                                   if ([weakSelf.photoModel.photoAsset.localIdentifier isEqualToString:asset.localIdentifier]) {
+                                     weakSelf.largeImage.image = result;
                                    }
                                  }];
   } else {
     [[[ALAssetsLibrary alloc] init] assetForURL:model.imgURL resultBlock:^(ALAsset *asset)  {
       
-      _largeImage.image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]];
+      weakSelf.largeImage.image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]];
       
     }failureBlock:^(NSError *error) {
-      NSLog(@"error=%@",error);
+      HPLog(@"error=%@",error);
     }];
   }
 }
