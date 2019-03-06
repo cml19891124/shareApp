@@ -18,7 +18,7 @@
 #import "HPHomeBannerModel.h"
 #import "HPMenuItemCell.h"
 
-#define slideRatio fabs(y/((self.headerView.center.y - [self.view convertPoint:self.openView.cityBtn.center fromView:self.openView].y)/g_rateWidth))
+#define slideRatio fabs(y/71.f)
 
 typedef NS_ENUM(NSInteger, HPAreaidsCellIndexpath) {
     HPAreaidsBaoan = 2,
@@ -125,10 +125,10 @@ static NSString *shareListCell = @"shareListCell";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-//    CGPoint cityPoint = [self.view convertPoint:self.openView.cityBtn.center fromView:self.openView];
-//    CGPoint searchPoint = self.headerView.center;
-//    CGFloat deltaY = (self.headerView.center.y - [self.view convertPoint:self.openView.cityBtn.center fromView:self.openView].y)/g_rateWidth;
-//    HPLog(@"deltaY : %f", deltaY);
+    CGPoint cityPoint = [self.view convertPoint:self.openView.cityBtn.center fromView:self.openView];
+    CGPoint searchPoint = self.searchBar.center;
+    CGFloat deltaY = (self.searchBar.center.y - cityPoint.y)/g_rateWidth;
+    HPLog(@"deltaY : %f", deltaY);
 }
 
 #pragma mark - 拼租发布数据
@@ -470,31 +470,29 @@ static NSString *shareListCell = @"shareListCell";
 
 - (void)updateSearchViewWithMaonryOffset:(CGFloat)y{
 
-    if (y > -71.f && y <= 0.f) {
+    float slideH = 0.00;
+    if (iPhone5) {
+        slideH = getWidth(15.f);
+    }else{
+        
+    }
+    if (y > getWidth(-73.5f) && y <= 0.f) {
         [self.openView.sloganImageView setAlpha:slideRatio];
-        [self.headerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.searchBar mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(getWidth(325.f) - (getWidth(325) - getWidth(225.f)) * (1 - slideRatio));
             make.height.mas_equalTo(getWidth(40.f) - (getWidth(40.f) - getWidth(30.f)) * (1 - slideRatio));
-            make.centerY.mas_equalTo(self.openView.cityBtn).offset(getWidth(73.5f) * slideRatio);
+            make.centerY.mas_equalTo(self.openView.cityBtn).offset(getWidth(73.5f) * slideRatio - getWidth(8) + slideH);
             make.centerX.mas_equalTo(self.tableView);
         }];
     }
-    else if (y <= -71.f) {//最下面的y值
-        [self.openView.sloganImageView setAlpha:1.f];
-        [self.headerView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(getWidth(325.f));
-            make.height.mas_equalTo(getWidth(40.f));
-            make.centerY.mas_equalTo(self.openView.cityBtn).offset(getWidth(73.5f));
-            make.centerX.mas_equalTo(self.tableView);
-        }];
-    }
+
     else if (y > 0.f) {//最上面的y值
         [self.openView.sloganImageView setAlpha:0.f];
-        [self.headerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.searchBar mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.openView.cityBtn.mas_right).offset(getWidth(15.f));
             make.right.mas_equalTo(self.openView.mas_right).offset(getWidth(-30.f));
             make.height.mas_equalTo(getWidth(30.f));
-            make.centerY.mas_equalTo(self.openView.cityBtn).offset(-getWidth(8.f));
+            make.centerY.mas_equalTo(self.openView.cityBtn).offset(-getWidth(0.f));
         }];
     }
     
