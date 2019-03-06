@@ -43,10 +43,6 @@ typedef NS_ENUM(NSInteger, HPAreaidsCellIndexpath) {
 @property (strong, nonatomic) NSMutableArray *bannerImageArr;
 
 /**
- searchBar 所属父视图
- */
-@property (nonatomic, strong) UIView *headerView;
-/**
  搜索栏
  */
 @property (nonatomic, strong) HPSearchBar *searchBar;
@@ -194,12 +190,6 @@ static NSString *shareListCell = @"shareListCell";
         make.centerY.mas_equalTo(self.openView.mas_bottom);
         make.centerX.mas_equalTo(self.tableView);
     }];
-}
-
--(UIView *)createHeaderView {
-    self.headerView = [[UIView alloc] init];
-    return  self.headerView;
-    
 }
 
 - (HPMenuOpenStoreView *)openView
