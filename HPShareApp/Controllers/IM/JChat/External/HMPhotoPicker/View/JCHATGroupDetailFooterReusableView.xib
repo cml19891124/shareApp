@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -12,15 +16,14 @@
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="群聊名称" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ZH-yI-AwQ">
-                    <rect key="frame" x="9" y="17" width="150" height="15"/>
-                    <animations/>
+                    <rect key="frame" x="9" y="17.5" width="150" height="15"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="150" id="TAm-TS-xnF"/>
                         <constraint firstAttribute="height" constant="15" id="XP8-Xd-ON1"/>
                         <constraint firstAttribute="height" constant="21" id="vpp-IY-nz9"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                     <variation key="default">
                         <mask key="constraints">
@@ -29,8 +32,7 @@
                     </variation>
                 </label>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="jiantou.png" translatesAutoresizingMaskIntoConstraints="NO" id="wQh-hC-oHM">
-                    <rect key="frame" x="304" y="18" width="8" height="13"/>
-                    <animations/>
+                    <rect key="frame" x="304" y="18.5" width="8" height="13"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="8" id="cO3-PH-514"/>
                         <constraint firstAttribute="height" constant="13" id="oeN-hI-af8"/>
@@ -38,21 +40,19 @@
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZSM-yF-CnV">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
-                    <animations/>
-                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="r0g-Zo-5k8"/>
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YB8-dk-x4H">
-                    <rect key="frame" x="179" y="17" width="117" height="15"/>
-                    <animations/>
+                    <rect key="frame" x="179" y="17.5" width="117" height="15"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="15" id="6GR-cB-yAg"/>
                         <constraint firstAttribute="width" constant="42" id="J1E-sr-Lhs"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                     <variation key="default">
                         <mask key="constraints">
@@ -62,23 +62,21 @@
                 </label>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b2J-MC-JvV">
                     <rect key="frame" x="20" y="5" width="280" height="40"/>
-                    <animations/>
-                    <color key="backgroundColor" red="0.96081479057591623" green="0.0" blue="0.0098653245311797148" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.96081479057591623" green="0.0" blue="0.0098653245311797148" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="ib1-Wo-Ny2"/>
                     </constraints>
                     <state key="normal" title="删除并退出">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <state key="highlighted" title="删除并退出">
-                        <color key="titleColor" red="1" green="0.95615263355864255" blue="0.95928410172498235" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" red="1" green="0.95615263355864255" blue="0.95928410172498235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <connections>
                         <action selector="clickToQuitGroup:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="NAf-Ie-a6P"/>
                     </connections>
                 </button>
             </subviews>
-            <animations/>
             <constraints>
                 <constraint firstItem="YB8-dk-x4H" firstAttribute="leading" secondItem="2ZH-yI-AwQ" secondAttribute="trailing" constant="20" id="D4x-CA-x5l"/>
                 <constraint firstAttribute="trailing" secondItem="ZSM-yF-CnV" secondAttribute="trailing" id="DxT-MX-1RW"/>

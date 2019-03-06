@@ -18,7 +18,7 @@
 #import "HPHomeBannerModel.h"
 #import "HPMenuItemCell.h"
 
-#define slideRatio fabs(y/71.0f)
+#define slideRatio fabs(y/((self.headerView.center.y - [self.view convertPoint:self.openView.cityBtn.center fromView:self.openView].y)/g_rateWidth))
 
 typedef NS_ENUM(NSInteger, HPAreaidsCellIndexpath) {
     HPAreaidsBaoan = 2,
@@ -68,8 +68,8 @@ static NSString *shareListCell = @"shareListCell";
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     
     [self.view insertSubview:self.tableView aboveSubview:self.openView];
-    [self.view addSubview:[self createHeaderView]];
-    [self.headerView addSubview:self.searchBar];
+
+    [self.view addSubview:self.searchBar];
     
     self.searchBar.backgroundColor = COLOR_GRAY_FFFFFF;
     
@@ -127,7 +127,7 @@ static NSString *shareListCell = @"shareListCell";
     
 //    CGPoint cityPoint = [self.view convertPoint:self.openView.cityBtn.center fromView:self.openView];
 //    CGPoint searchPoint = self.headerView.center;
-//    CGFloat deltaY = (searchPoint.y - cityPoint.y)/g_rateWidth;
+//    CGFloat deltaY = (self.headerView.center.y - [self.view convertPoint:self.openView.cityBtn.center fromView:self.openView].y)/g_rateWidth;
 //    HPLog(@"deltaY : %f", deltaY);
 }
 
@@ -189,21 +189,10 @@ static NSString *shareListCell = @"shareListCell";
         make.bottom.mas_equalTo(getWidth(-g_bottomSafeAreaHeight - 49));
     }];
     
-    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(getWidth(325.f), getWidth(40.f)));
         make.centerY.mas_equalTo(self.openView.mas_bottom);
         make.centerX.mas_equalTo(self.tableView);
-    }];
-    
-    float slideHeight = 0.00;
-    if (IPHONE_HAS_NOTCH) {
-        slideHeight = getWidth(7.f/2);
-    }else{
-        slideHeight = getWidth(8.f);
-    }
-    [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self.headerView);
-        make.top.mas_equalTo(self.headerView).offset(slideHeight);
     }];
 }
 

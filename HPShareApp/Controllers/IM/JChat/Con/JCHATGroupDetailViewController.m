@@ -420,7 +420,7 @@ UITabBarDelegate> {
 }
 
 - (void)switchDisturb {
-    [HUD HUDNotHidden:@"正在修改免打扰"];
+//    [HUD HUDNotHidden:@"正在修改免打扰"];
   if (_conversation.conversationType == kJMSGConversationTypeSingle) {
     JMSGUser * user = _conversation.target;
       __weak JMSGUser *weakUser = user;
@@ -430,11 +430,11 @@ UITabBarDelegate> {
           self->_isNoDisturb = !self->_isNoDisturb;
         if (weakUser.isNoDisturb) {
           HPLog(@"is no disturb");
-            [HUD HUDHidden];
+//            [HUD HUDHidden];
             [HUD HUDWithString:@"免打扰成功" Delay:1.0];
         } else {
           HPLog(@"is disturb");
-            [HUD HUDHidden];
+//            [HUD HUDHidden];
             [HUD HUDWithString:@"打开" Delay:1.0];
         }
       }
