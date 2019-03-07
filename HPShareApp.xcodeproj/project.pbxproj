@@ -85,7 +85,6 @@
 		E61F710D21C1328400932708 /* HPSystemNotiModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E61F710C21C1328400932708 /* HPSystemNotiModel.m */; };
 		E61FE09D21B9F94500555F3F /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE09B21B9F94500555F3F /* iCarousel.m */; };
 		E61FE0A021BA0F4A00555F3F /* HPNearbyShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE09F21BA0F4A00555F3F /* HPNearbyShareView.m */; };
-		E61FE0A321BA4EEC00555F3F /* HPGradientColor.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0A221BA4EEC00555F3F /* HPGradientColor.m */; };
 		E61FE0A921BA6F5C00555F3F /* HPHTTPSever.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0A721BA6F5C00555F3F /* HPHTTPSever.m */; };
 		E61FE0AA21BA6F5C00555F3F /* HPHTTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0A821BA6F5C00555F3F /* HPHTTPManager.m */; };
 		E61FE0B021BA816D00555F3F /* HPUserTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E61FE0AC21BA816C00555F3F /* HPUserTool.m */; };
@@ -590,8 +589,6 @@
 		E61FE09C21B9F94500555F3F /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		E61FE09E21BA0F4A00555F3F /* HPNearbyShareView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPNearbyShareView.h; sourceTree = "<group>"; };
 		E61FE09F21BA0F4A00555F3F /* HPNearbyShareView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPNearbyShareView.m; sourceTree = "<group>"; };
-		E61FE0A121BA4EEC00555F3F /* HPGradientColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPGradientColor.h; sourceTree = "<group>"; };
-		E61FE0A221BA4EEC00555F3F /* HPGradientColor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPGradientColor.m; sourceTree = "<group>"; };
 		E61FE0A521BA6F5C00555F3F /* HPHTTPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPHTTPManager.h; sourceTree = "<group>"; };
 		E61FE0A621BA6F5C00555F3F /* HPHTTPSever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPHTTPSever.h; sourceTree = "<group>"; };
 		E61FE0A721BA6F5C00555F3F /* HPHTTPSever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPHTTPSever.m; sourceTree = "<group>"; };
@@ -1903,8 +1900,6 @@
 				E6D75F6621B230FC00B2067C /* HPPageControlFactory.m */,
 				E6F551DC21B901820086094F /* HPTimeString.h */,
 				E6F551DD21B901820086094F /* HPTimeString.m */,
-				E61FE0A121BA4EEC00555F3F /* HPGradientColor.h */,
-				E61FE0A221BA4EEC00555F3F /* HPGradientColor.m */,
 				69165CF521C221C000593D25 /* HPCommonData.h */,
 				69165CF621C221C000593D25 /* HPCommonData.m */,
 				E622A9C221C34E1C007C35BC /* HPClearCacheTool.h */,
@@ -3507,7 +3502,6 @@
 				7AAFF3A721E390540049D175 /* LineDashPolyline.m in Sources */,
 				E68A770321F2D54000083A90 /* JCHATFriendDetailViewController.m in Sources */,
 				E693E90521E8331E0063797A /* CoordinateQuadTree.m in Sources */,
-				E61FE0A321BA4EEC00555F3F /* HPGradientColor.m in Sources */,
 				7A54483F21BAD9B2001301F3 /* HPAreaModel.m in Sources */,
 				E661B12721A28E8500C86CF5 /* JTCalendarDelegateManager.m in Sources */,
 				69165CE721C0A49A00593D25 /* HPShareAddressController.m in Sources */,

@@ -8,7 +8,7 @@
 
 #import "HPMyCardController.h"
 #import "HPShareListCell.h"
-#import "HPGradientColor.h"
+
 #import "HPCardDetailsModel.h"
 #import "HPShareListParam.h"
 #import "HPParentScrollView.h"
@@ -229,11 +229,6 @@ typedef NS_ENUM(NSInteger, HPMyCardType) {
         make.centerY.equalTo(nameLabel);
         make.size.mas_equalTo(btnSize);
     }];
-    //    [editBtn setNeedsLayout];
-    //    [editBtn layoutIfNeeded];
-    //    HPGradientColor * gradientColor = (HPGradientColor *_Nonnull)[HPGradientColor getGradientColorFromStartPoint:CGPointMake(0, 0) toEndColor:CGPointMake(1, 0) inRect:editBtn.frame withColors:@[COLOR_RED_FF3455,COLOR_RED_FF9B5E] atCornerRadius:9.f];
-    //    HPLog(@"gradientColor:%@  editbtn:%@",gradientColor,editBtn);
-    //    [editBtn.layer insertSublayer:(CALayer *)gradientColor atIndex:0];
     
     UIView *line = [[UIView alloc] init];
     [line setBackgroundColor:COLOR_GRAY_EEEEEE];

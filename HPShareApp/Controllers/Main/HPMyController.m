@@ -558,11 +558,7 @@
     [view addSubview:descLabel];
     [descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(view);
-//        if ([title containsString:@"我的名片"]) {
-//            make.top.equalTo(btn.mas_bottom).with.offset(2.f * g_rateWidth);
-//        }else{
-            make.top.equalTo(btn.mas_bottom).with.offset(6.f * g_rateWidth);
-//        }
+        make.top.equalTo(btn.mas_bottom).with.offset(6.f * g_rateWidth);
         make.height.mas_equalTo(descLabel.font.pointSize);
         make.bottom.equalTo(view);
     }];
@@ -590,7 +586,7 @@
 }
 
 - (void)onClickCertificateBtn:(UIButton *)btn {
-    NSLog(@"onClickCertificateBtn");
+    HPLog(@"onClickCertificateBtn");
 }
 
 - (void)onClickCollectionCtrl:(UIControl *)ctrl {
