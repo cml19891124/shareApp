@@ -29,7 +29,7 @@
 #import "WXApi.h"
 #import <AlipaySDK/AlipaySDK.h>
 #import "WXApiManager.h"
-#import "HPUpdateVersionTool.h"
+
 #import "AvoidCrash.h"
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate,JPUSHRegisterDelegate,WXApiDelegate>

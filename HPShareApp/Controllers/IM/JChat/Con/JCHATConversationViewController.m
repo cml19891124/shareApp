@@ -764,6 +764,12 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
   }
 }
 
+#pragma mark - 发送名片
+- (void)cardInfoBtnClick
+{
+    
+}
+
 #pragma mark - ZYQAssetPickerController Delegate
 //-(void)assetPickerController:(ZYQAssetPickerController *)picker didFinishPickingAssets:(NSArray *)assets{
 //  for (int i=0; i<assets.count; i++) {

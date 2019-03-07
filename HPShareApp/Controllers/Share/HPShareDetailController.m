@@ -202,6 +202,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     if (self.param[@"update"]) {
         [self updateData];
     }
@@ -779,7 +780,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [view addSubview:phoneBtn];
     [phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(view).offset(getWidth(-14.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(60.f), getWidth(40.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(90.f), getWidth(40.f)));
         make.centerY.mas_equalTo(view);
     }];
     
@@ -803,31 +804,25 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [keepBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(view);
         make.right.equalTo(phoneBtn.mas_left).offset(getWidth(-12.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(60.f), getWidth(40.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(90.f), getWidth(40.f)));
     }];
     
     UIButton *messageBtn = [[UIButton alloc] init];
-    [messageBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:18.f]];
-    [messageBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [messageBtn setTitleColor:COLOR_RED_912D01 forState:UIControlStateSelected];
-//    [messageBtn setImage:ImageNamed(@"menu_25") forState:UIControlStateNormal];
-//    [messageBtn setImage:ImageNamed(@"shared_shop_details_calendar_collection_selected") forState:UIControlStateSelected];
-//    [messageBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 10.f, 0.f, 10.f)];
+
     [messageBtn setImage:ImageNamed(@"menu_25") forState:UIControlStateNormal];
-//    [messageBtn setTitle:@"收藏" forState:UIControlStateNormal];
-//    messageBtn.titleLabel.font = kFont_Medium(14.f);
-//    [messageBtn setTitle:@"已收藏" forState:UIControlStateSelected];
-//    [messageBtn setTitle:@"已收藏" forState:UIControlStateSelected|UIControlStateHighlighted];
+
+    [messageBtn setImage:ImageNamed(@"menu_23") forState:UIControlStateSelected|UIControlStateHighlighted];
+
     messageBtn.layer.cornerRadius = 2.f;
     messageBtn.layer.masksToBounds = YES;
-    [messageBtn addTarget:self action:@selector(addFriend:) forControlEvents:UIControlEventTouchUpInside];
+    [messageBtn addTarget:self action:@selector(createConversationWithFriend:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:messageBtn];
-//    _keepBtn = messageBtn;
+
     [messageBtn addTarget:self action:@selector(addOrCancelCollection:) forControlEvents:UIControlEventTouchUpInside];
     [messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(view);
         make.right.equalTo(keepBtn.mas_left).offset(getWidth(-12.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(60.f), getWidth(40.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(90.f), getWidth(40.f)));
     }];
     
     UILabel *userNameLabel = [[UILabel alloc] init];
@@ -835,16 +830,16 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [userNameLabel setTextColor:COLOR_BLACK_333333];
     [view addSubview:userNameLabel];
     _userNameLabel = userNameLabel;
-    [_userNameLabel setText:@"高小薇"];
+    [_userNameLabel setText:@""];
     [userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(portrait.mas_right).with.offset(14.f * g_rateWidth);
-        make.right.equalTo(keepBtn.mas_left);
+        make.right.equalTo(messageBtn.mas_left);
         make.centerY.equalTo(view);
     }];
 }
 
 #pragma mark - 开启会话
-- (void)addFriend:(UIButton *)button
+- (void)createConversationWithFriend:(UIButton *)button
 {
     [[JCHATAlertViewWait ins] showInView];
     __block JCHATConversationViewController *sendMessageCtl = [[JCHATConversationViewController alloc] init];
@@ -856,7 +851,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 
     NSString *storeOwnner = [NSString stringWithFormat:@"hepai%@",model.userId];
     kWEAKSELF
-    [JMSGConversation createSingleConversationWithUsername:storeOwnner appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
+    [JMSGConversation createSingleConversationWithUsername:@"hepai1" appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
         
         [[JCHATAlertViewWait ins] hidenAll];
         

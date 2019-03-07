@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XW3-Sc-UxH">
-                    <rect key="frame" x="25" y="21" width="50" height="80"/>
+                    <rect key="frame" x="10" y="11" width="50" height="80"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="50" id="7Y1-39-JbT"/>
                         <constraint firstAttribute="height" constant="80" id="nM6-O2-yaN"/>
@@ -32,7 +32,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Juz-wz-A0c">
-                    <rect key="frame" x="135" y="21" width="50" height="80"/>
+                    <rect key="frame" x="73" y="11" width="50" height="80"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="80" id="BWQ-8l-kr5"/>
                         <constraint firstAttribute="width" constant="50" id="DcW-ml-W6P"/>
@@ -47,13 +47,32 @@
                         <action selector="cameraBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="FfB-f9-GNg"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zWd-v0-DU4">
+                    <rect key="frame" x="136" y="11" width="50" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="50" id="A5z-rk-zTn"/>
+                        <constraint firstAttribute="height" constant="80" id="VF0-h9-eBz"/>
+                    </constraints>
+                    <inset key="titleEdgeInsets" minX="-50" minY="60" maxX="0.0" maxY="0.0"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="-19" maxX="0.0" maxY="0.0"/>
+                    <state key="normal" title="名片" image="camera_35.png">
+                        <color key="titleColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="cardInfoBtnClick:" destination="-1" eventType="touchUpInside" id="uNY-ky-iRu"/>
+                        <action selector="cardInfoBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="ymV-b6-G62"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="XW3-Sc-UxH" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="21" id="GS3-t6-Ems"/>
-                <constraint firstItem="Juz-wz-A0c" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="21" id="LNu-RF-PNN"/>
-                <constraint firstItem="Juz-wz-A0c" firstAttribute="leading" secondItem="XW3-Sc-UxH" secondAttribute="trailing" constant="60" id="Yyq-6y-RQ8"/>
-                <constraint firstItem="XW3-Sc-UxH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="25" id="gM1-Ec-Ovo"/>
+                <constraint firstItem="zWd-v0-DU4" firstAttribute="leading" secondItem="Juz-wz-A0c" secondAttribute="trailing" constant="13" id="10O-hf-XZr"/>
+                <constraint firstItem="XW3-Sc-UxH" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="11" id="GS3-t6-Ems"/>
+                <constraint firstItem="zWd-v0-DU4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="11" id="KFF-k3-AmD"/>
+                <constraint firstItem="Juz-wz-A0c" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="11" id="LNu-RF-PNN"/>
+                <constraint firstItem="Juz-wz-A0c" firstAttribute="leading" secondItem="XW3-Sc-UxH" secondAttribute="trailing" constant="13" id="Yyq-6y-RQ8"/>
+                <constraint firstItem="XW3-Sc-UxH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="gM1-Ec-Ovo"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>

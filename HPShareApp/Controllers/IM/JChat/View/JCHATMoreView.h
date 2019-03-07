@@ -11,6 +11,7 @@
 @optional
 - (void)photoClick;
 - (void)cameraClick;
+- (void)cardInfoBtnClick;
 @end
 @interface JCHATMoreView : UIView
 @property (weak, nonatomic) IBOutlet UIButton *photoBtn;

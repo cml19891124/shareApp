@@ -27,6 +27,8 @@
  颜色宏定义
  */
 #import "UIColor+Hex.h"
+#define COLOR(x, y, z, a)       [UIColor colorWithRed:x/255.0 green:y/255.0 blue:z/255.0 alpha:a]
+
 #define COLOR_WHITE_F9FCFF [UIColor colorWithHexString:@"#F9FCFF"]
 #define COLOR_WHITE_FAF9FE [UIColor colorWithHexString:@"#FAF9FE"]
 #define COLOR_WHITE_FCFDFF [UIColor colorWithHexString:@"#FCFDFF"]

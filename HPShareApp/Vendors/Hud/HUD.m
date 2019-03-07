@@ -10,7 +10,7 @@
 #import "UIView+Toast.h"
 #import "MBProgressHUD.h"
 #import "GetCurrentViewcontroller.h"
-#define COLOR(x, y, z, a)       [UIColor colorWithRed:x/255.0 green:y/255.0 blue:z/255.0 alpha:a]
+#import "Macro.h"
 
 static MBProgressHUD *Hud = nil;
 @implementation HUD

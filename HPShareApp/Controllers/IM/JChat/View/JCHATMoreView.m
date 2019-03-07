@@ -33,6 +33,11 @@
     [self.delegate cameraClick];
   }
 }
+- (IBAction)cardInfoBtnClick:(id)sender {
+    if (self.delegate &&[self.delegate respondsToSelector:@selector(cardInfoBtnClick)]) {
+        [self.delegate cardInfoBtnClick];
+    }
+}
 @end
 
 
