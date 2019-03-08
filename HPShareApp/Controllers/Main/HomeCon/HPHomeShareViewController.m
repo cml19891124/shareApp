@@ -482,7 +482,7 @@ static NSString *shareListCell = @"shareListCell";
             make.left.mas_equalTo(self.openView.cityBtn.mas_right).offset(getWidth(15.f));
             make.right.mas_equalTo(self.openView.mas_right).offset(getWidth(-30.f));
             make.height.mas_equalTo(getWidth(30.f));
-            make.centerY.mas_equalTo(self.openView.cityBtn).offset(-getWidth(0.f));
+            make.centerY.mas_equalTo(self.openView.cityBtn);
         }];
     }
     

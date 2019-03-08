@@ -851,7 +851,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 
     NSString *storeOwnner = [NSString stringWithFormat:@"hepai%@",model.userId];
     kWEAKSELF
-    [JMSGConversation createSingleConversationWithUsername:@"hepai1" appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
+    [JMSGConversation createSingleConversationWithUsername:storeOwnner appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
         
         [[JCHATAlertViewWait ins] hidenAll];
         
@@ -863,7 +863,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
             [HUD HUDHidden];
         } else {
             HPLog(@"createSingleConversationWithUsername fail");
-            [HUD HUDWithString:@"添加的用户不存在" Delay:2.0];
+            [HUD HUDWithString:@"用户不存在" Delay:2.0];
             
         }
     }];
@@ -947,14 +947,17 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"phoneNoA"] = account.userInfo.mobile;
     dic[@"phoneNoB"] = model.contactMobile;
-//    [HPProgressHUD alertWithLoadingText:@"加载中..."];
-    [HPHTTPSever HPPostServerWithMethod:@"/v1/phone/secretNo" paraments:dic needToken:NO complete:^(id  _Nonnull responseObject) {
+    dic[@"calleeUserId"] = model.userId;//被呼叫人userid
+    dic[@"token"] = account.token;
+
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/phone/secretNo" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             self.privateStr = responseObject[@"data"][@"SecretNo"];
             if (self.privateStr.length) {
                 [self.dialView setPhoneText:self.privateStr];
             }
-//            [HPProgressHUD alertWithFinishText:@"加载完成"];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
