@@ -818,7 +818,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [messageBtn addTarget:self action:@selector(createConversationWithFriend:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:messageBtn];
 
-    [messageBtn addTarget:self action:@selector(addOrCancelCollection:) forControlEvents:UIControlEventTouchUpInside];
     [messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(view);
         make.right.equalTo(keepBtn.mas_left).offset(getWidth(-12.f));

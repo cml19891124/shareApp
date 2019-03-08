@@ -21,6 +21,10 @@
 #import "HPTextDialogView.h"
 #import <JMessage/JMessage.h>
 
+#import "HPUpdateVersionView.h"
+
+#import "HPUpdateVersionTool.h"
+
 typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoPortrait = 0,
     HPConfigGotoFullName,
@@ -100,6 +104,9 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
  获取到的图片
  */
 @property (nonatomic, strong) UIImage *photo;
+
+@property (nonatomic, weak) HPUpdateVersionView *updateView;
+
 @end
 
 @implementation HPConfigCenterController
@@ -114,7 +121,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [self setText:model.userInfo.username.length > 0?model.userInfo.username:@"未填写" ofBtnWithType:HPConfigGotoUserName];
     [self setText:fianlMobile > 0?fianlMobile:@"未填写" ofBtnWithType:HPConfigGotoPhoneNum];
     [self setText:model.userInfo.password?@"修改":@"未设置" ofBtnWithType:HPConfigGotoPassword];
-    [self setText:@"V1.1.0" ofBtnWithType:HPConfigGotoVersion];
+    [self setText:kAppVersion?[NSString stringWithFormat:@"V%@",kAppVersion]:@"V1.0.0" ofBtnWithType:HPConfigGotoVersion];
     [self setText:cacheStr.length>0 ?cacheStr:@"16.8MB" ofBtnWithType:HPConfigGotoCache];
     //查询绑定的业务员
     [self queryOnlineProducters];
@@ -995,44 +1002,12 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 检测版本更新信息
 - (void)updateAppVersionInfo
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // 耗时的操作
-        
-        //获取本地版本号
-        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-        NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-        NSString *newVersion = [NSString stringWithFormat:@"%@", version];
-        NSArray *currentVersionArr = [newVersion componentsSeparatedByString:@"."];
-        NSString *currentVersion =@"";
-        for (int i = 0;i < currentVersionArr.count; i++) {
-            currentVersion = [currentVersion stringByAppendingString:currentVersionArr[i]];
-        }
-        //获取appStore网络版本号
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@", kAppleId]];
-        NSString * file =  [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
-        
-        NSRange substr = [file rangeOfString:@"\"version\":\""];
-        NSRange range1 = NSMakeRange(substr.location+substr.length,10);
-        NSRange substr2 = [file rangeOfString:@"\"" options:NSCaseInsensitiveSearch  range:range1];
-        NSRange range2 = NSMakeRange(substr.location+substr.length, substr2.location-substr.location-substr.length);
-        NSString *appStoreVersion =[file substringWithRange:range2];
-        NSArray *appStoreVersionArr = [appStoreVersion componentsSeparatedByString:@"."];
-        NSString *onlineVersion = @"";
-        for (int i = 0;i < appStoreVersionArr.count; i++) {
-            onlineVersion = [onlineVersion stringByAppendingString:appStoreVersionArr[i]];
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // 更新界面
-            //如果不一样去更新
-            if([currentVersion intValue] < [onlineVersion intValue])
-            {
-                [self showAlert];
-            }else{
-                [self setText:@"已是最新版本" ofBtnWithType:HPConfigGotoVersion];
-            }
-        });
-    });
-    
+    BOOL isUpdate = [HPUpdateVersionTool updateAppVersionTool];
+    if (isUpdate) {
+        [self showAlert];
+    }else{
+        [HPProgressHUD alertMessage:@"已是最新版本"];
+    }
 }
 
 /**
@@ -1040,21 +1015,25 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
  */
 -(void)showAlert
 {
-    if (_textDialogView == nil) {
-        HPTextDialogView *textDialogView = [[HPTextDialogView alloc] init];
-        [textDialogView setText:@"有新的版本啦"];
-        [textDialogView setModalTop:279.f * g_rateHeight];
-        [textDialogView setCanecelBtnTitle:@"暂不更新"];
-        [textDialogView setConfirmBtnTitle:@"前往更新"];
-        _textDialogView = textDialogView;
+    if (_updateView == nil) {
+        kWEAKSELF
+        HPUpdateVersionView *updateView = [[HPUpdateVersionView alloc] initWithParent:self.view];
+        
+        [updateView setUpdateBlock:^{
+            // 此处加入应用在app store的地址，方便用户去更新，一种实现方式如下：
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/us/app/id%@?ls=1&mt=8", kAppleId]];
+            [[UIApplication sharedApplication] openURL:url];
+            
+        }];
+        
+        [updateView setCloseBlcok:^{
+            [weakSelf.updateView removeFromSuperview];
+        }];
+        _updateView = updateView;
     }
     
-    [_textDialogView setConfirmCallback:^{
-        // 此处加入应用在app store的地址，方便用户去更新，一种实现方式如下：
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/us/app/id%@?ls=1&mt=8", kAppleId]];
-        [[UIApplication sharedApplication] openURL:url];
-    }];
+    [_updateView show:YES];
     
-    [_textDialogView show:YES];
 }
+
 @end

@@ -243,10 +243,4 @@
     }
 }
 
-//- (void)show:(BOOL)isShow
-//{
-//    if ([self.delegate respondsToSelector:@selector(setUpdateView)]) {
-//        [self.delegate setUpdateView];
-//    }
-//}
 @end

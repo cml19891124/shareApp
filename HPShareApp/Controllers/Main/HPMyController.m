@@ -19,6 +19,8 @@
 #import "HPUpdateVersionView.h"
 #import "JCHATStringUtils.h"
 
+#import "HPUpdateVersionTool.h"
+
 @interface HPMyController ()
 
 @property (nonatomic, weak) UIButton *portraitBtn;
@@ -643,50 +645,13 @@
 #pragma mark - 检测版本更新信息
 - (void)updateAppVersionInfo
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // 耗时的操作
-        
-        //获取本地版本号
-        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-        NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-        NSString *newVersion = [NSString stringWithFormat:@"%@", version];
-        NSArray *currentVersionArr = [newVersion componentsSeparatedByString:@"."];
-        NSString *currentVersion =@"";
-        for (int i = 0;i < currentVersionArr.count; i++) {
-            currentVersion = [currentVersion stringByAppendingString:currentVersionArr[i]];
-        }
-        //获取appStore网络版本号
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@", kAppleId]];
-        NSString * file =  [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
-        
-        NSData *data = [file dataUsingEncoding:NSUTF8StringEncoding];
-        // 判断是否取到信息
-        if (![data isKindOfClass:[NSData class]]) {
-            return ;
-        }
-        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-        //获得上线版本号
-        NSString *getVersion = [[[dic objectForKey:@"results"]firstObject]objectForKey:@"version"];
-        NSArray *appStoreVersionArr = [getVersion componentsSeparatedByString:@"."];
-        NSString *onlineVersion = @"";
-        for (int i = 0;i < appStoreVersionArr.count; i++) {
-            onlineVersion = [onlineVersion stringByAppendingString:appStoreVersionArr[i]];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // 更新界面
-            //如果不一样去更新
-            if([currentVersion intValue] < [onlineVersion intValue])
-            {
-                [self showAlert];
-            }
-        });
-    });
     
-    //    BOOL isupdate = [HPUpdateVersionTool updateAppVersionTool];
-    //    if (isupdate) {
-    //        [self showAlert];
-    //    }
+    BOOL isUpdate = [HPUpdateVersionTool updateAppVersionTool];
+    if (isUpdate) {
+        [self showAlert];
+    }else{
+
+    }
 }
 
 /**
