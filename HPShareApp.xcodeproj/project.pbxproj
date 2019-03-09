@@ -349,6 +349,9 @@
 		E6B63B91221E51F100337830 /* HPUpdateVersionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B63B90221E51F100337830 /* HPUpdateVersionView.m */; };
 		E6B63B94221E835200337830 /* HPUpdateVersionTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B63B93221E835200337830 /* HPUpdateVersionTool.m */; };
 		E6B8987521D0D53900FD443B /* HPStoreLeavesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */; };
+		E6BB36692233552000DD7C9F /* HPPayOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BB36682233552000DD7C9F /* HPPayOrderViewController.m */; };
+		E6BB366C223357A600DD7C9F /* HPPayStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BB366A223357A600DD7C9F /* HPPayStyleCell.m */; };
+		E6BB366E2233879800DD7C9F /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E6BB366D2233879700DD7C9F /* libsqlite3.0.tbd */; };
 		E6BC6001220153FC0075C744 /* HPHomeBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC6000220153FC0075C744 /* HPHomeBannerView.m */; };
 		E6BC600422019DEB0075C744 /* HPGetherRentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC600322019DEB0075C744 /* HPGetherRentViewController.m */; };
 		E6D75F1321A78AD300B2067C /* HPSharePersonCard.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D75F1221A78AD300B2067C /* HPSharePersonCard.m */; };
@@ -1172,6 +1175,11 @@
 		E6B63B93221E835200337830 /* HPUpdateVersionTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUpdateVersionTool.m; sourceTree = "<group>"; };
 		E6B8987321D0D53900FD443B /* HPStoreLeavesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPStoreLeavesViewController.h; sourceTree = "<group>"; };
 		E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPStoreLeavesViewController.m; sourceTree = "<group>"; };
+		E6BB36672233552000DD7C9F /* HPPayOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPayOrderViewController.h; sourceTree = "<group>"; };
+		E6BB36682233552000DD7C9F /* HPPayOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPPayOrderViewController.m; sourceTree = "<group>"; };
+		E6BB366A223357A600DD7C9F /* HPPayStyleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPPayStyleCell.m; sourceTree = "<group>"; };
+		E6BB366B223357A600DD7C9F /* HPPayStyleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPPayStyleCell.h; sourceTree = "<group>"; };
+		E6BB366D2233879700DD7C9F /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		E6BC5FFF220153FC0075C744 /* HPHomeBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHomeBannerView.h; sourceTree = "<group>"; };
 		E6BC6000220153FC0075C744 /* HPHomeBannerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHomeBannerView.m; sourceTree = "<group>"; };
 		E6BC600222019DEB0075C744 /* HPGetherRentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPGetherRentViewController.h; sourceTree = "<group>"; };
@@ -1290,6 +1298,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6BB366E2233879800DD7C9F /* libsqlite3.0.tbd in Frameworks */,
 				E67EFDCD221B9BEB008BDA1D /* libjpush-ios-3.0.9.a in Frameworks */,
 				E67EFDCB221B9BC7008BDA1D /* libjcore-ios-1.2.0.a in Frameworks */,
 				E67EFE31221BA187008BDA1D /* libssl.a in Frameworks */,
@@ -1523,6 +1532,7 @@
 		D29D226676E10B1AF5705590 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6BB366D2233879700DD7C9F /* libsqlite3.0.tbd */,
 				E67EFDCC221B9BEB008BDA1D /* libjpush-ios-3.0.9.a */,
 				E67EFDCA221B9BC7008BDA1D /* libjcore-ios-1.2.0.a */,
 				E67EFDC8221B9B75008BDA1D /* libWeChatSDK.a */,
@@ -2374,6 +2384,7 @@
 		E67EFDCE221BA150008BDA1D /* OrderPay(订单支付) */ = {
 			isa = PBXGroup;
 			children = (
+				E6BB3663223354AB00DD7C9F /* PayOrder */,
 				E67EFDCF221BA187008BDA1D /* Alipay */,
 				E67EFE25221BA187008BDA1D /* WXPAY */,
 			);
@@ -2990,6 +3001,41 @@
 				E6830E4A21D20184000E0F39 /* HPHomeShareViewController.m */,
 			);
 			path = HomeCon;
+			sourceTree = "<group>";
+		};
+		E6BB3663223354AB00DD7C9F /* PayOrder */ = {
+			isa = PBXGroup;
+			children = (
+				E6BB3666223354DD00DD7C9F /* Model */,
+				E6BB3665223354CE00DD7C9F /* View */,
+				E6BB3664223354C700DD7C9F /* Con */,
+			);
+			path = PayOrder;
+			sourceTree = "<group>";
+		};
+		E6BB3664223354C700DD7C9F /* Con */ = {
+			isa = PBXGroup;
+			children = (
+				E6BB36672233552000DD7C9F /* HPPayOrderViewController.h */,
+				E6BB36682233552000DD7C9F /* HPPayOrderViewController.m */,
+			);
+			path = Con;
+			sourceTree = "<group>";
+		};
+		E6BB3665223354CE00DD7C9F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E6BB366B223357A600DD7C9F /* HPPayStyleCell.h */,
+				E6BB366A223357A600DD7C9F /* HPPayStyleCell.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E6BB3666223354DD00DD7C9F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		E6CD24E121E0D26000CE9261 /* Geode */ = {
@@ -3616,6 +3662,7 @@
 				E6B4CEE121C5286F00429C11 /* TAAnimatedDotView.m in Sources */,
 				7AAFF3AA21E390540049D175 /* MANaviPolyline.m in Sources */,
 				E661B0CA219D114300C86CF5 /* HPBaseTextInputController.m in Sources */,
+				E6BB366C223357A600DD7C9F /* HPPayStyleCell.m in Sources */,
 				E61FE09D21B9F94500555F3F /* iCarousel.m in Sources */,
 				E661B0D3219D3BF500C86CF5 /* HPSelectTableLayout.m in Sources */,
 				6993AD4621CB37360019506C /* HPShareReleaseParam.m in Sources */,
@@ -3708,6 +3755,7 @@
 				E61FE0AA21BA6F5C00555F3F /* HPHTTPManager.m in Sources */,
 				E6292144219AA83A00BEF16C /* main.m in Sources */,
 				7AAFF3BA21E390D80049D175 /* HPShareMapAnnotation.m in Sources */,
+				E6BB36692233552000DD7C9F /* HPPayOrderViewController.m in Sources */,
 				E68A76CD21F2C84200083A90 /* JCHATMessageTextView.m in Sources */,
 				E6D75F5621B0D24D00B2067C /* HPHistoryController.m in Sources */,
 				E6D75F6A21B253D000B2067C /* HPPageView.m in Sources */,

@@ -766,6 +766,23 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(MyCardVC:)];
     [portrait addGestureRecognizer:tap];
     
+    UIButton *orderBtn = [[UIButton alloc] init];
+    [orderBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:18.f]];
+    [orderBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [orderBtn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_FF531E] forState:UIControlStateNormal];
+    [orderBtn setTitle:@"下单" forState:UIControlStateNormal];
+    [orderBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 10.f, 0.f, 10.f)];
+    orderBtn.titleLabel.font = kFont_Medium(14.f);
+    [orderBtn addTarget:self action:@selector(createOrder:) forControlEvents:UIControlEventTouchUpInside];
+    orderBtn.layer.cornerRadius = 2.f;
+    orderBtn.layer.masksToBounds = YES;
+    [view addSubview:orderBtn];
+    [orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(view).offset(getWidth(-14.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(50.f), getWidth(40.f)));
+        make.centerY.mas_equalTo(view);
+    }];
+    
     UIButton *phoneBtn = [[UIButton alloc] init];
     [phoneBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:18.f]];
     [phoneBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
@@ -779,8 +796,8 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     phoneBtn.layer.masksToBounds = YES;
     [view addSubview:phoneBtn];
     [phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(view).offset(getWidth(-14.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(90.f), getWidth(40.f)));
+        make.right.mas_equalTo(orderBtn.mas_left).offset(getWidth(-12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(80.f), getWidth(40.f)));
         make.centerY.mas_equalTo(view);
     }];
     
@@ -804,7 +821,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [keepBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(view);
         make.right.equalTo(phoneBtn.mas_left).offset(getWidth(-12.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(90.f), getWidth(40.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(80.f), getWidth(40.f)));
     }];
     
     UIButton *messageBtn = [[UIButton alloc] init];
@@ -821,7 +838,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(view);
         make.right.equalTo(keepBtn.mas_left).offset(getWidth(-12.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(90.f), getWidth(40.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(80.f), getWidth(40.f)));
     }];
     
     UILabel *userNameLabel = [[UILabel alloc] init];
@@ -835,6 +852,13 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         make.right.equalTo(messageBtn.mas_left);
         make.centerY.equalTo(view);
     }];
+}
+
+- (void)createOrder:(UIButton *)button
+{
+    HPShareDetailModel *model = self.param[@"model"];
+
+    [self pushVCByClassName:@"HPPayOrderViewController" withParam:@{@"order":model}];
 }
 
 #pragma mark - 开启会话
