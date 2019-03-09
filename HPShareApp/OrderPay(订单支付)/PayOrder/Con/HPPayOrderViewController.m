@@ -25,6 +25,10 @@
 
 #import "HPBaseModalView.h"
 
+#import "HPRowPanel.h"
+
+#import "HPStoreItemButton.h"
+
 @interface HPPayOrderViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
@@ -46,11 +50,21 @@
 
 @property (nonatomic, strong) UIButton *confirmBtn;
 
+@property (nonatomic, strong) UIButton *confirmOrderBtn;
+
 @property (nonatomic, strong) HPShareDetailModel *model;
 
 @property (nonatomic, strong) HPBaseModalView *modelView;
 
 @property (nonatomic, strong) UIButton *coverView;
+
+@property (nonatomic, strong) UILabel *shopNameLabel;
+
+@property (nonatomic, strong) HPStoreItemButton *tagBtn;
+
+@property (nonatomic, strong) UILabel *contactField;
+
+@property (nonatomic, strong) UILabel *phoneLabel;
 @end
 
 @implementation HPPayOrderViewController
@@ -61,6 +75,8 @@ static NSString *payStyleCell = @"payStyleCell";
     if (!_coverView) {
         _coverView = [UIButton new];
         [_coverView addTarget:self action:@selector(hiddenCoverView:) forControlEvents:UIControlEventTouchUpInside];
+        [_coverView setBackgroundColor:COLOR(0, 0, 0, 0.4)];
+        _coverView.hidden = YES;
     }
     return _coverView;
 }
@@ -77,14 +93,8 @@ static NSString *payStyleCell = @"payStyleCell";
     [self setupNavigationBarWithTitle:@"订单支付"];
     
     _model = self.param[@"order"];
-
-    [self.view addSubview:self.coverView];
     
-    [self.coverView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.view);
-    }];
-
-    [self.coverView setBackgroundColor:COLOR(0, 0, 0, 0.4)];
+    [self setupOrderInfoUI];
     
     //默认为微信支付
     self.payType = kPayTypeWeChat;
@@ -97,22 +107,23 @@ static NSString *payStyleCell = @"payStyleCell";
     self.titleArr = @[@"微信支付",@"支付宝支付"];
     self.Status = 1;
     
-    [self.coverView addSubview:self.tableView];
-    
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.mas_equalTo(self.view);
-        make.width.mas_equalTo(kScreenWidth *0.7);
-        make.height.mas_equalTo(getWidth(150.f));
+    [self.view addSubview:self.confirmOrderBtn];
+
+    [self.confirmOrderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(getWidth(15.f));
+        make.centerX.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.view).offset(getWidth(-20.f));
+        make.height.mas_equalTo(getWidth(44.f));
     }];
+}
+
+#pragma mark - setupUI
+
+- (void)setupOrderInfoUI {
+    for (int i = 0; i < 3; i++) {
+//        [self setupPanelAtIndex:i ofView:self.scrollView];
+    }
     
-    [self.tableView addSubview:self.confirmBtn];
-    
-    [self.confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.tableView).offset(getWidth(15.f));
-        make.centerX.mas_equalTo(self.tableView);
-        make.top.mas_equalTo(getWidth(110.f));
-        make.height.mas_equalTo(getWidth(30.f));
-    }];
 }
 
 - (UIButton *)confirmBtn
@@ -137,6 +148,29 @@ static NSString *payStyleCell = @"payStyleCell";
     return _confirmBtn;
 }
 
+- (UIButton *)confirmOrderBtn
+{
+    if (!_confirmOrderBtn) {
+        CGSize btnSize = CGSizeMake(kScreenWidth/3, 44.f);
+        UIGraphicsBeginImageContextWithOptions(btnSize, NO, 0.f);
+        CGContextRef contextRef = UIGraphicsGetCurrentContext();
+        [HPGradientUtil drawGradientColor:contextRef rect:CGRectMake(0.f, 0.f, btnSize.width, btnSize.height) startPoint:CGPointMake(btnSize.width, 0.f) endPoint:CGPointMake(0.f, btnSize.height) options:kCGGradientDrawsBeforeStartLocation startColor:COLOR_ORANGE_FF9B5E endColor:COLOR_RED_FF3455];
+        UIImage *bgImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        _confirmOrderBtn = [[UIButton alloc] init];
+        [_confirmOrderBtn.layer setCornerRadius:5.f];
+        [_confirmOrderBtn.layer setMasksToBounds:YES];
+        [_confirmOrderBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:14.f]];
+        [_confirmOrderBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        [_confirmOrderBtn setTitle:@"确认订单" forState:UIControlStateNormal];
+        [_confirmOrderBtn setBackgroundImage:bgImage forState:UIControlStateNormal];
+        [_confirmOrderBtn addTarget:self action:@selector(onClickConfirmOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _confirmOrderBtn;
+}
+
+
 - (UITableView *)tableView
 {
     if (!_tableView) {
@@ -150,6 +184,7 @@ static NSString *payStyleCell = @"payStyleCell";
         
         _tableView.layer.cornerRadius = 5.f;
         _tableView.layer.masksToBounds = YES;
+        _tableView.scrollEnabled = NO;
     }
     return _tableView;
 }
@@ -251,13 +286,26 @@ static NSString *payStyleCell = @"payStyleCell";
             
             //调起微信支付
             PayReq* req             = [[PayReq alloc] init];
-            req.partnerId           = [responseObject objectForKey:@"partnerid"];
-            req.prepayId            = [responseObject objectForKey:@"prepayid"];
-            req.nonceStr            = [responseObject objectForKey:@"noncestr"];
-            req.timeStamp           = stamp.intValue;
-            req.package             = [responseObject objectForKey:@"package"];
-            req.sign                = [responseObject objectForKey:@"sign"];
-            [WXApi sendReq:req];
+            req.partnerId           = [responseObject objectForKey:@"partnerid"];//微信支付分配的商户ID
+            req.prepayId            = [responseObject objectForKey:@"prepayid"];// 预支付交易会话ID
+            req.nonceStr            = [responseObject objectForKey:@"noncestr"];//随机字符串
+            req.timeStamp           = stamp.intValue;//当前时间
+            req.package             = [responseObject objectForKey:@"package"];//固定值
+            req.sign                = [responseObject objectForKey:@"sign"];//签名，除了sign，剩下6个组合的再次签名字符串
+            req.openID              = [responseObject objectForKey:@"appid"];//微信开放平台审核通过的AppID
+//            [WXApi sendReq:req];
+            
+            if ([WXApi isWXAppInstalled] == YES) {
+                //此处会调用微信支付界面
+                BOOL success = [WXApi sendReq:req];
+                if (!success) {
+                    HPLog(@"sdk错误");
+                    }
+                }else {
+                    //微信未安装
+                    [HPProgressHUD alertMessage:@"您没有安装微信"];
+                }
+
         }else{
             [HPProgressHUD alertMessage:MSG];
 
@@ -461,5 +509,257 @@ static NSString *payStyleCell = @"payStyleCell";
         
     }
     
+}
+
+#pragma mark - 确认订单详情
+
+- (void)onClickConfirmOrderBtn:(UIButton *)button
+{
+    [self.view addSubview:self.coverView];
+    self.coverView.hidden = NO;
+    [self.coverView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.view);
+    }];
+    
+    [self.coverView addSubview:self.tableView];
+
+    [self.tableView addSubview:self.confirmBtn];
+
+    
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.view);
+        make.width.mas_equalTo(kScreenWidth *0.7);
+        make.height.mas_equalTo(getWidth(150.f));
+    }];
+    
+    [self.confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.tableView).offset(getWidth(15.f));
+        make.centerX.mas_equalTo(self.tableView);
+        make.top.mas_equalTo(getWidth(110.f));
+        make.height.mas_equalTo(getWidth(30.f));
+    }];
+    
+}
+
+#pragma mark - row view
+- (void)setupPanelAtIndex:(NSInteger)index ofView:(UIView *)view {
+    HPRowPanel *panel = [[HPRowPanel alloc] init];
+    [view addSubview:panel];
+    if (index == 0) {
+        //店铺简称
+        [panel addRowView:[self setupStoreNameRowView]];
+        [panel addRowView:[self setupStoreTagRowView] withHeight:46.f * g_rateWidth];
+        UIView *lastPanel = view.subviews[index - 1];
+        [panel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.width.equalTo(view);
+            make.height.mas_equalTo(92.f * g_rateWidth);
+            make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
+        }];
+    }
+    else if (index == 1) {
+//        [panel addRowView:[self setupAreaRowView]];
+        [panel addRowView:[self setupDetailAddressRowView]];
+        [panel addRowView:[self setupManagerIndustryRowView]];
+        UIView *lastPanel = view.subviews[index - 1];
+        [panel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.width.equalTo(view);
+            make.height.mas_equalTo(138.f * g_rateWidth);
+            make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
+        }];
+        
+        
+    }
+    else if (index == 2) {
+        [panel addRowView:[self setupContactRowView]];
+        [panel addRowView:[self setupPhoneNumRowView]];
+        UIView *lastPanel = view.subviews[index - 1];
+        [panel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.width.equalTo(view);
+            make.height.mas_equalTo(90.f * g_rateWidth);
+            make.top.equalTo(lastPanel.mas_bottom).with.offset(PANEL_SPACE);
+        }];
+    }
+
+}
+
+#pragma mark - 店铺简称
+- (UIView *)setupStoreNameRowView {
+    UIView *view = [[UIView alloc] init];
+    
+    [self setupTitleLabelWithText:@"店铺简称" ofView:view];
+    _shopNameLabel = [self setupOptTitleLabelWithText:_model.title ofView:view];
+    _shopNameLabel.font = kFont_Regular(13.f);
+    
+    return view;
+}
+
+#pragma mark - 店铺标签
+- (UIView *)setupStoreTagRowView {
+    UIView *view = [[UIView alloc] init];
+
+    UILabel *titleLabel = [[UILabel alloc] init];
+    [titleLabel setFont:kFont_Medium(15.f)];
+    [titleLabel setTextColor:COLOR_BLACK_333333];
+    [titleLabel setText:@"店铺标签"];
+    [view addSubview:titleLabel];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(view).with.offset(21.f * g_rateWidth);
+        make.top.equalTo(view).with.offset(16.f * g_rateWidth);
+        make.height.mas_equalTo(titleLabel.font.pointSize);
+    }];
+    
+    HPStoreItemButton *addBtn = [[HPStoreItemButton alloc] init];
+    [addBtn setTitle:@"" forState:UIControlStateNormal];
+    [addBtn setImage:ImageNamed(@"customizing_business_cards_add_to") forState:UIControlStateNormal];
+    [addBtn addTarget:self action:@selector(onClickTagBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:addBtn];
+    _tagBtn = addBtn;
+    [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(view).offset(getWidth(122.f));
+        make.right.equalTo(view).offset(getWidth(-21.f));
+        make.height.mas_equalTo(getWidth(20.f));
+        make.centerY.mas_equalTo(view);
+    }];
+    
+    return view;
+}
+#pragma mark - 所在区域
+/*
+- (UIView *)setupAreaRowView {
+    UIView *view = [[UIView alloc] init];
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [view addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
+    }];
+    
+    [self setupTitleLabelWithText:@"所在区域" ofView:view];
+    HPAreaButton *cityBtn = [HPAreaButton new];
+    [cityBtn setTitle:@"深圳市" forState:UIControlStateNormal];
+    [cityBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
+    [cityBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+    cityBtn.tag = HPSelectItemIndexCity;
+    [view addSubview:cityBtn];
+    _cityBtn = cityBtn;
+    [cityBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(view).offset(getWidth(122.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(64.f), getWidth(20.f)));
+        make.centerY.mas_equalTo(view);
+    }];
+    
+    HPAreaButton *areaBtn = [HPAreaButton new];
+    [areaBtn setTitle:@"请选择区域" forState:UIControlStateNormal];
+    [areaBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+    [areaBtn setImage:ImageNamed(@"transfer_down") forState:UIControlStateNormal];
+    [areaBtn addTarget:self action:@selector(callPickerViewWithDataSource:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:areaBtn];
+    areaBtn.tag = HPSelectItemIndexArea;
+    
+    _areaBtn = areaBtn;
+    [areaBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(cityBtn.mas_right).offset(getWidth(36.f));
+        make.right.mas_equalTo(view).offset(getWidth(-20.f));
+        make.height.mas_equalTo(getWidth(20.f));
+        make.centerY.mas_equalTo(view);
+    }];
+    
+    return view;
+}*/
+
+#pragma mark -详细地址
+- (UIView *)setupDetailAddressRowView {
+    UIView *view = [[UIView alloc] init];
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [view addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
+    }];
+    [self setupTitleLabelWithText:@"详细地址" ofView:view];
+    
+    UIImageView *downIcon = [self setupDownIconOfView:view];
+    
+    UIButton *addressBtn = [[UIButton alloc] init];
+    [addressBtn.titleLabel setFont:kFont_Regular(13.f)];
+    [addressBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+    [addressBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+    [addressBtn setTitle:@"请选择" forState:UIControlStateNormal];
+//    addressBtn.tag = HPSelectItemIndexAddress;
+    [addressBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    [addressBtn addTarget:self action:@selector(callDetailAddressVc:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:addressBtn];
+//    _detailAddressBtn = addressBtn;
+    [addressBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(view).with.offset(122.f * g_rateWidth);
+        make.right.equalTo(downIcon.mas_left).with.offset(-20.f * g_rateWidth);
+        make.centerY.equalTo(view);
+    }];
+    
+    return view;
+}
+
+#pragma mark - 经营行业
+- (UIView *)setupManagerIndustryRowView {
+    UIView *view = [[UIView alloc] init];
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [view addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
+    }];
+    
+    [self setupTitleLabelWithText:@"经营行业" ofView:view];
+    UIImageView *downIcon = [self setupDownIconOfView:view];
+    
+    return view;
+}
+
+#pragma mark - 联系人
+- (UIView *)setupContactRowView {
+    UIView *view = [[UIView alloc] init];
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [view addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
+    }];
+    
+    [self setupTitleLabelWithText:@"联系人" ofView:view];
+    _contactField = [self setupOptTitleLabelWithText:@"完善称呼交流更方便" ofView:view];
+    _contactField.textColor = COLOR_BLACK_333333;
+    _contactField.font = kFont_Regular(13.f);
+    return view;
+}
+
+#pragma mark - 联系方式
+- (UIView *)setupPhoneNumRowView {
+    UIView *view = [[UIView alloc] init];
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [view addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
+    }];
+    
+    [self setupTitleLabelWithText:@"联系方式" ofView:view];
+    HPLoginModel *account = [HPUserTool account];
+    
+    UILabel *phoneLabel = [self setupOptTitleLabelWithText:account.userInfo.mobile ofView:view];
+    phoneLabel.text = account.userInfo.mobile?:@"";
+    phoneLabel.textColor = COLOR_BLACK_333333;
+    phoneLabel.font = kFont_Regular(13.f);
+    _phoneLabel = phoneLabel;
+    return view;
 }
 @end

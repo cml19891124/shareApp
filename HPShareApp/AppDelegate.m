@@ -293,4 +293,36 @@
     }
     return YES;
 }
+
+#pragma mark - WXApiDelegate
+
+-(void) onResp:(BaseResp*)resp{
+ //如果第三方程序向微信发送了sendReq的请求，那么onResp会被回调。sendReq请求调用后，会切到微信终端程序界面。
+    
+ if([resp isKindOfClass:[PayResp class]])
+     {
+         PayResp*response=(PayResp*)resp;
+         NSString *strMsg = @"支付失败";
+         switch(response.errCode){
+             case WXSuccess:
+             {
+                 //服务器端查询支付通知或查询API返回的结果再提示成功
+                 HPLog(@"支付成功");
+                 strMsg = @"支付成功";
+                 break;
+             }
+             case WXErrCodeUserCancel:
+             {
+                 HPLog(@"用户点击取消");
+                 strMsg = @"用户点击取消";
+             }
+                 break;
+             default:
+                 HPLog(@"支付失败，retcode=%d",resp.errCode);
+                 break;
+            }
+
+         }
+}
+
 @end

@@ -6,7 +6,7 @@
 //  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPBaseViewController.h"
+#import "HPBaseReleaseController.h"
 
 typedef void(^SelectedIndexBlock)(NSInteger row);
 typedef void(^PaySuccessBlock)(void);
@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger,PayType){
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPPayOrderViewController : HPBaseViewController
+@interface HPPayOrderViewController : HPBaseReleaseController
 
 @property (nonatomic, copy) SelectedIndexBlock selectedIndexBlock;
 
