@@ -235,7 +235,7 @@ static NSInteger const st_toolBarTextSize = 17.0f;
 #define kGoBackBtnImageOffset UIEdgeInsetsMake(0, 0, 0, 15)
 #define kDeleteAllMessage  @"deleteAllMessage"
 //微信
-#define WeiXinKey @"wxa957c238d4ee6ed4"
+#define WeiXinKey @"wxdd24b8860828a629"
 
 //static const
 static NSString * const st_chatViewController = @"JCHATChatViewController";

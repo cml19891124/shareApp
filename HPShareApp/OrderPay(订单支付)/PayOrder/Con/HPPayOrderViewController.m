@@ -29,6 +29,8 @@
 
 #import "HPStoreItemButton.h"
 
+#import "HPPayModel.h"
+
 @interface HPPayOrderViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
@@ -65,6 +67,10 @@
 @property (nonatomic, strong) UILabel *contactField;
 
 @property (nonatomic, strong) UILabel *phoneLabel;
+
+@property (nonatomic, strong) HPPayModel *payModel;
+
+
 @end
 
 @implementation HPPayOrderViewController
@@ -282,17 +288,17 @@ static NSString *payStyleCell = @"payStyleCell";
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"预支付成功"];
             
-            NSMutableString *stamp  = [responseObject objectForKey:@"timestamp"];
+            self.payModel = [HPPayModel mj_objectWithKeyValues:DATA];
             
             //调起微信支付
             PayReq* req             = [[PayReq alloc] init];
-            req.partnerId           = [responseObject objectForKey:@"partnerid"];//微信支付分配的商户ID
-            req.prepayId            = [responseObject objectForKey:@"prepayid"];// 预支付交易会话ID
-            req.nonceStr            = [responseObject objectForKey:@"noncestr"];//随机字符串
-            req.timeStamp           = stamp.intValue;//当前时间
-            req.package             = [responseObject objectForKey:@"package"];//固定值
-            req.sign                = [responseObject objectForKey:@"sign"];//签名，除了sign，剩下6个组合的再次签名字符串
-            req.openID              = [responseObject objectForKey:@"appid"];//微信开放平台审核通过的AppID
+            req.partnerId           = self.payModel.partnerid;//微信支付分配的商户ID
+            req.prepayId            = self.payModel.prepayid;// 预支付交易会话ID
+            req.nonceStr            = self.payModel.noncestr;//随机字符串
+            req.timeStamp           = self.payModel.timestamp.intValue;//当前时间
+            req.package             = self.payModel.package;//固定值
+            req.sign                = self.payModel.sign;//签名，除了sign，剩下6个组合的再次签名字符串
+            req.openID              = self.payModel.appid;//微信开放平台审核通过的AppID
 //            [WXApi sendReq:req];
             
             if ([WXApi isWXAppInstalled] == YES) {
@@ -300,6 +306,9 @@ static NSString *payStyleCell = @"payStyleCell";
                 BOOL success = [WXApi sendReq:req];
                 if (!success) {
                     HPLog(@"sdk错误");
+                    }else
+                    {
+                    
                     }
                 }else {
                     //微信未安装
