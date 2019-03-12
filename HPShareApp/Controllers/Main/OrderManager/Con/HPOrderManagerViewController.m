@@ -206,7 +206,8 @@ static NSString *payStyleCell = @"payStyleCell";
            
         }else if(payOrder == PayOrderConsult){
 
-            [weakSelf pushVCByClassName:@"HPPayResultViewController" withParam:@{@"orderNo":weakSelf.payModel.out_trade_no}];
+        }else if (payOrder == PayOrderReturn){
+            [self pushVCByClassName:@"HPReturnFundsViewController" withParam:@{}];
         }
     };
     cell.model = _model;

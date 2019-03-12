@@ -91,7 +91,7 @@
                            [HPProgressHUD alertMessage:@"加载完成！"];
                            
                            if (error) {
-                             [_headView setImage:[UIImage imageNamed:@"headDefalt"]];
+                             [self->_headView setImage:[UIImage imageNamed:@"headDefalt"]];
                                [HPProgressHUD alertMessage:@"获取数据失败！"];
 
                              return;

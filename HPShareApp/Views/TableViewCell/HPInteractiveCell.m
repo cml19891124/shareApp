@@ -38,7 +38,7 @@
         UILabel *titleLabel = [[UILabel alloc] init];
         [titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];
         [titleLabel setTextColor:COLOR_BLACK_444444];
-        [titleLabel setHighlightedTextColor:COLOR_RED_FC4865];
+//        [titleLabel setHighlightedTextColor:COLOR_RED_FC4865];
         [titleLabel setTextAlignment:NSTextAlignmentLeft];
         [self.contentView addSubview:titleLabel];
         self.titleLabel = titleLabel;

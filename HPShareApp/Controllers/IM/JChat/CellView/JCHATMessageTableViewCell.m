@@ -36,7 +36,7 @@ static NSInteger const readViewRadius = 4;
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.backgroundColor = [UIColor clearColor];
     _headView = [UIImageView new];
-    [_headView setImage:[UIImage imageNamed:@"headDefalt.png"]];
+    [_headView setImage:[UIImage imageNamed:@"my_business_card_default_head_image.png"]];
     _headView.layer.cornerRadius = headHeight/2;
     _headView.layer.masksToBounds = YES;
     _headView.contentMode = UIViewContentModeScaleAspectFill;
