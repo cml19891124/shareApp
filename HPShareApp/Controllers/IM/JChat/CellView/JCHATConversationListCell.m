@@ -67,12 +67,12 @@
   
   [conversation avatarData:^(NSData *data, NSString *objectId, NSError *error) {
       if (![objectId isEqualToString:self->_conversationId]) {
-      NSLog(@"out-of-order avatar");
+      HPLog(@"out-of-order avatar");
       return ;
     }
     
     if (error == nil) {
-      if (data != nil) {
+      if (data != nil) {//系统头像
         [self.headView setImage:[UIImage imageWithData:data]];
       } else {
         if (conversation.conversationType == kJMSGConversationTypeSingle) {
@@ -81,7 +81,9 @@
           [self.headView setImage:[UIImage imageNamed:@"talking_icon_group"]];
         }
       }
-    } else {
+    } else {//会话列表的用户默认本地头像
+        [self.headView setImage:[UIImage imageNamed:@"my_business_card_default_head_image"]];
+
       HPLog(@"fail get avatar");
     }
   }];

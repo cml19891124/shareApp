@@ -416,17 +416,6 @@ static NSString *conversationListCell = @"conversationListCell";
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if (iPhone5) {
-//        if (indexPath.section == 1) {
-//            return kScreenHeight - g_navigationBarHeight - g_tabBarHeight - 20.f * g_rateWidth - 120.f * g_rateWidth;
-//        }else{
-//            return 60.f;
-//        }
-//    }else{
-//        if (indexPath.section == 1) {
-//            return 75.f * g_rateWidth;
-//        }
-//    }
     return 75.f * g_rateWidth;
 }
 

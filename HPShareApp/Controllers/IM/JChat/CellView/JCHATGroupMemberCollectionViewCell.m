@@ -35,12 +35,12 @@
   [user thumbAvatarData:^(NSData *data, NSString *objectId, NSError *error) {
     if (error == nil) {
       if (data != nil) {
-        _AvatarImgView.image = [UIImage imageWithData:data];
+        self->_AvatarImgView.image = [UIImage imageWithData:data];
       } else {
-        _AvatarImgView.image = [UIImage imageNamed:@"headDefalt"];
+        self->_AvatarImgView.image = [UIImage imageNamed:@"headDefalt"];
       }
     } else {
-      _AvatarImgView.image = [UIImage imageNamed:@"headDefalt"];
+      self->_AvatarImgView.image = [UIImage imageNamed:@"headDefalt"];
     }
   }];
 }

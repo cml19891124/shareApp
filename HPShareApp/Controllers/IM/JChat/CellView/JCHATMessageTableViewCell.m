@@ -126,12 +126,12 @@ static NSInteger const readViewRadius = 4;
                     self.model.avatarDataLength = data.length;
                     [strongSelf.headView setImage:[UIImage imageWithData:data]];
                 } else {
-                    [strongSelf.headView setImage:[UIImage imageNamed:@"headDefalt"]];
+                    [strongSelf.headView setImage:[UIImage imageNamed:@"my_business_card_default_head_image"]];
                 }
             }
         } else {
-            HPLog(@"Action -- get thumbavatar fail");
-            [strongSelf.headView setImage:[UIImage imageNamed:@"headDefalt"]];
+            HPLog(@"Action -- get thumbavatar fail");//用户本地默认头像
+            [strongSelf.headView setImage:[UIImage imageNamed:@"my_business_card_default_head_image"]];
         }
     }];
 }
