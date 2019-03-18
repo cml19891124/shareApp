@@ -61,6 +61,7 @@
 		E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E611563B219AC8D7003A29C5 /* HPBaseViewController.m */; };
 		E617887921BE5BC70092BFA3 /* HPEditPersonOInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = E617887821BE5BC60092BFA3 /* HPEditPersonOInfoController.m */; };
 		E617887C21BE6E4F0092BFA3 /* HPUploadImageHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = E617887B21BE6E4F0092BFA3 /* HPUploadImageHandle.m */; };
+		E6189A78223F6F0F007E8FE7 /* JCHATLoginTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E6189A77223F6F0F007E8FE7 /* JCHATLoginTool.m */; };
 		E61B5EA821CC739200DC8A59 /* HPStoreItemButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E61B5EA721CC739200DC8A59 /* HPStoreItemButton.m */; };
 		E61B5EAE21CC790700DC8A59 /* HPAreaButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E61B5EAD21CC790700DC8A59 /* HPAreaButton.m */; };
 		E61B5EB121CC849600DC8A59 /* HPReviseReleaseInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E61B5EB021CC849600DC8A59 /* HPReviseReleaseInfoViewController.m */; };
@@ -556,6 +557,8 @@
 		E617887821BE5BC60092BFA3 /* HPEditPersonOInfoController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPEditPersonOInfoController.m; sourceTree = "<group>"; };
 		E617887A21BE6E4F0092BFA3 /* HPUploadImageHandle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPUploadImageHandle.h; sourceTree = "<group>"; };
 		E617887B21BE6E4F0092BFA3 /* HPUploadImageHandle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUploadImageHandle.m; sourceTree = "<group>"; };
+		E6189A76223F6F0E007E8FE7 /* JCHATLoginTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCHATLoginTool.h; sourceTree = "<group>"; };
+		E6189A77223F6F0F007E8FE7 /* JCHATLoginTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCHATLoginTool.m; sourceTree = "<group>"; };
 		E61B5EA621CC739200DC8A59 /* HPStoreItemButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPStoreItemButton.h; sourceTree = "<group>"; };
 		E61B5EA721CC739200DC8A59 /* HPStoreItemButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPStoreItemButton.m; sourceTree = "<group>"; };
 		E61B5EAC21CC790700DC8A59 /* HPAreaButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaButton.h; sourceTree = "<group>"; };
@@ -2749,6 +2752,8 @@
 				E68A770C21F2FA3F00083A90 /* XHVoiceRecordHelper.m */,
 				E68A76E721F2D1D300083A90 /* JCHATAudioPlayerHelper.h */,
 				E68A76E821F2D1D400083A90 /* JCHATAudioPlayerHelper.m */,
+				E6189A76223F6F0E007E8FE7 /* JCHATLoginTool.h */,
+				E6189A77223F6F0F007E8FE7 /* JCHATLoginTool.m */,
 			);
 			path = Tool;
 			sourceTree = "<group>";
@@ -3871,6 +3876,7 @@
 				E61E27AD21C8D68000CD5288 /* EBBannerViewController.m in Sources */,
 				E6E89D1C2212A08A00D04F34 /* NSString+AvoidCrash.m in Sources */,
 				E68A76B721F2C6D100083A90 /* JCHATGroupSettingCell.m in Sources */,
+				E6189A78223F6F0F007E8FE7 /* JCHATLoginTool.m in Sources */,
 				6993AD2721C685470019506C /* HPParentScrollView.m in Sources */,
 				E6D75F6721B230FC00B2067C /* HPPageControlFactory.m in Sources */,
 				E61B5EB121CC849600DC8A59 /* HPReviseReleaseInfoViewController.m in Sources */,

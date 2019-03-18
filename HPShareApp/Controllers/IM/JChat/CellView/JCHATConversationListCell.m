@@ -76,7 +76,7 @@
         [self.headView setImage:[UIImage imageWithData:data]];
       } else {
         if (conversation.conversationType == kJMSGConversationTypeSingle) {
-          [self.headView setImage:[UIImage imageNamed:@"headDefalt"]];
+          [self.headView setImage:[UIImage imageNamed:@"my_business_card_default_head_image"]];
         } else {
           [self.headView setImage:[UIImage imageNamed:@"talking_icon_group"]];
         }

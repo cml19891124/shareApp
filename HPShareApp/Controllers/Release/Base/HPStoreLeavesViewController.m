@@ -56,6 +56,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.leavesArray = [NSMutableArray array];
 
     UIView *navTilteView = [self setupNavigationBarWithTitle:@"完善店铺拼租信息"];
 

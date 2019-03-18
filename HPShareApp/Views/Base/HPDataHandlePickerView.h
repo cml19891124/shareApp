@@ -8,6 +8,7 @@
 
 #import "HPBaseModalView.h"
 #import "HPLinkageData.h"
+
 typedef void(^ViewTapClickCallback)(void);
 
 typedef void(^FinishClickCallback)(NSString *model);

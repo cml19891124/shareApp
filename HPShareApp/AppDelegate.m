@@ -32,6 +32,8 @@
 
 #import "AvoidCrash.h"
 
+#import "JCHATLoginTool.h"
+
 @interface AppDelegate ()<UNUserNotificationCenterDelegate,JPUSHRegisterDelegate,WXApiDelegate>
 
 @property (nonatomic, strong) HPMainTabBarController *mainTabBarController;
@@ -55,6 +57,7 @@
     //极光推送
     [self setUpJPushAndMessageConfigWithOptions:launchOptions];
     
+    [self loginJMessage];
     //注册腾讯bugly
     [Bugly startWithAppId:kAppleId];
     
@@ -323,6 +326,80 @@
             }
 
          }
+}
+
+#pragma mark - 登录im
+- (void)loginJMessage
+{
+    HPLoginModel *account = [HPUserTool account];
+    if (!account.token) {
+        [HPProgressHUD alertMessage:@"请登录"];
+        return;
+    }
+    
+    [JCHATLoginTool loginJMessage:account result:^(id obj, NSError *error) {
+        if (!error) {
+            HPLog(@"登录极光成功");
+            JMSGUser *user = obj;
+            [self getThumbAvartar:user];
+            
+        }else{
+            [HPProgressHUD alertMessage:@"极光登录失败"];
+            [self regiestJMessage];
+        }
+    }];
+    
+}
+
+- (void)getThumbAvartar:(JMSGUser *)user
+{
+    HPLoginModel *account = [HPUserTool account];
+    
+    [JCHATLoginTool getThumbAvatar:user Result:^(NSData *data, NSString *objectId, NSError *error) {
+        
+        
+        if (!error) {
+            if (!data) {
+                [self uploadUserAvartar:account];
+            }
+        }else{
+            [self uploadUserAvartar:account];
+            
+        }
+    }];
+}
+
+#pragma mark - 上传头像
+- (void)uploadUserAvartar:(HPLoginModel *)account
+{
+    [JCHATLoginTool updateMyAvatar:account result:^(id obj, NSError *error) {
+        if (!error) {
+            HPLog(@"头像上传成功");
+        }else{
+            HPLog(@"头像上传失败");
+            
+        }
+    }];
+}
+
+#pragma mark - 注册im
+- (void)regiestJMessage
+{
+    HPLoginModel *account = [HPUserTool account];
+    JMSGUserInfo *userInfo = [JMSGUserInfo new];
+    userInfo.nickname = account.userInfo.username;
+    userInfo.signature = account.cardInfo.signature;
+    
+    [JCHATLoginTool regiestJMessage:account result:^(id obj, NSError *error) {
+        if (!error) {
+            //极光注册成功
+            [self loginJMessage];
+        } else {
+            //极光注册失败
+            [HPProgressHUD alertMessage:@"注册极光失败"];
+        }
+    }];
+    
 }
 
 @end
