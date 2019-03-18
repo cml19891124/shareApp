@@ -83,7 +83,7 @@
     [phoneNumTextField setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];
     [phoneNumTextField setTextColor:COLOR_BLACK_333333];
     [phoneNumTextField setTintColor:COLOR_RED_FF3C5E];
-    [phoneNumTextField setKeyboardType:UIKeyboardTypeNumberPad];
+    [phoneNumTextField setKeyboardType:UIKeyboardTypeAlphabet];
     phoneNumTextField.delegate = self;
     self.phoneNumTextField = phoneNumTextField;
     NSMutableAttributedString *phoneNumPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"手机号/用户名"];

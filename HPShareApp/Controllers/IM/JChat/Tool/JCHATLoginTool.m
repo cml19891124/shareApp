@@ -27,7 +27,7 @@
             }
         } else {
             //极光注册失败
-            [HPProgressHUD alertMessage:@"注册极光失败"];
+//            [HPProgressHUD alertMessage:@"注册极光失败"];
         }
     }];
 }
@@ -36,7 +36,7 @@
 + (void)loginJMessage:(HPLoginModel *)account result:(JpushLogin)result
 {
      if (!account.token) {
-        [HPProgressHUD alertMessage:@"请登录"];
+//        [HPProgressHUD alertMessage:@"请登录"];
         return;
     }
     NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];

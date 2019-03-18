@@ -717,7 +717,11 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
             
         case HPConfigGotoAddBtn:
             HPLog(@"HPConfigGotoAddBtn");
-            [self getProfessionalDetailView:ctrl];
+            if ([self.addBtn.text isEqualToString:@"更改"]) {
+                [HPProgressHUD alertMessage:@"暂时不支持更改"];
+            }else{
+                [self getProfessionalDetailView:ctrl];
+            }
             break;
             
         case HPConfigGotoVersion:
@@ -930,13 +934,16 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         if (CODE == 200) {
 
             self.model = [HPQueryproductersModel mj_objectWithKeyValues:responseObject[@"data"]];
-            if (self.model.userId) {
+            if (self.model) {
                 [self.userIcon sd_setImageWithURL:[NSURL URLWithString:self.model.avatar] placeholderImage:ImageNamed(@"my_business_card_default_head_image")];
                 self.fessionnameLabel.text = self.model.salesmanName;
                 [self layoutProfessionFrame];
                 [HPProgressHUD alertWithFinishText:@"加载完成"];
+                [self.addBtn setText:@"更改"];
             }else{
-                [HPProgressHUD alertMessage:@"请添加业务员"];
+//                [HPProgressHUD alertMessage:@"请添加业务员"];
+                [self.addBtn setText:@"去添加"];
+
             }
         }else{
             [HPProgressHUD alertMessage:MSG];
@@ -965,7 +972,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     
     [HPHTTPSever HPPostServerWithMethod:@"/v1/salesman/addUser" paraments:param needToken:YES complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
-            [self.addBtn setText:@"去更改"];
+            [self.addBtn setText:@"更改"];
             [HPProgressHUD alertMessage:@"绑定成功"];
             [self layoutProfessionFrame];
         }else{

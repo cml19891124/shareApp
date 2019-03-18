@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "Macro.h"
+
 typedef void(^JpushRegiest)(id _Nullable obj,NSError * _Nullable error);
 
 typedef void(^JpushLogin)(id _Nullable obj,NSError * _Nullable error);

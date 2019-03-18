@@ -73,7 +73,7 @@
     HPLoginModel *account = [HPUserTool account];
     //登录极光
     if (account.token) {
-        [self loginJMessage];
+//        [self loginJMessage];
     }
 }
 - (void)dealloc

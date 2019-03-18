@@ -333,7 +333,7 @@
 {
     HPLoginModel *account = [HPUserTool account];
     if (!account.token) {
-        [HPProgressHUD alertMessage:@"请登录"];
+//        [HPProgressHUD alertMessage:@"请登录"];
         return;
     }
     
@@ -344,7 +344,7 @@
             [self getThumbAvartar:user];
             
         }else{
-            [HPProgressHUD alertMessage:@"极光登录失败"];
+//            [HPProgressHUD alertMessage:@"极光登录失败"];
             [self regiestJMessage];
         }
     }];
@@ -396,7 +396,7 @@
             [self loginJMessage];
         } else {
             //极光注册失败
-            [HPProgressHUD alertMessage:@"注册极光失败"];
+//            [HPProgressHUD alertMessage:@"注册极光失败"];
         }
     }];
     
