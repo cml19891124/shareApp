@@ -50,7 +50,7 @@
      *具体区别请看 AvoidCrash.h中的描述
      *建议在didFinishLaunchingWithOptions最初始位置调用 上面的方法
      */
-    [AvoidCrash makeAllEffective];
+//    [AvoidCrash makeAllEffective];
     //微信注册
     [WXApi registerApp:WeiXinKey];
     

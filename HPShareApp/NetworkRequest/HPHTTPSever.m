@@ -93,7 +93,7 @@
 }
 + (void)HPGETServerWithMethod:(nonnull NSString*)method isNeedToken:(BOOL)isNeed paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure{
     HPHTTPManager *manager = [HPHTTPManager shareHPHTTPManage];
-    if (isNeed) {//[method isEqualToString:@"/v1/user/updateUser"]||[method isEqualToString:@"/v1/back/freeBack"]||[method isEqualToString:@"/v1/user/logOut"]||[method isEqualToString:@"/v1/user/center"]
+    if (isNeed) {
         HPLoginModel *account = [HPUserTool account];
         [manager.requestSerializer setValue:account.token?:@"" forHTTPHeaderField:@"token"];
     }
@@ -121,9 +121,39 @@
         }
     }];
 
+}
+
+
++ (void)HPGETServerWithMethodNoAppendingUrl:(nonnull NSString*)method isNeedToken:(BOOL)isNeed paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure{
+    HPHTTPManager *manager = [HPHTTPManager shareHPHTTPManage];
+    if (isNeed) {
+        HPLoginModel *account = [HPUserTool account];
+        [manager.requestSerializer setValue:account.token?:@"" forHTTPHeaderField:@"token"];
+    }
+    manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/html",@"text/json",@"text/plain", nil];
+    [manager.requestSerializer setTimeoutInterval:10];
+    NSString * urlString  = [NSString stringWithFormat:@"%@",method];
     
+    [manager GET:urlString parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        if (success) {
+            
+            success(responseObject);
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        //            请求失败。
+        
+        //  NSString * str1 = [[urlString componentsSeparatedByString:@"method="]lastObject];
+        //  NSString * nameStr =[[str1 componentsSeparatedByString:@"&sign"] firstObject];
+        //    [XHToast showCenterWithText:[NSString stringWithFormat:@"%@-链接超时",nameStr]];
+        
+        
+        if (failure) {
+            failure(error);
+        }
+    }];
     
-   
 }
 
 - (NSString* _Nonnull)returnMD5StrWithDict:(NSMutableDictionary* _Nonnull)mutDict{

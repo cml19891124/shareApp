@@ -129,15 +129,21 @@
     NSString *historyTime = [HPTimeString getNowTimeTimestamp];
     UIImage *image = [UIImage imageNamed:@"personal_center_not_login_head"];
     [HPUploadImageHandle sendPOSTWithUrl:url withLocalImage:image isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
+        if ([data[@"code"] intValue]== 200) {
+            HPUserInfo *userInfo = [[HPUserInfo alloc] init];
+            userInfo.avatarUrl = [data[@"data"]firstObject][@"url"]?:@"";
+            userInfo.password = account.userInfo.password?:@"";
+            userInfo.username = account.userInfo.username?:@"";
+            userInfo.userId = account.userInfo.userId?:@"";
+            userInfo.mobile = account.userInfo.mobile?:@"";
+            account.userInfo = userInfo;
+            [HPUserTool saveAccount:account];
+        }else if ([data[@"code"] intValue]== 401){
+            [HPUserTool deleteAccount];
+            [self pushVCByClassName:@"HPLoginController"];
+
+        }
         
-         HPUserInfo *userInfo = [[HPUserInfo alloc] init];
-         userInfo.avatarUrl = [data[@"data"]firstObject][@"url"]?:@"";
-         userInfo.password = account.userInfo.password?:@"";
-         userInfo.username = account.userInfo.username?:@"";
-         userInfo.userId = account.userInfo.userId?:@"";
-         userInfo.mobile = account.userInfo.mobile?:@"";
-         account.userInfo = userInfo;
-         [HPUserTool saveAccount:account];
     } fail:^(NSError *error) {
         ErrorNet
     }];

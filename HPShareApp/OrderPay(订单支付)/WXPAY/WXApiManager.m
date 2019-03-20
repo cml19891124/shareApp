@@ -9,6 +9,12 @@
 #import "WXApiManager.h"
 #import "Macro.h"
 
+@interface WXApiManager ()
+
+@property (nonatomic, strong) NSString *authState;
+
+@end
+
 @implementation WXApiManager
 
 #pragma mark - LifeCycle
@@ -48,6 +54,32 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:notice_WXPayReturnData object:resp];
     }
 
+    if([resp isKindOfClass:[SendAuthResp class]]) {
+        SendAuthResp* authResp = (SendAuthResp*)resp;
+        /* Prevent Cross Site Request Forgery */
+        if (![authResp.state isEqualToString:self.authState]) {
+            if (self.authDelegate && [self.authDelegate respondsToSelector:@selector(wxAuthDenied)])
+                [self.authDelegate wxAuthDenied];
+            return;
+        }
+        
+        switch (resp.errCode) {
+            case WXSuccess:
+                HPLog(@"RESP:code:%@,state:%@\n", authResp.code, authResp.state);
+                if (self.authDelegate && [self.authDelegate respondsToSelector:@selector(wxAuthSucceed:)])
+                    [self.authDelegate wxAuthSucceed:authResp.code];
+                break;
+            case WXErrCodeAuthDeny:
+                if (self.authDelegate && [self.authDelegate respondsToSelector:@selector(wxAuthDenied)])
+                    [self.authDelegate wxAuthDenied];
+                break;
+            case WXErrCodeUserCancel:
+                if (self.authDelegate && [self.authDelegate respondsToSelector:@selector(wxAuthCancel)])
+                    [self.authDelegate wxAuthCancel];
+            default:
+                break;
+        }
+    }
 }
 
 - (void)onReq:(BaseReq *)req {
@@ -72,4 +104,14 @@
     }
 }
 
+
+#pragma mark - Public Methods
+- (void)sendAuthRequestWithController:(UIViewController*)viewController
+                             delegate:(id<WXAuthDelegate>)delegate {
+    SendAuthReq* req = [[SendAuthReq alloc] init];
+    req.scope = @"snsapi_userinfo";
+    self.authState = req.state = [NSString randomKey];
+    self.authDelegate = delegate;
+    [WXApi sendAuthReq:req viewController:viewController delegate:self];
+}
 @end

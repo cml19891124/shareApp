@@ -36,9 +36,11 @@
 #define COLOR_RED_FF3C5E [UIColor colorWithHexString:@"#ff3c5e"]
 #define COLOR_BLUE_D5F2FF [UIColor colorWithHexString:@"#D5F2FF"]
 #define COLOR_GRAY_DADADA [UIColor colorWithHexString:@"#DADADA"]
+#define COLOR_GRAY_f9fafd [UIColor colorWithHexString:@"#f9fafd"]
 
 #define COLOR_RED_EA0000 [UIColor colorWithHexString:@"#EA0000"]
 #define COLOR_RED_4fa4f8 [UIColor colorWithHexString:@"#4fa4f8"]
+#define COLOR_GRAY_FAFAFA [UIColor colorWithHexString:@"#FAFAFA"]
 
 #define COLOR_BLACK_000000 [UIColor colorWithHexString:@"#000000"]
 #define COLOR_RED_FF0000 [UIColor colorWithHexString:@"#FF0000"]
@@ -141,6 +143,7 @@
 #define COLOR_GRAY_F9F9F9 [UIColor colorWithHexString:@"#F9F9F9"]
 #define COLOR_BLUE_841307 [UIColor colorWithHexString:@"#841307"]
 
+#define kAppleSecret @"1447187764"
 
 #define kAppleId @"1447187764"
 
@@ -160,8 +163,8 @@
 #define kFont_Heavy(font)  [UIFont fontWithName:@"PingFangSC-Semibold"size:font]
 #define kRect(x, y, w, h)   CGRectMake(x, y, w, h)
 //#define kBaseUrl  @"https://inner.hepaicn.com"
-#define kBaseUrl  @"https://app.hepaicn.com"
-//#define kBaseUrl  @"http://192.168.0.104:8083"//测试
+//#define kBaseUrl  @"https://app.hepaicn.com"
+#define kBaseUrl  @"http://192.168.0.104:8083"//测试
 //#define kBaseUrl  @"http://192.168.0.60:8083"//罗
 //#define kBaseUrl  @"http://192.168.0.148:8083"//胜光
 

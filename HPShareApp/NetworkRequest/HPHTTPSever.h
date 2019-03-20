@@ -23,4 +23,6 @@ typedef void(^Progress)(double progress) ;
 
 + (void)HPSecretServerWithMethod:(nonnull NSString*)method  paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure;
 
++ (void)HPGETServerWithMethodNoAppendingUrl:(nonnull NSString*)method isNeedToken:(BOOL)isNeed paraments:(nonnull NSDictionary *)dic complete:(nonnull Success)success Failure:(nonnull Failure)failure;
+
 @end

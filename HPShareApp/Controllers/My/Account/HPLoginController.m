@@ -14,7 +14,12 @@
 #import <UserNotifications/UserNotifications.h>
 #import "EBBannerView.h"
 
-@interface HPLoginController ()<UITextFieldDelegate>
+#import <WXApi.h>
+#import "WXApiManager.h"
+
+#import "Definition.h"
+
+@interface HPLoginController ()<UITextFieldDelegate,WXAuthDelegate>
 @property (nonatomic, strong) UIButton *probtn;
 @property (nonatomic, strong) UITextField *phoneNumTextField;
 @property (nonatomic, strong) UITextField *codeTextField;
@@ -26,6 +31,44 @@
 @end
 
 @implementation HPLoginController
+
+#pragma mark - WXAuthDelegate
+
+- (void)wxAuthSucceed:(NSString *)code
+{//access_token
+    [self getPramfromWechatApi:code];
+}
+
+#pragma mark - 微信登录
+- (void)getPramfromWechatApi:(NSString *)code
+{
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/wechatUser/login" isNeedToken:NO paraments:@{@"code":code} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
+            
+            [HPUserTool saveAccount:model];
+            
+            if (model.userInfo.mobile) {
+                [HPProgressHUD alertMessage:@"登录成功"];
+
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.navigationController popToRootViewControllerAnimated:NO];
+                });
+            }else{
+                NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+                dic[@"code"] = code;
+                dic[@"login"] = @"wx";
+                [self pushVCByClassName:@"HPThirdPartReturnController" withParam:dic];
+            }
+            
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -41,6 +84,7 @@
     if (model.token && self.navigationController.childViewControllers.count >= 2) {
         [self.navigationController popViewControllerAnimated:NO];
     }
+    
 }
 
 - (void)setupUI {
@@ -224,24 +268,24 @@
         make.centerX.equalTo(self.view);
     }];
     
-//    UILabel *thirdPartLabel = [[UILabel alloc] init];
-//    [thirdPartLabel setFont:[UIFont fontWithName:FONT_REGULAR size:13.f]];
-//    [thirdPartLabel setTextColor:COLOR_GRAY_999999];
-//    [thirdPartLabel setText:@"使用第三方账号登录"];
-//    [self.view addSubview:thirdPartLabel];
-//    [thirdPartLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.equalTo(self.view).with.offset(- g_bottomSafeAreaHeight - 42.f * g_rateWidth);
-//        make.centerX.equalTo(self.view);
-//        make.height.mas_equalTo(thirdPartLabel.font.pointSize);
-//    }];
-//    
-//    UIView *thirdPartView = [[UIView alloc] init];
-//    [self.view addSubview:thirdPartView];
-//    [thirdPartView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.equalTo(thirdPartLabel.mas_top).with.offset(-20.f * g_rateWidth);
-//        make.centerX.equalTo(self.view);
-//    }];
-//    [self setupThirdPartView:thirdPartView];
+    UILabel *thirdPartLabel = [[UILabel alloc] init];
+    [thirdPartLabel setFont:[UIFont fontWithName:FONT_REGULAR size:13.f]];
+    [thirdPartLabel setTextColor:COLOR_GRAY_999999];
+    [thirdPartLabel setText:@"使用第三方账号登录"];
+    [self.view addSubview:thirdPartLabel];
+    [thirdPartLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.view).with.offset(- g_bottomSafeAreaHeight - 42.f * g_rateWidth);
+        make.centerX.equalTo(self.view);
+        make.height.mas_equalTo(thirdPartLabel.font.pointSize);
+    }];
+    
+    UIView *thirdPartView = [[UIView alloc] init];
+    [self.view addSubview:thirdPartView];
+    [thirdPartView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(thirdPartLabel.mas_top).with.offset(-20.f * g_rateWidth);
+        make.centerX.equalTo(self.view);
+    }];
+    [self setupThirdPartView:thirdPartView];
 }
 #pragma mark - 是否同意协议
 - (void)checkProtocalContent:(UITapGestureRecognizer *)tap
@@ -309,7 +353,6 @@
     dic[@"mobile"] = _phoneNumTextField.text;
     dic[@"state"] = @"0";
     
-    kWEAKSELF
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/login" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
@@ -362,11 +405,10 @@
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"mobile"] = self.phoneNumTextField.text;
     dic[@"state"] = @"-1";
-    kWeakSelf(weakSelf);
+    
     [HPHTTPSever HPGETServerWithMethod:@"/v1/user/getCode" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"发送成功"];
-//            weakSelf.codeTextField.text = responseObject[@"data"];
         }else{
             [HPProgressHUD alertMessage:MSG];
         }
@@ -390,12 +432,18 @@
     }
     else if (btn.tag == 1) {
         HPLog(@"onClickThirdPartBtn: WeChat");
+        [self weChatLoginBtnAction];
     }
     else if (btn.tag == 2) {
         HPLog(@"onClickThirdPartBtn: Sina");
     }
+}
+
+- (void)weChatLoginBtnAction{
     
-    [self pushVCByClassName:@"HPLoginByPasswordController"];
+    [[WXApiManager sharedManager] sendAuthRequestWithController:self
+                                                       delegate:self];
+    
 }
 
 
@@ -428,19 +476,18 @@
 {
     if (textField == self.phoneNumTextField) {
         if (textField.text.length >= 11) {
-//            [HPProgressHUD alertMessage:@"请输入11位手机号"];
+
             self.phoneNumTextField.text = [self.phoneNumTextField.text substringToIndex:10];
-            //[textField resignFirstResponder];
-//            [self.codeTextField becomeFirstResponder];
+
             _isValidate = [HPValidatePhone validateContactNumber:textField.text];
 
             return YES;
         }
     }else if (textField == self.codeTextField){
         if (textField.text.length >= 6) {
-//            [HPProgressHUD alertMessage:@"请输入6位验证码"];
+
             self.codeTextField.text = [textField.text substringToIndex:6];
-//            [textField resignFirstResponder];
+
             return YES;
         }
     }

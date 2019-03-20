@@ -10,6 +10,8 @@
 #import "HPIdeaController.h"
 #import "HPInteractiveController.h"
 #import "HPMyController.h"
+
+#import "HPProfileViewController.h"
 #import "HPReleaseModalView.h"
 #import "HPOwnerCardDefineController.h"
 #import "HPStartUpCardDefineController.h"
@@ -79,7 +81,7 @@
     [interactiveController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:COLOR_BLACK_333333} forState:UIControlStateNormal];
     [self addChildViewController:interactiveController];
     
-    HPMyController *myController = [[HPMyController alloc] init];
+    HPProfileViewController *myController = [[HPProfileViewController alloc] init];
     myController.tabBarItem.title = @"我的";
     myController.tabBarItem.image = [UIImage imageNamed:@"my_unchecked"];
     myController.tabBarItem.selectedImage = [[UIImage imageNamed:@"my_checked"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];

@@ -8,6 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import "WXApi.h"
+#import "RandomKey.h"
+
+@protocol WXAuthDelegate <NSObject>
+
+@optional
+- (void)wxAuthSucceed:(NSString*)code;
+- (void)wxAuthDenied;
+- (void)wxAuthCancel;
+
+@end
 
 @protocol WXApiManagerDelegate <NSObject>
 
@@ -31,6 +41,17 @@
 
 @property (nonatomic, assign) id<WXApiManagerDelegate> delegate;
 
-+ (instancetype)sharedManager;
+@property (nonatomic, assign) id<WXAuthDelegate, NSObject> authDelegate;
 
++ (instancetype)sharedManager;
+/**
+ *  发送微信验证请求.
+ *
+ *  @restrict 该方法支持未安装微信的用户.
+ *
+ *  @param viewController 发起验证的VC
+ *  @param delegate       处理验证结果的代理
+ */
+- (void)sendAuthRequestWithController:(UIViewController*)viewController
+                             delegate:(id<WXAuthDelegate>)delegate;
 @end

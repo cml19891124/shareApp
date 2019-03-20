@@ -47,6 +47,7 @@
 		<string>alipayauth</string>
 		<string>safepay</string>
 		<string> alipay</string>
+		<string>wechat</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
