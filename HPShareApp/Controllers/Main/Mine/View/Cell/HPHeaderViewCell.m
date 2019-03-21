@@ -65,40 +65,43 @@
     
     [self.contentView addSubview:self.optionalBtn];
 
-    CGFloat orderBtnW = 60.f;
-    
-    CGFloat space = (kScreenWidth - orderBtnW * 5)/6;
-
-    for (int i = 0; i < self.orderNameArray.count; i++) {
-        HPOrderBtn *orderBtn = [HPOrderBtn new];
-        orderBtn.nameLabel.text = self.orderNameArray[i];
-        orderBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
-        orderBtn.nameLabel.font = kFont_Medium(13.f);
-        orderBtn.tag = 4000 + i;
-        [self.orderStatesView addSubview:orderBtn];
-        [orderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
-        [orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(space + i * (orderBtnW + space));
-            make.top.mas_equalTo(getWidth(2.f));
-            make.width.mas_equalTo(orderBtnW);
-            make.height.mas_equalTo(getWidth(60.f));
-        }];
+    if (self.identifyTag == 1) {
+        CGFloat orderBtnW = 60.f;
+        
+        CGFloat space = (kScreenWidth - orderBtnW * 5)/6;
+        
+        for (int i = 0; i < self.orderNameArray.count; i++) {
+            HPOrderBtn *orderBtn = [HPOrderBtn new];
+            orderBtn.nameLabel.text = self.orderNameArray[i];
+            orderBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
+            orderBtn.nameLabel.font = kFont_Medium(13.f);
+            orderBtn.tag = 4000 + i;
+            [self.orderStatesView addSubview:orderBtn];
+            [orderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
+            [orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(space + i * (orderBtnW + space));
+                make.top.mas_equalTo(getWidth(2.f));
+                make.width.mas_equalTo(orderBtnW);
+                make.height.mas_equalTo(getWidth(60.f));
+            }];
+        }
+        
+        for (int j = 0; j < self.businessNameArray.count; j ++) {
+            HPAlignCenterButton *busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.businessImageArray[j])];
+            [busiBtn setText:self.businessNameArray[j]];
+            busiBtn.tag = 4100 + j;
+            [busiBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
+            [self.businessView addSubview:busiBtn];
+            [busiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(getWidth(30.f) + j * getWidth(80.f));
+                make.width.height.mas_equalTo(getWidth(40.f));
+                make.top.mas_equalTo(getWidth(15.f));
+                make.bottom.mas_equalTo(getWidth(-15.f));
+                
+            }];
+        }
     }
     
-    for (int j = 0; j < self.businessNameArray.count; j ++) {
-        HPAlignCenterButton *busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.businessImageArray[j])];
-        [busiBtn setText:self.businessNameArray[j]];
-        busiBtn.tag = 4100 + j;
-        [busiBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
-        [self.businessView addSubview:busiBtn];
-        [busiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(getWidth(30.f) + j * getWidth(80.f));
-            make.width.height.mas_equalTo(getWidth(40.f));
-            make.top.mas_equalTo(getWidth(15.f));
-            make.bottom.mas_equalTo(getWidth(-15.f));
-
-        }];
-    }
 }
 
 - (void)onClickedOrderBtn:(HPAlignCenterButton *)button
