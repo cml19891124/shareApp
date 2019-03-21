@@ -12,7 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPSingleton : NSObject
 
-@property (nonatomic, strong) NSArray *bannerArray;
+/**
+ 身份认证状态
+ */
+@property (nonatomic, assign) NSInteger identifyTag;
 
 + (instancetype)sharedSingleton;
 

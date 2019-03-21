@@ -629,16 +629,38 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
     NSArray *typeArr;
     if (type == HPShareGotoBtnTagSpace) {
         typeArr = @[@"不限",@"小于5㎡",@"5-10㎡",@"10-20㎡",@"20㎡以上"];
+            CDZPickerBuilder *builder = [CDZPickerBuilder new];
+            builder.showMask = YES;
+            builder.cancelTextColor = COLOR_GRAY_BBBBBB;
+            builder.confirmTextColor = COLOR_RED_EA0000;
+            kWeakSelf(weakSelf);
+        
+         [CDZPicker showSinglePickerInView:self.view withBuilder:builder strings:typeArr confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
+         if (type == HPShareGotoBtnTagSpace) {
+         [weakSelf.spaceBtn setText:[strings componentsJoinedByString:@","]];
+         CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 20;
+         [weakSelf.spaceBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+         make.width.mas_equalTo(stringsW);
+         }];
+         }else if (type == HPShareGotoBtnTagTimeDuring){
+         [weakSelf.shareTimeBtn setText:[strings componentsJoinedByString:@","]];
+         CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 20;
+         [weakSelf.shareTimeBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+         make.width.mas_equalTo(stringsW);
+         }];
+         }
+         
+         }cancel:^{
+         //your code
+         }];
     }else if (type == HPShareGotoBtnTagTimeDuring){
-        typeArr = @[@"00:00-01:00",@"01:00-02:00",@"02:00-03:00",@"03:00-04:00",@"04:00-05:00",@"05:00-06:00",@"06:00-07:00",@"07:00-08:00",@"08:00-09:00",@"09:00-10:00",@"10:00-11:00",@"11:00-12:00",@"12:00-13:00",@"13:00-14:00",@"14:00-15:00",@"15:00-16:00",@"16:00-17:00",@"17:00-18:00",@"18:00-19:00",@"19:00-20:00",@"20:00-21:00",@"21:00-22:00",@"22:00-23:00",@"23:00-24:00"];
+        kWEAKSELF
+        self.picker = [HPRentTimePicker new];
+        self.picker.timeBlock = ^(NSString *startTime, NSString *endTime) {
+            [weakSelf.shareTimeBtn setText:[NSString stringWithFormat:@"%@-%@",startTime,endTime]];
+        };
+        [self.picker show:YES];
     }
-    kWEAKSELF
-    self.picker = [HPRentTimePicker new];
-    self.picker.timeBlock = ^(NSString *startTime, NSString *endTime) {
-        [weakSelf.shareTimeBtn setText:[NSString stringWithFormat:@"%@-%@",startTime,endTime]];
-    };
-    [self.picker show:YES];
-
 }
 
 - (UIView *)addRowOfParentView:(UIView *)view withHeight:(CGFloat)height margin:(CGFloat)margin isEnd:(BOOL)isEnd {

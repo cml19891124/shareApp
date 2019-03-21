@@ -208,6 +208,7 @@
 		E679B84F22422A5D004A2CFA /* HPRelationViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B84E22422A5D004A2CFA /* HPRelationViewCell.m */; };
 		E679B8522243260D004A2CFA /* UIView+Corner.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B8512243260D004A2CFA /* UIView+Corner.m */; };
 		E679B85622436519004A2CFA /* HPRentTimePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B85522436519004A2CFA /* HPRentTimePicker.m */; };
+		E679B8592243A62C004A2CFA /* HPOrderItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B8582243A62C004A2CFA /* HPOrderItemCell.m */; };
 		E67B778E21CDEEB1007AC636 /* HPRentAmountItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = E67B778D21CDEEB1007AC636 /* HPRentAmountItemView.m */; };
 		E67C68822237483600CF2297 /* HPReturnFundsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E67C68812237483600CF2297 /* HPReturnFundsViewController.m */; };
 		E67C688522374A8100CF2297 /* HPReturnModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E67C688422374A8100CF2297 /* HPReturnModel.m */; };
@@ -863,6 +864,8 @@
 		E679B8512243260D004A2CFA /* UIView+Corner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Corner.m"; sourceTree = "<group>"; };
 		E679B85422436519004A2CFA /* HPRentTimePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRentTimePicker.h; sourceTree = "<group>"; };
 		E679B85522436519004A2CFA /* HPRentTimePicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRentTimePicker.m; sourceTree = "<group>"; };
+		E679B8572243A62B004A2CFA /* HPOrderItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOrderItemCell.h; sourceTree = "<group>"; };
+		E679B8582243A62C004A2CFA /* HPOrderItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOrderItemCell.m; sourceTree = "<group>"; };
 		E67B778C21CDEEB1007AC636 /* HPRentAmountItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRentAmountItemView.h; sourceTree = "<group>"; };
 		E67B778D21CDEEB1007AC636 /* HPRentAmountItemView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRentAmountItemView.m; sourceTree = "<group>"; };
 		E67C68802237483600CF2297 /* HPReturnFundsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPReturnFundsViewController.h; sourceTree = "<group>"; };
@@ -2503,6 +2506,8 @@
 				E679B84822420D63004A2CFA /* HPHeaderViewCell.m */,
 				E679B84D22422A5D004A2CFA /* HPRelationViewCell.h */,
 				E679B84E22422A5D004A2CFA /* HPRelationViewCell.m */,
+				E679B8572243A62B004A2CFA /* HPOrderItemCell.h */,
+				E679B8582243A62C004A2CFA /* HPOrderItemCell.m */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -3986,6 +3991,7 @@
 				69165CF421C1FA8700593D25 /* HPShareListModel.m in Sources */,
 				7AAFF3BB21E390D80049D175 /* HPShareMapAnnotationView.m in Sources */,
 				E6B63B94221E835200337830 /* HPUpdateVersionTool.m in Sources */,
+				E679B8592243A62C004A2CFA /* HPOrderItemCell.m in Sources */,
 				E661B0A7219C0B9800C86CF5 /* HPBaseControl.m in Sources */,
 				E661B0B6219C2C0400C86CF5 /* HPCheckDialogView.m in Sources */,
 				E622A9D021C3A6B3007C35BC /* HPCardDetailsModel.m in Sources */,

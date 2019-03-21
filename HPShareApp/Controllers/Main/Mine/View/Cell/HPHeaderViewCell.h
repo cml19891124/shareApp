@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, HPBusinessCellIndex) {
     HPBusinessCellIndexStores = 4100,
     HPBusinessCellIndexOrder,
     HPBusinessCellIndexWallet,
-    HPBusinessCellIndexname,
+    HPBusinessCellIndexName,
 };
 
 @class HPHeaderViewCell;
@@ -88,6 +88,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *optionalBtn;
 
 @property (nonatomic, weak) id<HPHeaderViewCellDelegate> delegate;
+
+/**
+ 身份认证状态
+ */
+@property (nonatomic, assign) NSInteger identifyTag;
+
+@property (nonatomic, strong) UIView *rentView;
+
+@property (nonatomic, strong) UILabel *rentTipLabel;
+
 
 @end
 

@@ -54,9 +54,14 @@
 
     [self.contentView addSubview:self.editBtn];
 
-    [self.contentView addSubview:self.orderStatesView];
-
-    [self.contentView addSubview:self.businessView];
+    if (self.identifyTag == 0) {
+        [self.contentView addSubview:self.rentView];
+        
+    }else{
+        [self.contentView addSubview:self.orderStatesView];
+        
+        [self.contentView addSubview:self.businessView];
+    }
     
     [self.contentView addSubview:self.optionalBtn];
 
@@ -170,6 +175,13 @@
     
     [_optionalBtn setCornerRadius:13.f addRectCorners:UIRectCornerBottomLeft|UIRectCornerTopLeft];
 
+    [self.rentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(15.f));
+        make.top.mas_equalTo(self.bgImageView.mas_bottom).offset(getWidth(-28.f));
+        make.height.mas_equalTo(getWidth(112.f));
+        make.right.mas_equalTo(getWidth(-15.f));
+    }];
+
 }
 
 #pragma mark - 初始化控件
@@ -266,6 +278,17 @@
 
     }
     return _optionalBtn;
+}
+
+- (UIView *)rentView
+{
+    if (!_rentView) {
+        _rentView = [UIView new];
+        _rentView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _rentView.layer.cornerRadius = 2.f;
+        _rentView.layer.masksToBounds = YES;
+    }
+    return _rentView;
 }
 
 - (void)onClickedEditProfileInfo:(UIButton *)button

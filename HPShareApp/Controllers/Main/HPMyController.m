@@ -23,6 +23,7 @@
 
 @interface HPMyController ()
 
+
 @property (nonatomic, weak) UIButton *portraitBtn;
 
 @property (nonatomic, weak) UIButton *loginBtn;

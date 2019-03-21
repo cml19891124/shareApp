@@ -39,7 +39,7 @@
         make.left.mas_equalTo(getWidth(15.f));
         make.right.mas_equalTo(getWidth(-15.f));
         make.top.mas_equalTo(0.5f);
-        make.bottom.mas_equalTo(-1.f);
+        make.bottom.mas_equalTo(-0.5f);
     }];
     
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
