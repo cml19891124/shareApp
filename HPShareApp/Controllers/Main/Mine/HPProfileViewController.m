@@ -12,7 +12,7 @@
 
 #import "HPRelationViewCell.h"
 
-@interface HPProfileViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface HPProfileViewController ()<UITableViewDelegate,UITableViewDataSource,HPHeaderViewCellDelegate>
 
 @property (nonatomic, strong) UIView *navTitleView;
 
@@ -29,6 +29,40 @@
 static NSString *headerViewCell = @"HPHeaderViewCell";
 
 static NSString *relationViewCell = @"HPRelationViewCell";
+
+#pragma mark - HPHeaderViewCellDelegate
+
+- (void)onTapped:(HPHeaderViewCell *)tableviewCell HeaderView:(UITapGestureRecognizer *)tap
+{
+    HPLog(@"tap");
+    HPLoginModel *model = [HPUserTool account];
+    if (!model.token) {
+        //        [HPProgressHUD alertMessage:@"用户未登录"];
+        [self pushVCByClassName:@"HPLoginController"];
+        
+        return;
+    }else{
+        
+        [self pushVCByClassName:@"HPConfigCenterController"];
+    }
+}
+
+- (void)onClicked:(HPHeaderViewCell *)tableviewCell EditProfileInfoBtn:(UIButton *)button
+{
+    HPLog(@"edit");
+}
+
+- (void)onClicked:(HPHeaderViewCell *)tableviewCell OptionalBtn:(UIButton *)optionalBtn
+{
+    HPLog(@"optional");
+    optionalBtn.selected = !optionalBtn.selected;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -49,7 +83,7 @@ static NSString *relationViewCell = @"HPRelationViewCell";
     self.imageArray = @[@"",@"",@[@"me_business_identify",@"me_business_safe",@"me_business_emotion",@"me_business_server",@"me_business_ours"]];
     
     self.titleArray = @[@"",@"",@[@"资格认证",@"账号安全",@"意见反馈",@"在线客服",@"关于我们"]];
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
     [self setUpSubviewsUI];
     
     [self setUpSubviewsUIMasonry];
@@ -142,8 +176,7 @@ static NSString *relationViewCell = @"HPRelationViewCell";
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     if (indexPath.section == 0) {
-        HPHeaderViewCell *cell = [tableView dequeueReusableCellWithIdentifier:headerViewCell];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        HPHeaderViewCell *cell = [self setUpHeaderViewCell:tableView];
         return cell;
     }
     else if(indexPath.section == 1){
@@ -163,7 +196,7 @@ static NSString *relationViewCell = @"HPRelationViewCell";
         else if (indexPath.section == 2){
         HPRelationViewCell *cell = [tableView dequeueReusableCellWithIdentifier:relationViewCell];
         cell.backgroundColor = COLOR_GRAY_f9fafd;
-
+            
         UIImage *image = ImageNamed(self.imageArray[indexPath.section][indexPath.row]);
             cell.iconView.image = image;
         cell.titleLabel.text = self.titleArray[indexPath.section][indexPath.row];
@@ -172,6 +205,27 @@ static NSString *relationViewCell = @"HPRelationViewCell";
     return cell;
 }
 
+- (HPHeaderViewCell *)setUpHeaderViewCell:(UITableView *)tableView
+{
+    HPHeaderViewCell *cell = [tableView dequeueReusableCellWithIdentifier:headerViewCell];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.delegate = self;
+    
+    HPLoginModel *account = [HPUserTool account];
+    if (!account.token) {
+        cell.optionalBtn.hidden = YES;
+        [cell.phoneBtn setTitle:@"登录/注册" forState:UIControlStateNormal];
+        cell.identifiLabel.text = @"登录即可在线拼租";
+        cell.iconImageView.image = ImageNamed(@"personal_center_not_login_head");
+        
+    }else{
+        cell.optionalBtn.hidden = NO;
+        cell.identifiLabel.text = @"租客信息，资质认证";
+        [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];
+        [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:account.userInfo.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
+    }
+    return cell;
+}
 //设置分割线的位置 在willDisplayCell上增加如下代码
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{

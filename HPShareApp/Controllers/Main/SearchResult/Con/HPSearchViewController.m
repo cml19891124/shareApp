@@ -95,7 +95,7 @@ static NSString *hotKeywordCell = @"hotKeywordCell";
 - (void)setUpUiMasonry
 {
     [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(15.f));
+        make.left.mas_equalTo(self.view);
         make.top.mas_equalTo(g_statusBarHeight);
         make.height.mas_equalTo(getWidth(39.f));
         make.right.mas_equalTo(self.view);

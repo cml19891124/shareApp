@@ -16,6 +16,12 @@
 #import "HPOwnnerReleaseViewController.h"
 #import "HPStoreLeavesViewController.h"
 
+#import "HPShareSelectedItemView.h"
+
+#import "HPBotomPickerModalView.h"
+
+#import "HPRentTimePicker.h"
+
 typedef NS_ENUM(NSInteger, HPShareGotoBtnTag) {
     HPShareGotoBtnTagSpace = 30,
     HPShareGotoBtnTagTimeDuring,
@@ -33,8 +39,13 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
     HPShareGotoViewTagRect,
     HPShareGotoViewTagLeaves
 };
-@interface HPReviseReleaseInfoViewController ()<HPLeavesVCDelegate,HPReleasePhotoDelegate>
+@interface HPReviseReleaseInfoViewController ()<HPLeavesVCDelegate,HPReleasePhotoDelegate,HPShareSelectedItemViewDelegate>
 
+@property (nonatomic, strong) HPRentTimePicker *picker;
+
+@property (nonatomic, strong) HPBotomPickerModalView *areaPickerView;
+
+@property (nonatomic, strong) HPShareSelectedItemView *itemView;
 /**
  空间大小按钮
  */
@@ -161,39 +172,50 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
 }
 
 - (void)onClickReleaseBtn {
-    if (_spaceBtn.text.length && ![_spaceBtn.text isEqualToString:@"不限"]) {
-        self.infoDict[@"space"] = _spaceBtn.text;
-    }
-    if (_shareTimeBtn.text.length&& ![_shareTimeBtn.text isEqualToString:@"不限"]) {
-        self.infoDict[@"time"] = _shareTimeBtn.text;
-    }
-    if (_industryBtn.text.length&& ![_industryBtn.text isEqualToString:@"面议"]) {
-        self.infoDict[@"intention"] = _industryBtn.text;
-    }
-    
-    if (_rectTypeBtn.text.length) {
-        self.infoDict[@"rentType"] = _rectTypeBtn.text;
-    }
-    if (_rectBtn.text.length) {
-        self.infoDict[@"rentAmount"] = _rectBtn.text;
-    }
-    
-    if (_leavesInfo.length) {
-        self.infoDict[@"leaves"] = _leavesInfo;
-    }
-    
-    self.ratio = [NSString stringWithFormat:@"%.2f%%",self.infoDict.allValues.count/15.00 * 100];
-    if ([self.ratio isEqualToString:@"1.00%"]) {
-        self.ratio = @"100%";
-    }
-    self.ratioLabel.text = [NSString stringWithFormat:@"%@",self.ratio.length>0?self.ratio:@"0"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        HPOwnnerReleaseViewController *ownnervc = [HPOwnnerReleaseViewController new];
-        ownnervc.delegate = self;
-        ownnervc.infoDict = self.infoDict;
-        ownnervc.ratio = self.ratio;
-        [self.navigationController pushViewController:ownnervc animated:YES];
-    });
+        if (_shareTimeBtn.text.length != 0 && _rectBtn.text.length != 0 && ![_shareTimeBtn.text isEqualToString:@"不限"]) {
+            if (_spaceBtn.text.length && ![_spaceBtn.text isEqualToString:@"不限"]) {
+                self.infoDict[@"space"] = _spaceBtn.text;
+            }
+            if (_shareTimeBtn.text.length&& ![_shareTimeBtn.text isEqualToString:@"不限"]) {
+                self.infoDict[@"time"] = _shareTimeBtn.text;
+            }
+            if (_industryBtn.text.length&& ![_industryBtn.text isEqualToString:@"面议"]) {
+                self.infoDict[@"intention"] = _industryBtn.text;
+            }
+            
+            if (_rectTypeBtn.text.length) {
+                self.infoDict[@"rentType"] = _rectTypeBtn.text;
+            }
+            if (_rectBtn.text.length) {
+                self.infoDict[@"rentAmount"] = _rectBtn.text;
+            }
+            
+            if (_leavesInfo.length) {
+                self.infoDict[@"leaves"] = _leavesInfo;
+            }
+            
+            self.ratio = [NSString stringWithFormat:@"%.2f%%",self.infoDict.allValues.count/15.00 * 100];
+            if ([self.ratio isEqualToString:@"1.00%"]) {
+                self.ratio = @"100%";
+            }
+            self.ratioLabel.text = [NSString stringWithFormat:@"%@",self.ratio.length>0?self.ratio:@"0"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                HPOwnnerReleaseViewController *ownnervc = [HPOwnnerReleaseViewController new];
+                ownnervc.delegate = self;
+                ownnervc.infoDict = self.infoDict;
+                ownnervc.ratio = self.ratio;
+                [self.navigationController pushViewController:ownnervc animated:YES];
+            });
+        }else{
+            HPShareSelectedItemView *itemView = [[HPShareSelectedItemView alloc] init];
+            [itemView show:YES];
+            itemView.delegate = self;
+            _itemView = itemView;
+            [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.edges.mas_equalTo(self.view);
+            }];
+        }
+
     
 //    [self pushVCByClassName:@"HPOwnnerReleaseViewController"];
 
@@ -376,14 +398,24 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
 - (UIView *)setupShareTimeRowView
 {
     UIView *view = [[UIView alloc] init];
+    
     UIView *timeView = [self addRowOfParentView:view withHeight:46.f * g_rateWidth margin:0.f isEnd:YES];
+    
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [timeView addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
+    }];
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickShareGotoButton:)];
     [timeView setTag:HPShareGotoBtnTagTimeDuring];
     [timeView addGestureRecognizer:tap];
-    [self setupTitleLabelWithText:@"我想出租的时间段" ofView:timeView];
+    [self setupTitleLabelWithText:@"我的店铺营业时间" ofView:timeView];
     HPRightImageButton *shareTimeBtn = [self setupGotoBtnWithTitle:@"不限"];
-//    [shareTimeBtn setTag:HPShareGotoBtnTagTimeDuring];
-//    [shareTimeBtn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];
+
     [timeView addSubview:shareTimeBtn];
     _shareTimeBtn = shareTimeBtn;
     [_shareTimeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -466,14 +498,23 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
 - (UIView *)setupRentAmountRowView
 {
     UIView *view = [[UIView alloc] init];
+    
     UIView *rentView = [self addRowOfParentView:view withHeight:46.f * g_rateWidth margin:0.f isEnd:YES];
+    
+    UIButton *starBtn = [UIButton new];
+    [starBtn setTitle:@"*" forState:UIControlStateNormal];
+    [starBtn setTitleColor:COLOR_RED_FF3C5E forState:UIControlStateNormal];
+    [rentView addSubview:starBtn];
+    [starBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(12.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(12), getWidth(12)));
+    }];
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickShareGotoButton:)];
     [rentView setTag:HPShareGotoBtnTagRect];
     [rentView addGestureRecognizer:tap];
     [self setupTitleLabelWithText:@"我期望的拼租租金" ofView:rentView];
     HPRightImageButton *rectBtn = [self setupGotoBtnWithTitle:@""];
-//    [rectBtn setTag:HPShareGotoViewTagRect];
-//    [rectBtn addTarget:self action:@selector(onClickShareGotoButton:) forControlEvents:UIControlEventTouchUpInside];
     [rentView addSubview:rectBtn];
     _rectBtn = rectBtn;
     [_rectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -591,29 +632,13 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
     }else if (type == HPShareGotoBtnTagTimeDuring){
         typeArr = @[@"00:00-01:00",@"01:00-02:00",@"02:00-03:00",@"03:00-04:00",@"04:00-05:00",@"05:00-06:00",@"06:00-07:00",@"07:00-08:00",@"08:00-09:00",@"09:00-10:00",@"10:00-11:00",@"11:00-12:00",@"12:00-13:00",@"13:00-14:00",@"14:00-15:00",@"15:00-16:00",@"16:00-17:00",@"17:00-18:00",@"18:00-19:00",@"19:00-20:00",@"20:00-21:00",@"21:00-22:00",@"22:00-23:00",@"23:00-24:00"];
     }
-    CDZPickerBuilder *builder = [CDZPickerBuilder new];
-    builder.showMask = YES;
-    builder.cancelTextColor = COLOR_GRAY_BBBBBB;
-    builder.confirmTextColor = COLOR_RED_EA0000;
-    kWeakSelf(weakSelf);
-    [CDZPicker showSinglePickerInView:self.view withBuilder:builder strings:typeArr confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
-        if (type == HPShareGotoBtnTagSpace) {
-            [weakSelf.spaceBtn setText:[strings componentsJoinedByString:@","]];
-            CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 20;
-            [weakSelf.spaceBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(stringsW);
-            }];
-        }else if (type == HPShareGotoBtnTagTimeDuring){
-            [weakSelf.shareTimeBtn setText:[strings componentsJoinedByString:@","]];
-            CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 20;
-            [weakSelf.shareTimeBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(stringsW);
-            }];
-        }
-        
-    }cancel:^{
-        //your code
-    }];
+    kWEAKSELF
+    self.picker = [HPRentTimePicker new];
+    self.picker.timeBlock = ^(NSString *startTime, NSString *endTime) {
+        [weakSelf.shareTimeBtn setText:[NSString stringWithFormat:@"%@-%@",startTime,endTime]];
+    };
+    [self.picker show:YES];
+
 }
 
 - (UIView *)addRowOfParentView:(UIView *)view withHeight:(CGFloat)height margin:(CGFloat)margin isEnd:(BOOL)isEnd {

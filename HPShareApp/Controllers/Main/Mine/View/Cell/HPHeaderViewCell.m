@@ -8,6 +8,8 @@
 
 #import "HPHeaderViewCell.h"
 
+#import "UIView+Corner.h"
+
 @implementation HPHeaderViewCell
 
 - (void)awakeFromNib {
@@ -46,7 +48,7 @@
     
     [self.contentView addSubview:self.iconImageView];
 
-    [self.contentView addSubview:self.phoneLabel];
+    [self.contentView addSubview:self.phoneBtn];
 
     [self.contentView addSubview:self.identifiLabel];
 
@@ -55,6 +57,8 @@
     [self.contentView addSubview:self.orderStatesView];
 
     [self.contentView addSubview:self.businessView];
+    
+    [self.contentView addSubview:self.optionalBtn];
 
     CGFloat orderBtnW = 60.f;
     
@@ -120,12 +124,12 @@
         make.top.mas_equalTo(getWidth(46.f));
     }];
 
-    CGFloat phoneW = BoundWithSize(self.phoneLabel.text, kScreenWidth, 18.f).size.width + 10;
-    [self.phoneLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    CGFloat phoneW = BoundWithSize(self.phoneBtn.currentTitle, kScreenWidth, 18.f).size.width + 10;
+    [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(phoneW);
         make.left.mas_equalTo(self.iconImageView.mas_right).offset(getWidth(11.f));
         make.top.mas_equalTo(getWidth(54.f));
-        make.height.mas_equalTo(self.phoneLabel.font.pointSize);
+        make.height.mas_equalTo(self.phoneBtn.titleLabel.font.pointSize);
     }];
     
     CGFloat identifiW = BoundWithSize(self.identifiLabel.text, kScreenWidth, 12.f).size.width + 10;
@@ -133,14 +137,14 @@
     [self.identifiLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(identifiW);
         make.left.mas_equalTo(self.iconImageView.mas_right).offset(getWidth(11.f));
-        make.top.mas_equalTo(self.phoneLabel.mas_bottom).offset(getWidth(9.f));
+        make.top.mas_equalTo(self.phoneBtn.mas_bottom).offset(getWidth(9.f));
         make.height.mas_equalTo(self.identifiLabel.font.pointSize);
     }];
     
     [self.editBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(getWidth(20.f));
-        make.left.mas_equalTo(self.phoneLabel.mas_right).offset(getWidth(9.f));
-        make.top.mas_equalTo(self.phoneLabel);
+        make.left.mas_equalTo(self.phoneBtn.mas_right).offset(getWidth(9.f));
+        make.top.mas_equalTo(self.phoneBtn);
         make.height.mas_equalTo(getWidth(20.f));
     }];
     
@@ -156,6 +160,16 @@
         make.height.mas_equalTo(getWidth(95.f));
         make.right.mas_equalTo(getWidth(-15.f));
     }];
+    
+    [self.optionalBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(getWidth(50.f));
+        make.right.mas_equalTo(self.contentView);
+        make.width.mas_equalTo(getWidth(90.f));
+        make.height.mas_equalTo(getWidth(25.f));
+    }];
+    
+    [_optionalBtn setCornerRadius:13.f addRectCorners:UIRectCornerBottomLeft|UIRectCornerTopLeft];
+
 }
 
 #pragma mark - 初始化控件
@@ -175,21 +189,24 @@
 {
     if (!_iconImageView) {
         _iconImageView = [UIImageView new];
+        _iconImageView.userInteractionEnabled = YES;
         _iconImageView.image = ImageNamed(@"personal_center_not_login_head");
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapHeaderView:)];
+        [_iconImageView addGestureRecognizer:tap];
     }
     return _iconImageView;
 }
 
-- (UILabel *)phoneLabel
+- (UIButton *)phoneBtn
 {
-    if (!_phoneLabel) {
-        _phoneLabel = [UILabel new];
-        _phoneLabel.text = @"15817479363";
-        _phoneLabel.textColor = COLOR_GRAY_FFFFFF;
-        _phoneLabel.font = kFont_Medium(18.f);
-        _phoneLabel.textAlignment = NSTextAlignmentLeft;
+    if (!_phoneBtn) {
+        _phoneBtn = [UIButton new];
+        [_phoneBtn setTitle:@"15817479363" forState:UIControlStateNormal];
+        [_phoneBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+        _phoneBtn.titleLabel.font = kFont_Medium(18.f);
+        _phoneBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     }
-    return _phoneLabel;
+    return _phoneBtn;
 }
 
 - (UILabel *)identifiLabel
@@ -209,7 +226,7 @@
     if (!_editBtn) {
         _editBtn = [UIButton new];
         [_editBtn setBackgroundImage:ImageNamed(@"me_business_edit") forState:UIControlStateNormal];
-        [_editBtn addTarget:self action:@selector(editProfileInfo:) forControlEvents:UIControlEventTouchUpInside];
+        [_editBtn addTarget:self action:@selector(onClickedEditProfileInfo:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _editBtn;
 }
@@ -233,8 +250,42 @@
     }
     return _businessView;
 }
-- (void)editProfileInfo:(UIButton *)button
+
+- (UIButton *)optionalBtn
 {
-    
+    if (!_optionalBtn) {
+        _optionalBtn = [UIButton new];
+        [_optionalBtn setImage:ImageNamed(@"optional") forState:UIControlStateNormal];
+        _optionalBtn.backgroundColor = COLOR_BLACK_333333;
+        _optionalBtn.alpha = 0.4;
+        [_optionalBtn setTitle:@"切换为租客" forState:UIControlStateNormal];
+        [_optionalBtn setTitle:@"切换为店主" forState:UIControlStateSelected];
+        _optionalBtn.titleLabel.font = kFont_Medium(10.f);
+        [_optionalBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal|UIControlStateSelected];
+        [_optionalBtn addTarget:self action:@selector(onClickedOptionalBtn:) forControlEvents:UIControlEventTouchUpInside];
+
+    }
+    return _optionalBtn;
+}
+
+- (void)onClickedEditProfileInfo:(UIButton *)button
+{
+    if ([self.delegate respondsToSelector:@selector(onClicked:EditProfileInfoBtn:)]) {
+        [self.delegate onClicked:self EditProfileInfoBtn:button];
+    }
+}
+
+- (void)onClickedOptionalBtn:(UIButton *)button
+{
+    if ([self.delegate respondsToSelector:@selector(onClicked:OptionalBtn:)]) {
+        [self.delegate onClicked:self OptionalBtn:button];
+    }
+}
+
+- (void)onTapHeaderView:(UITapGestureRecognizer *)tap
+{
+    if ([self.delegate respondsToSelector:@selector(onTapped:HeaderView:)]) {
+        [self.delegate onTapped:self HeaderView:tap];
+    }
 }
 @end

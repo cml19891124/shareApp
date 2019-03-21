@@ -206,6 +206,8 @@
 		E679B84922420D63004A2CFA /* HPHeaderViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B84822420D63004A2CFA /* HPHeaderViewCell.m */; };
 		E679B84C22421951004A2CFA /* HPOrderBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B84B22421951004A2CFA /* HPOrderBtn.m */; };
 		E679B84F22422A5D004A2CFA /* HPRelationViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B84E22422A5D004A2CFA /* HPRelationViewCell.m */; };
+		E679B8522243260D004A2CFA /* UIView+Corner.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B8512243260D004A2CFA /* UIView+Corner.m */; };
+		E679B85622436519004A2CFA /* HPRentTimePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B85522436519004A2CFA /* HPRentTimePicker.m */; };
 		E67B778E21CDEEB1007AC636 /* HPRentAmountItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = E67B778D21CDEEB1007AC636 /* HPRentAmountItemView.m */; };
 		E67C68822237483600CF2297 /* HPReturnFundsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E67C68812237483600CF2297 /* HPReturnFundsViewController.m */; };
 		E67C688522374A8100CF2297 /* HPReturnModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E67C688422374A8100CF2297 /* HPReturnModel.m */; };
@@ -857,6 +859,10 @@
 		E679B84B22421951004A2CFA /* HPOrderBtn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOrderBtn.m; sourceTree = "<group>"; };
 		E679B84D22422A5D004A2CFA /* HPRelationViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRelationViewCell.h; sourceTree = "<group>"; };
 		E679B84E22422A5D004A2CFA /* HPRelationViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRelationViewCell.m; sourceTree = "<group>"; };
+		E679B8502243260D004A2CFA /* UIView+Corner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Corner.h"; sourceTree = "<group>"; };
+		E679B8512243260D004A2CFA /* UIView+Corner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Corner.m"; sourceTree = "<group>"; };
+		E679B85422436519004A2CFA /* HPRentTimePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRentTimePicker.h; sourceTree = "<group>"; };
+		E679B85522436519004A2CFA /* HPRentTimePicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRentTimePicker.m; sourceTree = "<group>"; };
 		E67B778C21CDEEB1007AC636 /* HPRentAmountItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRentAmountItemView.h; sourceTree = "<group>"; };
 		E67B778D21CDEEB1007AC636 /* HPRentAmountItemView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRentAmountItemView.m; sourceTree = "<group>"; };
 		E67C68802237483600CF2297 /* HPReturnFundsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPReturnFundsViewController.h; sourceTree = "<group>"; };
@@ -1997,6 +2003,8 @@
 				E661B14221A679E200C86CF5 /* UIScrollView+GestureConflict.m */,
 				E6F551D621B8C9480086094F /* HPValidatePhone.h */,
 				E6F551D721B8C9480086094F /* HPValidatePhone.m */,
+				E679B8502243260D004A2CFA /* UIView+Corner.h */,
+				E679B8512243260D004A2CFA /* UIView+Corner.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -2506,6 +2514,15 @@
 				E679B84B22421951004A2CFA /* HPOrderBtn.m */,
 			);
 			path = Subviews;
+			sourceTree = "<group>";
+		};
+		E679B853224364D8004A2CFA /* TimePicker */ = {
+			isa = PBXGroup;
+			children = (
+				E679B85422436519004A2CFA /* HPRentTimePicker.h */,
+				E679B85522436519004A2CFA /* HPRentTimePicker.m */,
+			);
+			path = TimePicker;
 			sourceTree = "<group>";
 		};
 		E67EFDCE221BA150008BDA1D /* OrderPay(订单支付) */ = {
@@ -3062,6 +3079,7 @@
 		E692144221D4800D00ED6B5C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				E679B853224364D8004A2CFA /* TimePicker */,
 				E692144321D4802700ED6B5C /* HPUploadButton.h */,
 				E692144421D4802700ED6B5C /* HPUploadButton.m */,
 			);
@@ -3690,6 +3708,7 @@
 				E66F1CB821D3625D00C2DEEF /* HPHotImageView.m in Sources */,
 				E67D2EDD21CBBB72005134DB /* HPShareSelectedItemView.m in Sources */,
 				E6D75F4D21AFF48200B2067C /* HPBindPhoneController.m in Sources */,
+				E679B85622436519004A2CFA /* HPRentTimePicker.m in Sources */,
 				E6292172219AB28700BEF16C /* HPGlobalVariable.m in Sources */,
 				E622A9BE21C33989007C35BC /* UIScrollView+Refresh.m in Sources */,
 				E6D75F3121AE211C00B2067C /* HPForgetPasswordController.m in Sources */,
@@ -3954,6 +3973,7 @@
 				E68A76CC21F2C84200083A90 /* JCHATMessageTableView.m in Sources */,
 				7A54489E21C6304C001301F3 /* HPCardHeaderView.m in Sources */,
 				E67EFE46221BE256008BDA1D /* BigSizeButton.m in Sources */,
+				E679B8522243260D004A2CFA /* UIView+Corner.m in Sources */,
 				E68A76B521F2C6D100083A90 /* JCHATConversationListCell.m in Sources */,
 				E693E90421E8331E0063797A /* ClusterAnnotation.m in Sources */,
 				E61E27A321C8D68000CD5288 /* EBBannerView.m in Sources */,

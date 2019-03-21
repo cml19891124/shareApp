@@ -1268,7 +1268,6 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     if (model.rent.length != 0 && model.type == 1) {
         if ([model.rent isEqualToString:@"0"]) {
             [_priceLabel setText:[NSString stringWithFormat:@"拼租参考价\n面议"]];
-            return;
         }
         if (model.rentType == 1) {
             [_priceLabel setText:[NSString stringWithFormat:@"拼租参考价\n%@ %@",model.rent,@"元/小时"]];
@@ -1306,14 +1305,21 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 
     }
     
-    if (model.rentMode && ![model.rentMode isEqualToString:@""]) {
+    if ([model.rentMode isEqualToString:@""]) {
+        for (int i = 0; i < self.rentModeView.subviews.count;i++) {
+            HPTimeRentButton *NObtn = self.rentModeView.subviews[i];
+            NObtn.userInteractionEnabled = NO;
+            NObtn.selected = NO;
+        }
+    }
+    else {
         for (int i = 0; i < self.rentModeView.subviews.count;i++) {
             HPTimeRentButton *NObtn = self.rentModeView.subviews[i];
             NObtn.userInteractionEnabled = NO;
             HPTimeRentButton *btn = self.rentModeView.subviews[[model.rentMode intValue] - 1];
             btn.selected = YES;
         }
-    
+    }
     if (!model.remark || [model.remark isEqualToString:@""]) {
         [_remarkLabel setText:@"用户很懒，什么也没有填写～"];
     }
@@ -1359,7 +1365,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
             [_bannerView startAutoScrollWithInterval:2.0];
         }
     }
-    }
+
 }
 
 - (void)updateData {

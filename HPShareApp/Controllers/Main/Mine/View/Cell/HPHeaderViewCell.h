@@ -31,6 +31,27 @@ typedef NS_ENUM(NSInteger, HPBusinessCellIndex) {
     HPBusinessCellIndexname,
 };
 
+@class HPHeaderViewCell;
+
+@protocol HPHeaderViewCellDelegate <NSObject>
+
+/**
+ 编辑名片按钮点击事件
+ */
+- (void)onTapped:(HPHeaderViewCell *)tableviewCell HeaderView:(UITapGestureRecognizer *)tap;
+
+/**
+ 编辑名片按钮点击事件
+ */
+- (void)onClicked:(HPHeaderViewCell *)tableviewCell EditProfileInfoBtn:(UIButton *)button;
+
+/**
+ 切换身份按钮点击事件
+ */
+- (void)onClicked:(HPHeaderViewCell *)tableviewCell OptionalBtn:(UIButton *)optionalBtn;
+
+@end
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPHeaderViewCell : HPBaseTableViewCell
@@ -39,7 +60,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIImageView *iconImageView;
 
-@property (nonatomic, strong) UILabel *phoneLabel;
+/**
+ 登录按钮的功能
+ */
+@property (nonatomic, strong) UIButton *phoneBtn;
 
 @property (nonatomic, strong) UILabel *identifiLabel;
 
@@ -60,6 +84,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) BusinessBtnClickBlcok busiBlock;
 
 @property (nonatomic, strong) UIView *businessView;
+
+@property (nonatomic, strong) UIButton *optionalBtn;
+
+@property (nonatomic, weak) id<HPHeaderViewCellDelegate> delegate;
 
 @end
 

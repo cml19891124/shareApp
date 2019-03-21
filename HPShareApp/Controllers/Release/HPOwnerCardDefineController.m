@@ -45,7 +45,6 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 @property (nonatomic, strong) UILabel *infoLabel;
 @property (nonatomic, strong) UILabel *ratioLabel;
 
-
 /**
  输入field
  */
@@ -527,7 +526,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
         textField.text = account.userInfo.mobile?:@"";
         textField.textColor = COLOR_BLACK_333333;
         textField.font = kFont_Regular(13.f);
-        textField.userInteractionEnabled = YES;//不允许交互，固定为注册登录人的手机号
+        textField.userInteractionEnabled = NO;//不允许交互，固定为注册登录人的手机号
     }
     _phoneNumField = textField;
     return view;
@@ -827,7 +826,7 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    if (_phoneNumField.text.length) {
+    if (_phoneNumField.text.length && textField == _phoneNumField) {
         
         [self queryUserOfSalesmanByMobile];
     }

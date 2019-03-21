@@ -148,9 +148,11 @@ static NSInteger space = 15;
     }];
     
     [_textField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(self);
+        make.left.mas_equalTo(getWidth(15.f));
+        make.top.mas_equalTo(self);
         make.height.mas_equalTo(getWidth(32.f));
         make.right.mas_equalTo(self).offset(getWidth(-55.f));
+        make.centerY.mas_equalTo(self);
     }];
     
     [_cancelButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -162,7 +164,7 @@ static NSInteger space = 15;
     [_lineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(kScreenWidth, getWidth(1.f)));
         make.bottom.mas_equalTo(self).offset(getWidth(1.f));
-        make.centerX.mas_equalTo(self);
+        make.left.mas_equalTo(self);
     }];
 }
 #pragma mark --- 取消按钮点击事件
