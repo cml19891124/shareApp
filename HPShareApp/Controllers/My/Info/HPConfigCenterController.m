@@ -25,6 +25,8 @@
 
 #import "HPUpdateVersionTool.h"
 
+#import "HPGradientUtil.h"
+
 typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoPortrait = 0,
     HPConfigGotoFullName,
@@ -33,6 +35,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPConfigGotoUserName,
     HPConfigGotoMail,
     HPConfigGotoPhoneNum,
+    HPConfigGotoThirdAccount,
+    HPConfigGotoDeleteAccount,
     HPConfigGotoPassword,
     HPConfigGotoVersion,
     HPConfigGotoCache,
@@ -170,12 +174,30 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     UILabel *accountInfoLabel = [[UILabel alloc] init];
     [accountInfoLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
     [accountInfoLabel setTextColor:COLOR_BLACK_333333];
-    [accountInfoLabel setText:@"账户信息"];
+    [accountInfoLabel setText:@"账号信息管理"];
     [scrollView addSubview:accountInfoLabel];
     [accountInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(scrollView).with.offset(19.f * g_rateWidth);
         make.left.equalTo(scrollView).with.offset(15.f * g_rateWidth);
         make.height.mas_equalTo(accountInfoLabel.font.pointSize);
+    }];
+    
+    CGSize btnSize = CGSizeMake(getWidth(60.f), getWidth(3.f));
+    UIGraphicsBeginImageContextWithOptions(btnSize, NO, 0.f);
+    CGContextRef contextRef = UIGraphicsGetCurrentContext();
+    [HPGradientUtil drawGradientColor:contextRef rect:CGRectMake(0.f, 0.f, btnSize.width, btnSize.height) startPoint:CGPointMake(0.f,0.f) endPoint:CGPointMake(btnSize.width, btnSize.height) options:kCGGradientDrawsBeforeStartLocation startColor:COLOR_ORANGE_EB0303 endColor:UIColor.clearColor];
+    UIImage *bgImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    UIButton *colorBtn = [[UIButton alloc] init];
+    [colorBtn.layer setCornerRadius:2.f];
+    [colorBtn.layer setMasksToBounds:YES];
+    [colorBtn setBackgroundImage:bgImage forState:UIControlStateNormal];
+    [scrollView addSubview:colorBtn];
+    [colorBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(scrollView).with.offset(getWidth(20.f));
+        make.top.equalTo(accountInfoLabel.mas_bottom).offset(getWidth(12.f));
+        make.size.mas_equalTo(btnSize);
     }];
     
     //账号管理
@@ -184,7 +206,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [scrollView addSubview:accountInfoPanel];
     self.accountInfoPanel = accountInfoPanel;
     [accountInfoPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(accountInfoLabel.mas_bottom ).with.offset(14.f * g_rateWidth);
+        make.top.equalTo(colorBtn.mas_bottom ).with.offset(getWidth(30.f));
         make.centerX.equalTo(scrollView);
         make.width.mas_equalTo(345.f * g_rateWidth);
     }];
@@ -198,13 +220,13 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.top.equalTo(self.accountInfoPanel.mas_bottom).with.offset(15.f * g_rateWidth);
         make.left.equalTo(self.accountInfoPanel);
         make.width.mas_equalTo(345.f * g_rateWidth);
-        make.height.mas_equalTo(63.f * g_rateWidth);
+        make.height.mas_equalTo(215.f * g_rateWidth);
     }];
     [self setupProfessionalPanel:professionalPanel];
     
     //专属顾问详情
     UIView *professDetailPanel = [[UIView alloc] init];
-    professDetailPanel.backgroundColor = UIColor.redColor;
+    professDetailPanel.backgroundColor = COLOR_GRAY_F9F9F9;
     [self setupShadowOfPanel:professDetailPanel];
     [scrollView addSubview:professDetailPanel];
     _professDetailPanel = professDetailPanel;
@@ -212,7 +234,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.top.equalTo(professionalPanel.mas_bottom).with.offset(15.f * g_rateWidth);
         make.left.equalTo(self.accountInfoPanel);
         make.width.mas_equalTo(345.f * g_rateWidth);
-        make.height.mas_equalTo(70.f * g_rateWidth);
+        make.height.mas_equalTo(64.f * g_rateWidth);
     }];
     [self setupProfessDetailPanel:professDetailPanel];
     
@@ -249,6 +271,60 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 专属顾问view
 - (void)setupProfessionalPanel:(UIView *)panel
 {
+    HPLoginModel *account = [HPUserTool account];
+    UIView *phoneNumRow = [self addRowOfParentView:panel withHeight:45.f * g_rateWidth margin:0.f isEnd:NO];
+    
+    UILabel *phoneNumLabel = [self setupTitleLabelWithTitle:@"绑定手机"];
+    [phoneNumRow addSubview:phoneNumLabel];
+    [phoneNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(phoneNumRow).with.offset(17.f * g_rateWidth);
+        make.centerY.equalTo(phoneNumRow);
+    }];
+    
+    HPRightImageButton *phoneNumGotoBtn = [self setupGotoBtnWithTitle:account.userInfo.mobile.length >0 ?account.userInfo.mobile:@"未绑定"];
+    [phoneNumGotoBtn setTag:HPConfigGotoPhoneNum];
+    [phoneNumRow addSubview:phoneNumGotoBtn];
+    _phoneNumGotoBtn = phoneNumGotoBtn;
+    [phoneNumGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(phoneNumRow).with.offset(-17.f * g_rateWidth);
+        make.centerY.equalTo(phoneNumRow);
+    }];
+    
+    //三方账号绑定
+    UIView *thirdAccountRow = [self addRowOfParentView:panel withHeight:45.f * g_rateWidth margin:0.f isEnd:NO];
+    UILabel *accountLabel = [self setupTitleLabelWithTitle:@"第三方账号绑定"];
+    [thirdAccountRow addSubview:accountLabel];
+    [accountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(thirdAccountRow).with.offset(17.f * g_rateWidth);
+        make.centerY.equalTo(thirdAccountRow);
+    }];
+    
+    HPRightImageButton *thirdGotoBtn = [self setupGotoBtnWithTitle:account.userInfo.mobile.length >0 ?account.userInfo.mobile:@"未绑定"];
+    [thirdGotoBtn setTag:HPConfigGotoThirdAccount];
+    [thirdAccountRow addSubview:thirdGotoBtn];
+//    _phoneNumGotoBtn = phoneNumGotoBtn;
+    [thirdGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(thirdAccountRow).with.offset(-17.f * g_rateWidth);
+        make.centerY.equalTo(thirdAccountRow);
+    }];
+    
+    //账号注销
+    UIView *deleteAccountRow = [self addRowOfParentView:panel withHeight:45.f * g_rateWidth margin:0.f isEnd:NO];
+    UILabel *deleteAccountLabel = [self setupTitleLabelWithTitle:@"账号注销"];
+    [deleteAccountRow addSubview:deleteAccountLabel];
+    [deleteAccountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(deleteAccountRow).with.offset(17.f * g_rateWidth);
+        make.centerY.equalTo(deleteAccountRow);
+    }];
+    
+    HPRightImageButton *deleteGotoBtn = [self setupGotoBtnWithTitle:@"申请注销"];
+    [deleteGotoBtn setTag:HPConfigGotoDeleteAccount];
+    [deleteAccountRow addSubview:deleteGotoBtn];
+    [deleteGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(deleteAccountRow).with.offset(-17.f * g_rateWidth);
+        make.centerY.equalTo(deleteAccountRow);
+    }];
+    
     UIView *professionalRow = [self addRowOfParentView:panel withHeight:70.f * g_rateWidth margin:0.f isEnd:NO];
     UILabel *professionalLabel = [self setupTitleLabelWithTitle:@"申请专属顾问"];
     [professionalRow addSubview:professionalLabel];
@@ -272,30 +348,27 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 专属顾问详情view
 - (void)setupProfessDetailPanel:(UIView *)view
 {
-    UIView *professDetailRow = [self addRowOfParentView:view withHeight:70.f * g_rateWidth margin:0.f isEnd:NO];
+    UIView *professDetailRow = [self addRowOfParentView:view withHeight:64.f * g_rateWidth margin:0.f isEnd:NO];
     UIImageView *userIcon = [UIImageView new];
     userIcon.image = ImageNamed(@"my_business_card_default_head_image");
-    userIcon.layer.cornerRadius = 23.f;
-    userIcon.layer.masksToBounds = YES;
     [professDetailRow addSubview:userIcon];
     self.userIcon = userIcon;
     [userIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(19.f));
-        make.height.mas_equalTo(getWidth(46.f));
-        make.width.mas_equalTo(getWidth(46.f));
+        make.left.mas_equalTo(getWidth(6.f));
+        make.width.height.mas_equalTo(getWidth(38.f));
         make.centerY.mas_equalTo(professDetailRow);
     }];
     
     UILabel *fessionnameLabel = [UILabel new];
-    fessionnameLabel.font = kFont_Medium(15.f);
+    fessionnameLabel.font = kFont_Medium(16.f);
     fessionnameLabel.textColor = COLOR_BLACK_444444;
     fessionnameLabel.textAlignment = NSTextAlignmentLeft;
     fessionnameLabel.text = @"--";
     [professDetailRow addSubview:fessionnameLabel];
     self.fessionnameLabel = fessionnameLabel;
     [fessionnameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(20.f));
-        make.top.mas_equalTo(getWidth(17.f));
+        make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(12.f));
+        make.top.mas_equalTo(getWidth(16.f));
         make.width.mas_equalTo(kScreenWidth/3);
         make.height.mas_equalTo(fessionnameLabel.font.pointSize);
     }];
@@ -308,8 +381,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [professDetailRow addSubview:fessionInfoLabel];
     self.fessionInfoLabel = fessionInfoLabel;
     [fessionInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(20.f));
-        make.top.mas_equalTo(fessionnameLabel.mas_bottom).offset(getWidth(11.f));
+        make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(12.f));
+        make.bottom.mas_equalTo(userIcon.mas_bottom);
         make.right.mas_equalTo(professDetailRow).offset(getWidth(-65.f));
         make.height.mas_equalTo(fessionnameLabel.font.pointSize);
     }];
@@ -319,9 +392,9 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [callBtn addTarget:self action:@selector(callProfessional:) forControlEvents:UIControlEventTouchUpInside];
     [professDetailRow addSubview:callBtn];
     [callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(getWidth(44.f), getWidth(44.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(30.f), getWidth(30.f)));
         make.right.mas_equalTo(getWidth(-18.f));
-        make.top.mas_equalTo(getWidth(13.f));
+        make.centerY.mas_equalTo(professDetailRow);
     }];
 }
 
@@ -515,6 +588,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.centerY.equalTo(mailRow);
     }];
     
+    /*
     UIView *phoneNumRow = [self addRowOfParentView:view withHeight:45.f * g_rateWidth margin:0.f isEnd:NO];
     
     UILabel *phoneNumLabel = [self setupTitleLabelWithTitle:@"绑定手机"];
@@ -531,11 +605,11 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [phoneNumGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(phoneNumRow).with.offset(-17.f * g_rateWidth);
         make.centerY.equalTo(phoneNumRow);
-    }];
+    }];*/
     
     UIView *passwordRow = [self addRowOfParentView:view withHeight:45.f * g_rateWidth margin:10.f * g_rateWidth isEnd:YES];
     
-    UILabel *passwordLabel = [self setupTitleLabelWithTitle:@"登录密码"];
+    UILabel *passwordLabel = [self setupTitleLabelWithTitle:@"修改密码"];
     [passwordRow addSubview:passwordLabel];
     [passwordLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(passwordRow).with.offset(17.f * g_rateWidth);
@@ -710,6 +784,15 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
             [self pushVCByClassName:@"HPUnbindPhoneController"];
             break;
         
+        case HPConfigGotoThirdAccount://三方账号绑定
+            HPLog(@"sanfang ");
+//            [self pushVCByClassName:@"HPUnbindPhoneController"];
+            break;
+            
+        case HPConfigGotoDeleteAccount://绑定注销
+            HPLog(@"注销 ");
+            //            [self pushVCByClassName:@"HPUnbindPhoneController"];
+            break;
         case HPConfigGotoPassword:
             HPLog(@"HPConfigGotoPassword");
             [self pushVCByClassName:@"HPForgetPasswordController" withParam:@{@"isForget":@"1"}];

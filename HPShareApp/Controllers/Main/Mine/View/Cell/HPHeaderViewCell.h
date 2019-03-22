@@ -16,6 +16,8 @@ typedef void(^OrderBtnClickBlcok)(NSInteger orderIndex);
 
 typedef void(^BusinessBtnClickBlcok)(NSInteger businessIndex);
 
+typedef void(^OnClickOnlineBlock)(NSInteger HPOnlineOrderIndex);
+
 typedef NS_ENUM(NSInteger, HPOrderCellIndex) {
     HPOrderCellIndexToReceive = 4000,
     HPOrderCellIndexToPay,
@@ -31,12 +33,24 @@ typedef NS_ENUM(NSInteger, HPBusinessCellIndex) {
     HPBusinessCellIndexName,
 };
 
+typedef NS_ENUM(NSInteger, HPMineCellRecordIndex) {//我的售后
+    HPMineCellRecordIndexStores = 4600,
+    HPMineCellRecordIndexOrder,
+    HPMineCellRecordIndexWallet,
+    HPMineCellRecordIndexName,
+};
+
 @class HPHeaderViewCell;
 
 @protocol HPHeaderViewCellDelegate <NSObject>
 
 /**
- 编辑名片按钮点击事件
+ 登录按钮点击事件
+ */
+- (void)onClicked:(HPHeaderViewCell *)tableviewCell LoginBtn:(UIButton *)button;
+
+/**
+ 头像点击事件
  */
 - (void)onTapped:(HPHeaderViewCell *)tableviewCell HeaderView:(UITapGestureRecognizer *)tap;
 
@@ -71,11 +85,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIView *orderStatesView;
 
+@property (nonatomic, strong) UIView *myInfoView;
+
+@property (nonatomic, strong) NSArray *myInfoArray;
+
 @property (nonatomic, strong) NSArray *orderNameArray;
 
 @property (nonatomic, strong) NSArray *businessImageArray;
 
 @property (nonatomic, strong) NSArray *businessNameArray;
+
+@property (nonatomic, strong) NSArray *rentArray;
+
+@property (nonatomic, strong) NSArray *rentImageArray;
 
 @property (nonatomic, strong) HPAlignCenterButton *orderBtn;
 
@@ -96,9 +118,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIView *rentView;
 
+@property (nonatomic, strong) UILabel *orderTipLabel;
+
 @property (nonatomic, strong) UILabel *rentTipLabel;
 
-
+@property (nonatomic, copy) OnClickOnlineBlock onlineBlock;
 @end
 
 NS_ASSUME_NONNULL_END

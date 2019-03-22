@@ -18,6 +18,8 @@
 
 #import "HPOrderItemCell.h"
 
+#import "HPUploadImageHandle.h"
+
 typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
     HPProfileSelectedRowIdentify = 0,//资格认证
     HPProfileSelectedRowAccountSafe,//账号安全
@@ -49,6 +51,17 @@ static NSString *relationViewCell = @"HPRelationViewCell";
 static NSString *orderItemCell = @"HPOrderItemCell";
 
 #pragma mark - HPHeaderViewCellDelegate
+
+- (void)onClicked:(HPHeaderViewCell *)tableviewCell LoginBtn:(UIButton *)button
+{
+    HPLoginModel *model = [HPUserTool account];
+    if (!model.token) {
+        //        [HPProgressHUD alertMessage:@"用户未登录"];
+        [self pushVCByClassName:@"HPLoginController"];
+        
+        return;
+    }
+}
 
 - (void)onTapped:(HPHeaderViewCell *)tableviewCell HeaderView:(UITapGestureRecognizer *)tap
 {
@@ -86,7 +99,62 @@ static NSString *orderItemCell = @"HPOrderItemCell";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    HPHeaderViewCell *cell = [self setUpHeaderViewCell:self.tableView];
+    HPLoginModel *account = [HPUserTool account];
+    if (!account.token) {
+        cell.optionalBtn.hidden = YES;
+        [cell.phoneBtn setTitle:@"登录/注册" forState:UIControlStateNormal];
+        cell.identifiLabel.text = @"登录即可在线拼租";
+        cell.iconImageView.image = ImageNamed(@"personal_center_not_login_head");
+        
+    }else{
+        cell.optionalBtn.hidden = NO;
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            cell.identifiLabel.text = @"租客信息，资质认证";
+            
+        }else{
+            cell.identifiLabel.text = @"店主信息，资质认证";
+            
+        }
+        [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];
+        if (account.userInfo.avatarUrl) {
+            [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:account.userInfo.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
+        }else{
+            [self uploadLocalImageGetAvatarUrl];
+        }
+    }
+    
     [self.tableView reloadData];
+}
+
+#pragma  mark - 上传一张图片
+- (void)uploadLocalImageGetAvatarUrl
+{
+    NSString *url = [NSString stringWithFormat:@"%@/v1/file/uploadPicture",kBaseUrl];//放上传图片的网址
+    HPLoginModel *account = [HPUserTool account];
+    NSString *historyTime = [HPTimeString getNowTimeTimestamp];
+    UIImage *image = [UIImage imageNamed:@"personal_center_not_login_head"];
+    [HPUploadImageHandle sendPOSTWithUrl:url withLocalImage:image isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
+        if ([data[@"code"] intValue]== 200) {
+            HPUserInfo *userInfo = [[HPUserInfo alloc] init];
+            userInfo.avatarUrl = [data[@"data"]firstObject][@"url"]?:@"";
+            userInfo.password = account.userInfo.password?:@"";
+            userInfo.username = account.userInfo.username?:@"";
+            userInfo.userId = account.userInfo.userId?:@"";
+            userInfo.mobile = account.userInfo.mobile?:@"";
+            account.userInfo = userInfo;
+            [HPUserTool saveAccount:account];
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+        }else if ([data[@"code"] intValue]== 401){
+            [HPUserTool deleteAccount];
+            [self pushVCByClassName:@"HPLoginController"];
+            
+        }
+        
+    } fail:^(NSError *error) {
+        ErrorNet
+    }];
+    
 }
 
 - (void)viewDidLoad {
@@ -172,14 +240,14 @@ static NSString *orderItemCell = @"HPOrderItemCell";
 {
     if (indexPath.section == 0) {
         if ([HPSingleton sharedSingleton].identifyTag == 0) {
-            return getWidth(300.f);
+            return getWidth(330.f);
 
         }else{
             return getWidth(285.f);
         }
     }else if (indexPath.section == 1){
         if ([HPSingleton sharedSingleton].identifyTag == 0) {
-            return getWidth(112.f);
+            return getWidth(152.f);
             
         }else{
             return getWidth(67.f);
@@ -271,18 +339,24 @@ static NSString *orderItemCell = @"HPOrderItemCell";
     cell.identifyTag = [HPSingleton sharedSingleton].identifyTag;
 
     HPLoginModel *account = [HPUserTool account];
-    if (!account.token) {
-        cell.optionalBtn.hidden = YES;
-        [cell.phoneBtn setTitle:@"登录/注册" forState:UIControlStateNormal];
-        cell.identifiLabel.text = @"登录即可在线拼租";
-        cell.iconImageView.image = ImageNamed(@"personal_center_not_login_head");
-        
-    }else{
-        cell.optionalBtn.hidden = NO;
-        cell.identifiLabel.text = @"租客信息，资质认证";
-        [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];
-        [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:account.userInfo.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
-    }
+//    if (!account.token) {
+//        cell.optionalBtn.hidden = YES;
+//        [cell.phoneBtn setTitle:@"登录/注册" forState:UIControlStateNormal];
+//        cell.identifiLabel.text = @"登录即可在线拼租";
+//        cell.iconImageView.image = ImageNamed(@"personal_center_not_login_head");
+//
+//    }else{
+//        cell.optionalBtn.hidden = NO;
+//        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+//            cell.identifiLabel.text = @"租客信息，资质认证";
+//
+//        }else{
+//            cell.identifiLabel.text = @"店主信息，资质认证";
+//
+//        }
+//        [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];
+//        [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:account.userInfo.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
+//    }
     
     cell.orderBlock = ^(NSInteger orderIndex) {
         if (orderIndex == HPOrderCellIndexToReceive) {
@@ -330,9 +404,14 @@ static NSString *orderItemCell = @"HPOrderItemCell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     HPLoginModel *account = [HPUserTool account];
+    
+    if (indexPath.section == 1) {
+        HPLog(@"application");
+    }
+    
     if (indexPath.section == 2) {
         if (indexPath.row == HPProfileSelectedRowIdentify) {
-//            [self pushVCByClassName:@"HPFeedbackController"];
+
         }else if (indexPath.row == HPProfileSelectedRowAccountSafe) {
             if (account.token) {
                 [self pushVCByClassName:@"HPConfigCenterController"];
