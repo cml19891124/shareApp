@@ -77,6 +77,7 @@
 #define COLOR_ORANGE_F59C40 [UIColor colorWithHexString:@"#F59C40"]
 #define COLOR_ORANGE_FF9B5E [UIColor colorWithHexString:@"#FF9B5E"]
 #define COLOR_ORANGE_EB0303 [UIColor colorWithHexString:@"#EB0303"]
+#define COLOR_ORANGE_EB0404 [UIColor colorWithHexString:@"#EB0404"]
 
 #define COLOR_BLUE_2AA5FC [UIColor colorWithHexString:@"#2AA5FC"]
 #define COLOR_GRAY_F2F2F2 [UIColor colorWithHexString:@"#F2F2F2"]

@@ -356,6 +356,7 @@
 		E693E90E21E834E20063797A /* HPRouteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E693E90B21E834E20063797A /* HPRouteButton.m */; };
 		E69D0A502220E07A0085B591 /* HPKeywordsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E69D0A4F2220E07A0085B591 /* HPKeywordsModel.m */; };
 		E69E0E8E21F95F2D0094837A /* HPAttributeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = E69E0E8D21F95F2D0094837A /* HPAttributeLabel.m */; };
+		E6A4F9082245C2E600ED71A4 /* HPCancelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A4F9072245C2E600ED71A4 /* HPCancelViewController.m */; };
 		E6A5388422212C1600BFEE02 /* HPHotKeywordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A5388322212C1600BFEE02 /* HPHotKeywordCell.m */; };
 		E6B4CECB21C51A4400429C11 /* HPGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CECA21C51A4400429C11 /* HPGuideViewController.m */; };
 		E6B4CEDC21C5286F00429C11 /* SDCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B4CED021C5286E00429C11 /* SDCycleScrollView.m */; };
@@ -1209,6 +1210,8 @@
 		E69D0A4F2220E07A0085B591 /* HPKeywordsModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPKeywordsModel.m; sourceTree = "<group>"; };
 		E69E0E8C21F95F2D0094837A /* HPAttributeLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAttributeLabel.h; sourceTree = "<group>"; };
 		E69E0E8D21F95F2D0094837A /* HPAttributeLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAttributeLabel.m; sourceTree = "<group>"; };
+		E6A4F9062245C2E600ED71A4 /* HPCancelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCancelViewController.h; sourceTree = "<group>"; };
+		E6A4F9072245C2E600ED71A4 /* HPCancelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCancelViewController.m; sourceTree = "<group>"; };
 		E6A5388222212C1500BFEE02 /* HPHotKeywordCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHotKeywordCell.h; sourceTree = "<group>"; };
 		E6A5388322212C1600BFEE02 /* HPHotKeywordCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHotKeywordCell.m; sourceTree = "<group>"; };
 		E6B4CEC521C4DD5200429C11 /* HPShareApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HPShareApp.entitlements; sourceTree = "<group>"; };
@@ -2477,8 +2480,6 @@
 			children = (
 				E679B84422420D25004A2CFA /* View */,
 				E679B84322420D1D004A2CFA /* Con */,
-				E679B83F2241E816004A2CFA /* HPProfileViewController.h */,
-				E679B8402241E816004A2CFA /* HPProfileViewController.m */,
 			);
 			path = Mine;
 			sourceTree = "<group>";
@@ -2486,6 +2487,10 @@
 		E679B84322420D1D004A2CFA /* Con */ = {
 			isa = PBXGroup;
 			children = (
+				E679B83F2241E816004A2CFA /* HPProfileViewController.h */,
+				E679B8402241E816004A2CFA /* HPProfileViewController.m */,
+				E6A4F9062245C2E600ED71A4 /* HPCancelViewController.h */,
+				E6A4F9072245C2E600ED71A4 /* HPCancelViewController.m */,
 			);
 			path = Con;
 			sourceTree = "<group>";
@@ -3848,6 +3853,7 @@
 				E68A77E221F321BD00083A90 /* JCHATSelectImgCollectionView.m in Sources */,
 				E661B0B3219C2B1300C86CF5 /* HPTextDialogView.m in Sources */,
 				E661B09A219BADB200C86CF5 /* HPInteractiveController.m in Sources */,
+				E6A4F9082245C2E600ED71A4 /* HPCancelViewController.m in Sources */,
 				E66F1CB221D3481D00C2DEEF /* HPGamesCell.m in Sources */,
 				E61FE0B021BA816D00555F3F /* HPUserTool.m in Sources */,
 				E67EFE34221BA187008BDA1D /* ApiXml.mm in Sources */,

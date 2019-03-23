@@ -149,16 +149,6 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     self.alertSheet = alertSheet;
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_GRAY_F7F7F7];
     UIView *navigationView = [self setupNavigationBarWithTitle:@"设置中心"];
@@ -220,23 +210,9 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.top.equalTo(self.accountInfoPanel.mas_bottom).with.offset(15.f * g_rateWidth);
         make.left.equalTo(self.accountInfoPanel);
         make.width.mas_equalTo(345.f * g_rateWidth);
-        make.height.mas_equalTo(215.f * g_rateWidth);
+        make.height.mas_equalTo(244.f * g_rateWidth);
     }];
     [self setupProfessionalPanel:professionalPanel];
-    
-    //专属顾问详情
-    UIView *professDetailPanel = [[UIView alloc] init];
-    professDetailPanel.backgroundColor = COLOR_GRAY_F9F9F9;
-    [self setupShadowOfPanel:professDetailPanel];
-    [scrollView addSubview:professDetailPanel];
-    _professDetailPanel = professDetailPanel;
-    [professDetailPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(professionalPanel.mas_bottom).with.offset(15.f * g_rateWidth);
-        make.left.equalTo(self.accountInfoPanel);
-        make.width.mas_equalTo(345.f * g_rateWidth);
-        make.height.mas_equalTo(64.f * g_rateWidth);
-    }];
-    [self setupProfessDetailPanel:professDetailPanel];
     
     //版本控制
     UIView *versionPanel = [[UIView alloc] init];
@@ -254,17 +230,18 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     //切换账号-退出登录
     UIButton *switchBtn = [[UIButton alloc] init];
     [switchBtn.layer setCornerRadius:24.f * g_rateWidth];
-    [switchBtn.titleLabel setFont:[UIFont fontWithName:FONT_BOLD size:18.f]];
-    [switchBtn setTitleColor:COLOR_PINK_FFEFF2 forState:UIControlStateNormal];
-    [switchBtn setTitle:@"切换账号" forState:UIControlStateNormal];
-    [switchBtn setBackgroundColor:COLOR_RED_EA0000];
+    [switchBtn.titleLabel setFont:kFont_Medium(16.f)];
+    [switchBtn setTitleColor:COLOR_ORANGE_EB0404 forState:UIControlStateNormal];
+    [switchBtn setTitle:@"退出登录" forState:UIControlStateNormal];
+    switchBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+//    [switchBtn setBackgroundColor:COLOR_RED_EA0000];
     [switchBtn addTarget:self action:@selector(swithAccountOfOthers:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:switchBtn];
     [switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(versionPanel.mas_bottom).with.offset(25.f * g_rateWidth);
-        make.centerX.equalTo(scrollView);
-        make.size.mas_equalTo(CGSizeMake(345.f * g_rateWidth, 47.f * g_rateWidth));
-        make.bottom.equalTo(scrollView).with.offset(-26.f * g_rateWidth);
+        make.top.equalTo(versionPanel.mas_bottom).with.offset(35.f * g_rateWidth);
+        make.left.mas_equalTo(getWidth(18.f));
+        make.size.mas_equalTo(CGSizeMake(65.f * g_rateWidth, 15.f * g_rateWidth));
+        make.bottom.equalTo(scrollView).with.offset(-30.f * g_rateWidth);
     }];
 }
 
@@ -325,8 +302,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.centerY.equalTo(deleteAccountRow);
     }];
     
-    UIView *professionalRow = [self addRowOfParentView:panel withHeight:70.f * g_rateWidth margin:0.f isEnd:NO];
-    UILabel *professionalLabel = [self setupTitleLabelWithTitle:@"申请专属顾问"];
+    UIView *professionalRow = [self addRowOfParentView:panel withHeight:45.f * g_rateWidth margin:0.f isEnd:NO];
+    UILabel *professionalLabel = [self setupTitleLabelWithTitle:@"合派专属顾问"];
     [professionalRow addSubview:professionalLabel];
     _professDetailPanel = professionalRow;
     [professionalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -343,12 +320,10 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         make.right.equalTo(professionalRow).offset(getWidth(-17.f));
         make.centerY.equalTo(professionalLabel);
     }];
-}
-
-#pragma mark - 专属顾问详情view
-- (void)setupProfessDetailPanel:(UIView *)view
-{
-    UIView *professDetailRow = [self addRowOfParentView:view withHeight:64.f * g_rateWidth margin:0.f isEnd:NO];
+    
+    //专属顾问详情
+    UIView *professDetailRow = [self addRowOfParentView:panel withHeight:64.f * g_rateWidth margin:0.f isEnd:NO];
+    professDetailRow.backgroundColor = COLOR_GRAY_F9F9F9;
     UIImageView *userIcon = [UIImageView new];
     userIcon.image = ImageNamed(@"my_business_card_default_head_image");
     [professDetailRow addSubview:userIcon];
@@ -791,7 +766,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
             
         case HPConfigGotoDeleteAccount://绑定注销
             HPLog(@"注销 ");
-            //            [self pushVCByClassName:@"HPUnbindPhoneController"];
+            [self pushVCByClassName:@"HPCancelViewController"];
             break;
         case HPConfigGotoPassword:
             HPLog(@"HPConfigGotoPassword");
