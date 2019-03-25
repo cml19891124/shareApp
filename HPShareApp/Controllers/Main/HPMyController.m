@@ -637,8 +637,8 @@
     else if ([btn.text isEqualToString:@"在线客服"]) {
         if (_customerServiceModalView == nil) {
             HPCustomerServiceModalView *customerServiceModalView = [[HPCustomerServiceModalView alloc] initWithParent:self.parentViewController.view];
-            customerServiceModalView.phone = @"0755-86713128";
-            [customerServiceModalView setPhoneString:@"0755-86713128"];
+            customerServiceModalView.phone = @"0755-86566389";
+            [customerServiceModalView setPhoneString:@"0755-86566389"];
             _customerServiceModalView = customerServiceModalView;
         }
         

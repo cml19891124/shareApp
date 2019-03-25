@@ -12,6 +12,8 @@
 
 #import "HPlaceholdTextView.h"
 
+#import "HPCancelView.h"
+
 @interface HPCancelViewController ()
 
 @property (nonatomic, strong) UIView *navTitleView;
@@ -30,16 +32,32 @@
 
 @property (nonatomic, strong) UIButton *applyBtn;
 
+@property (nonatomic, strong) HPCancelView *cancelView;
 @end
 
 @implementation HPCancelViewController
+
+
+- (void)onClickBack:(UIButton *)UIButton
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     
-    _navTitleView = [self setupNavigationBarWithTitle:@"账号注销"];
+//    _navTitleView = [self setupNavigationBarWithTitle:@"账号注销"];
+    UIButton *backBtn = [UIButton new];
+    [backBtn setBackgroundImage:ImageNamed(@"fanhui") forState:UIControlStateNormal];
+    [backBtn addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backBtn];
+    [backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(16.f));
+        make.width.height.mas_equalTo(getWidth(13.f));
+        make.top.mas_equalTo(g_statusBarHeight + 15.f);
+    }];
     
     [self.view addSubview:self.accountCancelLabel];
     
@@ -62,6 +80,9 @@
     [self.view addSubview:self.userBtn];
 
     [self.view addSubview:self.applyBtn];
+    
+    [self.view addSubview:self.cancelView];
+    [self.cancelView show:NO];
 
     [self setUpSubviewsMasonry];
 }
@@ -114,6 +135,17 @@
         make.width.mas_equalTo(self.userBtn);
         make.height.mas_equalTo(getWidth(44.f));
     }];
+}
+
+- (HPCancelView *)cancelView
+{
+    if (!_cancelView) {
+        _cancelView = [HPCancelView new];
+        [_cancelView setCancelBlock:^{
+            HPLog(@"接口服务");
+                }];
+    }
+    return _cancelView;
 }
 
 - (UILabel *)accountCancelLabel
@@ -209,12 +241,24 @@
         [_applyBtn addTarget:self action:@selector(applyCancelAccount:) forControlEvents:UIControlEventTouchUpInside];
         _applyBtn.layer.cornerRadius = 6;
         _applyBtn.layer.masksToBounds= YES;
+        _applyBtn.layer.borderColor = COLOR_RED_EA0000.CGColor;
+        _applyBtn.layer.borderWidth = 1;
     }
     return _applyBtn;
 }
 
 - (void)applyCancelAccount:(UIButton *)button
 {
+    if (_signTextView.text.length == 0) {
+        [HPProgressHUD alertMessage:@"申请原因不能为空"];
+        return;
+    }
     
+    if (_signTextView.text.length != 0) {
+        HPLog(@"申请");
+        [self.cancelView show:YES];
+
+    }
 }
+
 @end

@@ -117,6 +117,13 @@
 		E6292182219ABE6500BEF16C /* HPImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292181219ABE6500BEF16C /* HPImageUtil.m */; };
 		E6292185219ABF4400BEF16C /* HPGradientUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292184219ABF4400BEF16C /* HPGradientUtil.m */; };
 		E629218A219AC19D00BEF16C /* HPMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6292189219AC19D00BEF16C /* HPMainTabBarController.m */; };
+		E629AAB322487D1600CF0378 /* HPCancelView.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AAB222487D1600CF0378 /* HPCancelView.m */; };
+		E629AAB62248A43200CF0378 /* HPAccountBindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AAB52248A43200CF0378 /* HPAccountBindViewController.m */; };
+		E629AABB2248AA7900CF0378 /* HPAccountCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AABA2248AA7900CF0378 /* HPAccountCell.m */; };
+		E629AABE2248B7B700CF0378 /* HPRealNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AABD2248B7B700CF0378 /* HPRealNameViewController.m */; };
+		E629AAC32248C71700CF0378 /* HPIdentifyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AAC22248C71700CF0378 /* HPIdentifyViewController.m */; };
+		E629AAC62248D14100CF0378 /* HPManagerBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AAC52248D14100CF0378 /* HPManagerBoardViewController.m */; };
+		E629AACB2248E68300CF0378 /* HPCommitOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AACA2248E68300CF0378 /* HPCommitOrderViewController.m */; };
 		E62C84D121C20CBA00D7DFB3 /* HPSignInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = E62C84D021C20CBA00D7DFB3 /* HPSignInfoController.m */; };
 		E62C84D421C28F1D00D7DFB3 /* HPInviteSBGiftsController.m in Sources */ = {isa = PBXBuildFile; fileRef = E62C84D321C28F1D00D7DFB3 /* HPInviteSBGiftsController.m */; };
 		E633525B21F17A7C00999BE7 /* HPProvinceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E633525921F17A7B00999BE7 /* HPProvinceModel.m */; };
@@ -676,6 +683,20 @@
 		E6292184219ABF4400BEF16C /* HPGradientUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPGradientUtil.m; sourceTree = "<group>"; };
 		E6292188219AC19D00BEF16C /* HPMainTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPMainTabBarController.h; sourceTree = "<group>"; };
 		E6292189219AC19D00BEF16C /* HPMainTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPMainTabBarController.m; sourceTree = "<group>"; };
+		E629AAB122487D1600CF0378 /* HPCancelView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCancelView.h; sourceTree = "<group>"; };
+		E629AAB222487D1600CF0378 /* HPCancelView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCancelView.m; sourceTree = "<group>"; };
+		E629AAB42248A43200CF0378 /* HPAccountBindViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAccountBindViewController.h; sourceTree = "<group>"; };
+		E629AAB52248A43200CF0378 /* HPAccountBindViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAccountBindViewController.m; sourceTree = "<group>"; };
+		E629AAB92248AA7900CF0378 /* HPAccountCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAccountCell.h; sourceTree = "<group>"; };
+		E629AABA2248AA7900CF0378 /* HPAccountCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAccountCell.m; sourceTree = "<group>"; };
+		E629AABC2248B7B700CF0378 /* HPRealNameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRealNameViewController.h; sourceTree = "<group>"; };
+		E629AABD2248B7B700CF0378 /* HPRealNameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRealNameViewController.m; sourceTree = "<group>"; };
+		E629AAC12248C71700CF0378 /* HPIdentifyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdentifyViewController.h; sourceTree = "<group>"; };
+		E629AAC22248C71700CF0378 /* HPIdentifyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdentifyViewController.m; sourceTree = "<group>"; };
+		E629AAC42248D14100CF0378 /* HPManagerBoardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPManagerBoardViewController.h; sourceTree = "<group>"; };
+		E629AAC52248D14100CF0378 /* HPManagerBoardViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPManagerBoardViewController.m; sourceTree = "<group>"; };
+		E629AAC92248E68300CF0378 /* HPCommitOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCommitOrderViewController.h; sourceTree = "<group>"; };
+		E629AACA2248E68300CF0378 /* HPCommitOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCommitOrderViewController.m; sourceTree = "<group>"; };
 		E62C84CF21C20CBA00D7DFB3 /* HPSignInfoController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSignInfoController.h; sourceTree = "<group>"; };
 		E62C84D021C20CBA00D7DFB3 /* HPSignInfoController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSignInfoController.m; sourceTree = "<group>"; };
 		E62C84D221C28F1D00D7DFB3 /* HPInviteSBGiftsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPInviteSBGiftsController.h; sourceTree = "<group>"; };
@@ -2031,6 +2052,61 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		E629AAB72248AA4E00CF0378 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E629AAB82248AA5A00CF0378 /* Cell */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E629AAB82248AA5A00CF0378 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				E629AAB92248AA7900CF0378 /* HPAccountCell.h */,
+				E629AABA2248AA7900CF0378 /* HPAccountCell.m */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		E629AABF2248C6E000CF0378 /* Identify */ = {
+			isa = PBXGroup;
+			children = (
+				E629AAC02248C6EA00CF0378 /* Con */,
+			);
+			path = Identify;
+			sourceTree = "<group>";
+		};
+		E629AAC02248C6EA00CF0378 /* Con */ = {
+			isa = PBXGroup;
+			children = (
+				E629AAC12248C71700CF0378 /* HPIdentifyViewController.h */,
+				E629AAC22248C71700CF0378 /* HPIdentifyViewController.m */,
+				E629AABC2248B7B700CF0378 /* HPRealNameViewController.h */,
+				E629AABD2248B7B700CF0378 /* HPRealNameViewController.m */,
+				E629AAC42248D14100CF0378 /* HPManagerBoardViewController.h */,
+				E629AAC52248D14100CF0378 /* HPManagerBoardViewController.m */,
+			);
+			path = Con;
+			sourceTree = "<group>";
+		};
+		E629AAC72248E65A00CF0378 /* CommitOrder */ = {
+			isa = PBXGroup;
+			children = (
+				E629AAC82248E66E00CF0378 /* Con */,
+			);
+			path = CommitOrder;
+			sourceTree = "<group>";
+		};
+		E629AAC82248E66E00CF0378 /* Con */ = {
+			isa = PBXGroup;
+			children = (
+				E629AAC92248E68300CF0378 /* HPCommitOrderViewController.h */,
+				E629AACA2248E68300CF0378 /* HPCommitOrderViewController.m */,
+			);
+			path = Con;
+			sourceTree = "<group>";
+		};
 		E633528421F1C97C00999BE7 /* AddressBook */ = {
 			isa = PBXGroup;
 			children = (
@@ -2093,6 +2169,8 @@
 		E661B091219BAC4300C86CF5 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				E629AAC72248E65A00CF0378 /* CommitOrder */,
+				E629AABF2248C6E000CF0378 /* Identify */,
 				E679B84222420D0A004A2CFA /* Mine */,
 				E6801FB422363C52002B1133 /* OrderManager */,
 				E67EFE37221BD59C008BDA1D /* SearchResult */,
@@ -2522,6 +2600,8 @@
 			children = (
 				E679B84A22421951004A2CFA /* HPOrderBtn.h */,
 				E679B84B22421951004A2CFA /* HPOrderBtn.m */,
+				E629AAB122487D1600CF0378 /* HPCancelView.h */,
+				E629AAB222487D1600CF0378 /* HPCancelView.m */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -3280,6 +3360,7 @@
 		E6D75F3221AE247200B2067C /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				E629AAB72248AA4E00CF0378 /* View */,
 				E67083F4224107F7005CC8E4 /* ThirdLogin */,
 				E6D75F2321AD1B3900B2067C /* HPLoginController.h */,
 				E6D75F2421AD1B3900B2067C /* HPLoginController.m */,
@@ -3291,6 +3372,8 @@
 				E6D75F2D21AD6AF800B2067C /* HPThirdPartReturnController.m */,
 				E6D75F2F21AE211C00B2067C /* HPForgetPasswordController.h */,
 				E6D75F3021AE211C00B2067C /* HPForgetPasswordController.m */,
+				E629AAB42248A43200CF0378 /* HPAccountBindViewController.h */,
+				E629AAB52248A43200CF0378 /* HPAccountBindViewController.m */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -3720,7 +3803,9 @@
 				E6D75F4D21AFF48200B2067C /* HPBindPhoneController.m in Sources */,
 				E679B85622436519004A2CFA /* HPRentTimePicker.m in Sources */,
 				E6292172219AB28700BEF16C /* HPGlobalVariable.m in Sources */,
+				E629AABB2248AA7900CF0378 /* HPAccountCell.m in Sources */,
 				E622A9BE21C33989007C35BC /* UIScrollView+Refresh.m in Sources */,
+				E629AAB62248A43200CF0378 /* HPAccountBindViewController.m in Sources */,
 				E6D75F3121AE211C00B2067C /* HPForgetPasswordController.m in Sources */,
 				E629217F219ABD6D00BEF16C /* UIView + Tag.m in Sources */,
 				E68A77DD21F321BD00083A90 /* JCHATAlbumModel.m in Sources */,
@@ -3791,7 +3876,9 @@
 				E661B14A21A6986B00C86CF5 /* StyledPageControl.m in Sources */,
 				6993AD3621C8BCC60019506C /* HPBrowseModel.m in Sources */,
 				E661B12F21A28E8500C86CF5 /* JTCalendarMenuView.m in Sources */,
+				E629AAC62248D14100CF0378 /* HPManagerBoardViewController.m in Sources */,
 				E6D75F5321B0076F00B2067C /* HPFollowListCell.m in Sources */,
+				E629AABE2248B7B700CF0378 /* HPRealNameViewController.m in Sources */,
 				E661B0D0219D24A500C86CF5 /* HPSelectTable.m in Sources */,
 				6993AD4021CA45240019506C /* HPImageButton.m in Sources */,
 				E68A770A21F2D61E00083A90 /* JCHATPersonInfoCell.m in Sources */,
@@ -3973,10 +4060,12 @@
 				7AAFF3BA21E390D80049D175 /* HPShareMapAnnotation.m in Sources */,
 				E68A76CD21F2C84200083A90 /* JCHATMessageTextView.m in Sources */,
 				E6D75F5621B0D24D00B2067C /* HPHistoryController.m in Sources */,
+				E629AACB2248E68300CF0378 /* HPCommitOrderViewController.m in Sources */,
 				E6D75F6A21B253D000B2067C /* HPPageView.m in Sources */,
 				E661B14321A679E200C86CF5 /* UIScrollView+GestureConflict.m in Sources */,
 				E661B0F4219FC13E00C86CF5 /* HPShareListCell.m in Sources */,
 				E61E27AA21C8D68000CD5288 /* EBMuteDetector.m in Sources */,
+				E629AAB322487D1600CF0378 /* HPCancelView.m in Sources */,
 				E67EFE3A221BD5E0008BDA1D /* HPSearchViewController.m in Sources */,
 				E6D75F2B21AD4DD400B2067C /* HPRegisterController.m in Sources */,
 				E661B0F7219FEBDC00C86CF5 /* HPShareDetailController.m in Sources */,
@@ -4005,6 +4094,7 @@
 				E68A77B921F321BD00083A90 /* MJPhotoView.m in Sources */,
 				E6F551E121B911DF0086094F /* HPInterActiveModel.m in Sources */,
 				E670840522410AF6005CC8E4 /* RSA.m in Sources */,
+				E629AAC32248C71700CF0378 /* HPIdentifyViewController.m in Sources */,
 				E61E27A421C8D68000CD5288 /* EBBannerViewMaker.m in Sources */,
 				E6E89D242212A08A00D04F34 /* AvoidCrash.m in Sources */,
 				E68C856D21E9ED9400AF259C /* HPIdeaListCell.m in Sources */,

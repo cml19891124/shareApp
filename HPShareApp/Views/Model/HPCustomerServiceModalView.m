@@ -8,7 +8,7 @@
 
 #import "HPCustomerServiceModalView.h"
 
-#define TEL @"0755-86713128"
+#define TEL @"0755-86566389"
 
 @implementation HPCustomerServiceModalView
 

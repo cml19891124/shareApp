@@ -411,7 +411,9 @@ static NSString *orderItemCell = @"HPOrderItemCell";
     
     if (indexPath.section == 2) {
         if (indexPath.row == HPProfileSelectedRowIdentify) {
-
+            if (account.token) {
+                [self pushVCByClassName:@"HPIdentifyViewController"];
+            }
         }else if (indexPath.row == HPProfileSelectedRowAccountSafe) {
             if (account.token) {
                 [self pushVCByClassName:@"HPConfigCenterController"];
@@ -421,8 +423,8 @@ static NSString *orderItemCell = @"HPOrderItemCell";
         }else if (indexPath.row == HPProfileSelectedRowOnlineServer) {
             if (_customerServiceModalView == nil) {
                 HPCustomerServiceModalView *customerServiceModalView = [[HPCustomerServiceModalView alloc] initWithParent:self.parentViewController.view];
-                customerServiceModalView.phone = @"0755-86713128";
-                [customerServiceModalView setPhoneString:@"0755-86713128"];
+                customerServiceModalView.phone = @"0755-86566389";
+                [customerServiceModalView setPhoneString:@"0755-86566389"];
                 _customerServiceModalView = customerServiceModalView;
             }
             

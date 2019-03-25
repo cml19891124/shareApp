@@ -149,16 +149,30 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     self.alertSheet = alertSheet;
 }
 
+- (void)onClickBack:(UIButton *)UIButton
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_GRAY_F7F7F7];
-    UIView *navigationView = [self setupNavigationBarWithTitle:@"设置中心"];
+//    UIView *navigationView = [self setupNavigationBarWithTitle:@"设置中心"];
+    UIButton *backBtn = [UIButton new];
+    [backBtn setBackgroundImage:ImageNamed(@"fanhui") forState:UIControlStateNormal];
+    [backBtn addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backBtn];
+    [backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(16.f));
+        make.width.height.mas_equalTo(getWidth(13.f));
+        make.top.mas_equalTo(g_statusBarHeight + 15.f);
+    }];
     
     UIScrollView *scrollView = [[UIScrollView alloc] init];
     [scrollView setShowsVerticalScrollIndicator:NO];
     [self.view addSubview:scrollView];
     [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.and.bottom.equalTo(self.view);
-        make.top.equalTo(navigationView.mas_bottom);
+        make.top.mas_equalTo(g_statusBarHeight + 44);
     }];
     
     UILabel *accountInfoLabel = [[UILabel alloc] init];
@@ -233,14 +247,14 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [switchBtn.titleLabel setFont:kFont_Medium(16.f)];
     [switchBtn setTitleColor:COLOR_ORANGE_EB0404 forState:UIControlStateNormal];
     [switchBtn setTitle:@"退出登录" forState:UIControlStateNormal];
-    switchBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    switchBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
 //    [switchBtn setBackgroundColor:COLOR_RED_EA0000];
     [switchBtn addTarget:self action:@selector(swithAccountOfOthers:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:switchBtn];
     [switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(versionPanel.mas_bottom).with.offset(35.f * g_rateWidth);
         make.left.mas_equalTo(getWidth(18.f));
-        make.size.mas_equalTo(CGSizeMake(65.f * g_rateWidth, 15.f * g_rateWidth));
+        make.size.mas_equalTo(CGSizeMake(kScreenWidth/2, 15.f * g_rateWidth));
         make.bottom.equalTo(scrollView).with.offset(-30.f * g_rateWidth);
     }];
 }
@@ -279,7 +293,6 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     HPRightImageButton *thirdGotoBtn = [self setupGotoBtnWithTitle:account.userInfo.mobile.length >0 ?account.userInfo.mobile:@"未绑定"];
     [thirdGotoBtn setTag:HPConfigGotoThirdAccount];
     [thirdAccountRow addSubview:thirdGotoBtn];
-//    _phoneNumGotoBtn = phoneNumGotoBtn;
     [thirdGotoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(thirdAccountRow).with.offset(-17.f * g_rateWidth);
         make.centerY.equalTo(thirdAccountRow);
@@ -378,8 +391,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 {
     if (_customerServiceModalView == nil) {
         HPCustomerServiceModalView *customerServiceModalView = [[HPCustomerServiceModalView alloc] initWithParent:self.parentViewController.view];
-        customerServiceModalView.phone = self.model.mobile?self.model.mobile: @"0755-86713128";
-        [customerServiceModalView setPhoneString:self.model.mobile?self.model.mobile: @"0755-86713128"];
+        customerServiceModalView.phone = self.model.mobile?self.model.mobile: @"0755-86566389";
+        [customerServiceModalView setPhoneString:self.model.mobile?self.model.mobile: @"0755-86566389"];
         _customerServiceModalView = customerServiceModalView;
     }
     
@@ -761,7 +774,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         
         case HPConfigGotoThirdAccount://三方账号绑定
             HPLog(@"sanfang ");
-//            [self pushVCByClassName:@"HPUnbindPhoneController"];
+            [self pushVCByClassName:@"HPAccountBindViewController"];
             break;
             
         case HPConfigGotoDeleteAccount://绑定注销

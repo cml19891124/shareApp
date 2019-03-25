@@ -7,6 +7,9 @@
 //
 
 #import "HPlaceholdTextView.h"
+
+#import "Macro.h"
+
 #define INT_LONG_BASE(x) ((long)x)
 
 #define INT_ULONG_BASE(x) ((unsigned long)x)
@@ -75,6 +78,7 @@
     _promptFont = [UIFont systemFontOfSize:14.0];
     _promptBackground = self.backgroundColor;
     placehLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 7, self.frame.size.width-10, 0)];
+//    placehLab.numberOfLines = 0;
     placehLab.backgroundColor = [UIColor clearColor];
     placehLab.textColor = _placehTextColor;
     placehLab.font = _placehFont;
@@ -122,8 +126,11 @@
 - (void)setPlacehText:(NSString *)placehText{
     _placehText = placehText;
     placehLab.text = _placehText;
-    [placehLab sizeToFit];
-    
+//    [placehLab sizeToFit];
+    placehLab.numberOfLines = 0;
+    placehLab.lineBreakMode = NSLineBreakByClipping;
+    CGSize size = BoundWithSize(placehText, kScreenWidth - 20, 14.f).size;
+    placehLab.frame = CGRectMake(10, 7, kScreenWidth - 50, size.height + 30);
 }
 
 
@@ -210,7 +217,7 @@
                     self.text = [toBeString substringToIndex:_textLength];
                     }else{
                         }
-                [self changePromptLab];
+                    [self changePromptLab];
                 }else{
                     [self changePromptLab];
                     }

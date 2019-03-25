@@ -858,7 +858,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 {
     HPShareDetailModel *model = self.param[@"model"];
 
-    [self pushVCByClassName:@"HPOrderManagerViewController" withParam:@{@"order":model}];
+    [self pushVCByClassName:@"HPCommitOrderViewController" withParam:@{@"order":model}];
 }
 
 #pragma mark - 开启会话
