@@ -657,6 +657,17 @@ typedef NS_ENUM(NSInteger, HPShareGotoViewTag) {
         kWEAKSELF
         self.picker = [HPRentTimePicker new];
         self.picker.timeBlock = ^(NSString *startTime, NSString *endTime) {
+            
+            if (!startTime) {
+                [HPProgressHUD alertMessage:@"请选择起始时间"];
+                return;
+            }
+            
+            if (!endTime) {
+                [HPProgressHUD alertMessage:@"请选择结束时间"];
+                return;
+            }
+            
             [weakSelf.shareTimeBtn setText:[NSString stringWithFormat:@"%@-%@",startTime,endTime]];
         };
         [self.picker show:YES];

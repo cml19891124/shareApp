@@ -139,6 +139,14 @@
     }];
 }
 
+
+- (void)setRightSpace:(CGFloat)rightSpace {
+    _rightSpace = rightSpace;
+    [_imageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.mas_right).with.offset(rightSpace);
+    }];
+}
+
 - (void)setImage:(UIImage *)image {
     _image = image;
     if (!self.isSelected) {

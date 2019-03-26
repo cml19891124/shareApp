@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="calendarCell" id="gTV-IL-0wX" customClass="YZXCalendarCollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LTx-Hp-uzp">
+                        <rect key="frame" x="0.0" y="0.0" width="50" height="30"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="¥ 99.00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hRU-dA-Yx5">
+                        <rect key="frame" x="0.0" y="38" width="50" height="12"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                        <color key="textColor" red="1" green="0.23529411759999999" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="hRU-dA-Yx5" secondAttribute="trailing" id="0sJ-Jr-3P8"/>
+                <constraint firstItem="hRU-dA-Yx5" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="71g-gN-qeK"/>
+                <constraint firstItem="hRU-dA-Yx5" firstAttribute="top" secondItem="LTx-Hp-uzp" secondAttribute="bottom" id="Cp4-Be-mY8"/>
+                <constraint firstAttribute="bottom" secondItem="LTx-Hp-uzp" secondAttribute="bottom" constant="20" id="U5s-4z-HXv"/>
+                <constraint firstItem="LTx-Hp-uzp" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="UBd-P5-8Bh"/>
+                <constraint firstItem="LTx-Hp-uzp" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="egb-Zg-CKS"/>
+                <constraint firstAttribute="bottom" secondItem="hRU-dA-Yx5" secondAttribute="bottom" id="nRm-CT-LZY"/>
+                <constraint firstAttribute="trailing" secondItem="LTx-Hp-uzp" secondAttribute="trailing" id="rwh-ly-AoZ"/>
+            </constraints>
+            <connections>
+                <outlet property="day" destination="LTx-Hp-uzp" id="9VO-w3-ylP"/>
+                <outlet property="priceLabel" destination="hRU-dA-Yx5" id="lhv-52-hCV"/>
+            </connections>
+            <point key="canvasLocation" x="137.59999999999999" y="125.93703148425789"/>
+        </collectionViewCell>
+    </objects>
+</document>

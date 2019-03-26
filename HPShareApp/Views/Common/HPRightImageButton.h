@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) CGFloat space;
 
+@property (nonatomic, assign) CGFloat rightSpace;
+
 @property (nonatomic, strong) UIImage *image;
 
 @property (nonatomic, strong) UIImage *selectedImage;
