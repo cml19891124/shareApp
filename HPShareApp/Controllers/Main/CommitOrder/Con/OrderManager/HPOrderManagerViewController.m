@@ -6,7 +6,7 @@
 //  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPCommitOrderViewController.h"
+#import "HPOrderManagerViewController.h"
 
 #import "HPShareDetailModel.h"
 
@@ -32,9 +32,13 @@
 
 #import "JCHATConversationViewController.h"
 
+#import "HPQuitOrderView.h"
+
 #import "HPSingleton.h"
 
-@interface HPCommitOrderViewController ()
+@interface HPOrderManagerViewController ()
+
+@property (nonatomic, strong) HPQuitOrderView *quitView;
 
 @property (nonatomic, strong) HPOrderInfoListView *orderListView;
 
@@ -93,6 +97,10 @@
 @property (nonatomic, strong) UIView *contactView;
 
 @property (nonatomic, strong) UILabel *contactLabel;
+//沟通
+@property (nonatomic, strong) UIButton *communicateBtn;
+//电话
+@property (nonatomic, strong) UIButton *phoneBtn;
 
 @property (nonatomic, strong) UIView *contactInfoView;
 
@@ -122,7 +130,9 @@
 
 @property (nonatomic, strong) HPRightImageButton *priceListBtn;
 
-@property (nonatomic, strong) UIControl *predictBtn;
+@property (nonatomic, strong) UIButton *quitBtn;
+
+@property (nonatomic, strong) UIButton *predictBtn;
 
 @property (nonatomic, strong) UIImageView *cartView;
 
@@ -139,7 +149,7 @@
 
 @end
 
-@implementation HPCommitOrderViewController
+@implementation HPOrderManagerViewController
 
 
 - (void)onClickBack:(UIButton *)UIButton
@@ -188,6 +198,10 @@
 //    self.spaceInfoLabel.text = _model.address;
     
     self.addressLabel.text = _model.address;
+    
+    self.phoneField.text = _model.contactMobile;
+    
+    self.ownnerField.text = _model.contact;
 }
 - (void)setUpCommitSubviews
 {
@@ -240,6 +254,8 @@
     [self.scrollView addSubview:self.contactInfoView];
     
     [self.contactInfoView addSubview:self.contactLabel];
+//即时通讯按钮
+    [self.contactInfoView addSubview:self.communicateBtn];
 
     [self.contactInfoView addSubview:self.contactView];
 
@@ -257,6 +273,8 @@
     
     [self.phoneInfoView addSubview:self.phoneField];
     
+    [self.phoneInfoView addSubview:self.phoneBtn];
+
     [self.scrollView addSubview:self.desView];
 
     [self.desView addSubview:self.desLabel];
@@ -269,6 +287,8 @@
     
     [self.bottomView addSubview:self.priceListBtn];
     
+    [self.bottomView addSubview:self.quitBtn];
+
     [self.bottomView addSubview:self.predictBtn];
     //预定按钮
     [self.predictBtn addSubview:self.cartView];
@@ -282,6 +302,10 @@
     [self.view addSubview:self.predictView];
     
     [self.predictView show:NO];
+    //放弃
+    [self.view addSubview:self.quitView];
+    
+    [self.quitView show:NO];
 }
 
 -(void)setUpCommitSubviewsmasonry
@@ -449,9 +473,16 @@
     }];
     
     [self.contactLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(getWidth(-15.f));
+        make.width.mas_equalTo(kScreenWidth/2);
         make.left.top.mas_equalTo(getWidth(15.f));
         make.height.mas_equalTo(self.contactLabel.font.pointSize);
+    }];
+    
+    [self.communicateBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(getWidth(-15.f));
+        make.width.mas_equalTo(kScreenWidth/2);
+        make.top.mas_equalTo(self.contactLabel);
+        make.height.mas_equalTo(self.communicateBtn.titleLabel.font.pointSize);
     }];
     
     [self.contactView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -494,9 +525,18 @@
         make.centerY.mas_equalTo(self.phoneInfoView);
     }];
     
-    [self.phoneField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.width.height.mas_equalTo(self.ownnerField);
+    [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(getWidth(15.f));
         make.centerY.mas_equalTo(self.phoneInfoView);
+        make.right.mas_equalTo(getWidth(-13.f));
+        
+    }];
+    
+    [self.phoneField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.height.mas_equalTo(self.ownnerField);
+        make.centerY.mas_equalTo(self.phoneInfoView);
+        make.right.mas_equalTo(self.phoneBtn.mas_left);
+
     }];
     
     [self.desView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -528,20 +568,27 @@
         make.bottom.top.mas_equalTo(self.bottomView);
         make.left.mas_equalTo(getWidth(15.f));
         make.height.mas_equalTo(getWidth(60.f));
-        make.width.mas_equalTo(kScreenWidth/3);
+        make.width.mas_equalTo(kScreenWidth/4);
     }];
     
     [self.priceListBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.top.mas_equalTo(self.bottomView);
         make.left.mas_equalTo(self.priceLabel.mas_right);
-        make.width.mas_equalTo(kScreenWidth/5);
+        make.width.mas_equalTo(kScreenWidth/4);
     }];
     
     [self.predictBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.top.right.mas_equalTo(self.bottomView);
-        make.left.mas_equalTo(self.priceListBtn.mas_right);
+        make.width.mas_equalTo(kScreenWidth/4);
     }];
     
+    [self.quitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.top.mas_equalTo(self.bottomView);
+        make.right.mas_equalTo(self.predictBtn.mas_left);
+        make.width.mas_equalTo(self.predictBtn);
+    }];
+    
+    /*
     CGFloat predictW = BoundWithSize(@"拼租预定", kScreenWidth, 14.f).size.width;
     [self.predictLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.cartView);
@@ -561,6 +608,7 @@
         make.top.mas_equalTo(self.predictLabel.mas_bottom).offset(getWidth(10.f));
         make.left.right.bottom.mas_equalTo(self.predictBtn);
     }];
+     */
     
     [self.orderListView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.scrollView);
@@ -571,6 +619,49 @@
         make.top.left.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.view);
     }];
+    
+    [self.quitView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.view);
+    }];
+}
+
+- (UIButton *)quitBtn
+{
+    if (!_quitBtn) {
+        _quitBtn = [UIButton new];
+        _quitBtn.backgroundColor = COLOR_YELLOW_FFB400;
+        [_quitBtn setTitle:@"放弃此单" forState:UIControlStateNormal];
+        [_quitBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+        _quitBtn.titleLabel.font = kFont_Medium(14.f);
+        _quitBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        [_quitBtn addTarget:self action:@selector(onClickQuitBtn:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _quitBtn;
+}
+
+- (void)onClickQuitBtn:(UIButton *)button
+{
+    HPLog(@"quit");
+    [self.quitView show:YES];
+}
+
+- (HPQuitOrderView *)quitView
+{
+    if (!_quitView) {
+        _quitView = [HPQuitOrderView new];
+        kWEAKSELF
+        _quitView.holderBlock = ^{
+            HPLog(@"dfsdg");
+            [weakSelf.quitView show:NO];
+        };
+        
+        _quitView.quitBlock = ^{
+            HPLog(@"5555");
+            [weakSelf.quitView show:NO];
+        };
+    }
+    return _quitView;
 }
 
 - (UIScrollView *)scrollView
@@ -610,7 +701,7 @@
         _titleLabel.textColor = COLOR_GRAY_FFFFFF;
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.font = kFont_Bold(18.f);
-        _titleLabel.text = @"提交订单";
+        _titleLabel.text = @"订单处理";
     }
     return _titleLabel;
 }
@@ -660,7 +751,6 @@
     }
     return _spaceInfoLabel;
 }
-
 - (UILabel *)addressLabel
 {
     if (!_addressLabel) {
@@ -925,6 +1015,16 @@
     return _phoneLabel;
 }
 
+- (UIButton *)phoneBtn
+{
+    if (!_phoneBtn) {
+        _phoneBtn = [UIButton new];
+        [_phoneBtn setBackgroundImage:ImageNamed(@"tel_phone") forState:UIControlStateNormal];
+        [_phoneBtn addTarget:self action:@selector(onClickPhoneUser:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _phoneBtn;
+}
+
 - (UITextField *)phoneField
 {
     if (!_phoneField) {
@@ -933,6 +1033,7 @@
         _phoneField.textAlignment = NSTextAlignmentLeft;
         _phoneField.tintColor = COLOR_RED_EA0000;
         _phoneField.placeholder = @"请输入手机号码";
+        _phoneField.textColor = COLOR_GREEN_2DC22A;
         _phoneField.keyboardType = UIKeyboardTypeNumberPad;
         [_phoneField setValue:COLOR_GRAY_CCCCCC forKeyPath:@"_placeholderLabel.textColor"];
         [_phoneField setValue:kFont_Regular(13.f) forKeyPath:@"_placeholderLabel.font"];
@@ -1006,18 +1107,21 @@
         _priceListBtn.image = ImageNamed(@"arrow_down");
         [_priceListBtn setText:@"明细"];
         [_priceListBtn setColor:COLOR_GRAY_999999];
-
-        [_priceListBtn setRightSpace: getWidth(-20.f)];
+        [_priceListBtn setRightSpace: getWidth(-30.f)];
         [_priceListBtn addTarget:self action:@selector(onClickOrderListBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _priceListBtn;
 }
 
-- (UIControl *)predictBtn
+- (UIButton *)predictBtn
 {
     if (!_predictBtn) {
-        _predictBtn = [UIControl new];
+        _predictBtn = [UIButton new];
         _predictBtn.backgroundColor = COLOR_RED_EA0000;
+        [_predictBtn setTitle:@"确认接单" forState:UIControlStateNormal];
+        [_predictBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+        _predictBtn.titleLabel.font = kFont_Medium(14.f);
+        _predictBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [_predictBtn addTarget:self action:@selector(onClickPredictBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _predictBtn;
@@ -1065,6 +1169,22 @@
     return _orderListView;
 }
 
+- (UIButton *)communicateBtn
+{
+    if (!_communicateBtn) {
+        _communicateBtn = [UIButton new];
+        [_communicateBtn setTitle:@"免费沟通" forState:UIControlStateNormal];
+        [_communicateBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+        [_communicateBtn setImage:ImageNamed(@"communicate_serve") forState:UIControlStateNormal];
+        [_communicateBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(6.f), 0, 0)];
+        [_communicateBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, getWidth(6.f))];
+        _communicateBtn.titleLabel.font = kFont_Medium(12.f);
+        _communicateBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        [_communicateBtn addTarget:self action:@selector(onClickFreeCommicateBtn:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _communicateBtn;
+}
+
 - (HPPredictView *)predictView
 {
     if (!_predictView) {
@@ -1073,6 +1193,8 @@
         _predictView.knownBlock = ^{
             for (UIViewController *controller in weakSelf.navigationController.viewControllers) {
                 if ([controller isKindOfClass:[HPShareShopListController class]]) {
+//                    HPShareShopListController *shopList = [HPShareShopListController new];
+//                    shopList.isPop = YES;
                     [weakSelf.navigationController popToViewController:controller animated:YES];
                 }
             }
@@ -1082,9 +1204,26 @@
         _predictView.onlineBlock = ^{
             [weakSelf createConversationWithFriend:nil];
         };
+        
+        [_predictView setOnlineText:@"付款提醒"];
     }
     return _predictView;
 }
+
+- (void)onClickFreeCommicateBtn:(UIButton *)button
+{
+    HPLog(@"free");
+}
+
+- (void)onClickPhoneUser:(UIButton *)button
+{
+    NSString *telNumber = [NSString stringWithFormat:@"tel:%@", _model.contactMobile];
+    
+    NSURL *aURL = [NSURL URLWithString: telNumber];
+    
+    if ([[UIApplication sharedApplication] canOpenURL:aURL]) {
+        [[UIApplication sharedApplication] openURL:aURL];
+    }}
 
 #pragma mark - 开启会话
 - (void)createConversationWithFriend:(UIButton *)button
@@ -1117,13 +1256,8 @@
 
 - (void)onClickPredictBtn:(UIControl *)button
 {
-//    if ([HPSingleton sharedSingleton].receiveOrder == 1) {
-    
-        [self pushVCByClassName:@"HPOrderDetailViewController" withParam:@{@"order":self.model}];
-//    }else{
-//        [self.predictView show:YES];
-//
-//    }
+    [HPSingleton sharedSingleton].receiveOrder = 1;
+    [self.predictView show:YES];
 }
 
 - (void)onClickSelectedDaysbtn:(UIButton *)button
@@ -1178,5 +1312,6 @@
         [self.orderListView show:NO];
     }
 }
+
 
 @end

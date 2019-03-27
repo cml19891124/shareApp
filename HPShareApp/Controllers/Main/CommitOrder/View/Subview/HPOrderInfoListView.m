@@ -12,6 +12,8 @@
 
 static NSString *orderInfoListCell = @"HPOrderInfoListCell";
 
+static NSString *totalFeeCell = @"HPTotalFeeCell";
+
 - (void)setupModalView:(UIView *)view
 {
     [self setUpOrderView:view];
@@ -41,7 +43,7 @@ static NSString *orderInfoListCell = @"HPOrderInfoListCell";
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
         make.bottom.mas_equalTo(self).offset(-g_bottomSafeAreaHeight + getWidth(-60.f));
-        make.height.mas_equalTo(getWidth(40.f) * 5);
+        make.height.mas_equalTo(getWidth(40.f) * 8);
     }];
 
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -50,22 +52,29 @@ static NSString *orderInfoListCell = @"HPOrderInfoListCell";
     }];
     
     [self.feeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self);
         make.height.mas_equalTo(getWidth(50.f));
         make.width.mas_equalTo(getWidth(100.f));
-        make.center.mas_equalTo(self.headerView);
+        make.centerX.mas_equalTo(self.headerView);
+    }];
+    
+    [self.footerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(getWidth(40.f));
+        make.left.width.mas_equalTo(self.tableView);
+        make.top.mas_equalTo(self.mas_bottom).offset(getWidth(-40.f));
     }];
     
     [self.totalFeeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.bottom.mas_equalTo(self.footerView);
+        make.top.bottom.mas_equalTo(self.footerView);
         make.height.mas_equalTo(getWidth(40.f));
+        make.left.mas_equalTo(getWidth(15.f));
         make.width.mas_equalTo(getWidth(50.f));
     }];
     
-    CGFloat feeW = BoundWithSize(self.feeLabel.text, kScreenWidth, 14.f).size.width;
+    CGFloat feeW = BoundWithSize(self.feeLabel.text, kScreenWidth, 14.f).size.width + 10;
     [self.feeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.top.bottom.mas_equalTo(self.footerView);
+        make.top.bottom.mas_equalTo(self.footerView);
         make.height.mas_equalTo(getWidth(40.f));
+        make.right.mas_equalTo(getWidth(-15.f));
         make.width.mas_equalTo(feeW);
     }];
 }
@@ -97,7 +106,7 @@ static NSString *orderInfoListCell = @"HPOrderInfoListCell";
     if (!_feeLabel) {
         _feeLabel = [UILabel new];
         _feeLabel.text = @"¥ 793.00";
-        _feeLabel.textColor = COLOR_GRAY_666666;
+        _feeLabel.textColor = COLOR_RED_EA0000;
         _feeLabel.textAlignment = NSTextAlignmentRight;
         _feeLabel.font = kFont_Medium(14.f);
     }
@@ -133,6 +142,8 @@ static NSString *orderInfoListCell = @"HPOrderInfoListCell";
         _tableView.separatorColor = UIColor.clearColor;
         [_tableView setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
         [_tableView registerClass:HPOrderInfoListCell.class forCellReuseIdentifier:orderInfoListCell];
+        [_tableView registerClass:HPTotalFeeCell.class forCellReuseIdentifier:totalFeeCell];
+
     }
     return _tableView;
 }
@@ -141,7 +152,7 @@ static NSString *orderInfoListCell = @"HPOrderInfoListCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    return 7;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -153,6 +164,10 @@ static NSString *orderInfoListCell = @"HPOrderInfoListCell";
 {
     HPOrderInfoListCell *cell = [tableView dequeueReusableCellWithIdentifier:orderInfoListCell];
     
+    if (indexPath.row == 6) {
+        HPTotalFeeCell *cell = [tableView dequeueReusableCellWithIdentifier:totalFeeCell];
+        return cell;
+    }
     return cell;
 }
 

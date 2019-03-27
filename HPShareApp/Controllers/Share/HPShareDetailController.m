@@ -30,6 +30,8 @@
 
 #import "JCHATConversationViewController.h"
 
+#import "HPSingleton.h"
+
 typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     HPShareDetailGotoShare = 180,
 };
@@ -858,7 +860,13 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 {
     HPShareDetailModel *model = self.param[@"model"];
 
-    [self pushVCByClassName:@"HPCommitOrderViewController" withParam:@{@"order":model}];
+    if ([HPSingleton sharedSingleton].identifyTag == 0) {
+        [self pushVCByClassName:@"HPCommitOrderViewController" withParam:@{@"order":model}];
+
+    }else{
+        [self pushVCByClassName:@"HPOrderManagerViewController" withParam:@{@"order":model}];
+
+    }
 }
 
 #pragma mark - 开启会话

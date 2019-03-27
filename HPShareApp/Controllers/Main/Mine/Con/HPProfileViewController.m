@@ -20,6 +20,14 @@
 
 #import "HPUploadImageHandle.h"
 
+#import "HPUpdateVersionView.h"
+
+#import "HPUpdateVersionTool.h"
+
+#import <JMessage/JMessage.h>
+
+#import "JCHATStringUtils.h"
+
 typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
     HPProfileSelectedRowIdentify = 0,//资格认证
     HPProfileSelectedRowAccountSafe,//账号安全
@@ -29,6 +37,8 @@ typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
 };
 
 @interface HPProfileViewController ()<UITableViewDelegate,UITableViewDataSource,HPHeaderViewCellDelegate>
+
+@property (nonatomic, weak) HPUpdateVersionView *updateView;
 
 @property (nonatomic, weak) HPCustomerServiceModalView *customerServiceModalView;
 
@@ -99,6 +109,9 @@ static NSString *orderItemCell = @"HPOrderItemCell";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self updateAppVersionInfo];
+
     HPHeaderViewCell *cell = [self setUpHeaderViewCell:self.tableView];
     HPLoginModel *account = [HPUserTool account];
     if (!account.token) {
@@ -434,6 +447,97 @@ static NSString *orderItemCell = @"HPOrderItemCell";
             [self pushVCByClassName:@"HPAboutUsViewController"];
         }
     }
+}
+
+#pragma mark - 检测版本更新信息
+- (void)updateAppVersionInfo
+{
+    
+    BOOL isUpdate = [HPUpdateVersionTool updateAppVersionTool];
+    if (isUpdate) {
+        [self showAlert];
+    }else{
+        
+    }
+}
+
+/**
+ *  检查新版本更新弹框
+ */
+-(void)showAlert
+{
+    if (_updateView == nil) {
+        kWEAKSELF
+        HPUpdateVersionView *updateView = [[HPUpdateVersionView alloc] initWithParent:self.tabBarController.view];
+        
+        [updateView setUpdateBlock:^{
+            // 此处加入应用在app store的地址，方便用户去更新，一种实现方式如下：
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/us/app/id%@?ls=1&mt=8", kAppleId]];
+            [[UIApplication sharedApplication] openURL:url];
+            
+        }];
+        
+        [updateView setCloseBlcok:^{
+            [weakSelf.updateView removeFromSuperview];
+        }];
+        _updateView = updateView;
+    }
+    
+    [_updateView show:YES];
+    
+}
+
+#pragma mark - 登录im------------
+- (void)loginJMessage
+{
+    HPLoginModel *account = [HPUserTool account];
+    JMSGUserInfo *userInfo = [JMSGUserInfo new];
+    userInfo.nickname = account.userInfo.username;
+    userInfo.signature = account.cardInfo.signature;
+    NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
+    
+    [JMSGUser loginWithUsername:imAccount password:@"hepai123" completionHandler:^(id resultObject, NSError *error) {
+        if (!error) {
+            //登录成功
+            
+        } else {
+            NSString * errorStr = [JCHATStringUtils errorAlert:error];
+            if ([errorStr isEqualToString:@"用户名不合法"]||[errorStr isEqualToString:@"用户名还没有被注册过"]) {
+                [self regiestJMessage];
+            }
+        }
+    }];
+}
+
+/**
+ *  注册极光
+ */
+-(void)gotoRegiestIM
+{
+    [self regiestJMessage];
+}
+
+#pragma mark - 注册im
+- (void)regiestJMessage
+{
+    HPLoginModel *account = [HPUserTool account];
+    JMSGUserInfo *userInfo = [JMSGUserInfo new];
+    userInfo.nickname = account.userInfo.username;
+    userInfo.signature = account.cardInfo.signature;
+    NSString *imAccount = [NSString stringWithFormat:@"hepai%@",account.userInfo.userId];
+    
+    kWEAKSELF
+    [JMSGUser registerWithUsername:imAccount password:@"hepai123" completionHandler:^(id resultObject, NSError *error) {
+        if (!error) {
+            //极光注册成功
+            [kUserDefaults setObject:@"hepai123" forKey:@"password"];
+            [kUserDefaults synchronize];
+            [weakSelf loginJMessage];
+        } else {
+            //极光注册失败
+            [HPProgressHUD alertMessage:@"注册极光失败"];
+        }
+    }];
 }
 
 @end

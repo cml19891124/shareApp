@@ -17,6 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) NSInteger identifyTag;
 
+
+/**
+ 是否接单
+ */
+@property (nonatomic, assign) BOOL receiveOrder;
+
 + (instancetype)sharedSingleton;
 
 @end

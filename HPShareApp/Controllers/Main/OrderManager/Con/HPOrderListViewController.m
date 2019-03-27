@@ -6,7 +6,7 @@
 //  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
 
-#import "HPOrderManagerViewController.h"
+#import "HPOrderListViewController.h"
 
 #import "HPShareDetailModel.h"
 
@@ -27,7 +27,7 @@
 
 #import "HPPayModel.h"
 
-@interface HPOrderManagerViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface HPOrderListViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -59,7 +59,7 @@
 
 @end
 
-@implementation HPOrderManagerViewController
+@implementation HPOrderListViewController
 
 static NSString *orderCell = @"orderCell";
 

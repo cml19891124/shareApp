@@ -229,6 +229,11 @@
 		E670840522410AF6005CC8E4 /* RSA.m in Sources */ = {isa = PBXBuildFile; fileRef = E67083FD22410AF5005CC8E4 /* RSA.m */; };
 		E670840622410AF6005CC8E4 /* RandomKey.m in Sources */ = {isa = PBXBuildFile; fileRef = E67083FE22410AF5005CC8E4 /* RandomKey.m */; };
 		E670840722410AF6005CC8E4 /* MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = E670840122410AF5005CC8E4 /* MD5.m */; };
+		E67199E9224B0BF1002A4288 /* HPTotalFeeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E67199E8224B0BF1002A4288 /* HPTotalFeeCell.m */; };
+		E67199EC224B1024002A4288 /* HPPredictView.m in Sources */ = {isa = PBXBuildFile; fileRef = E67199EB224B1024002A4288 /* HPPredictView.m */; };
+		E67199F0224B254D002A4288 /* HPOrderManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E67199EF224B254D002A4288 /* HPOrderManagerViewController.m */; };
+		E67199F3224B69CE002A4288 /* HPQuitOrderView.m in Sources */ = {isa = PBXBuildFile; fileRef = E67199F2224B69CE002A4288 /* HPQuitOrderView.m */; };
+		E67199F6224B767A002A4288 /* HPOrderDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E67199F5224B767A002A4288 /* HPOrderDetailViewController.m */; };
 		E677C7CB21FAA1910099E2C9 /* HPMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E677C7CA21FAA1910099E2C9 /* HPMenuItemCell.m */; };
 		E677C7D421FABE950099E2C9 /* HPAreaItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = E677C7D321FABE950099E2C9 /* HPAreaItemView.m */; };
 		E677C7D721FAE6250099E2C9 /* HPPlusBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = E677C7D621FAE6250099E2C9 /* HPPlusBtn.m */; };
@@ -263,7 +268,7 @@
 		E67EFE46221BE256008BDA1D /* BigSizeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE44221BE256008BDA1D /* BigSizeButton.m */; };
 		E67EFE52221BEF8C008BDA1D /* HPHistoryViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFE51221BEF8C008BDA1D /* HPHistoryViewCell.m */; };
 		E6801FB32235FABD002B1133 /* HPPayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E6801FB22235FABD002B1133 /* HPPayModel.m */; };
-		E6801FB822363C9B002B1133 /* HPOrderManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6801FB722363C9B002B1133 /* HPOrderManagerViewController.m */; };
+		E6801FB822363C9B002B1133 /* HPOrderListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6801FB722363C9B002B1133 /* HPOrderListViewController.m */; };
 		E6801FBD2236402E002B1133 /* HPOrderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6801FBC2236402E002B1133 /* HPOrderCell.m */; };
 		E6801FC02236558C002B1133 /* HPPayResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6801FBF2236558C002B1133 /* HPPayResultViewController.m */; };
 		E6801FC322367672002B1133 /* HPPayResultModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E6801FC222367672002B1133 /* HPPayResultModel.m */; };
@@ -940,6 +945,16 @@
 		E670840222410AF5005CC8E4 /* RandomKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RandomKey.h; sourceTree = "<group>"; };
 		E670840322410AF5005CC8E4 /* RSA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSA.h; sourceTree = "<group>"; };
 		E670844E2241132C005CC8E4 /* Definition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Definition.h; sourceTree = "<group>"; };
+		E67199E7224B0BF1002A4288 /* HPTotalFeeCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPTotalFeeCell.h; sourceTree = "<group>"; };
+		E67199E8224B0BF1002A4288 /* HPTotalFeeCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPTotalFeeCell.m; sourceTree = "<group>"; };
+		E67199EA224B1024002A4288 /* HPPredictView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPredictView.h; sourceTree = "<group>"; };
+		E67199EB224B1024002A4288 /* HPPredictView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPPredictView.m; sourceTree = "<group>"; };
+		E67199EE224B254D002A4288 /* HPOrderManagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPOrderManagerViewController.h; sourceTree = "<group>"; };
+		E67199EF224B254D002A4288 /* HPOrderManagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPOrderManagerViewController.m; sourceTree = "<group>"; };
+		E67199F1224B69CE002A4288 /* HPQuitOrderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPQuitOrderView.h; sourceTree = "<group>"; };
+		E67199F2224B69CE002A4288 /* HPQuitOrderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPQuitOrderView.m; sourceTree = "<group>"; };
+		E67199F4224B767A002A4288 /* HPOrderDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOrderDetailViewController.h; sourceTree = "<group>"; };
+		E67199F5224B767A002A4288 /* HPOrderDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOrderDetailViewController.m; sourceTree = "<group>"; };
 		E677C7C921FAA1910099E2C9 /* HPMenuItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPMenuItemCell.h; sourceTree = "<group>"; };
 		E677C7CA21FAA1910099E2C9 /* HPMenuItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPMenuItemCell.m; sourceTree = "<group>"; };
 		E677C7D221FABE950099E2C9 /* HPAreaItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaItemView.h; sourceTree = "<group>"; };
@@ -1079,8 +1094,8 @@
 		E67EFE51221BEF8C008BDA1D /* HPHistoryViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHistoryViewCell.m; sourceTree = "<group>"; };
 		E6801FB12235FABD002B1133 /* HPPayModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPayModel.h; sourceTree = "<group>"; };
 		E6801FB22235FABD002B1133 /* HPPayModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPPayModel.m; sourceTree = "<group>"; };
-		E6801FB622363C9B002B1133 /* HPOrderManagerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOrderManagerViewController.h; sourceTree = "<group>"; };
-		E6801FB722363C9B002B1133 /* HPOrderManagerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOrderManagerViewController.m; sourceTree = "<group>"; };
+		E6801FB622363C9B002B1133 /* HPOrderListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOrderListViewController.h; sourceTree = "<group>"; };
+		E6801FB722363C9B002B1133 /* HPOrderListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOrderListViewController.m; sourceTree = "<group>"; };
 		E6801FBB2236402E002B1133 /* HPOrderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOrderCell.h; sourceTree = "<group>"; };
 		E6801FBC2236402E002B1133 /* HPOrderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOrderCell.m; sourceTree = "<group>"; };
 		E6801FBE2236558C002B1133 /* HPPayResultViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPayResultViewController.h; sourceTree = "<group>"; };
@@ -2184,6 +2199,7 @@
 		E629AAC82248E66E00CF0378 /* Con */ = {
 			isa = PBXGroup;
 			children = (
+				E67199ED224B254D002A4288 /* OrderManager */,
 				E629AAD3224A014600CF0378 /* YZXCalendar */,
 				E629AAC92248E68300CF0378 /* HPCommitOrderViewController.h */,
 				E629AACA2248E68300CF0378 /* HPCommitOrderViewController.m */,
@@ -2341,6 +2357,8 @@
 			children = (
 				E629AB21224A22DC00CF0378 /* HPOrderInfoListCell.h */,
 				E629AB22224A22DC00CF0378 /* HPOrderInfoListCell.m */,
+				E67199E7224B0BF1002A4288 /* HPTotalFeeCell.h */,
+				E67199E8224B0BF1002A4288 /* HPTotalFeeCell.m */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -2350,6 +2368,10 @@
 			children = (
 				E629AB25224A274D00CF0378 /* HPOrderInfoListView.h */,
 				E629AB26224A274D00CF0378 /* HPOrderInfoListView.m */,
+				E67199EA224B1024002A4288 /* HPPredictView.h */,
+				E67199EB224B1024002A4288 /* HPPredictView.m */,
+				E67199F1224B69CE002A4288 /* HPQuitOrderView.h */,
+				E67199F2224B69CE002A4288 /* HPQuitOrderView.m */,
 			);
 			path = Subview;
 			sourceTree = "<group>";
@@ -2771,6 +2793,17 @@
 			path = Encrypt;
 			sourceTree = "<group>";
 		};
+		E67199ED224B254D002A4288 /* OrderManager */ = {
+			isa = PBXGroup;
+			children = (
+				E67199EE224B254D002A4288 /* HPOrderManagerViewController.h */,
+				E67199EF224B254D002A4288 /* HPOrderManagerViewController.m */,
+				E67199F4224B767A002A4288 /* HPOrderDetailViewController.h */,
+				E67199F5224B767A002A4288 /* HPOrderDetailViewController.m */,
+			);
+			path = OrderManager;
+			sourceTree = "<group>";
+		};
 		E677C7CC21FAB4BA0099E2C9 /* ShareStoreInStore */ = {
 			isa = PBXGroup;
 			children = (
@@ -3037,8 +3070,8 @@
 		E6801FB522363C65002B1133 /* Con */ = {
 			isa = PBXGroup;
 			children = (
-				E6801FB622363C9B002B1133 /* HPOrderManagerViewController.h */,
-				E6801FB722363C9B002B1133 /* HPOrderManagerViewController.m */,
+				E6801FB622363C9B002B1133 /* HPOrderListViewController.h */,
+				E6801FB722363C9B002B1133 /* HPOrderListViewController.m */,
 				E6801FBE2236558C002B1133 /* HPPayResultViewController.h */,
 				E6801FBF2236558C002B1133 /* HPPayResultViewController.m */,
 				E67C68802237483600CF2297 /* HPReturnFundsViewController.h */,
@@ -4033,7 +4066,7 @@
 				E68A76C121F2C6D100083A90 /* JCHATMessageTableViewCell.m in Sources */,
 				E654C7DF21BFE6160066C506 /* HPCollectListModel.m in Sources */,
 				E68A780321F325F100083A90 /* JCHATGroupDetailViewController.m in Sources */,
-				E6801FB822363C9B002B1133 /* HPOrderManagerViewController.m in Sources */,
+				E6801FB822363C9B002B1133 /* HPOrderListViewController.m in Sources */,
 				E633525B21F17A7C00999BE7 /* HPProvinceModel.m in Sources */,
 				E68A77D821F321BD00083A90 /* JCHATAlbumViewController.m in Sources */,
 				E68A772021F31A2D00083A90 /* JCHATAlertViewWait.m in Sources */,
@@ -4098,6 +4131,7 @@
 				E67B778E21CDEEB1007AC636 /* HPRentAmountItemView.m in Sources */,
 				E67EFE40221BE214008BDA1D /* HPSearchBar.m in Sources */,
 				E620646721DEFC5700E37568 /* HPInfoModel.m in Sources */,
+				E67199EC224B1024002A4288 /* HPPredictView.m in Sources */,
 				E68A76C021F2C6D100083A90 /* JCHATSetDisturbTableViewCell.m in Sources */,
 				E661B0D6219D436900C86CF5 /* HPAlertSheet.m in Sources */,
 				E68A77BB21F321BD00083A90 /* MJPhoto.m in Sources */,
@@ -4174,6 +4208,7 @@
 				E611563C219AC8D7003A29C5 /* HPBaseViewController.m in Sources */,
 				E6D75F4A21AFF37B00B2067C /* HPUnbindPhoneController.m in Sources */,
 				E629AB09224A014600CF0378 /* YZXMonthModel.m in Sources */,
+				E67199F6224B767A002A4288 /* HPOrderDetailViewController.m in Sources */,
 				E6A5388422212C1600BFEE02 /* HPHotKeywordCell.m in Sources */,
 				E68A77BE21F321BD00083A90 /* MJPhotoBrowser.m in Sources */,
 				E68D07C921EC2D26007558CC /* HPIdeaDetailModel.m in Sources */,
@@ -4240,6 +4275,7 @@
 				69165CCE21BE402E00593D25 /* HPTimePicker.m in Sources */,
 				6993AD4C21CE97D40019506C /* HPShareTempGoodsController.m in Sources */,
 				6993AD2B21C688B30019506C /* HPSubTableView.m in Sources */,
+				E67199F0224B254D002A4288 /* HPOrderManagerViewController.m in Sources */,
 				E68A77FA21F3226D00083A90 /* JCHATGroupSettingCtl.m in Sources */,
 				E6E89D1F2212A08A00D04F34 /* NSMutableString+AvoidCrash.m in Sources */,
 				E68A76B021F2C6D100083A90 /* JCHATSelectFriendCell.m in Sources */,
@@ -4291,6 +4327,7 @@
 				E67EFE30221BA187008BDA1D /* APOrderInfo.m in Sources */,
 				69165CEE21C0EBD400593D25 /* HPLocateHistory.m in Sources */,
 				E68A77BC21F321BD00083A90 /* MJPhotoToolbar.m in Sources */,
+				E67199F3224B69CE002A4288 /* HPQuitOrderView.m in Sources */,
 				E68C857121E9EDFB00AF259C /* HPIdeaListModel.m in Sources */,
 				E63352A421F1C99300999BE7 /* PPPersonModel.m in Sources */,
 				E629AB1A224A014600CF0378 /* YZXDaysMenuView.m in Sources */,
@@ -4368,6 +4405,7 @@
 				E61E27A421C8D68000CD5288 /* EBBannerViewMaker.m in Sources */,
 				E6E89D242212A08A00D04F34 /* AvoidCrash.m in Sources */,
 				E68C856D21E9ED9400AF259C /* HPIdeaListCell.m in Sources */,
+				E67199E9224B0BF1002A4288 /* HPTotalFeeCell.m in Sources */,
 				E63C73F421EED2D7003D35E0 /* HPHomeBannerModel.m in Sources */,
 				E6B8987521D0D53900FD443B /* HPStoreLeavesViewController.m in Sources */,
 				E6D75F8521B65AAD00B2067C /* HPFeedbackController.m in Sources */,

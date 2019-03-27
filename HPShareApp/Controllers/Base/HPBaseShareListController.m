@@ -63,6 +63,9 @@ typedef NS_ENUM(NSInteger, HPFilterBtn) {
     
     if (!self.isPop) {
         [self loadTableViewFreshUI];
+    }else{//3.26新加
+        self.shareListParam.page = 1;
+        [self getShareListData:self.shareListParam reload:NO];
     }
 }
 

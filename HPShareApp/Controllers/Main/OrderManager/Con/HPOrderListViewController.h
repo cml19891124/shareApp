@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger,PayType){
 };
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPOrderManagerViewController : HPBaseViewController
+@interface HPOrderListViewController : HPBaseViewController
 
 @property (nonatomic, copy) PaySuccessBlock paySuccessBlock;
 

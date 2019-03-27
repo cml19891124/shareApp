@@ -82,6 +82,7 @@
     [self.view addSubview:self.applyBtn];
     
     [self.view addSubview:self.cancelView];
+    
     [self.cancelView show:NO];
 
     [self setUpSubviewsMasonry];
@@ -90,7 +91,7 @@
 - (void)setUpSubviewsMasonry
 {
     [self.accountCancelLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.navTitleView.mas_bottom).offset(19.f * g_rateWidth);
+        make.top.mas_equalTo(g_statusBarHeight + 44.f + getWidth(19.f));
         make.left.mas_equalTo(15.f * g_rateWidth);
         make.right.mas_equalTo(-15.f * g_rateWidth);
         make.height.mas_equalTo(self.accountCancelLabel.font.pointSize);

@@ -41,6 +41,7 @@
 @property (nonatomic, weak) UILabel *historyNumLabel;
 
 @property (nonatomic, weak) HPCustomerServiceModalView *customerServiceModalView;
+
 @property (nonatomic, strong) NSMutableArray *userInfoArray;
 
 @property (nonatomic, strong) HPPersonCenterModel *infoModel;

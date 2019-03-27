@@ -48,6 +48,8 @@
 
 @property (nonatomic, strong) HPAlignCenterButton *uploadBtn;
 
+@property (nonatomic, strong) UIButton *confirmBtn;
+
 @end
 
 @implementation HPManagerBoardViewController
@@ -118,6 +120,8 @@
     [self.scrollView addSubview:self.upView];
 
     [self.upView addSubview:self.uploadBtn];
+
+    [self.scrollView addSubview:self.confirmBtn];
 
 }
 
@@ -237,6 +241,12 @@
         make.centerX.mas_equalTo(self.upView);
         make.size.mas_equalTo(CGSizeMake(getWidth(100.f), getWidth(40.f)));
         make.top.mas_equalTo(getWidth(50.f));
+    }];
+    
+    [self.confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.scrollView);
+        make.size.mas_equalTo(CGSizeMake(getWidth(330.f), getWidth(44.f)));
+        make.top.mas_equalTo(self.upView.mas_bottom).offset(getWidth(10.f));
     }];
 }
 
@@ -430,6 +440,26 @@
         [_uploadBtn addTarget:self action:@selector(onClickUploadBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _uploadBtn;
+}
+
+- (UIButton *)confirmBtn
+{
+    if (!_confirmBtn) {
+        _confirmBtn = [UIButton new];
+        [_confirmBtn setTitle:@"确定" forState:UIControlStateNormal];
+        [_confirmBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+        _confirmBtn.backgroundColor = COLOR_RED_EA0000;
+        _confirmBtn.layer.cornerRadius = 6.f;
+        _confirmBtn.layer.masksToBounds = YES;
+        _confirmBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        [_confirmBtn addTarget:self action:@selector(conClickConfirmBtn:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _confirmBtn;
+}
+
+- (void)conClickConfirmBtn:(UIButton *)button
+{
+    
 }
 
 - (void)onClickUploadBtn:(UIButton *)button

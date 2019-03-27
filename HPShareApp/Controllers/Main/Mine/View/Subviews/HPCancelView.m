@@ -12,6 +12,12 @@
 
 - (void)setupModalView:(UIView *)view
 {
+    [view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(getWidth(280.f));
+        make.height.mas_equalTo(getWidth(160.f));
+        make.center.mas_equalTo(self);
+    }];
+    
     [view addSubview:self.bgview];
     
     [self setUpSubviews];
@@ -126,8 +132,8 @@
 - (void)setUpSubviewsMasonry
 {
     [self.bgview mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(getWidth(280.f), getWidth(160.f)));
-        make.center.mas_equalTo(self);
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+        
     }];
     
     [self.tipBtn mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -12,6 +12,8 @@
 
 #import "HPRightImageButton.h"
 
+#import "HPTotalFeeCell.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPOrderInfoListView : HPBaseDialogView<UITableViewDelegate,UITableViewDataSource>
