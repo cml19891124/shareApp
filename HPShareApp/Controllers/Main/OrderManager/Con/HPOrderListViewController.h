@@ -8,36 +8,10 @@
 
 #import "HPBaseViewController.h"
 
-typedef void(^SelectedIndexBlock)(NSInteger row);
-
-typedef void(^PaySuccessBlock)(void);
-
-typedef enum PayStyleRow {
-    
-    payWeChat = 0,
-    
-    payAlipay
-    
-} PayState;
-
-typedef NS_ENUM(NSInteger,PayType){
-    
-    /**
-     微信支付
-     */
-    kPayTypeWeChat = 0,
-    /**
-     支付宝支付
-     */
-    kPayTypeAlipay
-};
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPOrderListViewController : HPBaseViewController
 
-@property (nonatomic, copy) PaySuccessBlock paySuccessBlock;
-
-@property (nonatomic, copy) SelectedIndexBlock selectedIndexBlock;
 
 @end
 

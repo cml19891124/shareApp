@@ -46,6 +46,60 @@
 
 @property (nonatomic, strong) HPShareDetailModel *model;
 
+@property (nonatomic, strong) UIView *ownnerView;
+
+@property (nonatomic, strong) UILabel *ownnerLabel;
+
+@property (nonatomic, strong) UILabel *ownnerSubLabel;
+
+@property (nonatomic, strong) UILabel *phoneLabel;
+
+@property (nonatomic, strong) UILabel *phoneSubLabel;
+
+@property (nonatomic, strong) UIView *orderView;
+
+@property (nonatomic, strong) UILabel *orderIdLabel;
+
+@property (nonatomic, strong) UILabel *createOrderLabel;
+
+@property (nonatomic, strong) UILabel *payOrderLabel;
+
+@property (nonatomic, strong) UILabel *orderSubLabel;
+
+@property (nonatomic, strong) UILabel *createOrderSubLabel;
+
+@property (nonatomic, strong) UILabel *paySubLabel;
+
+@property (nonatomic, strong) UIView *rentAmountView;
+
+@property (nonatomic, strong) UILabel *amountLabel;
+
+@property (nonatomic, strong) UILabel *amountSubLabel;
+
+/**
+ 押金
+ */
+@property (nonatomic, strong) UILabel *depositLabel;
+
+@property (nonatomic, strong) UILabel *depositSubLabel;
+
+/**
+ 支付view
+ */
+@property (nonatomic, strong) UIView *payView;
+
+@property (nonatomic, strong) UILabel *toPayLabel;
+
+@property (nonatomic, strong) UILabel *toPaySubLabel;
+
+@property (nonatomic, strong) UIView *bottomView;
+
+@property (nonatomic, strong) UIButton *cancelBtn;
+
+@property (nonatomic, strong) UIButton *payBtn;
+
+@property (nonatomic, strong) UIButton *focusBtn;
+
 @end
 
 @implementation HPOrderDetailViewController
@@ -143,6 +197,54 @@
     
     [self.communicateView addSubview:self.phoneBtn];
 
+    [self.scrollView addSubview:self.ownnerView];
+
+    [self.ownnerView addSubview:self.ownnerLabel];
+
+    [self.ownnerView addSubview:self.ownnerSubLabel];
+
+    [self.ownnerView addSubview:self.phoneLabel];
+    
+    [self.ownnerView addSubview:self.phoneSubLabel];
+    
+    [self.scrollView addSubview:self.orderView];
+    
+    [self.orderView addSubview:self.orderIdLabel];
+    
+    [self.orderView addSubview:self.orderSubLabel];
+
+    [self.orderView addSubview:self.createOrderLabel];
+
+    [self.orderView addSubview:self.createOrderSubLabel];
+    
+    [self.orderView addSubview:self.payOrderLabel];
+    
+    [self.orderView addSubview:self.paySubLabel];
+
+    [self.scrollView addSubview:self.rentAmountView];
+    
+    [self.rentAmountView addSubview:self.amountLabel];
+    
+    [self.rentAmountView addSubview:self.amountSubLabel];
+    
+    [self.rentAmountView addSubview:self.depositLabel];
+    
+    [self.rentAmountView addSubview:self.depositSubLabel];
+    
+    [self.scrollView addSubview:self.payView];
+    
+    [self.payView addSubview:self.toPayLabel];
+    
+    [self.payView addSubview:self.toPaySubLabel];
+    
+    [self.scrollView addSubview:self.bottomView];
+
+    [self.bottomView addSubview:self.cancelBtn];
+
+    [self.bottomView addSubview:self.payBtn];
+
+    [self.scrollView addSubview:self.focusBtn];
+
 }
 
 -(void)setUpCommitSubviewsMasonry
@@ -172,7 +274,7 @@
     [self.warningBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.scrollView);
         make.width.left.mas_equalTo(self.scrollView);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(getWidth(25.f));
+        make.bottom.mas_equalTo(self.headerView.mas_bottom).offset(getWidth(-15.f));
     }];
     
     [self.communicateView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -210,6 +312,13 @@
         make.right.mas_equalTo(getWidth(-15.f));
     }];
     
+    [self.addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.rentDaysLabel.mas_bottom).offset(getWidth(15.f));
+        make.height.mas_equalTo(self.duringDayslabel.font.pointSize);
+        make.left.mas_equalTo(self.rentDaysLabel);
+        make.right.mas_equalTo(getWidth(-15.f));
+    }];
+    
     [self.contactLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.thumbView.mas_bottom).offset(getWidth(13.f));
         make.height.mas_equalTo(1);
@@ -218,18 +327,213 @@
     
     [self.consumerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(15.f));
-        make.height.mas_equalTo(getWidth(30.f));
+        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-15.f));
         make.left.mas_equalTo(getWidth(40.f));
-        make.width.mas_equalTo(getWidth(345.f)/4);
+        make.width.mas_equalTo(getWidth(345.f)/3);
 
     }];
     
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-15.f));
-        make.height.mas_equalTo(getWidth(30.f));
-        make.right.mas_equalTo(getWidth(40.f));
-        make.width.mas_equalTo(getWidth(345.f)/4);
+        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(15.f));
+        make.right.mas_equalTo(getWidth(-40.f));
+        make.width.mas_equalTo(getWidth(345.f)/3);
     }];
+    
+    [self.ownnerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(15.f));
+        make.left.width.mas_equalTo(self.communicateView);
+        make.height.mas_equalTo(getWidth(77.f));
+    }];
+    
+    CGFloat nameW = BoundWithSize(@"联系方式", kScreenWidth, 14.f).size.width + 20;
+    [self.ownnerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(15.f));
+        make.width.mas_equalTo(nameW);
+        make.height.mas_equalTo(self.ownnerLabel.font.pointSize);
+    }];
+    
+    [self.ownnerSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.ownnerLabel.mas_right).offset(getWidth(15.f));
+        make.right.mas_equalTo(getWidth(-15.f));
+        make.height.mas_equalTo(self.ownnerSubLabel.font.pointSize);
+        make.top.mas_equalTo(self.ownnerLabel);
+    }];
+    
+    [self.phoneLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.width.mas_equalTo(self.ownnerLabel);
+        make.height.mas_equalTo(self.phoneLabel.font.pointSize);
+        make.top.mas_equalTo(self.ownnerLabel.mas_bottom).offset(getWidth(20.f));
+    }];
+    
+    [self.phoneSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.width.mas_equalTo(self.ownnerSubLabel);
+        make.height.mas_equalTo(self.phoneSubLabel.font.pointSize);
+        make.top.mas_equalTo(self.ownnerLabel.mas_bottom).offset(getWidth(20.f));
+    }];
+    
+    [self.orderView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.width.mas_equalTo(self.ownnerView);
+        make.height.mas_equalTo(getWidth(110.f));
+        make.top.mas_equalTo(self.ownnerView.mas_bottom).offset(getWidth(15.f));
+    }];
+    
+    [self.orderIdLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(15.f));
+        make.width.mas_equalTo(nameW);
+        make.height.mas_equalTo(self.orderIdLabel.font.pointSize);
+        make.top.mas_equalTo(getWidth(15.f));
+    }];
+    
+    [self.createOrderLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.orderIdLabel);
+        make.width.mas_equalTo(nameW);
+        make.height.mas_equalTo(self.createOrderLabel.font.pointSize);
+        make.top.mas_equalTo(self.orderIdLabel.mas_bottom).offset(getWidth(20.f));
+    }];
+    
+    [self.payOrderLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.orderIdLabel);
+        make.width.mas_equalTo(nameW);
+        make.height.mas_equalTo(self.payOrderLabel.font.pointSize);
+        make.top.mas_equalTo(self.createOrderLabel.mas_bottom).offset(getWidth(20.f));
+    }];
+    
+    [self.orderSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.orderIdLabel.mas_right).offset(getWidth(12.f));
+        make.height.mas_equalTo(self.orderSubLabel.font.pointSize);
+        make.top.mas_equalTo(getWidth(15.f));
+        make.right.mas_equalTo(getWidth(-15.f));
+    }];
+    
+    [self.createOrderSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.createOrderLabel.mas_right).offset(getWidth(12.f));
+        make.height.mas_equalTo(self.createOrderSubLabel.font.pointSize);
+        make.top.mas_equalTo(self.orderIdLabel.mas_bottom).offset(getWidth(20.f));
+        make.right.mas_equalTo(getWidth(-15.f));
+    }];
+    
+    [self.paySubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.payOrderLabel.mas_right).offset(getWidth(12.f));
+        make.height.mas_equalTo(self.paySubLabel.font.pointSize);
+        make.top.mas_equalTo(self.payOrderLabel.mas_top);
+        make.right.mas_equalTo(getWidth(-15.f));
+    }];
+    
+    [self.rentAmountView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.width.mas_equalTo(self.orderView);
+        make.height.mas_equalTo(getWidth(77.f));
+        make.top.mas_equalTo(self.orderView.mas_bottom);
+    }];
+    
+    [self.amountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(getWidth(15.f));
+        make.height.mas_equalTo(self.amountLabel.font.pointSize);
+        make.width.mas_equalTo(nameW);
+    }];
+    
+    [self.amountSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.amountLabel.mas_right).offset(getWidth(15.f));
+        make.height.mas_equalTo(self.amountSubLabel.font.pointSize);
+        make.right.mas_equalTo(getWidth(-15.f));
+        make.top.mas_equalTo(getWidth(15.f));
+    }];
+    
+    [self.depositLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.amountLabel);
+        make.height.mas_equalTo(self.depositLabel.font.pointSize);
+        make.width.mas_equalTo(nameW);
+        make.top.mas_equalTo(self.amountLabel.mas_bottom).offset(getWidth(20.f));
+
+    }];
+    
+    [self.depositSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.depositLabel.mas_right).offset(getWidth(15.f));
+        make.height.mas_equalTo(self.depositSubLabel.font.pointSize);
+        make.right.mas_equalTo(getWidth(-15.f));
+        make.top.mas_equalTo(self.amountLabel.mas_bottom).offset(getWidth(20.f));
+    }];
+    
+    [self.payView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.width.mas_equalTo(self.orderView);
+        make.height.mas_equalTo(getWidth(45.f));
+        make.top.mas_equalTo(self.rentAmountView.mas_bottom).offset(getWidth(5.f));
+    }];
+    
+    [self.toPayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(15.f));
+        make.width.mas_equalTo(nameW);
+        make.height.mas_equalTo(self.toPayLabel.font.pointSize);
+        make.centerY.mas_equalTo(self.payView);
+    }];
+    
+    [self.toPaySubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.toPayLabel.mas_right).offset(getWidth(15.f));
+        make.right.mas_equalTo(getWidth(-15.f));
+        make.height.mas_equalTo(self.toPaySubLabel.font.pointSize);
+        make.centerY.mas_equalTo(self.payView);
+    }];
+    
+    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.bottom.width.mas_equalTo(self.view);
+        make.height.mas_equalTo(getWidth(60.f));
+    }];
+    
+    [self.cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.bottom.top.mas_equalTo(self.bottomView);
+        make.width.mas_equalTo(kScreenWidth/2);
+    }];
+    
+    [self.payBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.bottom.top.mas_equalTo(self.bottomView);
+        make.width.mas_equalTo(kScreenWidth/2);
+    }];
+    
+    [self.focusBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.left.top.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom);
+        make.height.mas_equalTo(self.focusBtn.titleLabel.font.pointSize);
+    }];
+}
+
+- (UIButton *)focusBtn
+{
+    if (_focusBtn) {
+        _focusBtn = [UIButton new];
+        _focusBtn.backgroundColor = COLOR_YELLOW_FBF8D9;
+        [_focusBtn setImage:ImageNamed(@"button_unselected") forState:UIControlStateNormal];
+        [_focusBtn setImage:ImageNamed(@"button_select") forState:UIControlStateSelected];
+        [_focusBtn setTitle:@"付款前请先阅读并同意《下单须知》" forState:UIControlStateNormal];
+        [_focusBtn setTitleColor:COLOR_YELLOW_DF6F23 forState:UIControlStateNormal];
+        [_focusBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, getWidth(6.f))];
+        [_focusBtn addTarget:self action:@selector(onClickAddOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _focusBtn;
+}
+
+- (UIButton *)cancelBtn
+{
+    if (!_cancelBtn) {
+        _cancelBtn = [UIButton new];
+        [_cancelBtn setTitle:@"取消订单" forState:UIControlStateNormal];
+        _cancelBtn.backgroundColor = COLOR_YELLOW_FFB400;
+        _cancelBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        [_cancelBtn addTarget:self action:@selector(onClickCancelBtn:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _cancelBtn;
+}
+
+- (UIButton *)payBtn
+{
+    if (!_payBtn) {
+        _payBtn = [UIButton new];
+        [_payBtn setTitle:@"立即支付" forState:UIControlStateNormal];
+        _payBtn.backgroundColor = COLOR_RED_EA0000;
+        _payBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        [_payBtn addTarget:self action:@selector(onClickPayBtn:) forControlEvents:UIControlEventTouchUpInside];
+
+    }
+    return _payBtn;
 }
 
 - (UIScrollView *)scrollView
@@ -321,7 +625,6 @@
     return _rentDaysLabel;
 }
 
-
 - (UILabel *)duringDayslabel
 {
     if (!_duringDayslabel) {
@@ -348,8 +651,11 @@
     if (!_consumerBtn) {
         _consumerBtn = [UIButton new];
         [_consumerBtn setTitle:@"联系客服" forState:UIControlStateNormal];
+        _consumerBtn.titleLabel.font = kFont_Medium(14.f);
+        [_consumerBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
         [_consumerBtn setImage:ImageNamed(@"communicate_serve") forState:UIControlStateNormal];
         [_consumerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(6.f), 0, 0)];
+        _consumerBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [_consumerBtn addTarget:self action:@selector(onClickConsumerBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _consumerBtn;
@@ -360,11 +666,260 @@
     if (!_phoneBtn) {
         _phoneBtn = [UIButton new];
         [_phoneBtn setTitle:@"拨打电话" forState:UIControlStateNormal];
+        [_phoneBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
         [_phoneBtn setImage:ImageNamed(@"call_phone") forState:UIControlStateNormal];
         [_phoneBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(6.f), 0, 0)];
+        _phoneBtn.titleLabel.font = kFont_Medium(14.f);
+        _phoneBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [_phoneBtn addTarget:self action:@selector(onClickPhoneBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _phoneBtn;
+}
+
+- (UIView *)ownnerView
+{
+    if (!_ownnerView) {
+        _ownnerView = [UIView new];
+        _ownnerView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _ownnerView.layer.cornerRadius = 2.f;
+        _ownnerView.layer.masksToBounds = YES;
+    }
+    return _ownnerView;
+}
+
+- (UILabel *)ownnerLabel
+{
+    if (!_ownnerLabel) {
+        _ownnerLabel = [UILabel new];
+        _ownnerLabel.textColor = COLOR_BLACK_333333;
+        _ownnerLabel.textAlignment = NSTextAlignmentLeft;
+        _ownnerLabel.font = kFont_Bold(14.f);
+        _ownnerLabel.text = @"姓      名：";
+    }
+    return _ownnerLabel;
+}
+
+- (UILabel *)ownnerSubLabel
+{
+    if (!_ownnerSubLabel) {
+        _ownnerSubLabel = [UILabel new];
+        _ownnerSubLabel.textColor = COLOR_GRAY_666666;
+        _ownnerSubLabel.textAlignment = NSTextAlignmentLeft;
+        _ownnerSubLabel.font = kFont_Regular(14.f);
+        _ownnerSubLabel.text = @"袁成燕";
+    }
+    return _ownnerSubLabel;
+}
+
+- (UILabel *)phoneLabel
+{
+    if (!_phoneLabel) {
+        _phoneLabel = [UILabel new];
+        _phoneLabel.textColor = COLOR_BLACK_333333;
+        _phoneLabel.textAlignment = NSTextAlignmentLeft;
+        _phoneLabel.font = kFont_Bold(14.f);
+        _phoneLabel.text = @"联系方式：";
+    }
+    return _phoneLabel;
+}
+
+- (UILabel *)phoneSubLabel
+{
+    if (!_phoneSubLabel) {
+        _phoneSubLabel = [UILabel new];
+        _phoneSubLabel.textColor = COLOR_GRAY_666666;
+        _phoneSubLabel.textAlignment = NSTextAlignmentLeft;
+        _phoneSubLabel.font = kFont_Regular(14.f);
+        _phoneSubLabel.text = @"183 1115 9215";
+    }
+    return _phoneSubLabel;
+}
+
+- (UIView *)orderView
+{
+    if (!_orderView) {
+        _orderView = [UIView new];
+        _orderView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _orderView.layer.cornerRadius = 2.f;
+        _orderView.layer.masksToBounds = YES;
+    }
+    return _orderView;
+}
+
+- (UILabel *)orderIdLabel
+{
+    if (!_orderIdLabel) {
+        _orderIdLabel = [UILabel new];
+        _orderIdLabel.textColor = COLOR_BLACK_333333;
+        _orderIdLabel.textAlignment = NSTextAlignmentLeft;
+        _orderIdLabel.font = kFont_Bold(14.f);
+        _orderIdLabel.text = @"订单编号：";
+    }
+    return _orderIdLabel;
+}
+
+- (UILabel *)orderSubLabel
+{
+    if (!_orderSubLabel) {
+        _orderSubLabel = [UILabel new];
+        _orderSubLabel.textColor = COLOR_GRAY_666666;
+        _orderSubLabel.textAlignment = NSTextAlignmentLeft;
+        _orderSubLabel.font = kFont_Regular(14.f);
+        _orderSubLabel.text = @"HD190321103";
+    }
+    return _orderSubLabel;
+}
+
+- (UILabel *)createOrderLabel
+{
+    if (!_createOrderLabel) {
+        _createOrderLabel = [UILabel new];
+        _createOrderLabel.textColor = COLOR_BLACK_333333;
+        _createOrderLabel.textAlignment = NSTextAlignmentLeft;
+        _createOrderLabel.font = kFont_Bold(14.f);
+        _createOrderLabel.text = @"下单时间：";
+    }
+    return _createOrderLabel;
+}
+
+- (UILabel *)createOrderSubLabel
+{
+    if (!_createOrderSubLabel) {
+        _createOrderSubLabel = [UILabel new];
+        _createOrderSubLabel.textColor = COLOR_GRAY_666666;
+        _createOrderSubLabel.textAlignment = NSTextAlignmentLeft;
+        _createOrderSubLabel.font = kFont_Regular(14.f);
+        _createOrderSubLabel.text = @"2019-03-21  09:21:12";
+    }
+    return _createOrderSubLabel;
+}
+
+- (UILabel *)payOrderLabel
+{
+    if (!_payOrderLabel) {
+        _payOrderLabel = [UILabel new];
+        _payOrderLabel.textColor = COLOR_BLACK_333333;
+        _payOrderLabel.textAlignment = NSTextAlignmentLeft;
+        _payOrderLabel.font = kFont_Bold(14.f);
+        _payOrderLabel.text = @"支付方式：";
+    }
+    return _payOrderLabel;
+}
+
+- (UILabel *)paySubLabel
+{
+    if (!_paySubLabel) {
+        _paySubLabel = [UILabel new];
+        _paySubLabel.textColor = COLOR_GRAY_666666;
+        _paySubLabel.textAlignment = NSTextAlignmentLeft;
+        _paySubLabel.font = kFont_Regular(14.f);
+        _paySubLabel.text = @"在线支付";
+    }
+    return _paySubLabel;
+}
+
+- (UIView *)rentAmountView
+{
+    if (!_rentAmountView) {
+        _rentAmountView = [UIView new];
+        _rentAmountView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _rentAmountView.layer.cornerRadius = 2.f;
+        _rentAmountView.layer.masksToBounds = YES;
+    }
+    return _rentAmountView;
+}
+
+- (UILabel *)amountLabel
+{
+    if (!_amountLabel) {
+        _amountLabel = [UILabel new];
+        _amountLabel.textColor = COLOR_BLACK_333333;
+        _amountLabel.textAlignment = NSTextAlignmentLeft;
+        _amountLabel.font = kFont_Bold(14.f);
+        _amountLabel.text = @"租金总额：";
+    }
+    return _amountLabel;
+}
+
+- (UILabel *)amountSubLabel
+{
+    if (!_amountSubLabel) {
+        _amountSubLabel = [UILabel new];
+        _amountSubLabel.textColor = COLOR_GRAY_666666;
+        _amountSubLabel.textAlignment = NSTextAlignmentLeft;
+        _amountSubLabel.font = kFont_Regular(14.f);
+        _amountSubLabel.text = @"¥ 10000";
+    }
+    return _amountSubLabel;
+}
+
+- (UILabel *)depositLabel
+{
+    if (!_depositLabel) {
+        _depositLabel = [UILabel new];
+        _depositLabel.textColor = COLOR_BLACK_333333;
+        _depositLabel.textAlignment = NSTextAlignmentLeft;
+        _depositLabel.font = kFont_Medium(14.f);
+        _depositLabel.text = @"押      金：";
+    }
+    return _depositLabel;
+}
+
+- (UILabel *)depositSubLabel
+{
+    if (!_depositSubLabel) {
+        _depositSubLabel = [UILabel new];
+        _depositSubLabel.textColor = COLOR_GRAY_666666;
+        _depositSubLabel.textAlignment = NSTextAlignmentLeft;
+        _depositSubLabel.font = kFont_Regular(14.f);
+        _depositSubLabel.text = @"+¥ 10000";
+    }
+    return _depositSubLabel;
+}
+
+- (UIView *)payView
+{
+    if (!_payView) {
+        _payView = [UIView new];
+        _payView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _payView.layer.cornerRadius = 2.f;
+        _payView.layer.masksToBounds = YES;
+    }
+    return _payView;
+}
+
+- (UILabel *)toPayLabel
+{
+    if (!_toPayLabel) {
+        _toPayLabel = [UILabel new];
+        _toPayLabel.textColor = COLOR_BLACK_333333;
+        _toPayLabel.textAlignment = NSTextAlignmentLeft;
+        _toPayLabel.font = kFont_Medium(14.f);
+        _toPayLabel.text = @"需付款：";
+    }
+    return _toPayLabel;
+}
+
+- (UILabel *)toPaySubLabel
+{
+    if (!_toPaySubLabel) {
+        _toPaySubLabel = [UILabel new];
+        _toPaySubLabel.textColor = COLOR_GRAY_666666;
+        _toPaySubLabel.textAlignment = NSTextAlignmentLeft;
+        _toPaySubLabel.font = kFont_Regular(14.f);
+        _toPaySubLabel.text = @"¥ 10000";
+    }
+    return _toPaySubLabel;
+}
+
+- (UIView *)bottomView
+{
+    if (!_bottomView) {
+        _bottomView = [UIView new];
+        _bottomView.backgroundColor = COLOR_GRAY_FFFFFF;
+        
+    }
+    return _bottomView;
 }
 
 - (void)onClickPhoneBtn:(UIButton *)button
@@ -379,6 +934,22 @@
 
 - (void)onClickLoundBtn:(UIButton *)button
 {
+    
+}
+
+- (void)onClickCancelBtn:(UIButton *)button
+{
+    
+}
+
+- (void)onClickPayBtn:(UIButton *)button
+{
+    [self pushVCByClassName:@"HPOrderPayViewController" withParam:@{@"order":@"gsgffg"}];
+}
+
+- (void)onClickAddOrderBtn:(UIButton *)button
+{
+    button.selected = !button.selected;
     
 }
 @end

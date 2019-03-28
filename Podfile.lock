@@ -14,33 +14,33 @@ PODS:
   - AFNetworking/Serialization (3.2.1)
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
-  - AlipaySDK-iOS (0.0.1)
-  - AMap3DMap (6.3.0):
+  - AlipaySDK-iOS (15.5.9)
+  - AMap3DMap (6.3.1):
     - AMapFoundation (~> 1.5)
-  - AMapFoundation (1.5.3)
-  - AMapLocation (2.6.0):
+  - AMapFoundation (1.5.6)
+  - AMapLocation (2.6.1):
     - AMapFoundation (~> 1.4)
-  - AMapSearch (6.1.1):
+  - AMapSearch (6.6.0):
     - AMapFoundation (~> 1.4)
   - Bugly (2.5.0)
-  - Charts (3.1.1):
-    - Charts/Core (= 3.1.1)
-  - Charts/Core (3.1.1)
-  - JCore (1.2.0)
-  - JMessage (3.6.1):
+  - Charts (3.2.2):
+    - Charts/Core (= 3.2.2)
+  - Charts/Core (3.2.2)
+  - JCore (1.2.6)
+  - JMessage (3.8.0):
     - JCore (~> 1.0)
-  - JPush (3.0.9):
-    - JCore (~> 1.2.0)
-  - LTScrollView (0.1.7)
+  - JPush (3.1.2):
+    - JCore (~> 1.2.6)
+  - LTScrollView (0.1.9)
   - Masonry (1.1.0)
   - MBProgressHUD (1.1.0)
   - MJExtension (3.0.15.1)
-  - MJRefresh (3.1.15.3)
-  - SDWebImage (4.4.1):
-    - SDWebImage/Core (= 4.4.1)
-  - SDWebImage/Core (4.4.1)
-  - TZImagePickerController (2.1.6)
-  - WechatOpenSDK (1.8.2)
+  - MJRefresh (3.1.15.7)
+  - SDWebImage (4.4.6):
+    - SDWebImage/Core (= 4.4.6)
+  - SDWebImage/Core (4.4.6)
+  - TZImagePickerController (3.2.0)
+  - WechatOpenSDK (1.8.4)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.2.1)
@@ -85,25 +85,25 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
-  AlipaySDK-iOS: 144af370f7665f2d311b5528e2c5d9a6738bf6fd
-  AMap3DMap: 1bb48f98ecb46682f145881692e7b06adcd06a93
-  AMapFoundation: 58f883c80754c659cf626deb3150936bfe8f1772
-  AMapLocation: 55116a2c8956eab7550cbb56e989aa5cdcc424e3
-  AMapSearch: 3dcbf85c403a2a0fe0eda5318caabc272b31f5e1
+  AlipaySDK-iOS: 1c5283b30977a24acecc0114662697f7dc78f618
+  AMap3DMap: 7e1b2f2a1628a584f085d7f158d7c9835837e8c2
+  AMapFoundation: 20fce2a12cd152e1092afdd04379cdac21932185
+  AMapLocation: cf024b53dc03663efb4ea4bcce27d4cce58bb97a
+  AMapSearch: def5983c8ca1a6d7430970046dc814f6e337621d
   Bugly: 3ca9f255c01025582df26f9222893b383c7e4b4e
-  Charts: 90a4d61da0f6e06684c591e3bcab11940fe61736
-  JCore: b52e3dd73625eec70afd1244bb9c41038aa06087
-  JMessage: f245ba75ba47959ec7d4408a62dcf703235ddaeb
-  JPush: 48041e8c5ad2ef9b48709eb0888af9640b36e9b0
-  LTScrollView: d7e8aeb7552b7d073475af49b0f67fc39b1980f0
+  Charts: f69cf0518b6d1d62608ca504248f1bbe0b6ae77e
+  JCore: cae516dd2bf1a73b578ce6e1065abd49e709e0f7
+  JMessage: 14355feac1f0b914c2ec813aede07cdcc8eddd1f
+  JPush: d0cead70ba223a6a3b52749899ebda830dfbc49a
+  LTScrollView: f2e17b5bc4b89f3aa59562a81fa10add77a8b8bf
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
-  MJRefresh: b48380ae2b927b46c4ef000de9adb8dc748e1df7
-  SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
-  TZImagePickerController: bc25e933c9d970a622d052f0d4de16202bbcd863
-  WechatOpenSDK: 676feec516a11173eafd1fe64b10d27babf28701
+  MJRefresh: 697f8ec75ebdbe9207767bb682cf0f51b0d8a41f
+  SDWebImage: 3f3f0c02f09798048c47a5ed0a13f17b063572d8
+  TZImagePickerController: 7850b158d025065b162a1a963d445040b828abc9
+  WechatOpenSDK: 9b721089507c895d05f997408c30bb6e6f5f9b60
 
 PODFILE CHECKSUM: f63125c9426bff3552bd3a1190d61063166552be
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.1

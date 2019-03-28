@@ -149,6 +149,13 @@
 		E629AB1E224A046100CF0378 /* JSBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AB1C224A046000CF0378 /* JSBadgeView.m */; };
 		E629AB23224A22DC00CF0378 /* HPOrderInfoListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AB22224A22DC00CF0378 /* HPOrderInfoListCell.m */; };
 		E629AB27224A274D00CF0378 /* HPOrderInfoListView.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AB26224A274D00CF0378 /* HPOrderInfoListView.m */; };
+		E629AD1C224CAF890038AA9F /* AlipaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E629AD1B224CAF890038AA9F /* AlipaySDK.framework */; };
+		E629AD1E224CAF960038AA9F /* libjcore-ios-1.2.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E629AD1D224CAF960038AA9F /* libjcore-ios-1.2.6.a */; };
+		E629AD20224CAFA00038AA9F /* libjpush-ios-3.1.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E629AD1F224CAFA00038AA9F /* libjpush-ios-3.1.2.a */; };
+		E629AD22224CAFAC0038AA9F /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E629AD21224CAFAC0038AA9F /* libWeChatSDK.a */; };
+		E629AD25224CDBA10038AA9F /* HPOrderPayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AD24224CDBA10038AA9F /* HPOrderPayViewController.m */; };
+		E629AD28224CF0920038AA9F /* HPChooseItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AD26224CF0910038AA9F /* HPChooseItemView.m */; };
+		E629AD2B224D08CB0038AA9F /* HPNewOrderView.m in Sources */ = {isa = PBXBuildFile; fileRef = E629AD2A224D08CB0038AA9F /* HPNewOrderView.m */; };
 		E62C84D121C20CBA00D7DFB3 /* HPSignInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = E62C84D021C20CBA00D7DFB3 /* HPSignInfoController.m */; };
 		E62C84D421C28F1D00D7DFB3 /* HPInviteSBGiftsController.m in Sources */ = {isa = PBXBuildFile; fileRef = E62C84D321C28F1D00D7DFB3 /* HPInviteSBGiftsController.m */; };
 		E633525B21F17A7C00999BE7 /* HPProvinceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E633525921F17A7B00999BE7 /* HPProvinceModel.m */; };
@@ -250,9 +257,6 @@
 		E67C68822237483600CF2297 /* HPReturnFundsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E67C68812237483600CF2297 /* HPReturnFundsViewController.m */; };
 		E67C688522374A8100CF2297 /* HPReturnModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E67C688422374A8100CF2297 /* HPReturnModel.m */; };
 		E67D2EDD21CBBB72005134DB /* HPShareSelectedItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = E67D2EDC21CBBB72005134DB /* HPShareSelectedItemView.m */; };
-		E67EFDC9221B9B75008BDA1D /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E67EFDC8221B9B75008BDA1D /* libWeChatSDK.a */; };
-		E67EFDCB221B9BC7008BDA1D /* libjcore-ios-1.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E67EFDCA221B9BC7008BDA1D /* libjcore-ios-1.2.0.a */; };
-		E67EFDCD221B9BEB008BDA1D /* libjpush-ios-3.0.9.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E67EFDCC221B9BEB008BDA1D /* libjpush-ios-3.0.9.a */; };
 		E67EFE2E221BA187008BDA1D /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E67EFDD0221BA187008BDA1D /* libcrypto.a */; };
 		E67EFE2F221BA187008BDA1D /* openssl_wrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFDD2221BA187008BDA1D /* openssl_wrapper.m */; };
 		E67EFE30221BA187008BDA1D /* APOrderInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = E67EFDD3221BA187008BDA1D /* APOrderInfo.m */; };
@@ -408,7 +412,6 @@
 		E6B8987521D0D53900FD443B /* HPStoreLeavesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6B8987421D0D53900FD443B /* HPStoreLeavesViewController.m */; };
 		E6BB366C223357A600DD7C9F /* HPPayStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BB366A223357A600DD7C9F /* HPPayStyleCell.m */; };
 		E6BB366E2233879800DD7C9F /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E6BB366D2233879700DD7C9F /* libsqlite3.0.tbd */; };
-		E6BB36702233973400DD7C9F /* AlipaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6BB366F2233973400DD7C9F /* AlipaySDK.framework */; };
 		E6BB36722233975600DD7C9F /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6BB36712233975600DD7C9F /* CoreMotion.framework */; };
 		E6BC6001220153FC0075C744 /* HPHomeBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC6000220153FC0075C744 /* HPHomeBannerView.m */; };
 		E6BC600422019DEB0075C744 /* HPGetherRentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC600322019DEB0075C744 /* HPGetherRentViewController.m */; };
@@ -778,6 +781,16 @@
 		E629AB22224A22DC00CF0378 /* HPOrderInfoListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOrderInfoListCell.m; sourceTree = "<group>"; };
 		E629AB25224A274D00CF0378 /* HPOrderInfoListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOrderInfoListView.h; sourceTree = "<group>"; };
 		E629AB26224A274D00CF0378 /* HPOrderInfoListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOrderInfoListView.m; sourceTree = "<group>"; };
+		E629AD1B224CAF890038AA9F /* AlipaySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlipaySDK.framework; path = "Pods/AlipaySDK-iOS/AlipaySDK.framework"; sourceTree = "<group>"; };
+		E629AD1D224CAF960038AA9F /* libjcore-ios-1.2.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libjcore-ios-1.2.6.a"; path = "Pods/JCore/libjcore-ios-1.2.6.a"; sourceTree = "<group>"; };
+		E629AD1F224CAFA00038AA9F /* libjpush-ios-3.1.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libjpush-ios-3.1.2.a"; path = "Pods/JPush/libjpush-ios-3.1.2.a"; sourceTree = "<group>"; };
+		E629AD21224CAFAC0038AA9F /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWeChatSDK.a; path = Pods/WechatOpenSDK/WeChatSDK1.8.4/libWeChatSDK.a; sourceTree = "<group>"; };
+		E629AD23224CDBA10038AA9F /* HPOrderPayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOrderPayViewController.h; sourceTree = "<group>"; };
+		E629AD24224CDBA10038AA9F /* HPOrderPayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOrderPayViewController.m; sourceTree = "<group>"; };
+		E629AD26224CF0910038AA9F /* HPChooseItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPChooseItemView.m; sourceTree = "<group>"; };
+		E629AD27224CF0920038AA9F /* HPChooseItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPChooseItemView.h; sourceTree = "<group>"; };
+		E629AD29224D08CB0038AA9F /* HPNewOrderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPNewOrderView.h; sourceTree = "<group>"; };
+		E629AD2A224D08CB0038AA9F /* HPNewOrderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPNewOrderView.m; sourceTree = "<group>"; };
 		E62C84CF21C20CBA00D7DFB3 /* HPSignInfoController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPSignInfoController.h; sourceTree = "<group>"; };
 		E62C84D021C20CBA00D7DFB3 /* HPSignInfoController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPSignInfoController.m; sourceTree = "<group>"; };
 		E62C84D221C28F1D00D7DFB3 /* HPInviteSBGiftsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPInviteSBGiftsController.h; sourceTree = "<group>"; };
@@ -1472,13 +1485,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E629AD22224CAFAC0038AA9F /* libWeChatSDK.a in Frameworks */,
+				E629AD20224CAFA00038AA9F /* libjpush-ios-3.1.2.a in Frameworks */,
+				E629AD1E224CAF960038AA9F /* libjcore-ios-1.2.6.a in Frameworks */,
+				E629AD1C224CAF890038AA9F /* AlipaySDK.framework in Frameworks */,
 				E6BB36722233975600DD7C9F /* CoreMotion.framework in Frameworks */,
-				E6BB36702233973400DD7C9F /* AlipaySDK.framework in Frameworks */,
 				E6BB366E2233879800DD7C9F /* libsqlite3.0.tbd in Frameworks */,
-				E67EFDCD221B9BEB008BDA1D /* libjpush-ios-3.0.9.a in Frameworks */,
-				E67EFDCB221B9BC7008BDA1D /* libjcore-ios-1.2.0.a in Frameworks */,
 				E67EFE31221BA187008BDA1D /* libssl.a in Frameworks */,
-				E67EFDC9221B9B75008BDA1D /* libWeChatSDK.a in Frameworks */,
 				E6F14A3F21E5CF5800631005 /* libresolv.tbd in Frameworks */,
 				E67EFE2E221BA187008BDA1D /* libcrypto.a in Frameworks */,
 				E6F14A3D21E5CF4C00631005 /* UserNotifications.framework in Frameworks */,
@@ -1708,6 +1721,10 @@
 		D29D226676E10B1AF5705590 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E629AD21224CAFAC0038AA9F /* libWeChatSDK.a */,
+				E629AD1F224CAFA00038AA9F /* libjpush-ios-3.1.2.a */,
+				E629AD1D224CAF960038AA9F /* libjcore-ios-1.2.6.a */,
+				E629AD1B224CAF890038AA9F /* AlipaySDK.framework */,
 				E6BB36712233975600DD7C9F /* CoreMotion.framework */,
 				E6BB366F2233973400DD7C9F /* AlipaySDK.framework */,
 				E6BB366D2233879700DD7C9F /* libsqlite3.0.tbd */,
@@ -2800,6 +2817,8 @@
 				E67199EF224B254D002A4288 /* HPOrderManagerViewController.m */,
 				E67199F4224B767A002A4288 /* HPOrderDetailViewController.h */,
 				E67199F5224B767A002A4288 /* HPOrderDetailViewController.m */,
+				E629AD23224CDBA10038AA9F /* HPOrderPayViewController.h */,
+				E629AD24224CDBA10038AA9F /* HPOrderPayViewController.m */,
 			);
 			path = OrderManager;
 			sourceTree = "<group>";
@@ -2882,6 +2901,8 @@
 				E679B84B22421951004A2CFA /* HPOrderBtn.m */,
 				E629AAB122487D1600CF0378 /* HPCancelView.h */,
 				E629AAB222487D1600CF0378 /* HPCancelView.m */,
+				E629AD29224D08CB0038AA9F /* HPNewOrderView.h */,
+				E629AD2A224D08CB0038AA9F /* HPNewOrderView.m */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -3083,6 +3104,8 @@
 		E6801FB922363FE4002B1133 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				E629AD27224CF0920038AA9F /* HPChooseItemView.h */,
+				E629AD26224CF0910038AA9F /* HPChooseItemView.m */,
 				E6801FBB2236402E002B1133 /* HPOrderCell.h */,
 				E6801FBC2236402E002B1133 /* HPOrderCell.m */,
 			);
@@ -3967,9 +3990,9 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-resources.sh",
 				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
-				"${PODS_ROOT}/AlipaySDK-iOS/AlipaySDk/AlipaySDK.bundle",
+				"${PODS_ROOT}/AlipaySDK-iOS/AlipaySDK.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -3978,7 +4001,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		70D9735B568E410427B2682C /* [CP] Embed Pods Frameworks */ = {
@@ -3987,7 +4010,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/LTScrollView/LTScrollView.framework",
@@ -4012,7 +4035,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B342B99A66A5FA78560C45ED /* [CP] Check Pods Manifest.lock */ = {
@@ -4085,6 +4108,7 @@
 				E67D2EDD21CBBB72005134DB /* HPShareSelectedItemView.m in Sources */,
 				E6D75F4D21AFF48200B2067C /* HPBindPhoneController.m in Sources */,
 				E679B85622436519004A2CFA /* HPRentTimePicker.m in Sources */,
+				E629AD28224CF0920038AA9F /* HPChooseItemView.m in Sources */,
 				E6292172219AB28700BEF16C /* HPGlobalVariable.m in Sources */,
 				E629AABB2248AA7900CF0378 /* HPAccountCell.m in Sources */,
 				E622A9BE21C33989007C35BC /* UIScrollView+Refresh.m in Sources */,
@@ -4095,6 +4119,7 @@
 				E6F551DB21B8FA800086094F /* HPInteractiveCell.m in Sources */,
 				E693E90621E8331E0063797A /* QuadTree.m in Sources */,
 				E661B0BD219C2DF700C86CF5 /* HPLinkageSheetView.m in Sources */,
+				E629AD25224CDBA10038AA9F /* HPOrderPayViewController.m in Sources */,
 				6979CA8121D6220700B1518C /* HPBotomPickerModalView.m in Sources */,
 				E6F551DE21B901820086094F /* HPTimeString.m in Sources */,
 				E661B12E21A28E8500C86CF5 /* JTCalendarPageView.m in Sources */,
@@ -4356,6 +4381,7 @@
 				E629AB11224A014600CF0378 /* YZXAnnualReportView.m in Sources */,
 				E66F28BF22003054000E0206 /* HUD.m in Sources */,
 				E61CB23D21C772460076540E /* HPMyCardController.m in Sources */,
+				E629AD2B224D08CB0038AA9F /* HPNewOrderView.m in Sources */,
 				69165CEA21C0D0E500593D25 /* HPAddressModel.m in Sources */,
 				E661B0DF219D4C8E00C86CF5 /* HPLinkageData.m in Sources */,
 				E6292185219ABF4400BEF16C /* HPGradientUtil.m in Sources */,
@@ -4627,6 +4653,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/AlipaySDK-iOS/AlipaySDk",
+					"$(PROJECT_DIR)/Pods/AlipaySDK-iOS",
 				);
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -4644,6 +4671,7 @@
 					"$(PROJECT_DIR)/Pods/JCore",
 					"$(PROJECT_DIR)/Pods/JPush",
 					"$(PROJECT_DIR)/HPShareApp/OrderPay(订单支付)/Alipay",
+					"$(PROJECT_DIR)/Pods/WechatOpenSDK/WeChatSDK1.8.4",
 				);
 				OTHER_CFLAGS = (
 					"$(inherited)",
@@ -4697,6 +4725,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/AlipaySDK-iOS/AlipaySDk",
+					"$(PROJECT_DIR)/Pods/AlipaySDK-iOS",
 				);
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -4714,6 +4743,7 @@
 					"$(PROJECT_DIR)/Pods/JCore",
 					"$(PROJECT_DIR)/Pods/JPush",
 					"$(PROJECT_DIR)/HPShareApp/OrderPay(订单支付)/Alipay",
+					"$(PROJECT_DIR)/Pods/WechatOpenSDK/WeChatSDK1.8.4",
 				);
 				OTHER_CFLAGS = (
 					"$(inherited)",

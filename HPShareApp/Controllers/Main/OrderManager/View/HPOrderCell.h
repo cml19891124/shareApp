@@ -10,12 +10,14 @@
 
 #import "HPShareDetailModel.h"
 
+#import "HPRightImageButton.h"
+
 typedef void (^PayOrderClickBlock)(NSInteger payOrder);
 
 typedef NS_ENUM(NSInteger, PayOrder){
-    PayOrderConsult = 3000,
-    PayOrderToPay,//待支付
-    PayOrderReturn//退款
+    
+    PayOrderToPay = 3000,//待支付
+    PayOrderImergency//退款
 };
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,24 +25,34 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIView *bgView;
 
-@property (nonatomic, strong) UILabel *orderLabel;
+@property (nonatomic, strong) UIImageView *shopIcon;
+
+@property (nonatomic, strong) UIImageView *leftIcon;
+
+@property (nonatomic, strong) HPRightImageButton *shopNamebtn;
+
+@property (nonatomic, strong) UIButton *dustbinBtn;
+
+@property (nonatomic, strong) UILabel *waitingReceiveLabel;
 
 @property (nonatomic, strong) UIView *firstLine;
 
-@property (nonatomic, strong) UILabel *contactLabel;
+@property (nonatomic, strong) UILabel *shopNameLabel;
 
-@property (nonatomic, strong) UILabel *shopLabel;
+@property (nonatomic, strong) UILabel *rentDuringLabel;
 
 @property (nonatomic, strong) HPShareDetailModel *model;
 
-@property (nonatomic, strong) UILabel *industryLabel;
+@property (nonatomic, strong) UILabel *desLabel;
 
 @property (nonatomic, strong) UIView *payLine;
 
+@property (nonatomic, strong) UILabel *totalLabel;
+
 /**
- 订单查询
+ 订单取消
  */
-@property (nonatomic, strong) UIButton *consultBtn;
+@property (nonatomic, strong) UIButton *cancelBtn;
 
 /**
  待付款

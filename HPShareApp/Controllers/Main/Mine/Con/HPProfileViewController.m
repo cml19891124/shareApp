@@ -28,6 +28,8 @@
 
 #import "JCHATStringUtils.h"
 
+#import "HPNewOrderView.h"
+
 typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
     HPProfileSelectedRowIdentify = 0,//资格认证
     HPProfileSelectedRowAccountSafe,//账号安全
@@ -37,6 +39,8 @@ typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
 };
 
 @interface HPProfileViewController ()<UITableViewDelegate,UITableViewDataSource,HPHeaderViewCellDelegate>
+
+@property (nonatomic, strong) HPNewOrderView *newOrderView;
 
 @property (nonatomic, weak) HPUpdateVersionView *updateView;
 
@@ -73,6 +77,15 @@ static NSString *orderItemCell = @"HPOrderItemCell";
     }
 }
 
+- (HPNewOrderView *)newOrderView
+{
+    if (!_newOrderView) {
+        _newOrderView = [[HPNewOrderView alloc] initWithParent:self.tabBarController.view];
+        
+    }
+    return _newOrderView;
+}
+
 - (void)onTapped:(HPHeaderViewCell *)tableviewCell HeaderView:(UITapGestureRecognizer *)tap
 {
     HPLog(@"tap");
@@ -100,6 +113,15 @@ static NSString *orderItemCell = @"HPOrderItemCell";
     optionalBtn.selected = !optionalBtn.selected;
     if (optionalBtn.selected) {
         [HPSingleton sharedSingleton].identifyTag = 1;
+        
+        [self.tabBarController.view addSubview:self.newOrderView];
+        
+        [self.newOrderView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.view);
+        }];
+        
+        [self.newOrderView show:YES];
+        
     }else{
         [HPSingleton sharedSingleton].identifyTag = 0;
     }
@@ -126,6 +148,7 @@ static NSString *orderItemCell = @"HPOrderItemCell";
             cell.identifiLabel.text = @"租客信息，资质认证";
             
         }else{
+            
             cell.identifiLabel.text = @"店主信息，资质认证";
             
         }
@@ -339,7 +362,13 @@ static NSString *orderItemCell = @"HPOrderItemCell";
 {
     HPOrderItemCell *cell = [tableView dequeueReusableCellWithIdentifier:orderItemCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
+    cell.returnBlock = ^(NSInteger HPReturnOrderIndex) {
+        if (HPReturnOrderIndex == 4405) {//全部订单
+            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{}];
+        }else{
+            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{}];
+        }
+    };
 //    HPLoginModel *account = [HPUserTool account];
     return cell;
 }

@@ -53,8 +53,8 @@
 {
     if (!_selectedButton) {
         _selectedButton = [UIButton new];
-        [_selectedButton setBackgroundImage:[UIImage imageNamed:@"unselected"] forState:UIControlStateNormal];
-        [_selectedButton setBackgroundImage:[UIImage imageNamed:@"selected"] forState:UIControlStateSelected];
+        [_selectedButton setBackgroundImage:[UIImage imageNamed:@"pay_unselected"] forState:UIControlStateNormal];
+        [_selectedButton setBackgroundImage:[UIImage imageNamed:@"pay_selected"] forState:UIControlStateSelected];
         [_selectedButton addTarget:self action:@selector(clickToSelectedPay:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _selectedButton;
@@ -63,20 +63,20 @@
 - (void)createCustomSubviewsMasonry
 {
     [self.imaV mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(12.f));
+        make.left.mas_equalTo(getWidth(15.f));
         make.width.height.mas_equalTo(getWidth(20.f));
         make.centerY.mas_equalTo(self.contentView);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.imaV.mas_right).offset(getWidth(13.f));
+        make.left.mas_equalTo(self.imaV.mas_right).offset(getWidth(15.f));
         make.width.mas_equalTo(getWidth(kScreenWidth/3));
         make.height.mas_equalTo(self.contentView);
     }];
     
     [self.selectedButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.contentView).offset(getWidth(-13.f));
-        make.width.height.mas_equalTo(getWidth(16.f));
+        make.right.mas_equalTo(self.contentView).offset(getWidth(-20.f));
+        make.width.height.mas_equalTo(getWidth(20.f));
         make.centerY.mas_equalTo(self.contentView);
     }];
 }
