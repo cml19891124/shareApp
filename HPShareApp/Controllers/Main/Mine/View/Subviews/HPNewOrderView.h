@@ -8,6 +8,15 @@
 
 #import "HPBaseModalView.h"
 
+typedef void(^NewOrderBtnBlock)(NSInteger newIndex);
+
+typedef NS_ENUM(NSInteger, NewOrderState) {
+    HPNewOrderStateCommunicate = 4900,
+    HPNewOrderStateReceive,
+    HPNewOrderStateCalender,
+    HPNewOrderStateCloseOrder
+};
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPNewOrderView : HPBaseModalView
@@ -34,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UILabel *rentDaysLabel;
 
+@property (nonatomic, strong) UIView *daysView;
+
 @property (nonatomic, strong) UILabel *daysLabel;
 
 @property (nonatomic, strong) UIButton *calendBtn;
@@ -49,6 +60,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *receiveBtn;
 
 @property (nonatomic, strong) UIButton *closed_order_btn;
+
+@property (nonatomic, copy) NewOrderBtnBlock newBlock;
+
+@property (nonatomic, strong) UIView *view;
 @end
 
 NS_ASSUME_NONNULL_END

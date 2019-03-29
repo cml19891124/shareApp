@@ -51,6 +51,7 @@
 #define COLOR_RED_FF531E    [UIColor colorWithHexString:@"#FF531E"]
 #define COLOR_YELLOW_FFB400 [UIColor colorWithHexString:@"#FFB400"]
 #define COLOR_YELLOW_FBF8D9 [UIColor colorWithHexString:@"#FBF8D9"]
+#define COLOR_YELLOW_FF531E [UIColor colorWithHexString:@"#FF531E"]
 
 #define COLOR_RED_FF3455 [UIColor colorWithHexString:@"#FF3455"]
 #define COLOR_RED_FF9B5E [UIColor colorWithHexString:@"#FF9B5E"]
@@ -110,6 +111,8 @@
 #define COLOR_GRAY_F44230 [UIColor colorWithHexString:@"#F44230"]
 #define COLOR_GRAY_F42000 [UIColor colorWithHexString:@"#F42000"]
 #define COLOR_RED_FFE6E2 [UIColor colorWithHexString:@"#FFE6E2"]
+#define COLOR_RED_FF7878 [UIColor colorWithHexString:@"#FF7878"]
+#define COLOR_RED_FF1213 [UIColor colorWithHexString:@"#FF1213"]
 
 #define COLOR_GRAY_F6F6F6 [UIColor colorWithHexString:@"#F6F6F6"]
 #define COLOR_GRAY_F7F7F7 [UIColor colorWithHexString:@"#F7F7F7"]

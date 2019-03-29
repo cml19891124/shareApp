@@ -36,6 +36,9 @@
 
 #import "HPSingleton.h"
 
+#import "HPCalenderView.h"
+
+
 @interface HPOrderManagerViewController ()
 
 @property (nonatomic, strong) HPQuitOrderView *quitView;
@@ -147,9 +150,34 @@
 @property (nonatomic, copy) NSString             *startDate;
 @property (nonatomic, copy) NSString             *endDate;
 
+@property (nonatomic, strong) HPCalenderView *calenderView;
+
 @end
 
 @implementation HPOrderManagerViewController
+
+
+- (HPCalenderView *)calenderView
+{
+    if (!_calenderView) {
+        _calenderView = [HPCalenderView new];
+        kWEAKSELF
+        _calenderView.calenderBlock = ^(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType) {
+            weakSelf.rentStartDayLabel.text = startDate;
+            weakSelf.rentEndDayLabel.text = endDate;
+            weakSelf.selectedType = selectedType;
+            
+        };
+        
+        _calenderView.singleBlock = ^(NSString *day) {
+            weakSelf.rentLineLabel.hidden = YES;
+            weakSelf.rentEndDayLabel.hidden = YES;
+            weakSelf.rentStartDayLabel.text = day;
+            
+        };
+    }
+    return _calenderView;
+}
 
 
 - (void)onClickBack:(UIButton *)UIButton
@@ -561,7 +589,7 @@
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.width.mas_equalTo(self.view);
-        make.height.mas_equalTo(getWidth(60.f) + g_bottomSafeAreaHeight);
+        make.height.mas_equalTo(getWidth(60.f));
     }];
     
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -721,7 +749,7 @@
         _nameLabel = [UILabel new];
         _nameLabel.text = @"小女当家场地拼租";
         _nameLabel.textAlignment = NSTextAlignmentLeft;
-        _nameLabel.font = kFont_Medium(16.f);
+        _nameLabel.font = kFont_Medium(14.f);
         _nameLabel.textColor = COLOR_BLACK_333333;
     }
     return _nameLabel;
@@ -1262,20 +1290,23 @@
 
 - (void)onClickSelectedDaysbtn:(UIButton *)button
 {
-    YZXSelectDateViewController *VC = [[YZXSelectDateViewController alloc] init];
-    kWEAKSELF
-    VC.confirmTheDateBlock = ^(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType) {
-        weakSelf.selectedType = selectedType;
-        weakSelf.startDate = startDate;
-        weakSelf.endDate = endDate;
-        weakSelf.rentStartDayLabel.text = startDate;
-        weakSelf.rentEndDayLabel.text = endDate;
-
-    };
-    VC.selectedType = self.selectedType;
-    VC.startDate    = self.startDate;
-    VC.endDate      = self.endDate;
-    [self presentViewController:VC animated:YES completion:nil];
+//    YZXSelectDateViewController *VC = [[YZXSelectDateViewController alloc] init];
+//    kWEAKSELF
+//    VC.confirmTheDateBlock = ^(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType) {
+//        weakSelf.selectedType = selectedType;
+//        weakSelf.startDate = startDate;
+//        weakSelf.endDate = endDate;
+//        weakSelf.rentStartDayLabel.text = startDate;
+//        weakSelf.rentEndDayLabel.text = endDate;
+//
+//    };
+//    VC.selectedType = self.selectedType;
+//    VC.startDate    = self.startDate;
+//    VC.endDate      = self.endDate;
+//    [self presentViewController:VC animated:YES completion:nil];
+    [self.view addSubview:self.calenderView];
+    
+    [self.calenderView show:YES];
 }
 
 - (void)onClickManagerTimesBtn:(UIButton *)button

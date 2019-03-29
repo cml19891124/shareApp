@@ -81,7 +81,18 @@ static NSString *orderItemCell = @"HPOrderItemCell";
 {
     if (!_newOrderView) {
         _newOrderView = [[HPNewOrderView alloc] initWithParent:self.tabBarController.view];
-        
+        kWEAKSELF
+        _newOrderView.newBlock = ^(NSInteger newIndex) {
+            if (newIndex == HPNewOrderStateCommunicate) {
+                HPLog(@"communciate");
+            }else if (newIndex == HPNewOrderStateReceive){
+                HPLog(@"receive");
+
+            }else if (newIndex == HPNewOrderStateCloseOrder){
+                HPLog(@"CloseOrder");
+                [weakSelf.newOrderView show:NO];
+            }
+        };
     }
     return _newOrderView;
 }

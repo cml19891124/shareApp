@@ -12,13 +12,13 @@
 #import "YZXAnnualReportView.h"
 #import "YZXMonthlyReportView.h"
 #import "YZXCustomDateBottomView.h"
-
+#import "HPGlobalVariable.h"
 #import "MBProgressHUD.h"
 
 #import "Macro.h"
 
 static const CGFloat topPageNavigationView_height = 44.0;
-static const CGFloat bottomView_height = 50.0;
+static const CGFloat bottomView_height = 60.0;
 static const CGFloat blankSpace = 40.0;
 
 @interface YZXSelectDateViewController () <SJPageNavigationViewDelegate,SJPageNavigationViewDataSource,YZXCalendarDelegate,YZXMonthlyReportViewDelegate,YZXAnnualReportViewDelegate>
@@ -65,7 +65,7 @@ static const CGFloat blankSpace = 40.0;
 {
     //默认为日报
     if (self.selectedType == YZXTimeToChooseInAll) {
-        self.selectedType = YZXTimeToChooseInDay;
+        self.selectedType = YZXTimeToChooseInCustom;
     }
     
     if (IPHONE_HAS_NOTCH) {
@@ -83,12 +83,12 @@ static const CGFloat blankSpace = 40.0;
     
     self.selectedView = [[UIView alloc] init];
     
-    [self.view addSubview:self.topPageNavigationView];
+//    [self.view addSubview:self.topPageNavigationView];
     
     [self.view addSubview:self.calendarView];
-    
+
     [self.view addSubview:self.monthlyReportView];
-    
+
     [self.view addSubview:self.annualReportView];
     
     [self.view addSubview:self.customCalendarView];
@@ -106,27 +106,28 @@ static const CGFloat blankSpace = 40.0;
         {
         }
             break;
-        case YZXTimeToChooseInDay:
-        {
-            self.calendarView.startDate = self.startDate;
-            self.selectedView = self.calendarView;
-        }
-            break;
-        case YZXTimeToChooseInMonth:
-        {
-            self.monthlyReportView.selectedMonth = self.startDate;
-            self.selectedView = self.monthlyReportView;
-        }
-            break;
-        case YZXTimeToChooseInYear:
-        {
-            self.annualReportView.selectedYear = self.startDate;
-            self.selectedView = self.annualReportView;
-        }
-            break;
+//        case YZXTimeToChooseInDay:
+//        {
+//            self.calendarView.startDate = self.startDate;
+//            self.selectedView = self.calendarView;
+//        }
+//            break;
+//        case YZXTimeToChooseInMonth:
+//        {
+//            self.monthlyReportView.selectedMonth = self.startDate;
+//            self.selectedView = self.monthlyReportView;
+//        }
+//            break;
+//        case YZXTimeToChooseInYear:
+//        {
+//            self.annualReportView.selectedYear = self.startDate;
+//            self.selectedView = self.annualReportView;
+//        }
+//            break;
+        
         case YZXTimeToChooseInCustom:
         {
-            self.customCalendarView.dateArray = @[self.startDate,self.endDate];
+//            self.customCalendarView.dateArray = @[self.startDate,self.endDate];
             self.bottomView.startTime = self.startDate;
             self.bottomView.endTime = self.endDate;
             if (self.endDate) {
@@ -172,7 +173,7 @@ static const CGFloat blankSpace = 40.0;
                 [self p_hudWithContent:@"请选择日期" WithYOffset:self.hudYOffset];
             }
             if (self.bottomView.startTime && !self.bottomView.endTime) {
-                [self p_hudWithContent:@"请再选择一个日期" WithYOffset:self.hudYOffset];
+//                [self p_hudWithContent:@"请再选择一个日期" WithYOffset:self.hudYOffset];
             }
             self.customCalendarView.hidden = NO;
             self.selectedView = self.customCalendarView;
@@ -281,7 +282,10 @@ static const CGFloat blankSpace = 40.0;
     if (_confirmTheDateBlock) {
         _confirmTheDateBlock(date,nil,YZXTimeToChooseInDay);
     }
-    [self dismissViewControllerAnimated:YES completion:nil];
+//    [self dismissViewControllerAnimated:YES completion:nil];
+    if ([self.delegate respondsToSelector:@selector(selectedDay:)]) {
+        [self.delegate selectedDay:date];
+    }
 }
 
 #pragma mark - <YZXMonthlyReportViewDelegate>
@@ -404,8 +408,8 @@ static const CGFloat blankSpace = 40.0;
 //顶部选择控制器
 - (SJPageNavigationView *)topPageNavigationView
 {
-    if (!_topPageNavigationView) {
-        _topPageNavigationView = [[SJPageNavigationView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.topView.frame), SCREEN_WIDTH, topPageNavigationView_height) titles:@[@"日报",@"月报",@"年报",@"自定义"] dataSource:self selectedIndex:self.selectedType - 1];
+    if (!_topPageNavigationView) {//CGRectGetMaxY(self.topView.frame)
+        _topPageNavigationView = [[SJPageNavigationView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, topPageNavigationView_height) titles:@[@"日期",@"",@"",@"段选"] dataSource:self selectedIndex:self.selectedType - 1];
         _topPageNavigationView.sjDelegate = self;
         _topPageNavigationView.isShowTopView = NO;
         _topPageNavigationView.isShowBottomView = NO;
@@ -417,10 +421,10 @@ static const CGFloat blankSpace = 40.0;
 {
     if (!_calendarView) {
         CGRect rect = CGRectZero;
-        if (kDevice_iPhoneX) {
-            rect = CGRectMake(0, CGRectGetMaxY(self.topPageNavigationView.frame), self.view.frame.size.width, SCREEN_HEIGHT - topPageNavigationView_height - 1 - TOPHEIGHT_IPHONE_X);
+        if (kDevice_iPhoneX) {// CGRectGetMaxY(self.topPageNavigationView.frame)
+            rect = CGRectMake(0,0, self.view.frame.size.width, SCREEN_HEIGHT - topPageNavigationView_height - 1 - TOPHEIGHT_IPHONE_X - g_bottomSafeAreaHeight - g_statusBarHeight);
         }else {
-            rect = CGRectMake(0, CGRectGetMaxY(self.topPageNavigationView.frame), self.view.frame.size.width, SCREEN_HEIGHT - topPageNavigationView_height - 1 - TOPHEIGHT);
+            rect = CGRectMake(0,0, self.view.frame.size.width, SCREEN_HEIGHT - topPageNavigationView_height - 1 - TOPHEIGHT - g_bottomSafeAreaHeight - g_statusBarHeight);
         }
         _calendarView = [[YZXCalendarView alloc] initWithFrame:rect withStartDateString:self.helper.dayReportStartDate endDateString:self.helper.dayReportEndDate];
         _calendarView.delegate = self;
@@ -433,9 +437,9 @@ static const CGFloat blankSpace = 40.0;
     if (!_customCalendarView) {
         CGRect rect = CGRectZero;
         if (kDevice_iPhoneX) {
-            rect = CGRectMake(0, CGRectGetMaxY(self.topPageNavigationView.frame), self.view.frame.size.width, SCREEN_HEIGHT - topPageNavigationView_height - bottomView_height - 1 - TOPHEIGHT_IPHONE_X - blankSpace);
+            rect = CGRectMake(0,0, self.view.frame.size.width, SCREEN_HEIGHT - bottomView_height - 1 - TOPHEIGHT_IPHONE_X - blankSpace - bottomView_height + 20);
         }else {
-            rect = CGRectMake(0, CGRectGetMaxY(self.topPageNavigationView.frame), self.view.frame.size.width, SCREEN_HEIGHT - topPageNavigationView_height - bottomView_height - 1 - TOPHEIGHT - blankSpace);
+            rect = CGRectMake(0,0, self.view.frame.size.width, SCREEN_HEIGHT - bottomView_height - 1 - TOPHEIGHT - blankSpace - bottomView_height);
         }
         
         _customCalendarView = [[YZXCalendarView alloc] initWithFrame:rect withStartDateString:self.helper.customDateStartDate endDateString:self.helper.customDateEndDate];
@@ -483,8 +487,8 @@ static const CGFloat blankSpace = 40.0;
 //底部视图
 - (YZXCustomDateBottomView *)bottomView
 {
-    if (!_bottomView) {
-        _bottomView = [[YZXCustomDateBottomView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.customCalendarView.frame) + blankSpace, self.view.bounds.size.width, bottomView_height)];
+    if (!_bottomView) {// CGRectGetMaxY(self.customCalendarView.frame) + blankSpace
+        _bottomView = [[YZXCustomDateBottomView alloc] initWithFrame:CGRectMake(0,CGRectGetMaxY(self.customCalendarView.frame), self.view.bounds.size.width, bottomView_height)];
         //确定 选择日期
         __weak typeof(self) weak_self = self;
         _bottomView.confirmBlock = ^(NSString *startTime, NSString *endTime) {
@@ -493,8 +497,14 @@ static const CGFloat blankSpace = 40.0;
                 weak_self.confirmTheDateBlock =nil;//ssj
             }
             
-            [weak_self dismissViewControllerAnimated:YES completion:nil];
+            if ([weak_self.delegate respondsToSelector:@selector(confirmSelectedDays)]) {
+                [weak_self.delegate confirmSelectedDays];
+            }
+//            [weak_self dismissViewControllerAnimated:YES completion:nil];
+            
         };
+
+        
     }
     return _bottomView;
 }

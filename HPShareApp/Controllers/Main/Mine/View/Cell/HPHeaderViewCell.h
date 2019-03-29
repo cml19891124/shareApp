@@ -74,6 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIImageView *iconImageView;
 
+@property (nonatomic, strong) UIView *rentLineView;
 /**
  登录按钮的功能
  */

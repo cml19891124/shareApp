@@ -184,7 +184,7 @@
         [self.rentView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(getWidth(15.f));
             make.top.mas_equalTo(self.bgImageView.mas_bottom).offset(getWidth(-28.f));
-            make.height.mas_equalTo(getWidth(142.f));
+            make.height.mas_equalTo(getWidth(120.f));
             make.right.mas_equalTo(getWidth(-15.f));
         }];
         
@@ -327,6 +327,17 @@
         _orderTipLabel.font = kFont_Bold(16.f);
     }
     return _orderTipLabel;
+}
+
+- (UIView *)rentLineView
+{
+    if (!_rentLineView) {
+        _rentLineView = [UIView new];
+        _rentLineView.backgroundColor = COLOR_GRAY_FAFAFA;
+        _rentLineView.layer.cornerRadius = 2.f;
+        _rentLineView.layer.masksToBounds = YES;
+    }
+    return _rentLineView;
 }
 
 - (void)onClickedEditProfileInfo:(UIButton *)button
@@ -488,7 +499,7 @@
         [self.rentView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(getWidth(15.f));
             make.top.mas_equalTo(self.bgImageView.mas_bottom).offset(getWidth(-28.f));
-            make.height.mas_equalTo(getWidth(142.f));
+            make.height.mas_equalTo(getWidth(120.f));
             make.right.mas_equalTo(getWidth(-15.f));
         }];
         

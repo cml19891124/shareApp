@@ -143,7 +143,7 @@
     }];
     
     [self.desLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.rentDuringLabel.mas_left);
+        make.right.mas_equalTo(getWidth(-10.f));
         make.left.mas_equalTo(self.shopIcon.mas_right).offset(getWidth(10.f));
         make.top.mas_equalTo(self.rentDuringLabel.mas_bottom).offset(getWidth(10.f));
     }];
@@ -162,7 +162,7 @@
         make.top.mas_equalTo(self.desLabel.mas_bottom).offset(getWidth(10.f));
     }];
     
-    CGFloat topayW = BoundWithSize(self.topayBtn.currentTitle, kScreenWidth, 12.f).size.width + 10.f;
+    CGFloat topayW = BoundWithSize(self.topayBtn.currentTitle, kScreenWidth, 12.f).size.width + 20.f;
 
     [self.topayBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(getWidth(-10.f));
@@ -174,7 +174,7 @@
         make.height.mas_equalTo(getWidth(25.f));
     }];
     
-    CGFloat consultW = BoundWithSize(self.cancelBtn.currentTitle, kScreenWidth, 12.f).size.width + 10.f;
+    CGFloat consultW = BoundWithSize(self.cancelBtn.currentTitle, kScreenWidth, 12.f).size.width + 20.f;
 
     [self.cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.topayBtn.mas_left).offset(getWidth(-10.f));
@@ -295,7 +295,7 @@
     if (!_rentDuringLabel) {
         _rentDuringLabel = [UILabel new];
         _rentDuringLabel.textColor = COLOR_BLACK_333333;
-        _rentDuringLabel.font = kFont_Medium(15.f);
+        _rentDuringLabel.font = kFont_Medium(12.f);
         _rentDuringLabel.text = @"租期（共7天）：3月21、3月22、3月23...";
         _rentDuringLabel.textAlignment = NSTextAlignmentLeft;
         _rentDuringLabel.numberOfLines = 2;
@@ -309,7 +309,7 @@
     if (!_desLabel) {
         _desLabel = [UILabel new];
         _desLabel.textColor = COLOR_BLACK_333333;
-        _desLabel.font = kFont_Medium(15.f);
+        _desLabel.font = kFont_Medium(12.f);
         _desLabel.text = @"拼租说明：我想用来做做推广，奶茶免费试喝";
         _desLabel.textAlignment = NSTextAlignmentLeft;
     }

@@ -16,6 +16,7 @@
 #import "YZXCalendarHeader.h"
 #import "UIColor+Hexadecimal.h"
 
+#import "Macro.h"
 #define collectionView_width (iPhone5SE ? self.bounds.size.width - 1.5 : (iPhone6Plus_6sPlus ? self.bounds.size.width - 1 : self.bounds.size.width - 0.5))
 
 #define dayView_width (collectionView_width / 7.f)
@@ -103,15 +104,39 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     }
     
     if (self.selectedArray.count == 2 && [indexPath compare:self.selectedArray.firstObject] == NSOrderedDescending && [indexPath compare:self.selectedArray.lastObject] == NSOrderedAscending) {
-        [cell changeContentViewBackgroundColor:RGBCOLOR(221,81,77,0.75)];
-        [cell changeDayTextColor:[UIColor whiteColor]];
+        [cell changeContentViewBackgroundColor:COLOR_RED_FF7878];
+//        [cell changeDayBackgroundColor:COLOR_RED_FF7878];
+        
+        if ([cell.day.text isEqualToString:@"9"]) {
+            cell.priceLabel.text = @"已预订";
+            cell.priceLabel.textColor = COLOR_GRAY_FFFFFF;
+            cell.priceLabel.font = kFont_Medium(10.f);
+            [cell changeContentViewBackgroundColor:COLOR_GRAY_CCCCCC];
+        }
+        if (cell.day.text.length) {
+            cell.isHidden = NO;
+            cell.priceLabel.hidden = NO;
+            [cell changeDayTextColor:[UIColor whiteColor]];
+        }
+        
+    }else{
+        cell.isHidden = YES;
+        cell.priceLabel.hidden = YES;
+//        [cell changeDayBackgroundColor:COLOR_GRAY_FFFFFF];
+
     }
     
     //将选中的按钮改变样式
     [self.selectedArray enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj.section == indexPath.section && obj.item == indexPath.item) {
-            [cell changeContentViewBackgroundColor:CustomColor(@"dd514d")];
+            [cell changeContentViewBackgroundColor:CustomColor(@"EA0000")];
+//            [cell changeDayBackgroundColor:COLOR_RED_EA0000];
+            cell.isHidden = NO;
+            cell.priceLabel.hidden = NO;
             [cell changeDayTextColor:[UIColor whiteColor]];
+        }else{
+//            [cell changeDayBackgroundColor:COLOR_GRAY_FFFFFF];
+
         }
     }];
     
@@ -120,8 +145,6 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    YZXCalendarCollectionViewCell *cell = (YZXCalendarCollectionViewCell *)[collectionView cellForItemAtIndexPath:[NSIndexPath indexPathWithIndex:indexPath.row]];
-
     //自定义选择
     if (self.customSelect) {
         switch (self.selectedArray.count) {
@@ -186,9 +209,9 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
                 break;
             case 2://重新选择
             {
-                //重新选择时，将之前点击的cell恢复成为点击状态，并移除数组中所有对象
+                //重新选择时，将之前点击的cell恢复成未点击状态，并移除数组中所有对象
                 [self.selectedArray removeAllObjects];
-                
+
                 //记录当前点击的cell
                 [self.selectedArray addObject:indexPath];
                 

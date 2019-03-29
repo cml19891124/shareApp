@@ -10,6 +10,10 @@
 
 #import "HPShareDetailModel.h"
 
+#import "HPSingleton.h"
+
+#import "HPAttributeLabel.h"
+
 @interface HPOrderDetailViewController ()
 
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -22,6 +26,11 @@
 
 @property (nonatomic, strong) UIButton *warningBtn;
 
+
+/**
+ 剩余时间
+ */
+@property (nonatomic, strong) HPAttributeLabel *leftLabel;
 
 /**
  联系商家的view
@@ -173,11 +182,16 @@
     
     [self.scrollView addSubview:self.headerView];
     
-    [self.scrollView addSubview:self.backBtn];
+    [self.headerView addSubview:self.backBtn];
     
-    [self.scrollView addSubview:self.titleLabel];
+    [self.headerView addSubview:self.titleLabel];
     
-    [self.scrollView addSubview:self.warningBtn];
+    [self.headerView addSubview:self.warningBtn];
+
+    NSString *lefttime = @"剩余：23小时49分";
+    self.leftLabel = [HPAttributeLabel getTitle:lefttime andFromFont:kFont_Medium(12.f) andToFont:kFont_Bold(14.f) andFromColor:COLOR_GRAY_FFFFFF andToColor:COLOR_GRAY_FFFFFF andFromRange:NSMakeRange(0, 3) andToRange:NSMakeRange(4,lefttime.length - 4) andLineSpace:0 andNumbersOfLine:0 andTextAlignment:NSTextAlignmentCenter andLineBreakMode:NSLineBreakByWordWrapping];
+    
+    [self.headerView addSubview:self.leftLabel];
 
     [self.scrollView addSubview:self.communicateView];
 
@@ -256,7 +270,11 @@
     
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(getWidth(107.f));
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            make.height.mas_equalTo(getWidth(107.f));
+        }else{
+            make.height.mas_equalTo(getWidth(140.f));
+        }
     }];
     
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -274,8 +292,21 @@
     [self.warningBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.scrollView);
         make.width.left.mas_equalTo(self.scrollView);
-        make.bottom.mas_equalTo(self.headerView.mas_bottom).offset(getWidth(-15.f));
+        make.top.mas_equalTo(self.warningBtn.mas_bottom).offset(getWidth(13.f));
+        make.height.mas_equalTo(self.warningBtn.titleLabel.font.pointSize);
     }];
+    
+    if ([HPSingleton sharedSingleton].identifyTag == 1) {
+        [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(self.scrollView);
+            make.width.left.mas_equalTo(self.scrollView);
+            make.top.mas_equalTo(self.warningBtn.mas_bottom).offset(getWidth(10.f));
+            make.height.mas_equalTo(self.leftLabel.font.pointSize);
+        }];
+    }else{
+        self.leftLabel.hidden = YES;
+    }
+    
     
     [self.communicateView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.scrollView);

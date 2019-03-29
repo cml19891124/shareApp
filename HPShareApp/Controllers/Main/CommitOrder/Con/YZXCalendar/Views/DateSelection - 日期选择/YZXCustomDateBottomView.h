@@ -10,6 +10,8 @@
 
 typedef void(^ConfirmBlock) (NSString *startTime,NSString *endTime);
 
+typedef void(^ResetBlock)(void);
+
 @interface YZXCustomDateBottomView : UIView
 
 @property (nonatomic, copy) NSString             *startTime;
@@ -17,4 +19,5 @@ typedef void(^ConfirmBlock) (NSString *startTime,NSString *endTime);
 
 @property (nonatomic, copy) ConfirmBlock             confirmBlock;
 
+@property (nonatomic, copy) ResetBlock resetBlock;
 @end

@@ -14,6 +14,10 @@
 
 #import "Masonry.h"
 
+#import "Macro.h"
+
+#import "HPGlobalVariable.h"
+
 @interface YZXCustomDateBottomView ()
 
 @property (nonatomic, strong) UILabel             *start;
@@ -29,7 +33,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = CustomLineColor;
+        self.backgroundColor = COLOR_GRAY_FFFFFF;
         [self p_initView];
     }
     return self;
@@ -37,6 +41,7 @@
 
 - (void)p_initView
 {
+    /*
     //开始时间文本
     UILabel *startLabel = [[UILabel alloc] init];
     startLabel.text = @"开始时间:";
@@ -74,15 +79,47 @@
         make.centerY.equalTo(endLabel);
         make.left.equalTo(endLabel.mas_right).offset(3);
     }];
+    */
+    UIButton *resetBtn = [[UIButton alloc] init];
+    resetBtn.backgroundColor = COLOR_YELLOW_FFB400;
+    resetBtn.layer.cornerRadius = 2.f;
+    resetBtn.layer.masksToBounds= YES;
+    [resetBtn setTitle:@"重置" forState:UIControlStateNormal];
+    resetBtn.titleLabel.font = kFont_Medium(14.f);
+    [resetBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+    resetBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    [resetBtn addTarget:self action:@selector(onClickResetBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:resetBtn];
     
+    [resetBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(@10);
+        make.left.equalTo(@10);
+        make.width.mas_equalTo(getWidth(165.f));
+        make.bottom.mas_equalTo(getWidth(-10.f));
+    }];
+    
+    [self addSubview:self.start];
+    
+    [self.start mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(resetBtn);
+        make.left.equalTo(resetBtn.mas_right).offset(3);
+    }];
     //确定按钮
     [self addSubview:self.confirmButton];
     
     [self.confirmButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.right.equalTo(@0);
-        make.width.equalTo(@90);
-        make.height.equalTo(@50);
+        make.right.mas_equalTo(getWidth(-15.f));
+        make.width.mas_equalTo(getWidth(165.f));
+        make.top.equalTo(@10);
+        make.bottom.mas_equalTo(getWidth(-10.f));
     }];
+}
+
+- (void)onClickResetBtn:(UIButton *)button
+{
+    if (self.resetBlock) {
+        self.resetBlock();
+    }
 }
 
 - (void)buttonPressed
@@ -104,11 +141,11 @@
     _endTime = endTime;
     self.end.text = _endTime;
     if (_endTime) {
-        self.confirmButton.backgroundColor = CustomRedColor;
+        self.confirmButton.backgroundColor = COLOR_RED_FF531E;
         self.confirmButton.userInteractionEnabled = YES;
     }else {
-        self.confirmButton.backgroundColor = RGBCOLOR(225.0,129.0,128.0,1);
-        self.confirmButton.userInteractionEnabled = NO;
+        self.confirmButton.backgroundColor = COLOR_RED_FF531E;//RGBCOLOR(225.0,129.0,128.0,1);
+        self.confirmButton.userInteractionEnabled = YES;
     }
 }
 
@@ -139,6 +176,8 @@
 {
     if (!_confirmButton) {
         _confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _confirmButton.layer.cornerRadius = 2;
+        _confirmButton.layer.masksToBounds= YES;
         _confirmButton.backgroundColor = RGBCOLOR(225.0,129.0,128.0,1);
         [_confirmButton setTitle:@"确定" forState:UIControlStateNormal];
         _confirmButton.titleLabel.font = FONT15;

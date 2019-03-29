@@ -49,9 +49,9 @@
         
         float itemW = (kScreenWidth - getWidth(30.f) - getWidth(35.f) * 4)/5;//BoundWithSize(self.areaArray[i], kScreenWidth, 14.f).size.width + 20;
         [btn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(getWidth(15.f) + (itemW + getWidth(35.f)) * i);
+            make.left.mas_equalTo(getWidth(5.f) + (itemW + getWidth(35.f)) * i);
             make.top.mas_equalTo(self);
-            make.width.mas_equalTo(itemW);
+            make.width.mas_equalTo(itemW + getWidth(35.f));
             make.height.mas_equalTo(getWidth(40.f));
         }];
         

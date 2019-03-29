@@ -380,6 +380,7 @@
 		E68A780E21F327A000083A90 /* JCHATFootTableCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = E68A780C21F327A000083A90 /* JCHATFootTableCollectionReusableView.m */; };
 		E68A781221F327DB00083A90 /* JCHATFootTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E68A781021F327DA00083A90 /* JCHATFootTableViewCell.xib */; };
 		E68A781321F327DB00083A90 /* JCHATFootTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68A781121F327DA00083A90 /* JCHATFootTableViewCell.m */; };
+		E68C76BC224DD85A00243AF7 /* HPCalenderView.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C76BB224DD85900243AF7 /* HPCalenderView.m */; };
 		E68C856A21E9EC2B00AF259C /* HPHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C856921E9EC2B00AF259C /* HPHeaderCell.m */; };
 		E68C856D21E9ED9400AF259C /* HPIdeaListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C856C21E9ED9400AF259C /* HPIdeaListCell.m */; };
 		E68C857121E9EDFB00AF259C /* HPIdeaListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E68C857021E9EDFB00AF259C /* HPIdeaListModel.m */; };
@@ -1290,6 +1291,8 @@
 		E68A780F21F327DA00083A90 /* JCHATFootTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCHATFootTableViewCell.h; sourceTree = "<group>"; };
 		E68A781021F327DA00083A90 /* JCHATFootTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JCHATFootTableViewCell.xib; sourceTree = "<group>"; };
 		E68A781121F327DA00083A90 /* JCHATFootTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCHATFootTableViewCell.m; sourceTree = "<group>"; };
+		E68C76BA224DD85900243AF7 /* HPCalenderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCalenderView.h; sourceTree = "<group>"; };
+		E68C76BB224DD85900243AF7 /* HPCalenderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCalenderView.m; sourceTree = "<group>"; };
 		E68C856821E9EC2B00AF259C /* HPHeaderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPHeaderCell.h; sourceTree = "<group>"; };
 		E68C856921E9EC2B00AF259C /* HPHeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHeaderCell.m; sourceTree = "<group>"; };
 		E68C856B21E9ED9400AF259C /* HPIdeaListCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdeaListCell.h; sourceTree = "<group>"; };
@@ -2319,13 +2322,15 @@
 			children = (
 				E629AAEF224A014600CF0378 /* DateSelection - 日期选择 */,
 				E629AAF8224A014600CF0378 /* collectionView */,
-				E629AB01224A014600CF0378 /* YZXDaysMenuView.h */,
+				E629AB05224A014600CF0378 /* YZXWeekMenuView.h */,
 				E629AB02224A014600CF0378 /* YZXWeekMenuView.m */,
 				E629AB03224A014600CF0378 /* YZXCalendarDelegate.h */,
-				E629AB04224A014600CF0378 /* YZXCalendarView.h */,
-				E629AB05224A014600CF0378 /* YZXWeekMenuView.h */,
+				E629AB01224A014600CF0378 /* YZXDaysMenuView.h */,
 				E629AB06224A014600CF0378 /* YZXDaysMenuView.m */,
+				E629AB04224A014600CF0378 /* YZXCalendarView.h */,
 				E629AB07224A014600CF0378 /* YZXCalendarView.m */,
+				E68C76BA224DD85900243AF7 /* HPCalenderView.h */,
+				E68C76BB224DD85900243AF7 /* HPCalenderView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2334,13 +2339,13 @@
 			isa = PBXGroup;
 			children = (
 				E629AAF0224A014600CF0378 /* YZXCustomDateBottomView.h */,
-				E629AAF1224A014600CF0378 /* YZXMonthTableViewHeaderView.m */,
-				E629AAF2224A014600CF0378 /* YZXAnnualReportView.m */,
-				E629AAF3224A014600CF0378 /* YZXMonthlyReportView.h */,
 				E629AAF4224A014600CF0378 /* YZXCustomDateBottomView.m */,
 				E629AAF5224A014600CF0378 /* YZXMonthTableViewHeaderView.h */,
+				E629AAF1224A014600CF0378 /* YZXMonthTableViewHeaderView.m */,
+				E629AAF3224A014600CF0378 /* YZXMonthlyReportView.h */,
 				E629AAF6224A014600CF0378 /* YZXMonthlyReportView.m */,
 				E629AAF7224A014600CF0378 /* YZXAnnualReportView.h */,
+				E629AAF2224A014600CF0378 /* YZXAnnualReportView.m */,
 			);
 			path = "DateSelection - 日期选择";
 			sourceTree = "<group>";
@@ -2348,14 +2353,14 @@
 		E629AAF8224A014600CF0378 /* collectionView */ = {
 			isa = PBXGroup;
 			children = (
-				E629AAF9224A014600CF0378 /* YZXCalendarCollectionViewHeaderView.m */,
+				E629AAFD224A014600CF0378 /* YZXCalendarCollectionViewCell.h */,
+				E629AB00224A014600CF0378 /* YZXCalendarCollectionViewCell.m */,
 				E629AAFA224A014600CF0378 /* YZXCalendarCollectionViewCell.xib */,
+				E629AAFE224A014600CF0378 /* YZXCalendarCollectionViewHeaderView.h */,
+				E629AAF9224A014600CF0378 /* YZXCalendarCollectionViewHeaderView.m */,
 				E629AAFB224A014600CF0378 /* YZXCalendarCollectionViewHeaderView.xib */,
 				E629AAFC224A014600CF0378 /* YZXPlainFlowLayout.h */,
-				E629AAFD224A014600CF0378 /* YZXCalendarCollectionViewCell.h */,
-				E629AAFE224A014600CF0378 /* YZXCalendarCollectionViewHeaderView.h */,
 				E629AAFF224A014600CF0378 /* YZXPlainFlowLayout.m */,
-				E629AB00224A014600CF0378 /* YZXCalendarCollectionViewCell.m */,
 			);
 			path = collectionView;
 			sourceTree = "<group>";
@@ -4309,6 +4314,7 @@
 				7AAFF3AB21E390540049D175 /* MANaviAnnotation.m in Sources */,
 				E629AB23224A22DC00CF0378 /* HPOrderInfoListCell.m in Sources */,
 				E68A77B821F321BD00083A90 /* MJPhotoLoadingView.m in Sources */,
+				E68C76BC224DD85A00243AF7 /* HPCalenderView.m in Sources */,
 				E6830E4B21D20184000E0F39 /* HPHomeShareViewController.m in Sources */,
 				E67EFE43221BE233008BDA1D /* UITextField+TextLeftOffset_ffset.m in Sources */,
 				6979CA7E21D4830900B1518C /* HPLinkageTopModalView.m in Sources */,

@@ -10,6 +10,13 @@
 
 #import "YZXCalendarHelper.h"
 
+@protocol SelectedDayDelegate <NSObject>
+
+- (void)selectedDay:(NSString *)day;
+
+- (void)confirmSelectedDays;
+
+@end
 typedef NS_ENUM(NSInteger ,YZXSelectedDateType) {
     YZXAllSelectedType = 0,
     YZXSalesTrendsType,//销售趋势（没有总累计，自定义最多31天）
@@ -40,4 +47,5 @@ typedef void (^ConfirmTheDateBlock) (NSString *startDate,NSString *endDate, YZXT
  */
 @property (nonatomic, assign) NSInteger         maxChooseNumber;
 
+@property (nonatomic, weak) id<SelectedDayDelegate> delegate;
 @end

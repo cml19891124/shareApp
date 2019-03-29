@@ -13,6 +13,10 @@
 @interface YZXCalendarCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
 
+@property (nonatomic, strong) UIButton *lineBtn;
+
+@property (weak, nonatomic) IBOutlet UILabel *day;
+
 @property (nonatomic, assign) BOOL isHidden;
 
 - (void)layoutContentViewOfCollectionViewCellWithCellIndxePath:(NSIndexPath *)indexPath model:(YZXCalendarModel *)model;
