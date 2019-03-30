@@ -153,18 +153,14 @@
     if (!_calenderView) {
         _calenderView = [HPCalenderView new];
         kWEAKSELF
-        _calenderView.calenderBlock = ^(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType) {
+        _calenderView.confirmTheDateBlock = ^(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType) {
             weakSelf.rentStartDayLabel.text = startDate;
-            weakSelf.rentEndDayLabel.text = endDate;
-            weakSelf.selectedType = selectedType;
-            
-        };
-        
-        _calenderView.singleBlock = ^(NSString *day) {
-            weakSelf.rentLineLabel.hidden = YES;
-            weakSelf.rentEndDayLabel.hidden = YES;
-            weakSelf.rentStartDayLabel.text = day;
-
+            if (endDate) {
+                weakSelf.rentEndDayLabel.text = endDate;
+            }else{
+                weakSelf.rentLineLabel.hidden = YES;
+                weakSelf.rentEndDayLabel.hidden = YES;
+            }            
         };
     }
     return _calenderView;

@@ -8,17 +8,26 @@
 
 #import "HPBaseModalView.h"
 
-#import "YZXSelectDateViewController.h"
+#import "YZXCalendarView.h"
+
+static const CGFloat bottomView_height = 60.0;
+
+/**
+ block回调
+ 
+ @param startDate 自定义时间时返回的开始时间，非自定义时间时返回当前选择的时间
+ @param endDate 自定义时间时返回的结束时间，非自定义时为nil
+ @param selectedType 查看的报表类型
+ */
+typedef void (^ConfirmTheDateBlock) (NSString *startDate,NSString *endDate, YZXTimeToChooseType selectedType);
 
 typedef void(^CalenderViewBlock)(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType);
 
 typedef void(^SelectSingleDay)(NSString *day);
 
-typedef void(^SelectDaysblcok)(YZXTimeToChooseType selectedType);
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPCalenderView : HPBaseModalView<SelectedDayDelegate>
+@interface HPCalenderView : HPBaseModalView<YZXCalendarDelegate>
 
 @property (nonatomic, strong) UIView *view;
 
@@ -26,11 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIButton *singleSelectBtn;
 
-@property (nonatomic, strong) UIView *marginView;
-
 @property (nonatomic, strong) UIButton *duringBtn;
-
-@property (nonatomic, strong) YZXSelectDateViewController *selectDaysVC;
 
 @property (nonatomic, copy) CalenderViewBlock calenderBlock;
 
@@ -42,7 +47,33 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) SelectSingleDay singleBlock;
 
-@property (nonatomic, copy) SelectDaysblcok selectBlock;
+/**
+ 单选的日期
+ */
+@property (nonatomic, copy) NSString *singleDay;
+
+@property (nonatomic, strong) UIButton *resetBtn;
+
+@property (nonatomic, strong) UIButton *confirmButton;
+
+@property (strong, nonatomic) UIView *bottomView;
+
+@property (nonatomic, strong) NSDateFormatter             *formatter;
+@property (nonatomic, strong) NSDateFormatter             *yearFormatter;
+@property (nonatomic, strong) NSDateFormatter             *yearAndMonthFormatter;
+
+@property (nonatomic, strong) YZXCalendarHelper           *helper;
+@property (nonatomic, strong) YZXCalendarView             *calendarView;
+@property (nonatomic, strong) YZXCalendarView             *customCalendarView;
+
+@property (nonatomic, copy) ConfirmTheDateBlock             confirmTheDateBlock;
+
+//@property (nonatomic, assign) YZXSelectedDateType         selectedDateType;
+
+/**
+ 自定义时最多选择的天数
+ */
+@property (nonatomic, assign) NSInteger         maxChooseNumber;
 @end
 
 NS_ASSUME_NONNULL_END

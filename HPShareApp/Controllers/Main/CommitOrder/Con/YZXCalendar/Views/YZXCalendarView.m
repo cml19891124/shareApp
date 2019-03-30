@@ -8,12 +8,10 @@
 
 #import "YZXCalendarView.h"
 #import "YZXWeekMenuView.h"
-#import "YZXDaysMenuView.h"
 
 @interface YZXCalendarView ()
 
 @property (nonatomic, strong) YZXWeekMenuView             *weekMenuView;
-@property (nonatomic, strong) YZXDaysMenuView             *daysMenuView;
 
 @end
 

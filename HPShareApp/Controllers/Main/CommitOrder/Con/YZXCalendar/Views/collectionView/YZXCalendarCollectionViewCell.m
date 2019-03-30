@@ -34,7 +34,9 @@
     [super awakeFromNib];
     // Initialization code
     self.priceLabel.hidden = YES;
-    
+    //保存原来的价格
+    self.originalPrice = self.priceLabel.text;
+    self.originalColor = self.priceLabel.textColor;
     self.day.layer.cornerRadius = 2;
     self.day.layer.masksToBounds = YES;
 }

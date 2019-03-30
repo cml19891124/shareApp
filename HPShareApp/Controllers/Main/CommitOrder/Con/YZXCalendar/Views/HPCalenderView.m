@@ -24,17 +24,28 @@
     [self.view addSubview:self.selectView];
     
     [self.selectView addSubview:self.singleSelectBtn];
-
-//    [self.selectView addSubview:self.marginView];
-//
-//    [self.selectView addSubview:self.duringBtn];
     
     [self.selectView addSubview:self.closeBtn];
-
-    [self.view addSubview:self.selectDaysVC.view];
     
+    [self.view addSubview:self.bottomView];
+
+    [self.bottomView addSubview:self.resetBtn];
+
+    //确定按钮
+    [self.bottomView addSubview:self.confirmButton];
+    
+    [self.view addSubview:self.customCalendarView];
     
     [self setUpSubviewsMasonry];
+}
+
+- (UIView *)bottomView
+{
+    if (!_bottomView) {
+        _bottomView = [UIView new];
+        _bottomView.backgroundColor = COLOR_GRAY_FFFFFF;
+    }
+    return _bottomView;
 }
 
 - (void)setUpSubviewsMasonry
@@ -57,11 +68,25 @@
         make.right.mas_equalTo(getWidth(-15.f));
         make.top.width.height.mas_equalTo(getWidth(15.f));
     }];
-    
-    [_selectDaysVC.view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.selectView.mas_bottom);
-        make.left.right.mas_equalTo(self.view);
+
+    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.width.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.view.mas_bottom);
+        make.height.mas_equalTo(getWidth(60.f));
+    }];
+    
+    [self.resetBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(15.f));
+        make.width.mas_equalTo(getWidth(165.f));
+        make.bottom.mas_equalTo(getWidth(-10.f));
+        make.top.mas_equalTo(getWidth(10.f));
+    }];
+    
+    [self.confirmButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(getWidth(-15.f));
+        make.width.mas_equalTo(getWidth(165.f));
+        make.top.mas_equalTo(self.resetBtn.mas_top);
+        make.bottom.mas_equalTo(getWidth(-10.f));
     }];
 }
 
@@ -72,15 +97,6 @@
         _selectView.backgroundColor = COLOR_GRAY_FFFFFF;
     }
     return _selectView;
-}
-
-- (UIView *)marginView
-{
-    if (!_marginView) {
-        _marginView = [UIView new];
-        _marginView.backgroundColor = COLOR_GRAY_CCCCCC;
-    }
-    return _marginView;
 }
 
 - (UIButton *)closeBtn
@@ -107,35 +123,81 @@
     return _singleSelectBtn;
 }
 
-- (UIButton *)duringBtn
+- (NSDateFormatter *)formatter
 {
-    if (!_duringBtn) {
-        _duringBtn = [UIButton new];
-        _duringBtn.tag = YZXTimeToChooseInCustom;
-        [_duringBtn setTitle:@"段选" forState:UIControlStateNormal];
-        [_duringBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-        _duringBtn.backgroundColor = COLOR_GRAY_FFFFFF;
-        _duringBtn.titleLabel.font = kFont_Medium(16.f);
-        _duringBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    if (!_formatter) {
+        _formatter = [YZXCalendarHelper.helper yearMonthAndDayFormatter];
     }
-    return _duringBtn;
+    return _formatter;
+}
+//设置日期格式
+- (NSDateFormatter *)yearFormatter
+{
+    if (!_yearFormatter) {
+        _yearFormatter = self.helper.yearFormatter;
+    }
+    return _yearFormatter;
+}
+//设置日期格式
+- (NSDateFormatter *)yearAndMonthFormatter
+{
+    if (!_yearAndMonthFormatter) {
+        _yearAndMonthFormatter = self.helper.yearAndMonthFormatter;
+    }
+    return _yearAndMonthFormatter;
 }
 
-- (YZXSelectDateViewController *)selectDaysVC
+//自定义日历
+- (YZXCalendarView *)customCalendarView
 {
-    if (!_selectDaysVC.view) {
-        _selectDaysVC = [[YZXSelectDateViewController alloc] init];
-        _selectDaysVC.delegate =self;
-        [_selectDaysVC.navigationController setNavigationBarHidden:YES animated:YES];
-        kWEAKSELF
-        _selectDaysVC.confirmTheDateBlock = ^(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType) {
-            weakSelf.selectedType = selectedType;
-            weakSelf.startDate = startDate;
-            weakSelf.endDate = endDate;
-            
-        };
+    if (!_customCalendarView) {
+        CGRect rect = CGRectZero;
+        if (kDevice_iPhoneX) {
+            rect = CGRectMake(0, getWidth(46.f),kScreenWidth, SCREEN_HEIGHT - bottomView_height - TOPHEIGHT_IPHONE_X - g_statusBarHeight + 20 -getWidth(46.f));
+        }else {
+            rect = CGRectMake(0,getWidth(46.f),kScreenWidth, SCREEN_HEIGHT - bottomView_height - 1 - TOPHEIGHT - bottomView_height - getWidth(46.f));
+        }
+        
+        _customCalendarView = [[YZXCalendarView alloc] initWithFrame:rect withStartDateString:self.helper.customDateStartDate endDateString:self.helper.customDateEndDate];
+        _customCalendarView.backgroundColor = [UIColor whiteColor];
+        _customCalendarView.delegate = self;
+        _customCalendarView.customSelect = YES;
+        if (self.maxChooseNumber) {
+            _customCalendarView.maxChooseNumber = self.maxChooseNumber;
+        }
     }
-    return _selectDaysVC;
+    return _customCalendarView;
+}
+
+- (UIButton *)resetBtn
+{
+    if (!_resetBtn) {
+        _resetBtn = [UIButton new];
+        _resetBtn.backgroundColor = COLOR_YELLOW_FFB400;
+        _resetBtn.layer.cornerRadius = 2.f;
+        _resetBtn.layer.masksToBounds= YES;
+        [_resetBtn setTitle:@"重置" forState:UIControlStateNormal];
+        _resetBtn.titleLabel.font = kFont_Medium(14.f);
+        [_resetBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+        _resetBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        [_resetBtn addTarget:self action:@selector(onClickResetBtn:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _resetBtn;
+}
+
+- (UIButton *)confirmButton
+{
+    if (!_confirmButton) {
+        _confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _confirmButton.layer.cornerRadius = 2;
+        _confirmButton.layer.masksToBounds= YES;
+        _confirmButton.backgroundColor = RGBCOLOR(225.0,129.0,128.0,1);
+        [_confirmButton setTitle:@"确定" forState:UIControlStateNormal];
+        _confirmButton.titleLabel.font = FONT15;
+        [_confirmButton addTarget:self action:@selector(buttonPressed) forControlEvents:UIControlEventTouchUpInside];
+        _confirmButton.userInteractionEnabled = YES;
+    }
+    return _confirmButton;
 }
 
 - (void)onTapModalOutSide
@@ -148,21 +210,45 @@
     [self show:NO];
 }
 
-#pragma mark - SelectedDayDelegate
-
-- (void)selectedDay:(NSString *)day
+- (void)onClickResetBtn:(UIButton *)button
 {
-    [self show:NO];
-    if (self.singleBlock) {
-        self.singleBlock(day);
+    self.customCalendarView.dateArray = nil;
+    
+    [self.customCalendarView.daysMenuView.collectionView reloadData];
+
+}
+
+- (void)buttonPressed
+{
+    
+    if (!self.startDate) {
+        [HPProgressHUD alertMessage:@"请选择日期"];
+    }
+
+    if (self.confirmTheDateBlock) {
+        
+        [self show:NO];
+
+        self.confirmTheDateBlock(self.startDate, self.endDate, self.selectedType);
     }
 }
 
-- (void)confirmSelectedDays
+#pragma mark - YZXCalendarDelegate
+
+- (void)clickCalendarWithStartDate:(NSString *)startDate andEndDate:(NSString *)endDate
 {
-    [self show:NO];
-    if (self.calenderBlock) {
-        self.calenderBlock(self.startDate, self.endDate, self.selectedType);
-    }
+    self.startDate = startDate;
+    self.endDate = endDate;
+
 }
+
+#pragma mark - 懒加载
+- (YZXCalendarHelper *)helper
+{
+    if (!_helper) {
+        _helper = [YZXCalendarHelper helper];
+    }
+    return _helper;
+}
+
 @end

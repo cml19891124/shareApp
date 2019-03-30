@@ -92,18 +92,12 @@
     [self addSubview:resetBtn];
     
     [resetBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(@10);
-        make.left.equalTo(@10);
+        make.top.mas_equalTo(getWidth(10.f));
+        make.left.mas_equalTo(getWidth(15.f));
         make.width.mas_equalTo(getWidth(165.f));
         make.bottom.mas_equalTo(getWidth(-10.f));
     }];
     
-    [self addSubview:self.start];
-    
-    [self.start mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(resetBtn);
-        make.left.equalTo(resetBtn.mas_right).offset(3);
-    }];
     //确定按钮
     [self addSubview:self.confirmButton];
     
@@ -118,7 +112,7 @@
 - (void)onClickResetBtn:(UIButton *)button
 {
     if (self.resetBlock) {
-        self.resetBlock();
+
     }
 }
 

@@ -17,6 +17,8 @@
 
 #import "Macro.h"
 
+#import "YZXDaysMenuView.h"
+
 static const CGFloat topPageNavigationView_height = 44.0;
 static const CGFloat bottomView_height = 60.0;
 static const CGFloat blankSpace = 40.0;
@@ -40,6 +42,11 @@ static const CGFloat blankSpace = 40.0;
 @property (nonatomic, strong) MBProgressHUD             *hud;
 
 @property (nonatomic, assign) CGFloat         hudYOffset;
+
+/**
+ 单选时选中的起始日期
+ */
+@property (nonatomic, copy) NSString *selectedDay;
 
 @end
 
@@ -93,37 +100,19 @@ static const CGFloat blankSpace = 40.0;
     
     [self.view addSubview:self.customCalendarView];
     
-    [self.view addSubview:self.bottomView];
+//    [self.view addSubview:self.bottomView];
     
     self.calendarView.hidden = YES;
     self.monthlyReportView.hidden = YES;
     self.annualReportView.hidden = YES;
     self.customCalendarView.hidden = YES;
-    
+
     //根据传入内容确定选择的内容
     switch (_selectedType) {
         case YZXTimeToChooseInAll:
         {
         }
             break;
-//        case YZXTimeToChooseInDay:
-//        {
-//            self.calendarView.startDate = self.startDate;
-//            self.selectedView = self.calendarView;
-//        }
-//            break;
-//        case YZXTimeToChooseInMonth:
-//        {
-//            self.monthlyReportView.selectedMonth = self.startDate;
-//            self.selectedView = self.monthlyReportView;
-//        }
-//            break;
-//        case YZXTimeToChooseInYear:
-//        {
-//            self.annualReportView.selectedYear = self.startDate;
-//            self.selectedView = self.annualReportView;
-//        }
-//            break;
         
         case YZXTimeToChooseInCustom:
         {
@@ -136,6 +125,9 @@ static const CGFloat blankSpace = 40.0;
             self.selectedView = self.customCalendarView;
         }
         break;
+            
+        default:
+            break;
     }
     
     [self didSelectedIndex:_selectedType - 1];
@@ -170,7 +162,7 @@ static const CGFloat blankSpace = 40.0;
         case 3:
         {
             if (!self.bottomView.startTime && !self.bottomView.endTime) {
-                [self p_hudWithContent:@"请选择日期" WithYOffset:self.hudYOffset];
+//                [self p_hudWithContent:@"请选择日期" WithYOffset:self.hudYOffset];
             }
             if (self.bottomView.startTime && !self.bottomView.endTime) {
 //                [self p_hudWithContent:@"请再选择一个日期" WithYOffset:self.hudYOffset];
@@ -249,12 +241,12 @@ static const CGFloat blankSpace = 40.0;
     if (startDate) {
         self.bottomView.startTime = startDate;
     }else {
-        [self p_hudWithContent:@"请选择日期" WithYOffset:self.hudYOffset];
+//        [self p_hudWithContent:@"请选择日期" WithYOffset:self.hudYOffset];
         self.bottomView.startTime = nil;
     }
     
     if ([endDate isEqualToString:@"error"]) {
-        [self p_errorMessageContent:@"最多可选择31天" withYOffset:0];
+//        [self p_errorMessageContent:@"最多可选择31天" withYOffset:0];
         return;
     }
     
@@ -263,7 +255,7 @@ static const CGFloat blankSpace = 40.0;
         [self p_hideHUD];
     }else {
         if (startDate) {
-            [self p_hudWithContent:@"请再选择一个日期" WithYOffset:self.hudYOffset];
+//            [self p_hudWithContent:@"请再选择一个日期" WithYOffset:self.hudYOffset];
         }
         self.bottomView.endTime = nil;
     }
@@ -283,9 +275,7 @@ static const CGFloat blankSpace = 40.0;
         _confirmTheDateBlock(date,nil,YZXTimeToChooseInDay);
     }
 //    [self dismissViewControllerAnimated:YES completion:nil];
-    if ([self.delegate respondsToSelector:@selector(selectedDay:)]) {
-        [self.delegate selectedDay:date];
-    }
+
 }
 
 #pragma mark - <YZXMonthlyReportViewDelegate>
@@ -361,15 +351,6 @@ static const CGFloat blankSpace = 40.0;
         [cancel setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [cancel addTarget:self action:@selector(p_cancelPressed) forControlEvents:UIControlEventTouchUpInside];
         [_topView addSubview:cancel];
-        
-//        UIButton *rightItemButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//        rightItemButton.bounds = CGRectMake(0, 0, 66.5, 21);
-//        rightItemButton.center = CGPointMake(SCREEN_WIDTH - 15 - CGRectGetWidth(rightItemButton.bounds) / 2.0, CGRectGetMidY(label.frame));
-//        [rightItemButton setTitle:@"总累计" forState:UIControlStateNormal];
-//        rightItemButton.titleLabel.font = FONT15;
-//        [rightItemButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-//        [rightItemButton setTitleColor:CustomColor(@"4990e2") forState:UIControlStateNormal];
-//        [_topView addSubview:rightItemButton];
         
         UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_topView.bounds) - 1, SCREEN_WIDTH, 1)];
         lineView.backgroundColor = CustomLineColor;
@@ -496,15 +477,10 @@ static const CGFloat blankSpace = 40.0;
                 weak_self.confirmTheDateBlock(startTime,endTime,YZXTimeToChooseInCustom);
                 weak_self.confirmTheDateBlock =nil;//ssj
             }
-            
-            if ([weak_self.delegate respondsToSelector:@selector(confirmSelectedDays)]) {
-                [weak_self.delegate confirmSelectedDays];
-            }
 //            [weak_self dismissViewControllerAnimated:YES completion:nil];
             
         };
 
-        
     }
     return _bottomView;
 }

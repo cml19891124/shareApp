@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "YZXCalendarDelegate.h"
 
+#import "YZXDaysMenuView.h"
+
 @interface YZXCalendarView : UIView <YZXCalendarDelegate>
 
 
@@ -35,5 +37,7 @@
  自定义时最多选择的天数
  */
 @property (nonatomic, assign) NSInteger         maxChooseNumber;
+
+@property (nonatomic, strong) YZXDaysMenuView             *daysMenuView;
 
 @end

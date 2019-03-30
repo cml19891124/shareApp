@@ -15,6 +15,10 @@
 
 @property (nonatomic, strong) UIButton *lineBtn;
 
+@property (nonatomic, copy) NSString *originalPrice;
+
+@property (nonatomic, strong) UIColor *originalColor;
+
 @property (weak, nonatomic) IBOutlet UILabel *day;
 
 @property (nonatomic, assign) BOOL isHidden;

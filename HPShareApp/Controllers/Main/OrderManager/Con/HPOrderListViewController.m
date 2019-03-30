@@ -89,7 +89,7 @@ static NSString *orderCell = @"orderCell";
     if (!_headerView) {
         _headerView = [UIImageView new];
         _headerView.image = ImageNamed(@"order_head");
-        
+        _headerView.userInteractionEnabled = YES;
     }
     return _headerView;
 }

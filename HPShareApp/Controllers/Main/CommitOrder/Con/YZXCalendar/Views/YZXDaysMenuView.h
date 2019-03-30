@@ -34,4 +34,9 @@
 //自定义日历，控制可选择的日期的最大跨度
 @property (nonatomic, assign) NSInteger          maxChooseNumber;
 
+//用于记录点击的cell
+@property (nonatomic, strong) NSMutableArray <NSIndexPath *>            *selectedArray;
+
+@property (nonatomic, strong) UICollectionView                          *collectionView;
+
 @end

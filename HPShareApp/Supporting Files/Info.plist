@@ -76,6 +76,10 @@
 	<string>合店站需要访问您的麦克风</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>合店站需要访问您的相册，用于上传照片</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

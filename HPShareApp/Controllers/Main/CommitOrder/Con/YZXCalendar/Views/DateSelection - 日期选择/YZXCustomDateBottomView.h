@@ -10,7 +10,7 @@
 
 typedef void(^ConfirmBlock) (NSString *startTime,NSString *endTime);
 
-typedef void(^ResetBlock)(void);
+typedef void(^ResetBlock)(NSString *selectDay);
 
 @interface YZXCustomDateBottomView : UIView
 

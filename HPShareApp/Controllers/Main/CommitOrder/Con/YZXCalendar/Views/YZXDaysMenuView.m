@@ -26,15 +26,12 @@ static const CGFloat collectionView_headerHeight = 20.0;
 
 @interface YZXDaysMenuView ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
-@property (nonatomic, strong) UICollectionView                          *collectionView;
 //collectionView数据
 @property (nonatomic, copy) NSArray <YZXCalendarModel *>                *collectionViewData;
 //manager
 @property (nonatomic, strong) YZXCalendarHelper                         *calendarHelper;
 //数据
 @property (nonatomic, strong) YZXCalendarModel                          *model;
-//用于记录点击的cell
-@property (nonatomic, strong) NSMutableArray <NSIndexPath *>            *selectedArray;
 
 @end
 
@@ -104,36 +101,61 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     }
     
     if (self.selectedArray.count == 2 && [indexPath compare:self.selectedArray.firstObject] == NSOrderedDescending && [indexPath compare:self.selectedArray.lastObject] == NSOrderedAscending) {
-        [cell changeContentViewBackgroundColor:COLOR_RED_FF7878];
-//        [cell changeDayBackgroundColor:COLOR_RED_FF7878];
+//        [cell changeContentViewBackgroundColor:COLOR_RED_FF7878];
+        [cell changeDayBackgroundColor:COLOR_RED_FF7878];
         
         if ([cell.day.text isEqualToString:@"9"]) {
             cell.priceLabel.text = @"已预订";
-            cell.priceLabel.textColor = COLOR_GRAY_FFFFFF;
+            cell.priceLabel.textColor = COLOR_GRAY_CCCCCC;
             cell.priceLabel.font = kFont_Medium(10.f);
-            [cell changeContentViewBackgroundColor:COLOR_GRAY_CCCCCC];
+            cell.priceLabel.hidden = NO;
+            [cell changeDayBackgroundColor:COLOR_GRAY_CCCCCC];
+        }else{
+            cell.priceLabel.text = cell.originalPrice;
+            cell.priceLabel.textColor = cell.originalColor;
+
         }
+
         if (cell.day.text.length) {
             cell.isHidden = NO;
             cell.priceLabel.hidden = NO;
-            [cell changeDayTextColor:[UIColor whiteColor]];
+        }
+        if (cell.day.text.length == 0) {
+            [cell changeDayBackgroundColor:[UIColor whiteColor]];
         }
         
     }else{
         cell.isHidden = YES;
         cell.priceLabel.hidden = YES;
-//        [cell changeDayBackgroundColor:COLOR_GRAY_FFFFFF];
+        [cell changeDayBackgroundColor:COLOR_GRAY_FFFFFF];
 
     }
     
     //将选中的按钮改变样式
     [self.selectedArray enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj.section == indexPath.section && obj.item == indexPath.item) {
-            [cell changeContentViewBackgroundColor:CustomColor(@"EA0000")];
-//            [cell changeDayBackgroundColor:COLOR_RED_EA0000];
+//            [cell changeContentViewBackgroundColor:CustomColor(@"EA0000")];
+            [cell changeDayBackgroundColor:COLOR_RED_EA0000];
             cell.isHidden = NO;
             cell.priceLabel.hidden = NO;
             [cell changeDayTextColor:[UIColor whiteColor]];
+            
+            if ([cell.day.text isEqualToString:@"9"] && cell.day.text.length) {
+                cell.priceLabel.text = @"已预订";
+                cell.priceLabel.textColor = COLOR_GRAY_CCCCCC;
+                cell.priceLabel.font = kFont_Medium(10.f);
+                cell.priceLabel.hidden = NO;
+                [cell changeDayBackgroundColor:COLOR_GRAY_CCCCCC];
+            }
+            
+            if (cell.day.text.length) {
+                cell.isHidden = NO;
+                cell.priceLabel.hidden = NO;
+            }
+            if (cell.day.text.length == 0) {
+                [cell changeDayBackgroundColor:[UIColor whiteColor]];
+            }
+            
         }else{
 //            [cell changeDayBackgroundColor:COLOR_GRAY_FFFFFF];
 
@@ -264,9 +286,9 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 - (void)p_changeTheSelectedCellStyleWithIndexPath:(NSIndexPath *)indexPath
 {
     YZXCalendarCollectionViewCell *cell = (YZXCalendarCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    [cell changeContentViewBackgroundColor:CustomColor(@"dd514d")];
+    [cell changeDayBackgroundColor:CustomColor(@"EA0000")];
     [cell changeDayTextColor:[UIColor whiteColor]];
-    cell.isHidden = NO;
+    
 }
 
 //恢复成为未选中状态
@@ -274,7 +296,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 {
     //回复之前选择的cell样式
     YZXCalendarCollectionViewCell *selectedCell = (YZXCalendarCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    [selectedCell changeContentViewBackgroundColor:[UIColor whiteColor]];
+    [selectedCell changeDayBackgroundColor:[UIColor whiteColor]];
     
     //判断之前点击的是否为周末和当天
     if ([self p_judgepWeekendAndToday:indexPath]) {
@@ -320,10 +342,10 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     }
     //传入一个时间时，查找其indexPath信息，用在collectionView上展现
     [self.collectionViewData enumerateObjectsUsingBlock:^(YZXCalendarModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj.headerTitle isEqualToString:[_startDate substringWithRange:NSMakeRange(0, 8)]]) {
-            NSInteger day = [_startDate substringWithRange:NSMakeRange(8, 2)].integerValue;
+        if ([obj.headerTitle isEqualToString:[self->_startDate substringWithRange:NSMakeRange(0, 8)]]) {
+            NSInteger day = [self->_startDate substringWithRange:NSMakeRange(8, 2)].integerValue;
             [self.selectedArray addObject:[NSIndexPath indexPathForItem:(day + obj.firstDayOfTheMonth - 2) inSection:idx]];
-            [_collectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:(self.collectionViewData[idx].sectionRow * 7 - 1) inSection:idx] animated:YES scrollPosition:UICollectionViewScrollPositionBottom];
+            [self->_collectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:(self.collectionViewData[idx].sectionRow * 7 - 1) inSection:idx] animated:YES scrollPosition:UICollectionViewScrollPositionBottom];
             *stop = YES;
         }
     }];
