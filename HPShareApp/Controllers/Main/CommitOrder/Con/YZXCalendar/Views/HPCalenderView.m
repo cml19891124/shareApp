@@ -222,10 +222,11 @@
 
 - (void)onClickResetBtn:(UIButton *)button
 {
-    self.customCalendarView.dateArray = nil;
+    [self.customCalendarView.daysMenuView.selectedArray removeAllObjects];
+    
+    self.customCalendarView.customSelect = YES;
     
     [self.customCalendarView.daysMenuView.collectionView reloadData];
-
 }
 
 - (void)buttonPressed

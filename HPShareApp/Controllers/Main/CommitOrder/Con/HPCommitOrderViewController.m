@@ -157,6 +157,8 @@
             weakSelf.rentStartDayLabel.text = startDate;
             if (endDate) {
                 weakSelf.rentEndDayLabel.text = endDate;
+                weakSelf.rentLineLabel.hidden = NO;
+                weakSelf.rentEndDayLabel.hidden = NO;
             }else{
                 weakSelf.rentLineLabel.hidden = YES;
                 weakSelf.rentEndDayLabel.hidden = YES;
