@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIView *view;
 
+@property (strong, nonatomic) UIView *bgView;
+
 @property (nonatomic, strong) UIView *selectView;
 
 @property (nonatomic, strong) UIButton *singleSelectBtn;

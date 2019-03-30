@@ -48,6 +48,16 @@
     return _bottomView;
 }
 
+- (UIView *)bgView
+{
+    if (!_bgView) {
+        _bgView = [UIView new];
+        _bgView.backgroundColor = COLOR_GRAY_FFFFFF;
+        
+    }
+    return _bgView;
+}
+
 - (void)setUpSubviewsMasonry
 {
     [self.selectView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -155,7 +165,7 @@
         if (kDevice_iPhoneX) {
             rect = CGRectMake(0, getWidth(46.f),kScreenWidth, SCREEN_HEIGHT - bottomView_height - TOPHEIGHT_IPHONE_X - g_statusBarHeight + 20 -getWidth(46.f));
         }else {
-            rect = CGRectMake(0,getWidth(46.f),kScreenWidth, SCREEN_HEIGHT - bottomView_height - 1 - TOPHEIGHT - bottomView_height - getWidth(46.f));
+            rect = CGRectMake(0,getWidth(46.f),kScreenWidth, SCREEN_HEIGHT - bottomView_height - 1 - TOPHEIGHT - bottomView_height - getWidth(46.f)+20);
         }
         
         _customCalendarView = [[YZXCalendarView alloc] initWithFrame:rect withStartDateString:self.helper.customDateStartDate endDateString:self.helper.customDateEndDate];
