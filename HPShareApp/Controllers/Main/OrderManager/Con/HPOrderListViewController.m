@@ -14,6 +14,21 @@
 
 #import "HPChooseItemView.h"
 
+#import "HPSingleton.h"
+
+#import "HPShareListParam.h"
+
+typedef NS_ENUM(NSInteger, HPOrderType) {
+    HPOrderTypeRentCreateOrder = 4901,//租客下单，等待商家确认
+    HPOrderTypeOwnnerConfirmOrder,//商家确认，等待租客确认
+    HPOrderTypeOwnnerPayed,//已经付款，拼租进行
+    HPOrderTypeOwnnerRentComplete,//确认拼租完成
+    HPOrderTypeOwnnerOwnnerCancel,//商家取消
+    HPOrderTypeOwnnerRenterCancel,//租客取消
+    HPOrderTypeOwnnerOwnnerTimerOutOfReceiveCancel,//超时未接单取消
+    HPOrderTypeOwnnerRenterTimerOutOfToPayCancel//超时未付款取消
+};
+
 @interface HPOrderListViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UIImageView *headerView;
@@ -32,6 +47,8 @@
 
 @property (nonatomic, strong) HPChooseItemView *orderItemView;
 
+@property (nonatomic, strong) HPShareListParam *shareListParam;
+
 @end
 
 @implementation HPOrderListViewController
@@ -49,10 +66,38 @@ static NSString *orderCell = @"orderCell";
     [self.view setBackgroundColor:COLOR_GRAY_EEEEEE];
     
     _model = self.param[@"order"];
+    
+    self.shareListParam.page = 1;
+    
+    self.shareListParam.page = 20;
 
     [self setUpListSubviews];
     
     [self setUpListSubviesMasonry];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self getOrderListApi];
+}
+
+#pragma mark - 获取订单列表
+- (void)getOrderListApi
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"isBoss"] = [NSString stringWithFormat:@"%ld",[HPSingleton sharedSingleton].identifyTag];//商家还是租户：1商家，0租户
+    dic[@"page"] = @(self.shareListParam.page);
+    dic[@"pageSize"] = @(self.shareListParam.pageSize);
+    dic[@"status"] = @(HPOrderTypeRentCreateOrder - 4900);
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/order" isNeedToken:NO paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE) {
+            
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 - (void)setUpListSubviews
@@ -98,7 +143,8 @@ static NSString *orderCell = @"orderCell";
 {
     if (!_backBtn) {
         _backBtn = [UIButton new];
-        [_backBtn setBackgroundImage:ImageNamed(@"fanhui_wh") forState:UIControlStateNormal];
+        [_backBtn setImage:ImageNamed(@"fanhui_wh") forState:UIControlStateNormal];
+        [_backBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(18.f), getWidth(15.f), getWidth(18.f), 0)];
         [_backBtn addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
         
     }
@@ -134,9 +180,9 @@ static NSString *orderCell = @"orderCell";
     }];
     
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(16.f));
-        make.width.height.mas_equalTo(getWidth(13.f));
-        make.top.mas_equalTo(g_statusBarHeight + 15.f);
+        make.left.mas_equalTo(self.headerView);
+        make.width.height.mas_equalTo(getWidth(50.f));
+        make.top.mas_equalTo(g_statusBarHeight);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -205,7 +251,7 @@ static NSString *orderCell = @"orderCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
+    [self pushVCByClassName:@"HPOrderListViewController" withParam:@{}];
 }
 
 #pragma mark - 确认订单详情

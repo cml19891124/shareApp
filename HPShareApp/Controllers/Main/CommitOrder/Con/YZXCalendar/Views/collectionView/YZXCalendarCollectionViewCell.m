@@ -33,7 +33,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
-    self.priceLabel.hidden = YES;
+    self.priceLabel.hidden = NO;
     //保存原来的价格
     self.originalPrice = self.priceLabel.text;
     self.originalColor = self.priceLabel.textColor;
@@ -86,7 +86,7 @@
         self.day.textColor = CustomRedColor;
     }else if ([YZXCalendarHelper.helper determineWhetherForTodayWithIndexPaht:indexPath model:model] == YZXDateLaterThanToday) {//判断日期是否超过今天
         self.day.textColor = [UIColor grayColor];
-        self.userInteractionEnabled = NO;
+        self.userInteractionEnabled = YES;
     }
 }
 - (void)drawLine

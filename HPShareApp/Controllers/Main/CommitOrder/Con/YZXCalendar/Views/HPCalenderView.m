@@ -165,7 +165,7 @@
         if (kDevice_iPhoneX) {
             rect = CGRectMake(0, getWidth(46.f),kScreenWidth, SCREEN_HEIGHT - bottomView_height - TOPHEIGHT_IPHONE_X - g_statusBarHeight + 20 -getWidth(46.f));
         }else {
-            rect = CGRectMake(0,getWidth(46.f),kScreenWidth, SCREEN_HEIGHT - bottomView_height - 1 - TOPHEIGHT - bottomView_height - getWidth(46.f)+20);
+            rect = CGRectMake(0,getWidth(46.f),kScreenWidth, SCREEN_HEIGHT - bottomView_height - 1 - TOPHEIGHT - bottomView_height - getWidth(46.f)+10);
         }
         
         _customCalendarView = [[YZXCalendarView alloc] initWithFrame:rect withStartDateString:self.helper.customDateStartDate endDateString:self.helper.customDateEndDate];
@@ -201,7 +201,7 @@
         _confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _confirmButton.layer.cornerRadius = 2;
         _confirmButton.layer.masksToBounds= YES;
-        _confirmButton.backgroundColor = RGBCOLOR(225.0,129.0,128.0,1);
+        _confirmButton.backgroundColor = COLOR_RED_FF1213;
         [_confirmButton setTitle:@"确定" forState:UIControlStateNormal];
         _confirmButton.titleLabel.font = FONT15;
         [_confirmButton addTarget:self action:@selector(buttonPressed) forControlEvents:UIControlEventTouchUpInside];

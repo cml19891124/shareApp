@@ -57,6 +57,13 @@
 
 @property (nonatomic, strong) UILabel *titleLabel;
 
+@property (nonatomic, strong) UIButton *warningBtn;
+
+/**
+ 剩余时间
+ */
+@property (nonatomic, strong) HPAttributeLabel *leftLabel;
+
 @property (nonatomic, strong) UIView *storeInfoView;
 
 @property (nonatomic, strong) UIImageView *storeView;
@@ -215,13 +222,13 @@
 {
     [self.storeView sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:ImageNamed(@"loading_logo_small")];
     
-    self.nameLabel.text = _model.title;
+    self.nameLabel.text = [NSString stringWithFormat:@"拼租位置：%@",_model.title];
     
 //    self.locationLabel.text = _model.address;
 //    
 //    self.spaceInfoLabel.text = _model.address;
     
-    self.addressLabel.text = _model.address;
+    self.addressLabel.text = [NSString stringWithFormat:@"地址：%@",_model.address];
     
     self.phoneField.text = _model.contactMobile;
     
@@ -233,9 +240,16 @@
 
     [self.scrollView addSubview:self.headerView];
     
-    [self.scrollView addSubview:self.backBtn];
+    [self.headerView addSubview:self.backBtn];
     
-    [self.scrollView addSubview:self.titleLabel];
+    [self.headerView addSubview:self.titleLabel];
+    
+    [self.headerView addSubview:self.warningBtn];
+    
+    NSString *lefttime = @"剩余：23小时49分";
+    self.leftLabel = [HPAttributeLabel getTitle:lefttime andFromFont:kFont_Medium(12.f) andToFont:kFont_Bold(14.f) andFromColor:COLOR_GRAY_FFFFFF andToColor:COLOR_GRAY_FFFFFF andFromRange:NSMakeRange(0, 3) andToRange:NSMakeRange(4,lefttime.length - 4) andLineSpace:0 andNumbersOfLine:0 andTextAlignment:NSTextAlignmentCenter andLineBreakMode:NSLineBreakByWordWrapping];
+    
+    [self.headerView addSubview:self.leftLabel];
 
     [self.scrollView addSubview:self.storeInfoView];
     
@@ -341,13 +355,13 @@
     
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(getWidth(107.f));
+        make.height.mas_equalTo(getWidth(140.f));
     }];
     
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(16.f));
-        make.width.height.mas_equalTo(getWidth(13.f));
-        make.top.mas_equalTo(g_statusBarHeight + 15.f);
+        make.left.mas_equalTo(self.headerView);
+        make.width.height.mas_equalTo(getWidth(50.f));
+        make.top.mas_equalTo(g_statusBarHeight);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -356,11 +370,25 @@
         make.top.mas_equalTo(g_statusBarHeight + 13.f);
     }];
     
+    [self.warningBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.scrollView);
+        make.width.left.mas_equalTo(self.scrollView);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(getWidth(13.f));
+        make.height.mas_equalTo(self.warningBtn.titleLabel.font.pointSize);
+    }];
+    
+    [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.scrollView);
+        make.width.left.mas_equalTo(self.scrollView);
+        make.top.mas_equalTo(self.warningBtn.mas_bottom).offset(getWidth(10.f));
+        make.height.mas_equalTo(self.leftLabel.font.pointSize);
+    }];
+    
     [self.storeInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.scrollView);
         make.left.mas_equalTo(getWidth(15.f));
         make.size.mas_equalTo(CGSizeMake(getWidth(345.f), getWidth(115.f)));
-        make.top.mas_equalTo(g_statusBarHeight + 44 + getWidth(4.f));
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(getWidth(-28.f));
     }];
     
     [self.storeView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -702,7 +730,7 @@
     if (!_headerView) {
         _headerView = [UIImageView new];
         _headerView.image = ImageNamed(@"order_head");
-        
+        _headerView.userInteractionEnabled = YES;
     }
     return _headerView;
 }
@@ -711,7 +739,8 @@
 {
     if (!_backBtn) {
         _backBtn = [UIButton new];
-        [_backBtn setBackgroundImage:ImageNamed(@"fanhui_wh") forState:UIControlStateNormal];
+        [_backBtn setImage:ImageNamed(@"fanhui_wh") forState:UIControlStateNormal];
+        [_backBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(18.f), getWidth(15.f), getWidth(18.f), 0)];
         [_backBtn addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
         
     }
@@ -730,11 +759,28 @@
     return _titleLabel;
 }
 
+- (UIButton *)warningBtn
+{
+    if (!_warningBtn) {
+        _warningBtn = [UIButton new];
+        [_warningBtn setImage:ImageNamed(@"laba") forState:UIControlStateNormal];
+        [_warningBtn setTitle:@"用户发起新的拼租，请在24小时内进行处理" forState:UIControlStateNormal];
+        [_warningBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+        [_warningBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(5.f), 0, 0)];
+        _warningBtn.titleLabel.font = kFont_Medium(14.f);
+        [_warningBtn addTarget:self action:@selector(onClickLoundBtn:) forControlEvents:UIControlEventTouchUpInside];
+        _warningBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    }
+    return _warningBtn;
+}
+
 - (UIView *)storeInfoView
 {
     if (!_storeInfoView) {
         _storeInfoView = [UIView new];
         _storeInfoView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _storeInfoView.layer.cornerRadius = 2;
+        _storeInfoView.layer.masksToBounds = YES;
     }
     return _storeInfoView;
 }
@@ -834,8 +880,8 @@
         _rentStartDayLabel = [UILabel new];
         _rentStartDayLabel.text = @"请选择起始日期";
         _rentStartDayLabel.textAlignment = NSTextAlignmentLeft;
-        _rentStartDayLabel.font = kFont_Medium(12.f);
-        _rentStartDayLabel.textColor = COLOR_BLACK_333333;
+        _rentStartDayLabel.font = kFont_Regular(14.f);
+        _rentStartDayLabel.textColor = COLOR_GRAY_CCCCCC;
     }
     return _rentStartDayLabel;
 }
@@ -856,8 +902,8 @@
         _rentEndDayLabel = [UILabel new];
         _rentEndDayLabel.text = @"请选择结束日期";
         _rentEndDayLabel.textAlignment = NSTextAlignmentLeft;
-        _rentEndDayLabel.font = kFont_Medium(12.f);
-        _rentEndDayLabel.textColor = COLOR_BLACK_333333;
+        _rentEndDayLabel.font = kFont_Regular(14.f);
+        _rentEndDayLabel.textColor = COLOR_GRAY_CCCCCC;
     }
     return _rentEndDayLabel;
 }
@@ -1340,5 +1386,8 @@
     }
 }
 
-
+- (void)onClickLoundBtn:(UIButton *)button
+{
+    
+}
 @end

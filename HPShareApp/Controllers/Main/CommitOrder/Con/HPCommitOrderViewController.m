@@ -178,6 +178,10 @@
     [super viewWillAppear:animated];
     
     [self.navigationController setNavigationBarHidden:YES animated:YES];
+    
+    [self.view addSubview:self.calenderView];
+
+    [self.calenderView show:YES];
 }
 
 - (void)viewDidLoad {
@@ -205,15 +209,25 @@
 
 - (void)loadData
 {
-    [self.storeView sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:ImageNamed(@"loading_logo_small")];
-    
+//    for (int i = 0; i < self.model.pictures.count; i++) {
+//
+//    }
+//    if (self.model.pictures.count ==0) {
+//        self.storeView.image = ImageNamed(@"loading_logo_small");
+//    }else{
+//        [self.storeView sd_setImageWithURL:[NSURL URLWithString:self.model.pictures[0].url] placeholderImage:ImageNamed(@"loading_logo_small")];
+//    }
     self.nameLabel.text = _model.title;
     
-//    self.locationLabel.text = _model.address;
-//    
+    self.locationLabel.text = _model.address;
+
 //    self.spaceInfoLabel.text = _model.address;
     
     self.addressLabel.text = _model.address;
+    
+    self.ownnerField.text = _model.contact;
+
+    self.phoneField.text = _model.contactMobile;
 }
 - (void)setUpCommitSubviews
 {
@@ -323,9 +337,9 @@
     }];
     
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(16.f));
-        make.width.height.mas_equalTo(getWidth(13.f));
-        make.top.mas_equalTo(g_statusBarHeight + 15.f);
+        make.left.mas_equalTo(self.headerView);
+        make.width.height.mas_equalTo(getWidth(50.f));
+        make.top.mas_equalTo(g_statusBarHeight);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -622,7 +636,8 @@
 {
     if (!_backBtn) {
         _backBtn = [UIButton new];
-        [_backBtn setBackgroundImage:ImageNamed(@"fanhui_wh") forState:UIControlStateNormal];
+        [_backBtn setImage:ImageNamed(@"fanhui_wh") forState:UIControlStateNormal];
+        [_backBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(18.f), getWidth(15.f), getWidth(18.f), 0)];
         [_backBtn addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
         
     }
@@ -646,6 +661,8 @@
     if (!_storeInfoView) {
         _storeInfoView = [UIView new];
         _storeInfoView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _storeInfoView.layer.cornerRadius = 2;
+        _storeInfoView.layer.masksToBounds = YES;
     }
     return _storeInfoView;
 }
@@ -1143,32 +1160,13 @@
 
 - (void)onClickPredictBtn:(UIControl *)button
 {
-//    if ([HPSingleton sharedSingleton].receiveOrder == 1) {
     
-        [self pushVCByClassName:@"HPOrderDetailViewController" withParam:@{@"order":self.model}];
-//    }else{
-//        [self.predictView show:YES];
-//
-//    }
+    [self createSpaceRentOrder];
 }
 
 - (void)onClickSelectedDaysbtn:(UIButton *)button
 {
-//    YZXSelectDateViewController *VC = [[YZXSelectDateViewController alloc] init];
-//    kWEAKSELF
-//    VC.confirmTheDateBlock = ^(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType) {
-//        weakSelf.selectedType = selectedType;
-//        weakSelf.startDate = startDate;
-//        weakSelf.endDate = endDate;
-//        weakSelf.rentStartDayLabel.text = startDate;
-//        weakSelf.rentEndDayLabel.text = endDate;
-//
-//    };
-//    VC.selectedType = self.selectedType;
-//    VC.startDate    = self.startDate;
-//    VC.endDate      = self.endDate;
-//    [self presentViewController:VC animated:YES completion:nil];
-    [self.view addSubview:self.calenderView];
+//    [self.view addSubview:self.calenderView];
     
     [self.calenderView show:YES];
 }
@@ -1188,8 +1186,8 @@
             [HPProgressHUD alertMessage:@"请选择离店时间"];
             return;
         }
-        [weakSelf.arrivalLabel setText:startTime];
-        [weakSelf.leaveLabel setText:endTime];
+        [weakSelf.arrivalLabel setText:[NSString stringWithFormat:@"入店时间：%@",startTime]];
+        [weakSelf.leaveLabel setText:[NSString stringWithFormat:@"离店时间：%@",endTime]];
 
     };
     [self.picker show:YES];
@@ -1208,4 +1206,26 @@
     }
 }
 
+- (void)createSpaceRentOrder
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSArray *closeTimeArr = [self.leaveLabel.text componentsSeparatedByString:@":"];
+    NSString *closeTime = [NSString stringWithFormat:@"%@%@",closeTimeArr.firstObject,closeTimeArr.lastObject];
+    dic[@"closeTime"] = closeTime;
+    dic[@"contact"] = self.model.contact;
+    dic[@"contactMobile"] = self.model.contactMobile;
+    dic[@"days"] = @"";
+    dic[@"openTime"] = @"";
+    dic[@"remark"] = @"";
+    dic[@"shareOrder"] = @"";
+
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/order" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            [self.predictView show:YES];
+            
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
 @end

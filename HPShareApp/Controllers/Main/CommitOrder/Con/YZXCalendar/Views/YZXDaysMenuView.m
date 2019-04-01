@@ -96,12 +96,22 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     [cell layoutContentViewOfCollectionViewCellWithCellIndxePath:indexPath
                                                            model:self.collectionViewData[indexPath.section]];
     
+    if (cell.day.text.length == 0) {
+        [cell changeDayBackgroundColor:[UIColor whiteColor]];
+        cell.isHidden = YES;
+        cell.priceLabel.hidden = YES;
+    }
+    
     if (_selectedArray.count == 0 && [YZXCalendarHelper.helper determineWhetherForTodayWithIndexPaht:indexPath model:self.collectionViewData[indexPath.section]] == YZXDateEqualToToday && !self.customSelect) {
         [_selectedArray addObject:indexPath];
+        if (cell.day.text.length == 0) {
+            [cell changeDayBackgroundColor:[UIColor whiteColor]];
+            cell.isHidden = YES;
+            cell.priceLabel.hidden = YES;
+        }
     }
     
     if (self.selectedArray.count == 1) {
-        //        [cell changeContentViewBackgroundColor:COLOR_RED_FF7878];
         [cell changeDayBackgroundColor:COLOR_RED_EA0000];
         
         if ([cell.day.text isEqualToString:@"9"]) {
@@ -122,24 +132,29 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
         }
         if (cell.day.text.length == 0) {
             [cell changeDayBackgroundColor:[UIColor whiteColor]];
+            cell.isHidden = YES;
+            cell.priceLabel.hidden = YES;
         }
         
     }else{
-        cell.isHidden = YES;
-        cell.priceLabel.hidden = YES;
+        cell.isHidden = NO;
+        cell.priceLabel.hidden = NO;
         [cell changeDayBackgroundColor:COLOR_GRAY_FFFFFF];
-        
+        if (cell.day.text.length == 0) {
+            [cell changeDayBackgroundColor:[UIColor whiteColor]];
+            cell.isHidden = YES;
+            cell.priceLabel.hidden = YES;
+        }
     }
     
     if (self.selectedArray.count == 2 && [indexPath compare:self.selectedArray.firstObject] == NSOrderedDescending && [indexPath compare:self.selectedArray.lastObject] == NSOrderedAscending) {
-//        [cell changeContentViewBackgroundColor:COLOR_RED_FF7878];
         [cell changeDayBackgroundColor:COLOR_RED_FF7878];
         
         if ([cell.day.text isEqualToString:@"9"]) {
             cell.priceLabel.text = @"已预订";
             cell.priceLabel.textColor = COLOR_GRAY_CCCCCC;
             cell.priceLabel.font = kFont_Medium(10.f);
-            cell.priceLabel.hidden = NO;
+//            cell.priceLabel.hidden = NO;
             [cell changeDayBackgroundColor:COLOR_GRAY_CCCCCC];
         }else{
             cell.priceLabel.text = cell.originalPrice;
@@ -153,13 +168,19 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
         }
         if (cell.day.text.length == 0) {
             [cell changeDayBackgroundColor:[UIColor whiteColor]];
+            cell.isHidden = YES;
+            cell.priceLabel.hidden = YES;
         }
         
     }else{
-        cell.isHidden = YES;
-        cell.priceLabel.hidden = YES;
+        cell.isHidden = NO;
+        cell.priceLabel.hidden = NO;
         [cell changeDayBackgroundColor:COLOR_GRAY_FFFFFF];
-
+        if (cell.day.text.length == 0) {
+            [cell changeDayBackgroundColor:[UIColor whiteColor]];
+            cell.isHidden = YES;
+            cell.priceLabel.hidden = YES;
+        }
     }
     
     //将选中的按钮改变样式
@@ -185,6 +206,8 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
             }
             if (cell.day.text.length == 0) {
                 [cell changeDayBackgroundColor:[UIColor whiteColor]];
+                cell.isHidden = YES;
+                cell.priceLabel.hidden = YES;
             }
             
         }else{
@@ -301,6 +324,20 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
         YZXCalendarCollectionViewHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:collectionViewHeaderIdentify forIndexPath:indexPath];
         headerView.textLabel.text = self.collectionViewData[indexPath.section].headerTitle;
+        HPLog(@"dddd:%@",self.collectionViewData[indexPath.section].headerTitle);
+        
+        YZXCalendarCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:collectionViewCellIdentify forIndexPath:indexPath];
+        NSDateFormatter *format = [[NSDateFormatter alloc] init];
+        
+        [format setDateFormat:@"YYYY年MM月"];
+        //获取今天
+        NSDate *nowDate = [NSDate date];
+        NSString *today = [format stringFromDate:nowDate];
+        NSString *lastSecondStr = [today substringWithRange:NSMakeRange(today.length - 1, 1)];
+//        NSString *finalStr =
+//        if ([self.collectionViewData[indexPath.section].headerTitle isEqualToString:@"2019年03月"]) {
+//            HPLog(@"5555555");
+//        }
         return headerView;
     }
     return [[UICollectionReusableView alloc] init];
