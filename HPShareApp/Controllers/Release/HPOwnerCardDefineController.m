@@ -329,8 +329,22 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [self setupTitleLabelWithText:@"店铺简称" ofView:view];
     _titleField = [self setupTextFieldWithPlaceholder:@"请填写店铺简称" ofView:view rightTo:view];
     _titleField.font = kFont_Regular(13.f);
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didTextFieldChange:) name:UITextFieldTextDidChangeNotification object:_titleField];
+
     return view;
+}
+
+- (void)dealloc
+{
+    [kNotificationCenter removeObserver:self name:UITextFieldTextDidChangeNotification object:_titleField];
+}
+//判断输入的是否是汉字，yes是输入汉字， No不是汉字
+- (BOOL)judgeInputIsChinese:(NSString *)textStr{
+    NSString *regex = @"[\u4e00-\u9fa5]";
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+    BOOL isMatch = [pred evaluateWithObject:textStr];
+    return isMatch;
+    
 }
 
 #pragma mark - 店铺标签
@@ -966,14 +980,43 @@ typedef NS_ENUM(NSInteger, HPSelectItemIndex) {
     [self queryUserOfSalesmanByMobile];
 }
 
+#pragma mark - NSNotification
+
+- (void)didTextFieldChange:(NSNotification *)notification {
+    UITextField *textField = (UITextField *)notification.object;
+    
+    // text field 的内容
+    NSString *contentText = textField.text;
+    
+    // 获取高亮内容的范围
+    UITextRange *selectedRange = [textField markedTextRange];
+    // 这行代码 可以认为是 获取高亮内容的长度
+    NSInteger markedTextLength = [textField offsetFromPosition:selectedRange.start toPosition:selectedRange.end];
+    // 没有高亮内容时,对已输入的文字进行操作
+    if (markedTextLength == 0) {
+        // 如果 text field 的内容长度大于我们限制的内容长度
+        if (contentText.length > 12) {
+            // 截取从前面开始maxLength长度的字符串
+            //            textField.text = [contentText substringToIndex:maxLength];
+            // 此方法用于在字符串的一个range范围内，返回此range范围内完整的字符串的range
+            NSRange rangeRange = [contentText rangeOfComposedCharacterSequencesForRange:NSMakeRange(0, 12)];
+            textField.text = [contentText substringWithRange:rangeRange];
+            [HPProgressHUD alertMessage:@"店铺简称不得超过12位"];
+        }
+    }
+}
+
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     if (textField == _titleField) {
-        if (textField.text.length >= 12) {
-            textField.text = [textField.text substringToIndex:textField.text.length -1];
-            [HPProgressHUD alertMessage:@"店铺简称不得超过12位"];
-        }
+        //给uitextfiled增加一个 消息处理:
+//        [_titleField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+//        NSString *text = [self textFieldDidChange:_titleField];
+//        if (text.length >= 12) {
+//            textField.text = [textField.text substringToIndex:textField.text.length -1];
+//            [HPProgressHUD alertMessage:@"店铺简称不得超过12位"];
+//        }
     }else if (textField == _convertTitleField){
         if (textField.text.length >= 30) {
             textField.text = [textField.text substringToIndex:textField.text.length -1];

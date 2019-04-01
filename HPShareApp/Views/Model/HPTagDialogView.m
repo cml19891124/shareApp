@@ -303,7 +303,7 @@
         }
     }
     
-    [_countLabel setText:[NSString stringWithFormat:@"%u/5", _textField.text.length - markedTextLength]];
+    [_countLabel setText:[NSString stringWithFormat:@"%lu/5", _textField.text.length - markedTextLength]];
 }
 
 #pragma mark - Select
