@@ -251,7 +251,7 @@ static NSString *orderCell = @"orderCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self pushVCByClassName:@"HPOrderListViewController" withParam:@{}];
+    [self pushVCByClassName:@"HPOrderDetailViewController" withParam:@{}];
 }
 
 #pragma mark - 确认订单详情

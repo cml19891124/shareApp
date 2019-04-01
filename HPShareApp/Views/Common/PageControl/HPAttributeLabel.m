@@ -26,6 +26,7 @@
     
     //设置行间距
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.alignment = textAlignment;
     [paragraphStyle setLineSpacing:lineSpace];
     [attributeStr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,title.length)];
     lb.attributedText = attributeStr;

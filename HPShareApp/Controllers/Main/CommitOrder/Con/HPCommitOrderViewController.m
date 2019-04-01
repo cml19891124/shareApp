@@ -20,7 +20,7 @@
 
 #import "YZXCalendarHelper.h"
 
-#import "HPRentTimePicker.h"
+#import "HPRentDuringView.h"
 
 #import "HPOrderInfoListView.h"
 
@@ -39,11 +39,15 @@
 
 @interface HPCommitOrderViewController ()
 
+@property (nonatomic, copy) NSString *arriveTime;
+
+@property (nonatomic, copy) NSString *leaveTime;
+
 @property (nonatomic, strong) HPCalenderView *calenderView;
 
 @property (nonatomic, strong) HPOrderInfoListView *orderListView;
 
-@property (nonatomic, strong) HPRentTimePicker *picker;
+@property (nonatomic, strong) HPRentDuringView *picker;
 
 @property (nonatomic, strong) HPPredictView *predictView;
 
@@ -627,7 +631,7 @@
     if (!_headerView) {
         _headerView = [UIImageView new];
         _headerView.image = ImageNamed(@"order_head");
-        
+        _headerView.userInteractionEnabled = YES;
     }
     return _headerView;
 }
@@ -1166,30 +1170,38 @@
 
 - (void)onClickSelectedDaysbtn:(UIButton *)button
 {
-//    [self.view addSubview:self.calenderView];
-    
     [self.calenderView show:YES];
+}
+
+- (HPRentDuringView *)picker{
+    if (!_picker) {
+        kWEAKSELF
+        _picker = [HPRentDuringView new];
+        _picker.timeBlock = ^(NSString *startTime, NSString *endTime) {
+            
+            if (!startTime) {
+                [HPProgressHUD alertMessage:@"请选择入店时间"];
+                return;
+            }
+            
+            if (!endTime) {
+                [HPProgressHUD alertMessage:@"请选择离店时间"];
+                return;
+            }
+            weakSelf.arriveTime = startTime;
+            weakSelf.leaveTime = endTime;
+            
+            [weakSelf.arrivalLabel setText:[NSString stringWithFormat:@"入店：%@",startTime]];
+            [weakSelf.leaveLabel setText:[NSString stringWithFormat:@"离店：%@",endTime]];
+            
+        };
+    }
+    return _picker;
 }
 
 - (void)onClickManagerTimesBtn:(UIButton *)button
 {
-    kWEAKSELF
-    self.picker = [HPRentTimePicker new];
-    self.picker.timeBlock = ^(NSString *startTime, NSString *endTime) {
-        
-        if (!startTime) {
-            [HPProgressHUD alertMessage:@"请选择入店时间"];
-            return;
-        }
-        
-        if (!endTime) {
-            [HPProgressHUD alertMessage:@"请选择离店时间"];
-            return;
-        }
-        [weakSelf.arrivalLabel setText:[NSString stringWithFormat:@"入店时间：%@",startTime]];
-        [weakSelf.leaveLabel setText:[NSString stringWithFormat:@"离店时间：%@",endTime]];
-
-    };
+    [self.view addSubview:self.picker];
     [self.picker show:YES];
 }
 
@@ -1201,7 +1213,7 @@
         [self.orderListView show:YES];
 
     }else{
-        _priceListBtn.selectedImage = ImageNamed(@"arrow_down");
+        _priceListBtn.image = ImageNamed(@"arrow_down");
         [self.orderListView show:NO];
     }
 }
@@ -1209,7 +1221,7 @@
 - (void)createSpaceRentOrder
 {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    NSArray *closeTimeArr = [self.leaveLabel.text componentsSeparatedByString:@":"];
+    NSArray *closeTimeArr = [self.leaveTime componentsSeparatedByString:@":"];
     NSString *closeTime = [NSString stringWithFormat:@"%@%@",closeTimeArr.firstObject,closeTimeArr.lastObject];
     dic[@"closeTime"] = closeTime;
     dic[@"contact"] = self.model.contact;

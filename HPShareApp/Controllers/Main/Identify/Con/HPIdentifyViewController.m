@@ -49,7 +49,7 @@
 - (void)setUpSubviews
 {
     UIButton *backBtn = [UIButton new];
-    [backBtn setBackgroundImage:ImageNamed(@"fanhui_wh") forState:UIControlStateNormal];
+    [backBtn setImage:ImageNamed(@"fanhui_wh") forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
@@ -58,9 +58,9 @@
     
     [self.headView addSubview:backBtn];
     [backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(16.f));
-        make.width.height.mas_equalTo(getWidth(13.f));
-        make.top.mas_equalTo(g_statusBarHeight + 15.f);
+        make.left.mas_equalTo(self.headView);
+        make.width.height.mas_equalTo(getWidth(50.f));
+        make.top.mas_equalTo(g_statusBarHeight);
     }];
     
     [self.headView addSubview:self.titleLabel];

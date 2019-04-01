@@ -95,73 +95,45 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     YZXCalendarCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:collectionViewCellIdentify forIndexPath:indexPath];
     [cell layoutContentViewOfCollectionViewCellWithCellIndxePath:indexPath
                                                            model:self.collectionViewData[indexPath.section]];
-    
+    //默认情况下显示的状态
+    if (cell.day.text.length) {
+        cell.isHidden = NO;
+        cell.priceLabel.hidden = NO;
+    }
     if (cell.day.text.length == 0) {
         [cell changeDayBackgroundColor:[UIColor whiteColor]];
         cell.isHidden = YES;
         cell.priceLabel.hidden = YES;
     }
     
+    if ([cell.day.text isEqualToString:@"9"]) {
+        cell.priceLabel.text = @"已预订";
+        cell.priceLabel.textColor = COLOR_GRAY_CCCCCC;
+        cell.priceLabel.font = kFont_Medium(10.f);
+        [cell changeDayBackgroundColor:COLOR_GRAY_CCCCCC];
+    }else{
+        cell.priceLabel.text = cell.originalPrice;
+        cell.priceLabel.textColor = cell.originalColor;
+        cell.priceLabel.font = cell.originalFont;
+    }
+    //未选择情况
     if (_selectedArray.count == 0 && [YZXCalendarHelper.helper determineWhetherForTodayWithIndexPaht:indexPath model:self.collectionViewData[indexPath.section]] == YZXDateEqualToToday && !self.customSelect) {
         [_selectedArray addObject:indexPath];
-        if (cell.day.text.length == 0) {
-            [cell changeDayBackgroundColor:[UIColor whiteColor]];
-            cell.isHidden = YES;
-            cell.priceLabel.hidden = YES;
-        }
+
     }
-    
+    //选择一个日期
     if (self.selectedArray.count == 1) {
         [cell changeDayBackgroundColor:COLOR_RED_EA0000];
-        
-        if ([cell.day.text isEqualToString:@"9"]) {
-            cell.priceLabel.text = @"已预订";
-            cell.priceLabel.textColor = COLOR_GRAY_CCCCCC;
-            cell.priceLabel.font = kFont_Medium(10.f);
-            cell.priceLabel.hidden = NO;
-            [cell changeDayBackgroundColor:COLOR_GRAY_CCCCCC];
-        }else{
-            cell.priceLabel.text = cell.originalPrice;
-            cell.priceLabel.textColor = cell.originalColor;
-            
-        }
-        
-        if (cell.day.text.length) {
-            cell.isHidden = NO;
-            cell.priceLabel.hidden = NO;
-        }
-        if (cell.day.text.length == 0) {
-            [cell changeDayBackgroundColor:[UIColor whiteColor]];
-            cell.isHidden = YES;
-            cell.priceLabel.hidden = YES;
-        }
         
     }else{
         cell.isHidden = NO;
         cell.priceLabel.hidden = NO;
         [cell changeDayBackgroundColor:COLOR_GRAY_FFFFFF];
-        if (cell.day.text.length == 0) {
-            [cell changeDayBackgroundColor:[UIColor whiteColor]];
-            cell.isHidden = YES;
-            cell.priceLabel.hidden = YES;
-        }
+
     }
     
     if (self.selectedArray.count == 2 && [indexPath compare:self.selectedArray.firstObject] == NSOrderedDescending && [indexPath compare:self.selectedArray.lastObject] == NSOrderedAscending) {
         [cell changeDayBackgroundColor:COLOR_RED_FF7878];
-        
-        if ([cell.day.text isEqualToString:@"9"]) {
-            cell.priceLabel.text = @"已预订";
-            cell.priceLabel.textColor = COLOR_GRAY_CCCCCC;
-            cell.priceLabel.font = kFont_Medium(10.f);
-//            cell.priceLabel.hidden = NO;
-            [cell changeDayBackgroundColor:COLOR_GRAY_CCCCCC];
-        }else{
-            cell.priceLabel.text = cell.originalPrice;
-            cell.priceLabel.textColor = cell.originalColor;
-
-        }
-
         if (cell.day.text.length) {
             cell.isHidden = NO;
             cell.priceLabel.hidden = NO;
@@ -171,7 +143,6 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
             cell.isHidden = YES;
             cell.priceLabel.hidden = YES;
         }
-        
     }else{
         cell.isHidden = NO;
         cell.priceLabel.hidden = NO;
@@ -186,19 +157,10 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     //将选中的按钮改变样式
     [self.selectedArray enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj.section == indexPath.section && obj.item == indexPath.item) {
-//            [cell changeContentViewBackgroundColor:CustomColor(@"EA0000")];
             [cell changeDayBackgroundColor:COLOR_RED_EA0000];
             cell.isHidden = NO;
             cell.priceLabel.hidden = NO;
             [cell changeDayTextColor:[UIColor whiteColor]];
-            
-            if ([cell.day.text isEqualToString:@"9"] && cell.day.text.length) {
-                cell.priceLabel.text = @"已预订";
-                cell.priceLabel.textColor = COLOR_GRAY_CCCCCC;
-                cell.priceLabel.font = kFont_Medium(10.f);
-                cell.priceLabel.hidden = NO;
-                [cell changeDayBackgroundColor:COLOR_GRAY_CCCCCC];
-            }
             
             if (cell.day.text.length) {
                 cell.isHidden = NO;
@@ -211,21 +173,31 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
             }
             
         }else{
-//            [cell changeDayBackgroundColor:COLOR_GRAY_FFFFFF];
 
         }
     }];
     
+    //默认只显示近三个月的时间
+    if (indexPath.section != self.collectionViewData.count -1 && indexPath.section != self.collectionViewData.count -2 && indexPath.section != self.collectionViewData.count -3) {
+        [cell changeDayBackgroundColor:[UIColor whiteColor]];
+        cell.isHidden = YES;
+    }
     return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    YZXCalendarCollectionViewCell *cell = (YZXCalendarCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+
     //自定义选择
     if (self.customSelect) {
         switch (self.selectedArray.count) {
             case 0://选择第一个时间
             {
+                if ([cell.day.text isEqualToString:@"9"]) {
+                    [HPProgressHUD alertMessage:@"已预订，请重新选择"];
+                    return;
+                }
                 //设置点击的cell的样式
                 [self p_changeTheSelectedCellStyleWithIndexPath:indexPath];
                 //记录当前点击的cell
@@ -324,20 +296,8 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
         YZXCalendarCollectionViewHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:collectionViewHeaderIdentify forIndexPath:indexPath];
         headerView.textLabel.text = self.collectionViewData[indexPath.section].headerTitle;
-        HPLog(@"dddd:%@",self.collectionViewData[indexPath.section].headerTitle);
+        HPLog(@"dddd:%@ indexPath.section:%ld self.collectionViewData.count:%ld",self.collectionViewData[indexPath.section].headerTitle,indexPath.section,self.collectionViewData.count);
         
-        YZXCalendarCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:collectionViewCellIdentify forIndexPath:indexPath];
-        NSDateFormatter *format = [[NSDateFormatter alloc] init];
-        
-        [format setDateFormat:@"YYYY年MM月"];
-        //获取今天
-        NSDate *nowDate = [NSDate date];
-        NSString *today = [format stringFromDate:nowDate];
-        NSString *lastSecondStr = [today substringWithRange:NSMakeRange(today.length - 1, 1)];
-//        NSString *finalStr =
-//        if ([self.collectionViewData[indexPath.section].headerTitle isEqualToString:@"2019年03月"]) {
-//            HPLog(@"5555555");
-//        }
         return headerView;
     }
     return [[UICollectionReusableView alloc] init];
@@ -430,14 +390,14 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     }
     //传入两个时间时，查找其indexPath信息，用在collectionView上展现
     [self.collectionViewData enumerateObjectsUsingBlock:^(YZXCalendarModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj.headerTitle isEqualToString:[_dateArray.firstObject substringWithRange:NSMakeRange(0, 8)]]) {
-            NSInteger day = [_dateArray.firstObject substringWithRange:NSMakeRange(8, 2)].integerValue;
+        if ([obj.headerTitle isEqualToString:[self->_dateArray.firstObject substringWithRange:NSMakeRange(0, 8)]]) {
+            NSInteger day = [self->_dateArray.firstObject substringWithRange:NSMakeRange(8, 2)].integerValue;
             [self.selectedArray addObject:[NSIndexPath indexPathForItem:(day + obj.firstDayOfTheMonth - 2) inSection:idx]];
         }
-        if ([obj.headerTitle isEqualToString:[_dateArray.lastObject substringWithRange:NSMakeRange(0, 8)]]) {
+        if ([obj.headerTitle isEqualToString:[self->_dateArray.lastObject substringWithRange:NSMakeRange(0, 8)]]) {
             NSInteger day = [_dateArray.lastObject substringWithRange:NSMakeRange(8, 2)].integerValue;
             [self.selectedArray addObject:[NSIndexPath indexPathForItem:(day + obj.firstDayOfTheMonth - 2) inSection:idx]];
-            [_collectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:(self.collectionViewData[idx].sectionRow * 7 - 1) inSection:idx] animated:YES scrollPosition:UICollectionViewScrollPositionBottom];
+            [self->_collectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:(self.collectionViewData[idx].sectionRow * 7 - 1) inSection:idx] animated:YES scrollPosition:UICollectionViewScrollPositionBottom];
         }
     }];
     

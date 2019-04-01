@@ -133,9 +133,9 @@
     }];
     
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(16.f));
-        make.width.height.mas_equalTo(getWidth(13.f));
-        make.top.mas_equalTo(g_statusBarHeight + 15.f);
+        make.left.mas_equalTo(self.scrollView);
+        make.width.height.mas_equalTo(getWidth(50.f));
+        make.top.mas_equalTo(g_statusBarHeight);
     }];
 
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -254,7 +254,9 @@
 {
     if (!_backBtn) {
         _backBtn = [UIButton new];
-        [_backBtn setBackgroundImage:ImageNamed(@"fanhui") forState:UIControlStateNormal];
+        [_backBtn setImage:ImageNamed(@"fanhui") forState:UIControlStateNormal];
+        [_backBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(18.f), getWidth(15.f), getWidth(18.f), 0)];
+
         [_backBtn addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _backBtn;

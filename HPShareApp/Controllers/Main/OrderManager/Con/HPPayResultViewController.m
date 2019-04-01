@@ -122,9 +122,9 @@
     }];
     
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(16.f));
-        make.width.height.mas_equalTo(getWidth(13.f));
-        make.top.mas_equalTo(g_statusBarHeight + 15.f);
+        make.left.mas_equalTo(self.headerView);
+        make.width.height.mas_equalTo(getWidth(50.f));
+        make.top.mas_equalTo(g_statusBarHeight);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -234,7 +234,7 @@
     if (!_headerView) {
         _headerView = [UIImageView new];
         _headerView.image = ImageNamed(@"order_head");
-        
+        _headerView.userInteractionEnabled = YES;
     }
     return _headerView;
 }
@@ -243,7 +243,8 @@
 {
     if (!_backBtn) {
         _backBtn = [UIButton new];
-        [_backBtn setBackgroundImage:ImageNamed(@"fanhui_wh") forState:UIControlStateNormal];
+        [_backBtn setImage:ImageNamed(@"fanhui_wh") forState:UIControlStateNormal];
+        [_backBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(18.f), getWidth(15.f), getWidth(18.f), 0)];
         [_backBtn addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
         
     }

@@ -97,6 +97,7 @@
 #define COLOR_BLACK_4A4A4B [UIColor colorWithHexString:@"#4A4A4B"]
 #define COLOR_BLACK_090103 [UIColor colorWithHexString:@"#090103"]
 #define COLOR_BLACK_TRANS_1111119b [UIColor colorWithHexString:@"#1111119b"]
+#define COLOR_GRAY_E4E4E4 [UIColor colorWithHexString:@"#E4E4E4"]
 
 #define COLOR_GRAY_DBDBDB [UIColor colorWithHexString:@"#dbdbdb"]
 #define COLOR_GRAY_E0E0E0 [UIColor colorWithHexString:@"#E0E0E0"]
@@ -182,8 +183,8 @@
 #define kFont_Heavy(font)  [UIFont fontWithName:@"PingFangSC-Semibold"size:font]
 #define kRect(x, y, w, h)   CGRectMake(x, y, w, h)
 //#define kBaseUrl  @"https://inner.hepaicn.com"
-//#define kBaseUrl  @"https://app.hepaicn.com"
-#define kBaseUrl  @"http://192.168.0.104:8083"//测试
+#define kBaseUrl  @"https://app.hepaicn.com"
+//#define kBaseUrl  @"http://192.168.0.104:8083"//测试
 //#define kBaseUrl  @"http://192.168.0.60:8083"//罗
 //#define kBaseUrl  @"http://192.168.0.148:8083"//胜光
 

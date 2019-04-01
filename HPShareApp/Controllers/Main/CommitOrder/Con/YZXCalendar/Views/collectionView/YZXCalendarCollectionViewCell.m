@@ -37,6 +37,8 @@
     //保存原来的价格
     self.originalPrice = self.priceLabel.text;
     self.originalColor = self.priceLabel.textColor;
+    self.originalFont = self.priceLabel.font;
+
     self.day.layer.cornerRadius = 2;
     self.day.layer.masksToBounds = YES;
 }

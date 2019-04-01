@@ -189,7 +189,7 @@
     [self.headerView addSubview:self.warningBtn];
 
     NSString *lefttime = @"剩余：23小时49分";
-    self.leftLabel = [HPAttributeLabel getTitle:lefttime andFromFont:kFont_Medium(12.f) andToFont:kFont_Bold(14.f) andFromColor:COLOR_GRAY_FFFFFF andToColor:COLOR_GRAY_FFFFFF andFromRange:NSMakeRange(0, 3) andToRange:NSMakeRange(4,lefttime.length - 4) andLineSpace:0 andNumbersOfLine:0 andTextAlignment:NSTextAlignmentCenter andLineBreakMode:NSLineBreakByWordWrapping];
+    self.leftLabel = [HPAttributeLabel getTitle:lefttime andFromFont:kFont_Medium(12.f) andToFont:kFont_Bold(14.f) andFromColor:COLOR_GRAY_FFFFFF andToColor:COLOR_GRAY_FFFFFF andFromRange:NSMakeRange(0, 3) andToRange:NSMakeRange(3,lefttime.length - 3) andLineSpace:0 andNumbersOfLine:0 andTextAlignment:NSTextAlignmentCenter andLineBreakMode:NSLineBreakByWordWrapping];
     
     [self.headerView addSubview:self.leftLabel];
 
@@ -270,11 +270,7 @@
     
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.view);
-        if ([HPSingleton sharedSingleton].identifyTag == 0) {
-            make.height.mas_equalTo(getWidth(107.f));
-        }else{
-            make.height.mas_equalTo(getWidth(140.f));
-        }
+        make.height.mas_equalTo(getWidth(140.f));
     }];
     
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -296,17 +292,12 @@
         make.height.mas_equalTo(self.warningBtn.titleLabel.font.pointSize);
     }];
     
-    if ([HPSingleton sharedSingleton].identifyTag == 1) {
-        [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self.scrollView);
-            make.width.left.mas_equalTo(self.scrollView);
-            make.top.mas_equalTo(self.warningBtn.mas_bottom).offset(getWidth(10.f));
-            make.height.mas_equalTo(self.leftLabel.font.pointSize);
-        }];
-    }else{
-        self.leftLabel.hidden = YES;
-    }
-    
+    [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.headerView);
+        make.width.mas_equalTo(self.scrollView);
+        make.top.mas_equalTo(self.warningBtn.mas_bottom).offset(getWidth(10.f));
+        make.height.mas_equalTo(self.leftLabel.font.pointSize);
+    }];
     
     [self.communicateView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.scrollView);
@@ -357,17 +348,17 @@
     }];
     
     [self.consumerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(15.f));
-        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-15.f));
-        make.left.mas_equalTo(getWidth(40.f));
+        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(10.f));
+        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-10.f));
+        make.left.mas_equalTo(getWidth(30.f));
         make.width.mas_equalTo(getWidth(345.f)/3);
 
     }];
     
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-15.f));
-        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(15.f));
-        make.right.mas_equalTo(getWidth(-40.f));
+        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-10.f));
+        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(10.f));
+        make.right.mas_equalTo(getWidth(-30.f));
         make.width.mas_equalTo(getWidth(345.f)/3);
     }];
     
@@ -454,7 +445,7 @@
     [self.rentAmountView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.width.mas_equalTo(self.orderView);
         make.height.mas_equalTo(getWidth(77.f));
-        make.top.mas_equalTo(self.orderView.mas_bottom);
+        make.top.mas_equalTo(self.orderView.mas_bottom).offset(getWidth(15.f));
     }];
     
     [self.amountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -904,7 +895,7 @@
         _depositSubLabel.textColor = COLOR_GRAY_666666;
         _depositSubLabel.textAlignment = NSTextAlignmentLeft;
         _depositSubLabel.font = kFont_Regular(14.f);
-        _depositSubLabel.text = @"+¥ 10000";
+        _depositSubLabel.text = @"+¥ 0";
     }
     return _depositSubLabel;
 }

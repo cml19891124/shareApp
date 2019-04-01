@@ -41,6 +41,11 @@
 
 @interface HPOrderManagerViewController ()
 
+
+@property (nonatomic, copy) NSString *arriveTime;
+
+@property (nonatomic, copy) NSString *leaveTime;
+
 @property (nonatomic, strong) HPQuitOrderView *quitView;
 
 @property (nonatomic, strong) HPOrderInfoListView *orderListView;
@@ -193,6 +198,10 @@
     [super viewWillAppear:animated];
     
     [self.navigationController setNavigationBarHidden:YES animated:YES];
+    
+    [self.view addSubview:self.calenderView];
+    
+    [self.calenderView show:YES];
 }
 
 - (void)viewDidLoad {
@@ -1332,22 +1341,6 @@
 
 - (void)onClickSelectedDaysbtn:(UIButton *)button
 {
-//    YZXSelectDateViewController *VC = [[YZXSelectDateViewController alloc] init];
-//    kWEAKSELF
-//    VC.confirmTheDateBlock = ^(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType) {
-//        weakSelf.selectedType = selectedType;
-//        weakSelf.startDate = startDate;
-//        weakSelf.endDate = endDate;
-//        weakSelf.rentStartDayLabel.text = startDate;
-//        weakSelf.rentEndDayLabel.text = endDate;
-//
-//    };
-//    VC.selectedType = self.selectedType;
-//    VC.startDate    = self.startDate;
-//    VC.endDate      = self.endDate;
-//    [self presentViewController:VC animated:YES completion:nil];
-    [self.view addSubview:self.calenderView];
-    
     [self.calenderView show:YES];
 }
 
@@ -1366,6 +1359,8 @@
             [HPProgressHUD alertMessage:@"请选择离店时间"];
             return;
         }
+        weakSelf.arriveTime = startTime;
+        weakSelf.leaveTime = endTime;
         [weakSelf.arrivalLabel setText:startTime];
         [weakSelf.leaveLabel setText:endTime];
 

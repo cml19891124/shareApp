@@ -158,13 +158,15 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [self.view setBackgroundColor:COLOR_GRAY_F7F7F7];
 //    UIView *navigationView = [self setupNavigationBarWithTitle:@"设置中心"];
     UIButton *backBtn = [UIButton new];
-    [backBtn setBackgroundImage:ImageNamed(@"fanhui") forState:UIControlStateNormal];
+    [backBtn setImage:ImageNamed(@"fanhui") forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
+    [backBtn setImageEdgeInsets:UIEdgeInsetsMake(getWidth(18.f), getWidth(15.f), getWidth(18.f), 0)];
+
     [self.view addSubview:backBtn];
     [backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(16.f));
-        make.width.height.mas_equalTo(getWidth(13.f));
-        make.top.mas_equalTo(g_statusBarHeight + 15.f);
+        make.left.mas_equalTo(self.view);
+        make.width.height.mas_equalTo(getWidth(50.f));
+        make.top.mas_equalTo(g_statusBarHeight);
     }];
     
     UIScrollView *scrollView = [[UIScrollView alloc] init];

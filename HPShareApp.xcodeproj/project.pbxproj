@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -44,6 +44,8 @@
 		7A54485A21C16A48001301F3 /* HPPartyCenterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485921C16A48001301F3 /* HPPartyCenterModel.m */; };
 		7A54485D21C16BF3001301F3 /* HPPartyCenterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485C21C16BF3001301F3 /* HPPartyCenterCell.m */; };
 		7A54489E21C6304C001301F3 /* HPCardHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54489D21C6304C001301F3 /* HPCardHeaderView.m */; };
+		7A8C806F22525BE800E275EB /* HPRentTimePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8C806E22525BE800E275EB /* HPRentTimePicker.m */; };
+		7A8C807222525D0000E275EB /* HPRentDuringView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8C807122525D0000E275EB /* HPRentDuringView.m */; };
 		7AAFF36521CD2EC20049D175 /* HPTimeRentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAFF36421CD2EC20049D175 /* HPTimeRentView.m */; };
 		7AAFF36821CD2F680049D175 /* HPTimeRentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAFF36721CD2F680049D175 /* HPTimeRentButton.m */; };
 		7AAFF3A621E390540049D175 /* HPGeodeMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAFF39921E390540049D175 /* HPGeodeMapViewController.m */; };
@@ -251,7 +253,6 @@
 		E679B84C22421951004A2CFA /* HPOrderBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B84B22421951004A2CFA /* HPOrderBtn.m */; };
 		E679B84F22422A5D004A2CFA /* HPRelationViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B84E22422A5D004A2CFA /* HPRelationViewCell.m */; };
 		E679B8522243260D004A2CFA /* UIView+Corner.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B8512243260D004A2CFA /* UIView+Corner.m */; };
-		E679B85622436519004A2CFA /* HPRentTimePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B85522436519004A2CFA /* HPRentTimePicker.m */; };
 		E679B8592243A62C004A2CFA /* HPOrderItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E679B8582243A62C004A2CFA /* HPOrderItemCell.m */; };
 		E67B778E21CDEEB1007AC636 /* HPRentAmountItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = E67B778D21CDEEB1007AC636 /* HPRentAmountItemView.m */; };
 		E67C68822237483600CF2297 /* HPReturnFundsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E67C68812237483600CF2297 /* HPReturnFundsViewController.m */; };
@@ -576,6 +577,10 @@
 		7A54485C21C16BF3001301F3 /* HPPartyCenterCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPPartyCenterCell.m; sourceTree = "<group>"; };
 		7A54489C21C6304C001301F3 /* HPCardHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCardHeaderView.h; sourceTree = "<group>"; };
 		7A54489D21C6304C001301F3 /* HPCardHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCardHeaderView.m; sourceTree = "<group>"; };
+		7A8C806D22525BE800E275EB /* HPRentTimePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPRentTimePicker.h; sourceTree = "<group>"; };
+		7A8C806E22525BE800E275EB /* HPRentTimePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPRentTimePicker.m; sourceTree = "<group>"; };
+		7A8C807022525D0000E275EB /* HPRentDuringView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRentDuringView.h; sourceTree = "<group>"; };
+		7A8C807122525D0000E275EB /* HPRentDuringView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRentDuringView.m; sourceTree = "<group>"; };
 		7AAFF36321CD2EC20049D175 /* HPTimeRentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPTimeRentView.h; sourceTree = "<group>"; };
 		7AAFF36421CD2EC20049D175 /* HPTimeRentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPTimeRentView.m; sourceTree = "<group>"; };
 		7AAFF36621CD2F680049D175 /* HPTimeRentButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPTimeRentButton.h; sourceTree = "<group>"; };
@@ -989,8 +994,6 @@
 		E679B84E22422A5D004A2CFA /* HPRelationViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRelationViewCell.m; sourceTree = "<group>"; };
 		E679B8502243260D004A2CFA /* UIView+Corner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Corner.h"; sourceTree = "<group>"; };
 		E679B8512243260D004A2CFA /* UIView+Corner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Corner.m"; sourceTree = "<group>"; };
-		E679B85422436519004A2CFA /* HPRentTimePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRentTimePicker.h; sourceTree = "<group>"; };
-		E679B85522436519004A2CFA /* HPRentTimePicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRentTimePicker.m; sourceTree = "<group>"; };
 		E679B8572243A62B004A2CFA /* HPOrderItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOrderItemCell.h; sourceTree = "<group>"; };
 		E679B8582243A62C004A2CFA /* HPOrderItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOrderItemCell.m; sourceTree = "<group>"; };
 		E67B778C21CDEEB1007AC636 /* HPRentAmountItemView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRentAmountItemView.h; sourceTree = "<group>"; };
@@ -2331,6 +2334,8 @@
 				E629AB07224A014600CF0378 /* YZXCalendarView.m */,
 				E68C76BA224DD85900243AF7 /* HPCalenderView.h */,
 				E68C76BB224DD85900243AF7 /* HPCalenderView.m */,
+				7A8C807022525D0000E275EB /* HPRentDuringView.h */,
+				7A8C807122525D0000E275EB /* HPRentDuringView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2912,15 +2917,6 @@
 			path = Subviews;
 			sourceTree = "<group>";
 		};
-		E679B853224364D8004A2CFA /* TimePicker */ = {
-			isa = PBXGroup;
-			children = (
-				E679B85422436519004A2CFA /* HPRentTimePicker.h */,
-				E679B85522436519004A2CFA /* HPRentTimePicker.m */,
-			);
-			path = TimePicker;
-			sourceTree = "<group>";
-		};
 		E67EFDCE221BA150008BDA1D /* OrderPay(订单支付) */ = {
 			isa = PBXGroup;
 			children = (
@@ -3477,7 +3473,8 @@
 		E692144221D4800D00ED6B5C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				E679B853224364D8004A2CFA /* TimePicker */,
+				7A8C806D22525BE800E275EB /* HPRentTimePicker.h */,
+				7A8C806E22525BE800E275EB /* HPRentTimePicker.m */,
 				E692144321D4802700ED6B5C /* HPUploadButton.h */,
 				E692144421D4802700ED6B5C /* HPUploadButton.m */,
 			);
@@ -3995,18 +3992,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-resources.sh",
-				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
-				"${PODS_ROOT}/AlipaySDK-iOS/AlipaySDK.bundle",
+				"${PODS_ROOT}/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AlipaySDK.bundle",
+				"${PODS_ROOT}/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4019,32 +4009,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
-				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
-				"${BUILT_PRODUCTS_DIR}/LTScrollView/LTScrollView.framework",
-				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
-				"${BUILT_PRODUCTS_DIR}/MJExtension/MJExtension.framework",
-				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
-				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/TZImagePickerController/TZImagePickerController.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LTScrollView.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJExtension.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TZImagePickerController.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-HPShareApp/Pods-HPShareApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4120,7 +4089,6 @@
 				E66F1CB821D3625D00C2DEEF /* HPHotImageView.m in Sources */,
 				E67D2EDD21CBBB72005134DB /* HPShareSelectedItemView.m in Sources */,
 				E6D75F4D21AFF48200B2067C /* HPBindPhoneController.m in Sources */,
-				E679B85622436519004A2CFA /* HPRentTimePicker.m in Sources */,
 				E629AD28224CF0920038AA9F /* HPChooseItemView.m in Sources */,
 				E6292172219AB28700BEF16C /* HPGlobalVariable.m in Sources */,
 				E629AABB2248AA7900CF0378 /* HPAccountCell.m in Sources */,
@@ -4154,6 +4122,7 @@
 				E661B0CD219D1B9200C86CF5 /* HPRowPanel.m in Sources */,
 				E677C7DC21FB06F80099E2C9 /* HPAreaStoreItemListViewController.m in Sources */,
 				E68A780821F3276C00083A90 /* JCHATGroupDetailFooterReusableView.m in Sources */,
+				7A8C806F22525BE800E275EB /* HPRentTimePicker.m in Sources */,
 				E68A76BD21F2C6D100083A90 /* JCHATShowTimeCell.m in Sources */,
 				E6D75F7F21B6463400B2067C /* HPShareManageCell.m in Sources */,
 				E661B14621A68BE300C86CF5 /* HPRoundedRectPageControl.m in Sources */,
@@ -4313,6 +4282,7 @@
 				69165CCE21BE402E00593D25 /* HPTimePicker.m in Sources */,
 				6993AD4C21CE97D40019506C /* HPShareTempGoodsController.m in Sources */,
 				6993AD2B21C688B30019506C /* HPSubTableView.m in Sources */,
+				7A8C807222525D0000E275EB /* HPRentDuringView.m in Sources */,
 				E67199F0224B254D002A4288 /* HPOrderManagerViewController.m in Sources */,
 				E68A77FA21F3226D00083A90 /* JCHATGroupSettingCtl.m in Sources */,
 				E6E89D1F2212A08A00D04F34 /* NSMutableString+AvoidCrash.m in Sources */,

@@ -19,6 +19,8 @@
 
 @property (nonatomic, strong) UIColor *originalColor;
 
+@property (nonatomic, strong) UIFont *originalFont;
+
 @property (weak, nonatomic) IBOutlet UILabel *day;
 
 @property (nonatomic, assign) BOOL isHidden;

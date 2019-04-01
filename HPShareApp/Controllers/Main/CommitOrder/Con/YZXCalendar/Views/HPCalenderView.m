@@ -234,12 +234,11 @@
     
     if (!self.startDate) {
         [HPProgressHUD alertMessage:@"请选择日期"];
+        return;
     }
 
     if (self.confirmTheDateBlock) {
-        
         [self show:NO];
-
         self.confirmTheDateBlock(self.startDate, self.endDate, self.selectedType);
     }
 }
