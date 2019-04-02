@@ -43,11 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UILabel *shopNameLabel;
 
-/**
- 室内、室外
- */
-@property (strong, nonatomic) UILabel *rentOutsideLabel;
-
 @property (nonatomic, strong) UILabel *rentDuringLabel;
 
 @property (nonatomic, strong) UILabel *desLabel;

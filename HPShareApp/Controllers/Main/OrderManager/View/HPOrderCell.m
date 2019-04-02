@@ -118,21 +118,10 @@
     
     [self.waitingReceiveLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.dustbinBtn.mas_left).offset(getWidth(-10.f));
-        
         make.top.mas_equalTo(self.shopNamebtn.mas_top);
-        
         make.width.mas_equalTo(kScreenWidth/2);
-        
         make.height.mas_equalTo(self.waitingReceiveLabel.font.pointSize);
     }];
-    
-//    [self.firstLine mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.mas_equalTo(self.bgView);
-//
-//        make.top.mas_equalTo(self.shopNamebtn.mas_bottom).offset(getWidth(10.f));
-//
-//        make.height.mas_equalTo(0.5f);
-//    }];
     
     [self.shopNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.shopIcon.mas_right).offset(getWidth(10.f));
@@ -398,20 +387,6 @@
     return _returnBtn;
 }
 
-- (UILabel *)rentOutsideLabel
-{
-    if (!_rentOutsideLabel) {
-        _rentOutsideLabel = [UILabel new];
-        _rentOutsideLabel.textColor = COLOR_RED_EA0000;
-        _rentOutsideLabel.font = kFont_Medium(12.f);
-        _rentOutsideLabel.text = @"室内";
-        _rentOutsideLabel.textAlignment = NSTextAlignmentRight;
-        _rentOutsideLabel.numberOfLines = 0;
-        [_rentOutsideLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-    }
-    return _rentOutsideLabel;
-}
-
 - (void)clickManagerFunds:(UIButton *)button
 {
     if (self.payBlock) {
@@ -572,8 +547,6 @@
         if ([HPSingleton sharedSingleton].identifyTag == 0) {
             self.waitingReceiveLabel.text = @"商家未同意接单";
             [self.cancelBtn setTitle:@"查看原因" forState:UIControlStateNormal];
-
-            
             [self.topayBtn setTitle:@"重新下单" forState:UIControlStateNormal];
         }else{
             self.waitingReceiveLabel.text = @"支付超时已关闭";

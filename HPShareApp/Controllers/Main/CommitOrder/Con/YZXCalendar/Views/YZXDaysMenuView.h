@@ -39,4 +39,8 @@
 
 @property (nonatomic, strong) UICollectionView                          *collectionView;
 
+/**
+ 是否可以交互点击
+ */
+@property (assign, nonatomic) BOOL userActivity;
 @end

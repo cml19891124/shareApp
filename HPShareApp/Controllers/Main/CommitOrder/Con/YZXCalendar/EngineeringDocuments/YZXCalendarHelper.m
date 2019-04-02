@@ -168,4 +168,8 @@
     return [[self class] createFormatterWithDateFormat:@"yyyy年MM月dd日"];
 }
 
+- (NSDateFormatter *)yearMonthAndDayFormatterJustNumber
+{
+    return [[self class] createFormatterWithDateFormat:@"yyyyMMdd"];
+}
 @end

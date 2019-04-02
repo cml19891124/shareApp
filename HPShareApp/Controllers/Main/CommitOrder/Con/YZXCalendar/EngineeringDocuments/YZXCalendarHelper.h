@@ -60,6 +60,8 @@ typedef NS_ENUM(NSUInteger ,YZXTimeToChooseType) {
 - (NSDateFormatter *)yearAndMonthFormatter;
 //yyyy年MM月dd日
 - (NSDateFormatter *)yearMonthAndDayFormatter;
+//yyyyMMdd
+- (NSDateFormatter *)yearMonthAndDayFormatterJustNumber;
 
 - (NSCalendar *)calendar;
 

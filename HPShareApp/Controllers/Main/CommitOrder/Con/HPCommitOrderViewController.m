@@ -213,14 +213,6 @@
 
 - (void)loadData
 {
-//    for (int i = 0; i < self.model.pictures.count; i++) {
-//
-//    }
-//    if (self.model.pictures.count ==0) {
-//        self.storeView.image = ImageNamed(@"loading_logo_small");
-//    }else{
-//        [self.storeView sd_setImageWithURL:[NSURL URLWithString:self.model.pictures[0].url] placeholderImage:ImageNamed(@"loading_logo_small")];
-//    }
     self.nameLabel.text = _model.title;
     
     self.locationLabel.text = _model.address;

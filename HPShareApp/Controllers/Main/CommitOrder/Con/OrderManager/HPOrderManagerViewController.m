@@ -65,6 +65,10 @@
 @property (nonatomic, strong) UIButton *warningBtn;
 
 /**
+ 室内、室外
+ */
+@property (strong, nonatomic) UILabel *rentOutsideLabel;
+/**
  剩余时间
  */
 @property (nonatomic, strong) HPAttributeLabel *leftLabel;
@@ -201,6 +205,8 @@
     
     [self.view addSubview:self.calenderView];
     
+    self.calenderView.calendarView.daysMenuView.userActivity = NO;
+    
     [self.calenderView show:YES];
 }
 
@@ -254,7 +260,33 @@
         [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:不限"]];
     }
 
-    self.spaceInfoLabel.text = [NSString stringWithFormat:@"场地规格："];
+    if (_model.spaceDetail.rentOutside) {
+        [self.rentOutsideLabel setText:@"室外"];
+    }else{
+        [self.rentOutsideLabel setText:@"室内"];
+
+    }
+    
+    if ([_model.order.status integerValue] == 1) {
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            self.titleLabel.text = @"待付款";
+            [self.predictBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self.bottomView).offset(getWidth(-15.f));
+                make.left.mas_equalTo(self.priceListBtn.mas_right).offset(getWidth(15.f));
+                make.top.mas_equalTo(getWidth(15.f));
+                make.bottom.mas_equalTo(getWidth(-15.f));
+            }];
+           
+        }else{
+            self.titleLabel.text = @"订单处理";
+            [self.predictBtn setTitle:@"在线催单" forState:UIControlStateNormal];
+            [self.predictBtn setTitleColor:COLOR_RED_FF1213 forState:UIControlStateNormal];
+            self.predictBtn.layer.cornerRadius = 15.f;
+            self.predictBtn.layer.masksToBounds = YES;
+            self.predictBtn.layer.borderColor = COLOR_RED_FF1213.CGColor;
+            self.predictBtn.layer.borderWidth = 1;
+        }
+    }
     
     self.addressLabel.text = [NSString stringWithFormat:@"地址：%@",_model.spaceDetail.address];
     
@@ -289,6 +321,8 @@
     [self.storeInfoView addSubview:self.nameLabel];
 
     [self.storeInfoView addSubview:self.locationLabel];
+
+    [self.storeInfoView addSubview:self.rentOutsideLabel];
 
     [self.storeInfoView addSubview:self.spaceInfoLabel];
 
@@ -439,6 +473,13 @@
         make.left.width.mas_equalTo(self.nameLabel);
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
         make.height.mas_equalTo(self.locationLabel.font.pointSize);
+    }];
+    
+    [self.rentOutsideLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.locationLabel.mas_right);
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
+        make.height.mas_equalTo(self.rentOutsideLabel.font.pointSize);
+        make.width.mas_equalTo(getWidth(35.f));
     }];
     
     [self.spaceInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -838,6 +879,23 @@
         _locationLabel.textColor = COLOR_GRAY_999999;
     }
     return _locationLabel;
+}
+
+- (UILabel *)rentOutsideLabel
+{
+    if (!_rentOutsideLabel) {
+        _rentOutsideLabel = [UILabel new];
+        _rentOutsideLabel.layer.cornerRadius = 2.f;
+        _rentOutsideLabel.layer.masksToBounds = YES;
+        _rentOutsideLabel.textColor = COLOR_GRAY_FFFFFF;
+        _rentOutsideLabel.backgroundColor = COLOR_RED_EA0000;
+        _rentOutsideLabel.font = kFont_Medium(12.f);
+        _rentOutsideLabel.text = @"室内";
+        _rentOutsideLabel.textAlignment = NSTextAlignmentLeft;
+        _rentOutsideLabel.numberOfLines = 0;
+        [_rentOutsideLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    }
+    return _rentOutsideLabel;
 }
 
 - (UILabel *)spaceInfoLabel
@@ -1425,6 +1483,8 @@
 
 - (void)onClickLoundBtn:(UIButton *)button
 {
-    
+    if ([self.warningBtn.currentTitle isEqualToString:@"00:00"]) {
+        [self pushVCByClassName:@"HPOwnnerTimeOutViewController" withParam:@{@"model":_model}];
+    }
 }
 @end

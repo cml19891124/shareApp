@@ -183,6 +183,10 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
         [cell changeDayBackgroundColor:[UIColor whiteColor]];
         cell.isHidden = YES;
     }
+    
+    if (!cell.userActivity) {
+        cell.userInteractionEnabled = NO;
+    }
     return cell;
 }
 
@@ -207,7 +211,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 
                 if (_delegate && [_delegate respondsToSelector:@selector(clickCalendarWithStartDate:andEndDate:)]) {
                     NSString *startString = [NSString stringWithFormat:@"%@%02ld日",self.collectionViewData[indexPath.section].headerTitle,indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2)];
-                    
+
                     [_delegate clickCalendarWithStartDate:startString andEndDate:nil];
                 }
             }
@@ -290,6 +294,15 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
             [_delegate clickCalendarDate:dateString];
         }
     }
+}
+
+//判断输入的是否是汉字，yes是输入汉字， No不是汉字
+- (BOOL)judgeInputIsChinese:(NSString *)textStr{
+    NSString *regex = @"[\u4e00-\u9fa5]";
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+    BOOL isMatch = [pred evaluateWithObject:textStr];
+    return isMatch;
+    
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
