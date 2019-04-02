@@ -184,9 +184,6 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
         cell.isHidden = YES;
     }
     
-    if (!cell.userActivity) {
-        cell.userInteractionEnabled = NO;
-    }
     return cell;
 }
 
@@ -211,8 +208,11 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 
                 if (_delegate && [_delegate respondsToSelector:@selector(clickCalendarWithStartDate:andEndDate:)]) {
                     NSString *startString = [NSString stringWithFormat:@"%@%02ld日",self.collectionViewData[indexPath.section].headerTitle,indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2)];
-
-                    [_delegate clickCalendarWithStartDate:startString andEndDate:nil];
+                    NSString *y = [self.collectionViewData[indexPath.section].headerTitle substringToIndex:4];
+                    NSString *m = [self.collectionViewData[indexPath.section].headerTitle substringWithRange:NSMakeRange(5, 2)];
+                    NSString *d = @(indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2)).stringValue;
+                    NSString *stTime = [NSString stringWithFormat:@"%@%@%@",y,m,d];
+                    [_delegate clickCalendarWithStartDate:stTime andEndDate:nil];
                 }
             }
                 break;
@@ -230,7 +230,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
                 
                 NSString *startDate = [NSString stringWithFormat:@"%@%02ld日",self.collectionViewData[self.selectedArray.firstObject.section].headerTitle,self.selectedArray.firstObject.item - (self.collectionViewData[self.selectedArray.firstObject.section].firstDayOfTheMonth - 2)];
                 NSString *endDate = [NSString stringWithFormat:@"%@%02ld日",self.collectionViewData[indexPath.section].headerTitle,indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2)];
-                
+            
                 YZXCalendarHelper *helper = [YZXCalendarHelper helper];
                 NSDateComponents *components = [helper.calendar components:NSCalendarUnitDay fromDate:[helper.yearMonthAndDayFormatter dateFromString:startDate] toDate:[helper.yearMonthAndDayFormatter dateFromString:endDate] options:0];
                 //当设置了maxChooseNumber时判断选择的时间段是否超出范围
@@ -255,9 +255,20 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
                 endDate = [NSString stringWithFormat:@"%@%02ld日",self.collectionViewData[self.selectedArray.lastObject.section].headerTitle,self.selectedArray.lastObject.item - (self.collectionViewData[self.selectedArray.lastObject.section].firstDayOfTheMonth - 2)];
                 //时间选择完毕，刷新界面
                 [self.collectionView reloadData];
+                
+                
+                NSString *ys = [self.collectionViewData[self.selectedArray.firstObject.section].headerTitle substringToIndex:4];
+                NSString *ms = [self.collectionViewData[self.selectedArray.firstObject.section].headerTitle substringWithRange:NSMakeRange(5, 2)];
+                NSString *ds = @(self.selectedArray.firstObject.item - (self.collectionViewData[self.selectedArray.firstObject.section].firstDayOfTheMonth - 2)).stringValue;
+                NSString *stTime = [NSString stringWithFormat:@"%@%@%@",ys,ms,ds];
+                
+                NSString *ye = [self.collectionViewData[self.selectedArray.lastObject.section].headerTitle substringToIndex:4];
+                NSString *me = [self.collectionViewData[self.selectedArray.lastObject.section].headerTitle substringWithRange:NSMakeRange(5, 2)];
+                NSString *de = @(self.selectedArray.lastObject.item - (self.collectionViewData[self.selectedArray.lastObject.section].firstDayOfTheMonth - 2)).stringValue;
+                NSString *eTime = [NSString stringWithFormat:@"%@%@%@",ye,me,de];
                 //代理返回数据
                 if (_delegate && [_delegate respondsToSelector:@selector(clickCalendarWithStartDate:andEndDate:)]) {
-                    [_delegate clickCalendarWithStartDate:startDate andEndDate:endDate];
+                    [_delegate clickCalendarWithStartDate:stTime andEndDate:eTime];
                 }
             }
                 break;

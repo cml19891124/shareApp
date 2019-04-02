@@ -185,6 +185,8 @@
     
     [self.view addSubview:self.calenderView];
 
+    self.calenderView.calendarView.daysMenuView.userActivity = YES;
+
     [self.calenderView show:YES];
 }
 
