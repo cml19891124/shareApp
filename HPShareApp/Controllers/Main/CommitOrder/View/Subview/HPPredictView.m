@@ -123,7 +123,7 @@
 {
     if (!_knownBtn) {
         _knownBtn = [UIButton new];
-        [_knownBtn setTitle:@"我知道了" forState:UIControlStateNormal];
+        [_knownBtn setTitle:@"知道了" forState:UIControlStateNormal];
         _knownBtn.backgroundColor = COLOR_RED_EA0000;
         [_knownBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
         [_knownBtn addTarget:self action:@selector(onClickKnownBtn:) forControlEvents:UIControlEventTouchUpInside];

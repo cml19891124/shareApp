@@ -15,7 +15,8 @@
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(getWidth(280.f));
         make.height.mas_equalTo(getWidth(160.f));
-        make.center.mas_equalTo(self);
+        make.top.mas_equalTo(getWidth(203.f));
+        make.centerX.mas_equalTo(self);
     }];
     
     [view addSubview:self.bgView];
@@ -48,7 +49,9 @@
     }];
     
     [_signTextView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(getWidth(10.f), getWidth(11.f), getWidth(11.f), getWidth(10.f)));
+//        make.edges.mas_equalTo(UIEdgeInsetsMake(getWidth(10.f), getWidth(11.f), getWidth(11.f), getWidth(10.f)));
+        make.left.top.right.mas_equalTo(self.signContentView);
+        make.height.mas_equalTo(getWidth(50.f));
     }];
     
     [self.holderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -110,6 +113,7 @@
         _signTextView.promptBackground = COLOR_GRAY_F6F6F6;
         _signTextView.promptFrameMaxY = getWidth(-11.f);
         _signTextView.tintColor = COLOR_RED_FF3C5E;
+        _signTextView.delegate = self;
         _signTextView.EditChangedBlock = ^{
             
         };
@@ -217,6 +221,22 @@
             make.height.mas_equalTo(size.height);
         }];
     }
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+
+{
+    
+    if ([text isEqualToString:@"\n"]) //获取键盘中发送事件（回车事件
+        
+      {
+            
+      [textView resignFirstResponder];//处理键盘的发送事件
+            
+      }
+    
+     return YES;
+    
 }
 
 @end

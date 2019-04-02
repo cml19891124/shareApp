@@ -9,6 +9,9 @@
 #import "HPOrderCell.h"
 #import "HPCommonData.h"
 
+#import "Macro.h"
+
+#import "HPSingleton.h"
 
 @implementation HPOrderCell
 
@@ -60,6 +63,7 @@
     [self.bgView addSubview:self.desLabel];
     
     [self.bgView addSubview:self.totalLabel];
+    
 
     [self.bgView addSubview:self.payLine];
     
@@ -145,7 +149,8 @@
     [self.desLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(getWidth(-10.f));
         make.left.mas_equalTo(self.shopIcon.mas_right).offset(getWidth(10.f));
-        make.top.mas_equalTo(self.rentDuringLabel.mas_bottom).offset(getWidth(10.f));
+        make.bottom.mas_equalTo(self.shopIcon.mas_bottom);
+        make.height.mas_equalTo(self.desLabel.font.pointSize);
     }];
     
     CGFloat tw = BoundWithSize(self.totalLabel.text, kScreenWidth, 12.f).size.width + 10;
@@ -201,7 +206,7 @@
 {
     if (!_leftIcon) {
         _leftIcon = [UIImageView new];
-        _leftIcon.backgroundColor = COLOR_GRAY_CCCCCC;
+//        _leftIcon.backgroundColor = COLOR_GRAY_CCCCCC;
         _leftIcon.image = ImageNamed(@"dianpu");
     }
     return _leftIcon;
@@ -323,6 +328,7 @@
         _totalLabel.textColor = COLOR_GRAY_666666;
         _totalLabel.font = kFont_Medium(12.f);
         _totalLabel.text = @"合计：¥199.00";
+        
         _totalLabel.textAlignment = NSTextAlignmentRight;
         _totalLabel.numberOfLines = 2;
         [_totalLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
@@ -335,7 +341,7 @@
 {
     if (!_cancelBtn) {
         _cancelBtn = [UIButton new];
-        _cancelBtn.tag = PayOrderToPay;
+        _cancelBtn.tag = PayOrderToCancel;
         _cancelBtn.layer.cornerRadius = 13.f;
         _cancelBtn.layer.masksToBounds = YES;
         _cancelBtn.titleLabel.font = kFont_Medium(12.f);
@@ -377,7 +383,7 @@
 {
     if (!_returnBtn) {
         _returnBtn = [UIButton new];
-        _returnBtn.tag = PayOrderImergency;
+//        _returnBtn.tag = PayOrderImergency;
         _returnBtn.layer.cornerRadius = 5.f;
         _returnBtn.layer.masksToBounds = YES;
         _returnBtn.titleLabel.font = kFont_Medium(13.f);
@@ -391,24 +397,194 @@
     }
     return _returnBtn;
 }
-//- (void)setModel:(HPShareDetailModel *)model
-//{
-//    _model = model;
-//
-//    _shopNamebtn.text = [NSString stringWithFormat:@"订单管理：%ld",(arc4random() % 4654475678858657546) + 100];
-//
-//    _shopNameLabel.text = [NSString stringWithFormat:@"联系人:%@",_model.contactMobile];
-//
-//    _rentDuringLabel.text = [NSString stringWithFormat:@"店铺名称:%@",_model.title];
-//
-//    _desLabel.text = [NSString stringWithFormat:@"经营行业:%@ %@",[HPCommonData getIndustryNameById:_model.industryId],[HPCommonData getIndustryNameById:_model.subIndustryId]];
-//
-//}
+
+- (UILabel *)rentOutsideLabel
+{
+    if (!_rentOutsideLabel) {
+        _rentOutsideLabel = [UILabel new];
+        _rentOutsideLabel.textColor = COLOR_RED_EA0000;
+        _rentOutsideLabel.font = kFont_Medium(12.f);
+        _rentOutsideLabel.text = @"室内";
+        _rentOutsideLabel.textAlignment = NSTextAlignmentRight;
+        _rentOutsideLabel.numberOfLines = 0;
+        [_rentOutsideLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    }
+    return _rentOutsideLabel;
+}
 
 - (void)clickManagerFunds:(UIButton *)button
 {
     if (self.payBlock) {
         self.payBlock(button.tag);
     }
+}
+
+- (void)setModel:(HOOrderListModel *)model
+{
+    _model = model;
+    if (model.spaceDetail.shortName && ![model.spaceDetail.shortName isEqualToString:@""]) {
+        self.shopNamebtn.text = model.spaceDetail.shortName;
+    }else if(kObjectIsEmpty(model.spaceDetail.shortName)||[model.spaceDetail.shortName isEqualToString:@""]){
+        self.shopNamebtn.image = ImageNamed(@"");
+        [self.shopNamebtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(0);
+        }];
+    }
+    self.shopNameLabel.text = model.spaceDetail.title;
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",model.spaceDetail.picture.url]];
+    [self.shopIcon sd_setImageWithURL:url placeholderImage:ImageNamed(@"loading_logo_small")];
+    if (kObjectIsEmpty(model.order.days)) {
+        self.rentDuringLabel.text = [NSString stringWithFormat:@"租期:--"];
+    }else{
+        self.rentDuringLabel.text = [NSString stringWithFormat:@"租期:%@",model.order.days];
+    }
+    if (kObjectIsEmpty(model.spaceDetail.remark)) {
+        self.desLabel.text = [NSString stringWithFormat:@"拼租说明:--"];
+    }else{
+        self.desLabel.text = [NSString stringWithFormat:@"拼租说明:%@",model.spaceDetail.remark];
+    }
+    
+    self.totalLabel.text = [NSString stringWithFormat:@"合计：¥%@",model.spaceDetail.rent];
+
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:_totalLabel.text];
+    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_666666 range:NSMakeRange(0, 3)];
+    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF1213 range:NSMakeRange(3, _totalLabel.text.length - 3)];
+    _totalLabel.attributedText = attr;
+    
+    if ([HPSingleton sharedSingleton].identifyTag == 0) {
+        [self.leftIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(0);
+        }];
+    }else{
+
+        [self.leftIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(getWidth(20.f));
+            
+        }];
+    }
+    
+    if ([model.order.status integerValue] == 1) {
+        self.waitingReceiveLabel.text = @"等待商家接单";
+        [self.cancelBtn setTitle:@"取消订单" forState:UIControlStateNormal];
+        [self.topayBtn setTitle:@"在线催单" forState:UIControlStateNormal];
+        [self.dustbinBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(0);
+        }];
+        
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            [self.cancelBtn setTitle:@"取消订单" forState:UIControlStateNormal];
+            [self.topayBtn setTitle:@"在线催单" forState:UIControlStateNormal];
+            
+        }else{
+            [self.cancelBtn setTitle:@"放弃此单" forState:UIControlStateNormal];
+            [self.topayBtn setTitle:@"确认接单" forState:UIControlStateNormal];
+            
+        }
+    }
+    
+    if ([model.order.status integerValue] == 2) {
+        [self.dustbinBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(0);
+        }];
+        
+        self.waitingReceiveLabel.text = @"等待租客付款";
+
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            [self.cancelBtn setTitle:@"取消订单" forState:UIControlStateNormal];
+            [self.topayBtn setTitle:@"立即支付" forState:UIControlStateNormal];
+
+        }else{
+            [self.cancelBtn setTitle:@"放弃此单" forState:UIControlStateNormal];
+            [self.topayBtn setTitle:@"确认接单" forState:UIControlStateNormal];
+
+        }
+        
+    }
+    
+    if ([model.order.status integerValue] == 3) {
+        [self.dustbinBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(0);
+        }];
+        self.waitingReceiveLabel.text = @"待收货";
+        [self.cancelBtn setTitle:@"订单投诉" forState:UIControlStateNormal];
+        [self.topayBtn setTitle:@"确认收货" forState:UIControlStateNormal];
+
+    }else if ([model.order.status integerValue] == 11) {
+        self.waitingReceiveLabel.text = @"已确认收货";
+        [self.cancelBtn setTitle:@"评价此单" forState:UIControlStateNormal];
+
+        [self.topayBtn setTitle:@"再来一单" forState:UIControlStateNormal];
+    }else if ([model.order.status integerValue] == 12) {
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            [self.cancelBtn setTitle:@"查看原因" forState:UIControlStateNormal];
+            self.waitingReceiveLabel.text = @"商家未同意接单";
+
+            [self.topayBtn setTitle:@"重新下单" forState:UIControlStateNormal];
+        }else{
+            [self.cancelBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+            [self.topayBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+            self.waitingReceiveLabel.text = @"订单已拒绝";
+
+        }
+        
+    }else if([model.order.status integerValue] == 13) {//隐藏按钮
+        
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            self.waitingReceiveLabel.text = @"订单已取消";
+            
+            [self.cancelBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+            [self.topayBtn setTitle:@"重新下单" forState:UIControlStateNormal];
+        }else{
+            self.waitingReceiveLabel.text = @"租客已取消订单";
+            [self.cancelBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+            
+            [self.topayBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+        }
+    }else if ([model.order.status integerValue] == 15){
+        
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            self.waitingReceiveLabel.text = @"支付超时已关闭";
+            [self.cancelBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+            
+            [self.topayBtn setTitle:@"重新下单" forState:UIControlStateNormal];
+        }else{
+            self.waitingReceiveLabel.text = @"支付超时已关闭";
+            [self.cancelBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+            [self.topayBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+        }
+    }else if ([model.order.status integerValue] == 14){
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            self.waitingReceiveLabel.text = @"商家未同意接单";
+            [self.cancelBtn setTitle:@"查看原因" forState:UIControlStateNormal];
+
+            
+            [self.topayBtn setTitle:@"重新下单" forState:UIControlStateNormal];
+        }else{
+            self.waitingReceiveLabel.text = @"支付超时已关闭";
+            [self.cancelBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+            [self.topayBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+        }
+    }
+    
 }
 @end

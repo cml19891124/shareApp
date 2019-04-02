@@ -15,7 +15,8 @@ typedef NS_ENUM(NSInteger, HPMineOrderCellIndex) {
     HPMineOrderCellToPay,
     HPMineOrderCellToRent,
     HPMineOrderCellToReturnFuns,
-    HPMineOrderCellToComment
+    HPMineOrderCellToComment,
+    HPMineOrderCellAllOrders
 };
 
 typedef NS_ENUM(NSInteger, HPRentOrderCellIndex) {

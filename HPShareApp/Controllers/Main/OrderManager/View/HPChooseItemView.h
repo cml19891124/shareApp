@@ -15,9 +15,12 @@
 #import "HPGlobalVariable.h"
 
 typedef NS_ENUM(NSInteger, HPAreaItemsMenu) {
-    HPAreaItemsMenuBaoan = 2200,
-    HPAreaItemsMenuLonghua,
-    HPAreaItemsMenuNanshan
+    HPAreaItemsMenuAllOrder = 2200,
+    HPAreaItemsMenuToReceive,
+    HPAreaItemsMenuToPay,
+    HPAreaItemsMenuToRent,
+    HPAreaItemsMenuToComment,
+    HPAreaItemsMenuToReturnFuns
 };
 
 typedef NS_ENUM(NSInteger, HPAreaItemsMenuLine) {
@@ -46,6 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *bottomView;
 
 @property (nonatomic, copy) AreaItemMenuClickBlock block;
+
+- (void)scrolling:(NSInteger)tag;
+
 @end
 
 NS_ASSUME_NONNULL_END

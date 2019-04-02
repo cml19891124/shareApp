@@ -39,6 +39,9 @@
 		6993AD4921CE97B40019506C /* HPShareTempHumanController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993AD4821CE97B40019506C /* HPShareTempHumanController.m */; };
 		6993AD4C21CE97D40019506C /* HPShareTempGoodsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993AD4B21CE97D40019506C /* HPShareTempGoodsController.m */; };
 		786E617DDD64F9CC68E4049B /* Pods_HPShareAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C508ECCC8CC2C9D9701839BE /* Pods_HPShareAppTests.framework */; };
+		7A09A2BE2253076000A68FBD /* HOOrderListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2BD2253076000A68FBD /* HOOrderListModel.m */; };
+		7A09A2C222535BCA00A68FBD /* HPOwnnerOrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2C122535BCA00A68FBD /* HPOwnnerOrderModel.m */; };
+		7A09A2C52253629A00A68FBD /* HPRentCancelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2C42253629A00A68FBD /* HPRentCancelView.m */; };
 		7A54483F21BAD9B2001301F3 /* HPAreaModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54483E21BAD9B2001301F3 /* HPAreaModel.m */; };
 		7A54485721C169AE001301F3 /* HPPartyCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485621C169AE001301F3 /* HPPartyCenterController.m */; };
 		7A54485A21C16A48001301F3 /* HPPartyCenterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485921C16A48001301F3 /* HPPartyCenterModel.m */; };
@@ -567,6 +570,12 @@
 		6993AD4821CE97B40019506C /* HPShareTempHumanController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareTempHumanController.m; sourceTree = "<group>"; };
 		6993AD4A21CE97D40019506C /* HPShareTempGoodsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareTempGoodsController.h; sourceTree = "<group>"; };
 		6993AD4B21CE97D40019506C /* HPShareTempGoodsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareTempGoodsController.m; sourceTree = "<group>"; };
+		7A09A2BC2253076000A68FBD /* HOOrderListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HOOrderListModel.h; sourceTree = "<group>"; };
+		7A09A2BD2253076000A68FBD /* HOOrderListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HOOrderListModel.m; sourceTree = "<group>"; };
+		7A09A2C022535BCA00A68FBD /* HPOwnnerOrderModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOwnnerOrderModel.h; sourceTree = "<group>"; };
+		7A09A2C122535BCA00A68FBD /* HPOwnnerOrderModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOwnnerOrderModel.m; sourceTree = "<group>"; };
+		7A09A2C32253629A00A68FBD /* HPRentCancelView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPRentCancelView.h; sourceTree = "<group>"; };
+		7A09A2C42253629A00A68FBD /* HPRentCancelView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPRentCancelView.m; sourceTree = "<group>"; };
 		7A54483D21BAD9B2001301F3 /* HPAreaModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaModel.h; sourceTree = "<group>"; };
 		7A54483E21BAD9B2001301F3 /* HPAreaModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAreaModel.m; sourceTree = "<group>"; };
 		7A54485521C169AE001301F3 /* HPPartyCenterController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPartyCenterController.h; sourceTree = "<group>"; };
@@ -1652,6 +1661,15 @@
 				6993AD4521CB37360019506C /* HPShareReleaseParam.m */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		7A09A2BF22535BB600A68FBD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7A09A2C022535BCA00A68FBD /* HPOwnnerOrderModel.h */,
+				7A09A2C122535BCA00A68FBD /* HPOwnnerOrderModel.m */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		7A54483C21BAD97F001301F3 /* Model */ = {
@@ -2865,6 +2883,7 @@
 		E679B84222420D0A004A2CFA /* Mine */ = {
 			isa = PBXGroup;
 			children = (
+				7A09A2BF22535BB600A68FBD /* Model */,
 				E679B84422420D25004A2CFA /* View */,
 				E679B84322420D1D004A2CFA /* Con */,
 			);
@@ -3109,6 +3128,8 @@
 				E629AD26224CF0910038AA9F /* HPChooseItemView.m */,
 				E6801FBB2236402E002B1133 /* HPOrderCell.h */,
 				E6801FBC2236402E002B1133 /* HPOrderCell.m */,
+				7A09A2C32253629A00A68FBD /* HPRentCancelView.h */,
+				7A09A2C42253629A00A68FBD /* HPRentCancelView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3120,6 +3141,8 @@
 				E6801FC222367672002B1133 /* HPPayResultModel.m */,
 				E67C688322374A8100CF2297 /* HPReturnModel.h */,
 				E67C688422374A8100CF2297 /* HPReturnModel.m */,
+				7A09A2BC2253076000A68FBD /* HOOrderListModel.h */,
+				7A09A2BD2253076000A68FBD /* HOOrderListModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4175,6 +4198,7 @@
 				E629AABE2248B7B700CF0378 /* HPRealNameViewController.m in Sources */,
 				E661B0D0219D24A500C86CF5 /* HPSelectTable.m in Sources */,
 				6993AD4021CA45240019506C /* HPImageButton.m in Sources */,
+				7A09A2C222535BCA00A68FBD /* HPOwnnerOrderModel.m in Sources */,
 				E68A770A21F2D61E00083A90 /* JCHATPersonInfoCell.m in Sources */,
 				E661B13321A2C4F500C86CF5 /* HPCalendarView.m in Sources */,
 				E67EFE36221BA187008BDA1D /* WXApiManager.m in Sources */,
@@ -4317,6 +4341,7 @@
 				E61FE0A921BA6F5C00555F3F /* HPHTTPSever.m in Sources */,
 				E629AB1E224A046100CF0378 /* JSBadgeView.m in Sources */,
 				E67EFE33221BA187008BDA1D /* WXUtil.mm in Sources */,
+				7A09A2C52253629A00A68FBD /* HPRentCancelView.m in Sources */,
 				E6292175219AB32000BEF16C /* HPScreenAdapter.m in Sources */,
 				E661B097219BAD5000C86CF5 /* HPIdeaController.m in Sources */,
 				E677C7D421FABE950099E2C9 /* HPAreaItemView.m in Sources */,
@@ -4422,6 +4447,7 @@
 				E61E27AD21C8D68000CD5288 /* EBBannerViewController.m in Sources */,
 				E6E89D1C2212A08A00D04F34 /* NSString+AvoidCrash.m in Sources */,
 				E68A76B721F2C6D100083A90 /* JCHATGroupSettingCell.m in Sources */,
+				7A09A2BE2253076000A68FBD /* HOOrderListModel.m in Sources */,
 				E6189A78223F6F0F007E8FE7 /* JCHATLoginTool.m in Sources */,
 				6993AD2721C685470019506C /* HPParentScrollView.m in Sources */,
 				E6D75F6721B230FC00B2067C /* HPPageControlFactory.m in Sources */,

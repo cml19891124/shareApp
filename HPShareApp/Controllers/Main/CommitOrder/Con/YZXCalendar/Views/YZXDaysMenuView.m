@@ -133,10 +133,11 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     }
     
     if (self.selectedArray.count == 2 && [indexPath compare:self.selectedArray.firstObject] == NSOrderedDescending && [indexPath compare:self.selectedArray.lastObject] == NSOrderedAscending) {
-        [cell changeDayBackgroundColor:COLOR_RED_FF7878];
+        [cell changeDayBackgroundColor:COLOR_RED_EA0000];
         if (cell.day.text.length) {
             cell.isHidden = NO;
             cell.priceLabel.hidden = NO;
+            cell.day.textColor = COLOR_GRAY_FFFFFF;
         }
         if (cell.day.text.length == 0) {
             [cell changeDayBackgroundColor:[UIColor whiteColor]];
@@ -161,7 +162,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
             cell.isHidden = NO;
             cell.priceLabel.hidden = NO;
             [cell changeDayTextColor:[UIColor whiteColor]];
-            
+            cell.day.textColor = COLOR_GRAY_FFFFFF;
             if (cell.day.text.length) {
                 cell.isHidden = NO;
                 cell.priceLabel.hidden = NO;

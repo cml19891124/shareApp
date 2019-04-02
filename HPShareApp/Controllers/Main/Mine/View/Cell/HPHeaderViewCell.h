@@ -19,11 +19,10 @@ typedef void(^BusinessBtnClickBlcok)(NSInteger businessIndex);
 typedef void(^OnClickOnlineBlock)(NSInteger HPOnlineOrderIndex);
 
 typedef NS_ENUM(NSInteger, HPOrderCellIndex) {
-    HPOrderCellIndexToReceive = 4000,
-    HPOrderCellIndexToPay,
-    HPOrderCellIndexToRent,
-    HPOrderCellIndexToReturnFuns,
-    HPOrderCellIndexToComment
+    HPOrderCellIndexToCollection = 4000,
+    HPOrderCellIndexToFocus,
+    HPOrderCellIndexToFoot,
+    HPOrderCellIndexTodiscount
 };
 
 typedef NS_ENUM(NSInteger, HPBusinessCellIndex) {
@@ -101,6 +100,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray *rentImageArray;
 
 @property (nonatomic, strong) HPAlignCenterButton *orderBtn;
+
+@property (nonatomic, strong) HPOrderBtn *receiveBtn;
+
+@property (nonatomic, strong) HPOrderBtn *topayBtn;
+
+@property (nonatomic, strong) HPOrderBtn *toRentBtn;
+
+@property (nonatomic, strong) HPOrderBtn *returnBtn;
+
+@property (nonatomic, strong) HPOrderBtn *commentBtn;
+
 
 @property (nonatomic, copy) OrderBtnClickBlcok orderBlock;
 

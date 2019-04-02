@@ -12,16 +12,20 @@
 
 #import "HPRightImageButton.h"
 
+#import "HOOrderListModel.h"
+
 typedef void (^PayOrderClickBlock)(NSInteger payOrder);
 
 typedef NS_ENUM(NSInteger, PayOrder){
     
-    PayOrderToPay = 3000,//待支付
-    PayOrderImergency//退款
+    PayOrderToCancel = 3000,//待支付
+    PayOrderToPay//退款
 };
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPOrderCell : HPBaseTableViewCell
+
+@property (strong, nonatomic) HOOrderListModel *model;
 
 @property (nonatomic, strong) UIView *bgView;
 
@@ -39,9 +43,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UILabel *shopNameLabel;
 
-@property (nonatomic, strong) UILabel *rentDuringLabel;
+/**
+ 室内、室外
+ */
+@property (strong, nonatomic) UILabel *rentOutsideLabel;
 
-@property (nonatomic, strong) HPShareDetailModel *model;
+@property (nonatomic, strong) UILabel *rentDuringLabel;
 
 @property (nonatomic, strong) UILabel *desLabel;
 

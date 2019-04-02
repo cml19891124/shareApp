@@ -230,7 +230,7 @@
     
     
     
-    NSLog(@"设备当前的时间:%@",[formatter stringFromDate:datenow]);
+    HPLog(@"设备当前的时间:%@",[formatter stringFromDate:datenow]);
     
     //时间转时间戳的方法:
     

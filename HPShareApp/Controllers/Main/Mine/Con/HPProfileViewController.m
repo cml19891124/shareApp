@@ -30,6 +30,8 @@
 
 #import "HPNewOrderView.h"
 
+#import "HPOwnnerOrderModel.h"
+
 typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
     HPProfileSelectedRowIdentify = 0,//资格认证
     HPProfileSelectedRowAccountSafe,//账号安全
@@ -53,6 +55,8 @@ typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
 @property (nonatomic, strong) NSArray *imageArray;
 
 @property (nonatomic, strong) NSArray *titleArray;
+
+@property (strong, nonatomic) HPOwnnerOrderModel *ownnerModel;
 
 @end
 
@@ -124,7 +128,7 @@ static NSString *orderItemCell = @"HPOrderItemCell";
     optionalBtn.selected = !optionalBtn.selected;
     if (optionalBtn.selected) {
         [HPSingleton sharedSingleton].identifyTag = 1;
-        
+        [self getOwnnerOrdersListApi];
         [self.tabBarController.view addSubview:self.newOrderView];
         
         [self.newOrderView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -139,37 +143,32 @@ static NSString *orderItemCell = @"HPOrderItemCell";
     [self.tableView reloadData];
 }
 
+
+/**
+ 商家订单数量
+ */
+- (void)getOwnnerOrdersListApi
+{
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/order/stats" isNeedToken:NO paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            self.ownnerModel = [HPOwnnerOrderModel mj_objectWithKeyValues:responseObject[@"data"]];
+            [self.tableView reloadData];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
     [self updateAppVersionInfo];
 
-    HPHeaderViewCell *cell = [self setUpHeaderViewCell:self.tableView];
-    HPLoginModel *account = [HPUserTool account];
-    if (!account.token) {
-        cell.optionalBtn.hidden = YES;
-        [cell.phoneBtn setTitle:@"登录/注册" forState:UIControlStateNormal];
-        cell.identifiLabel.text = @"登录即可在线拼租";
-        cell.iconImageView.image = ImageNamed(@"personal_center_not_login_head");
-        
-    }else{
-        cell.optionalBtn.hidden = NO;
-        if ([HPSingleton sharedSingleton].identifyTag == 0) {
-            cell.identifiLabel.text = @"租客信息，资质认证";
-            
-        }else{
-            
-            cell.identifiLabel.text = @"店主信息，资质认证";
-            
-        }
-        [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];
-        if (account.userInfo.avatarUrl) {
-            [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:account.userInfo.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
-        }else{
-            [self uploadLocalImageGetAvatarUrl];
-        }
-    }
+    [HPSingleton sharedSingleton].identifyTag = 0;
     
     [self.tableView reloadData];
 }
@@ -217,7 +216,6 @@ static NSString *orderItemCell = @"HPOrderItemCell";
         _tableView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
         
     }
-    [HPSingleton sharedSingleton].identifyTag = 0;
 
     self.view.backgroundColor = COLOR_GRAY_f9fafd;
 
@@ -327,7 +325,8 @@ static NSString *orderItemCell = @"HPOrderItemCell";
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:defaultCell];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
+    HPLoginModel *account = [HPUserTool account];
+
     if (indexPath.section == 0) {
         HPHeaderViewCell *cell = [self setUpHeaderViewCell:tableView];
         
@@ -337,6 +336,7 @@ static NSString *orderItemCell = @"HPOrderItemCell";
         
         if ([HPSingleton sharedSingleton].identifyTag == 0) {
             HPOrderItemCell *cell = [self setOrderItemCell:tableView];
+            
             return cell;
         }else{
             UIImageView *protectView = [UIImageView new];
@@ -374,13 +374,21 @@ static NSString *orderItemCell = @"HPOrderItemCell";
     HPOrderItemCell *cell = [tableView dequeueReusableCellWithIdentifier:orderItemCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.returnBlock = ^(NSInteger HPReturnOrderIndex) {
-        if (HPReturnOrderIndex == 4405) {//全部订单
-            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{}];
-        }else{
-            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{}];
+        if (HPReturnOrderIndex == HPMineOrderCellAllOrders) {//全部订单
+            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(0)}];
+        }else if(HPReturnOrderIndex == HPMineOrderCellToReceive){
+            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(1)}];
+        }else if(HPReturnOrderIndex == HPMineOrderCellToPay){
+            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(2)}];
+        }else if(HPReturnOrderIndex == HPMineOrderCellToRent){
+//            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(3)}];
+        }else if(HPReturnOrderIndex == HPMineOrderCellToComment){
+//            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(11)}];
+        }else if(HPReturnOrderIndex == HPMineOrderCellToReturnFuns){
+//            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(12)}];
         }
     };
-//    HPLoginModel *account = [HPUserTool account];
+
     return cell;
 }
 
@@ -392,44 +400,63 @@ static NSString *orderItemCell = @"HPOrderItemCell";
     cell.identifyTag = [HPSingleton sharedSingleton].identifyTag;
 
     HPLoginModel *account = [HPUserTool account];
-//    if (!account.token) {
-//        cell.optionalBtn.hidden = YES;
-//        [cell.phoneBtn setTitle:@"登录/注册" forState:UIControlStateNormal];
-//        cell.identifiLabel.text = @"登录即可在线拼租";
-//        cell.iconImageView.image = ImageNamed(@"personal_center_not_login_head");
-//
-//    }else{
-//        cell.optionalBtn.hidden = NO;
-//        if ([HPSingleton sharedSingleton].identifyTag == 0) {
-//            cell.identifiLabel.text = @"租客信息，资质认证";
-//
-//        }else{
-//            cell.identifiLabel.text = @"店主信息，资质认证";
-//
-//        }
-//        [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];
-//        [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:account.userInfo.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
-//    }
+
+    if (!account.token) {
+        cell.optionalBtn.hidden = YES;
+        [cell.phoneBtn setTitle:@"登录/注册" forState:UIControlStateNormal];
+        cell.identifiLabel.text = @"登录即可在线拼租";
+        cell.iconImageView.image = ImageNamed(@"personal_center_not_login_head");
+    }else{
+        cell.optionalBtn.hidden = NO;
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            cell.identifiLabel.text = @"租客信息，资质认证";
+            [cell.optionalBtn setTitle:@"切换为店主" forState:UIControlStateNormal];
+            
+        }else{
+            [cell.optionalBtn setTitle:@"切换为租客" forState:UIControlStateNormal];
+            
+            cell.identifiLabel.text = @"店主信息，资质认证";
+            //商家订单信息数量
+            
+            cell.receiveBtn.numLabel.text = self.ownnerModel.needAdmittedNum;
+            cell.topayBtn.numLabel.text = self.ownnerModel.needPaidNum;
+            cell.toRentBtn.numLabel.text = self.ownnerModel.cooperatingNum;
+            cell.returnBtn.numLabel.text = self.ownnerModel.finishedNum;
+            cell.commentBtn.numLabel.text = @"0";
+
+        }
+        [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];
+        if (account.userInfo.avatarUrl) {
+            [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:account.userInfo.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
+        }else{
+            [self uploadLocalImageGetAvatarUrl];
+        }
+        
+        if (account.userInfo.avatarUrl) {
+            [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:account.userInfo.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
+        }else{
+            [self uploadLocalImageGetAvatarUrl];
+        }
+    }
     
     cell.orderBlock = ^(NSInteger orderIndex) {
-        if (orderIndex == HPOrderCellIndexToReceive) {
+        if (orderIndex == HPOrderCellIndexToCollection) {
             HPLog(@"toreceive");
-        }else if (orderIndex == HPOrderCellIndexToPay){
-            HPLog(@"to pay");
-        }else if (orderIndex == HPOrderCellIndexToRent){
-            HPLog(@"to rent");
-        }else if (orderIndex == HPOrderCellIndexToReturnFuns){
+            [self pushVCByClassName:@"HPKeepController"];
+        }else if (orderIndex == HPOrderCellIndexToFocus){
+            [self pushVCByClassName:@"HPFollowController"];
+        }else if (orderIndex == HPOrderCellIndexToFoot){
+            [self pushVCByClassName:@"HPHistoryController"];
+        }else if (orderIndex == HPOrderCellIndexTodiscount){
             HPLog(@"to return");
-        }else if (orderIndex == HPOrderCellIndexToComment){
-            HPLog(@"to comment");
         }
     };
     
     cell.busiBlock = ^(NSInteger businessIndex) {
         if (businessIndex == HPBusinessCellIndexStores) {
-            [self pushVCByClassName:@"HPShareShopListController"];
+            [self pushVCByClassName:@"HPShareManageController"];
         }else if (businessIndex == HPBusinessCellIndexOrder){
-            HPLog(@"order");
+            [self pushVCByClassName:@"HPOrderListViewController"];
         }else if (businessIndex == HPBusinessCellIndexWallet){
             HPLog(@"wallet");
         }else if (businessIndex == HPBusinessCellIndexName){
@@ -460,6 +487,7 @@ static NSString *orderItemCell = @"HPOrderItemCell";
     
     if (indexPath.section == 1) {
         HPLog(@"application");
+        
     }
     
     if (indexPath.section == 2) {

@@ -8,6 +8,8 @@
 
 #import "HPHeaderViewCell.h"
 
+#import "HPSingleton.h"
+
 #import "UIView+Corner.h"
 
 @implementation HPHeaderViewCell
@@ -64,7 +66,8 @@
 
     [self.contentView addSubview:self.editBtn];
 
-    if (self.identifyTag == 0) {//租客的
+    if ([HPSingleton sharedSingleton].identifyTag == 0) {//租客的
+//        [self.optionalBtn setTitle:@"切换为店主" forState:UIControlStateNormal];
         [self.contentView addSubview:self.myInfoView];
 
         CGFloat orderBtnW = 60.f;
@@ -106,6 +109,9 @@
             }];
         }
         
+    }else{
+//        [self.optionalBtn setTitle:@"切换为租客" forState:UIControlStateNormal];
+
     }
 
     [self.contentView addSubview:self.optionalBtn];
@@ -148,10 +154,10 @@
         make.height.mas_equalTo(self.phoneBtn.titleLabel.font.pointSize);
     }];
     
-    CGFloat identifiW = BoundWithSize(self.identifiLabel.text, kScreenWidth, 12.f).size.width + 10;
+//    CGFloat identifiW = BoundWithSize(self.identifiLabel.text, kScreenWidth, 12.f).size.width + 10;
 
     [self.identifiLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(identifiW);
+        make.width.mas_equalTo(kScreenWidth/3);
         make.left.mas_equalTo(self.iconImageView.mas_right).offset(getWidth(11.f));
         make.top.mas_equalTo(self.phoneBtn.mas_bottom).offset(getWidth(9.f));
         make.height.mas_equalTo(self.identifiLabel.font.pointSize);
@@ -243,7 +249,7 @@
     if (!_identifiLabel) {
         _identifiLabel = [UILabel new];
         _identifiLabel.textColor = COLOR_GRAY_FFFFFF;
-        _identifiLabel.text = @"租客信息，资质认证";
+        _identifiLabel.text = @"";
         _identifiLabel.font = kFont_Medium(12.f);
         _identifiLabel.textAlignment = NSTextAlignmentLeft;
     }
@@ -296,8 +302,8 @@
         [_optionalBtn setImage:ImageNamed(@"optional") forState:UIControlStateNormal];
         _optionalBtn.backgroundColor = COLOR_BLACK_333333;
         _optionalBtn.alpha = 0.4;
-        [_optionalBtn setTitle:@"切换为租客" forState:UIControlStateNormal];
-        [_optionalBtn setTitle:@"切换为店主" forState:UIControlStateSelected];
+//        [_optionalBtn setTitle:@"切换为租客" forState:UIControlStateNormal];
+//        [_optionalBtn setTitle:@"切换为店主" forState:UIControlStateSelected];
         _optionalBtn.titleLabel.font = kFont_Medium(10.f);
         [_optionalBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal|UIControlStateSelected];
         [_optionalBtn addTarget:self action:@selector(onClickedOptionalBtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -458,6 +464,17 @@
             orderBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
             orderBtn.nameLabel.font = kFont_Medium(13.f);
             orderBtn.tag = 4600 + i;
+            if (i == 4600) {
+                self.receiveBtn = orderBtn;
+            }else if (i == 4601) {
+                self.topayBtn = orderBtn;
+            }else if (i == 4602) {
+                self.toRentBtn = orderBtn;
+            }else if (i == 4603) {
+                self.returnBtn = orderBtn;
+            }else if (i == 4604) {
+                self.commentBtn = orderBtn;
+            }
             [self.orderStatesView addSubview:orderBtn];
             [orderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
             [orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -34,11 +34,19 @@
     [super awakeFromNib];
     // Initialization code
     self.priceLabel.hidden = NO;
+    self.day.font = kFont_Bold(14.f);
+    self.priceLabel.font = kFont_Regular(11.f);
+    self.day.textColor = COLOR_GRAY_E4E4E4;
     //保存原来的价格
     self.originalPrice = self.priceLabel.text;
     self.originalColor = self.priceLabel.textColor;
     self.originalFont = self.priceLabel.font;
-
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:self.priceLabel.text];
+    [attr addAttribute:NSFontAttributeName value:kFont_Regular(8.f) range:NSMakeRange(0, 1)];
+    [attr addAttribute:NSFontAttributeName value:kFont_Regular(11.f) range:NSMakeRange(1, self.priceLabel.text.length - 1)];
+    self.priceLabel.attributedText = attr;
+    
     self.day.layer.cornerRadius = 2;
     self.day.layer.masksToBounds = YES;
 }
@@ -87,8 +95,10 @@
         self.day.text = @"今天";
         self.day.textColor = CustomRedColor;
     }else if ([YZXCalendarHelper.helper determineWhetherForTodayWithIndexPaht:indexPath model:model] == YZXDateLaterThanToday) {//判断日期是否超过今天
-        self.day.textColor = [UIColor grayColor];
+        self.day.textColor = COLOR_GRAY_999999;
         self.userInteractionEnabled = YES;
+    }else{
+        self.day.textColor = COLOR_GRAY_E4E4E4;
     }
 }
 - (void)drawLine

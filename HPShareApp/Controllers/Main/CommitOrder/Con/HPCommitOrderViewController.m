@@ -766,8 +766,8 @@
     if (!_rentStartDayLabel) {
         _rentStartDayLabel = [UILabel new];
         _rentStartDayLabel.text = @"请选择起始日期";
-        _rentStartDayLabel.textAlignment = NSTextAlignmentLeft;
-        _rentStartDayLabel.font = kFont_Medium(12.f);
+        _rentStartDayLabel.textAlignment = NSTextAlignmentCenter;
+        _rentStartDayLabel.font = kFont_Regular(14.f);
         _rentStartDayLabel.textColor = COLOR_BLACK_333333;
     }
     return _rentStartDayLabel;
@@ -788,8 +788,8 @@
     if (!_rentEndDayLabel) {
         _rentEndDayLabel = [UILabel new];
         _rentEndDayLabel.text = @"请选择结束日期";
-        _rentEndDayLabel.textAlignment = NSTextAlignmentLeft;
-        _rentEndDayLabel.font = kFont_Medium(12.f);
+        _rentEndDayLabel.textAlignment = NSTextAlignmentCenter;
+        _rentEndDayLabel.font = kFont_Regular(14.f);
         _rentEndDayLabel.textColor = COLOR_BLACK_333333;
     }
     return _rentEndDayLabel;
@@ -1223,18 +1223,33 @@
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     NSArray *closeTimeArr = [self.leaveTime componentsSeparatedByString:@":"];
     NSString *closeTime = [NSString stringWithFormat:@"%@%@",closeTimeArr.firstObject,closeTimeArr.lastObject];
+    
+    NSArray *openTimeArr = [self.arriveTime componentsSeparatedByString:@":"];
+
+    NSString *openTime = [NSString stringWithFormat:@"%@%@",openTimeArr.firstObject,openTimeArr.lastObject];
+
     dic[@"closeTime"] = closeTime;
     dic[@"contact"] = self.model.contact;
     dic[@"contactMobile"] = self.model.contactMobile;
-    dic[@"days"] = @"";
-    dic[@"openTime"] = @"";
-    dic[@"remark"] = @"";
+    dic[@"days"] = @"20190302,20190415";
+    dic[@"openTime"] = openTime;
+    dic[@"remark"] = self.desField.text;
     dic[@"shareOrder"] = @"";
+    dic[@"spaceId"] = _model.spaceId;
+    dic[@"totalFee"] = @(1);//@([_model.rent integerValue]);
 
     [HPHTTPSever HPPostServerWithMethod:@"/v1/order" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
-        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+//        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+//
+//        }
+        if (CODE == 200) {
             [self.predictView show:YES];
-            
+            [HPProgressHUD alertMessage:MSG];
+
+
+        }else
+        {
+            [HPProgressHUD alertMessage:MSG];
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet

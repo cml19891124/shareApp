@@ -10,6 +10,8 @@
 
 #import "HPGlobalVariable.h"
 
+#import "HPTimeString.h"
+
 @implementation HPCalenderView
 
 - (void)setupModalView:(UIView *)view
@@ -248,6 +250,7 @@
 - (void)clickCalendarWithStartDate:(NSString *)startDate andEndDate:(NSString *)endDate
 {
     self.startDate = startDate;
+
     self.endDate = endDate;
 
 }

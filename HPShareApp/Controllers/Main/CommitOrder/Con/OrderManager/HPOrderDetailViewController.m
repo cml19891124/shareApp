@@ -14,7 +14,7 @@
 
 #import "HPAttributeLabel.h"
 
-@interface HPOrderDetailViewController ()
+@interface HPOrderDetailViewController ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
 
@@ -268,9 +268,17 @@
         make.bottom.mas_equalTo(self.view.mas_bottom).offset(-g_bottomSafeAreaHeight + getWidth(-75.f));
     }];
     
+    CGFloat height = 0.00;
+    if (IPHONE_HAS_NOTCH) {
+        height = getWidth(130.f);
+    }else if(kScreenHeight == 568){
+        
+    }else{
+        height = getWidth(100.f);
+    }
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(self.view);
-        make.size.mas_equalTo(CGSizeMake(kScreenWidth, getWidth(120.f)));
+        make.left.top.mas_equalTo(self.scrollView);
+        make.size.mas_equalTo(CGSizeMake(kScreenWidth, height));
     }];
     
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -283,6 +291,7 @@
         make.centerX.mas_equalTo(self.scrollView);
         make.width.left.mas_equalTo(self.scrollView);
         make.top.mas_equalTo(g_statusBarHeight + 13.f);
+        make.height.mas_equalTo(self.titleLabel.font.pointSize);
     }];
     
     [self.warningBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -319,7 +328,7 @@
 
     }];
     
-    CGFloat rentW = BoundWithSize(self.rentDaysLabel.text, kScreenWidth, 12.f).size.width;
+    CGFloat rentW = BoundWithSize(self.rentDaysLabel.text, kScreenWidth, 14.f).size.width;
     [self.rentDaysLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
         make.height.mas_equalTo(self.rentDaysLabel.font.pointSize);
@@ -480,6 +489,7 @@
         make.left.width.mas_equalTo(self.orderView);
         make.height.mas_equalTo(getWidth(45.f));
         make.top.mas_equalTo(self.rentAmountView.mas_bottom).offset(getWidth(5.f));
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom);
     }];
     
     [self.toPayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -565,7 +575,9 @@
 {
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc] init];
-        _scrollView.showsVerticalScrollIndicator = NO;
+//        _scrollView.showsVerticalScrollIndicator = NO;
+        _scrollView.scrollEnabled = YES;
+        _scrollView.delegate = self;
     }
     return _scrollView;
 }
@@ -645,7 +657,7 @@
         _rentDaysLabel = [UILabel new];
         _rentDaysLabel.textColor = COLOR_GRAY_999999;
         _rentDaysLabel.textAlignment = NSTextAlignmentLeft;
-        _rentDaysLabel.font = kFont_Medium(12.f);
+        _rentDaysLabel.font = kFont_Regular(14.f);
         _rentDaysLabel.text = @"租期：7天";
     }
     return _rentDaysLabel;
@@ -657,7 +669,7 @@
         _duringDayslabel = [UILabel new];
         _duringDayslabel.textColor = COLOR_GRAY_999999;
         _duringDayslabel.textAlignment = NSTextAlignmentLeft;
-        _duringDayslabel.font = kFont_Medium(12.f);
+        _duringDayslabel.font = kFont_Regular(14.f);
         _duringDayslabel.text = @"入离店：09:00-18:00";
     }
     return _duringDayslabel;
@@ -895,7 +907,7 @@
 {
     if (!_depositSubLabel) {
         _depositSubLabel = [UILabel new];
-        _depositSubLabel.textColor = COLOR_GRAY_666666;
+        _depositSubLabel.textColor = COLOR_RED_EA0000;
         _depositSubLabel.textAlignment = NSTextAlignmentRight;
         _depositSubLabel.font = kFont_Regular(14.f);
         _depositSubLabel.text = @"+¥ 0";
@@ -977,5 +989,10 @@
 {
     button.selected = !button.selected;
     
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    HPLog(@"dsD:%f",scrollView.contentOffset.y);
 }
 @end
