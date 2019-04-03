@@ -5,6 +5,11 @@
 //  Created by HP on 2019/3/25.
 //  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
+#define carlenderhasOrderArrayName @"carlenderhasOrderArrayName"
+
+#import "HPHasOrderModel.h"
+
+#import "HPTimeString.h"
 
 #import "HPOrderManagerViewController.h"
 
@@ -38,9 +43,12 @@
 
 #import "HPCalenderView.h"
 
-
+#define topaytimeout @"topaytimeout"
 @interface HPOrderManagerViewController ()
 
+@property (strong, nonatomic) NSMutableArray *orderArray;
+
+@property (strong, nonatomic) NSMutableArray *hasOrderArray;
 
 @property (nonatomic, copy) NSString *arriveTime;
 
@@ -202,7 +210,10 @@
     [super viewWillAppear:animated];
     
     [self.navigationController setNavigationBarHidden:YES animated:YES];
-    
+    self.hasOrderArray = [NSMutableArray array];
+
+    [self getHasPredictOrderApi];
+
     [self.view addSubview:self.calenderView];
     
     self.calenderView.calendarView.daysMenuView.userActivity = NO;
@@ -210,10 +221,35 @@
     [self.calenderView show:YES];
 }
 
+#pragma mark - 获取已经预定的订单
+- (void)getHasPredictOrderApi
+{
+    NSString *method = [NSString stringWithFormat:@"/v1/order/spaceId/%@/orderedDays",_model.order.spaceId];
+    [HPHTTPSever HPGETServerWithMethod:method isNeedToken:YES paraments:@{@"spaceId":_model.order.spaceId?_model.order.spaceId:@""} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            NSArray *orderArray = [HPHasOrderModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+            [self.hasOrderArray addObjectsFromArray:orderArray];
+            
+            [kNotificationCenter postNotificationName:carlenderhasOrderArrayName object:nil userInfo:@{@"array":self.hasOrderArray}];
+            
+            self.calenderView.calendarView.hasOrderArray = self.hasOrderArray;
+
+            if (orderArray.count == 0) {
+                HPLog(@"暂无已预订的数据");
+            }
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    self.orderArray = [NSMutableArray array];
+
     [self.view setBackgroundColor:COLOR_GRAY_F9FAFD];
     
 //    [self setupNavigationBarWithTitle:@"提交订单"];
@@ -266,28 +302,7 @@
         [self.rentOutsideLabel setText:@"室内"];
 
     }
-    
-    if ([_model.order.status integerValue] == 1) {
-        if ([HPSingleton sharedSingleton].identifyTag == 0) {
-            self.titleLabel.text = @"待付款";
-            [self.predictBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(self.bottomView).offset(getWidth(-15.f));
-                make.left.mas_equalTo(self.priceListBtn.mas_right).offset(getWidth(15.f));
-                make.top.mas_equalTo(getWidth(15.f));
-                make.bottom.mas_equalTo(getWidth(-15.f));
-            }];
-           
-        }else{
-            self.titleLabel.text = @"订单处理";
-            [self.predictBtn setTitle:@"在线催单" forState:UIControlStateNormal];
-            [self.predictBtn setTitleColor:COLOR_RED_FF1213 forState:UIControlStateNormal];
-            self.predictBtn.layer.cornerRadius = 15.f;
-            self.predictBtn.layer.masksToBounds = YES;
-            self.predictBtn.layer.borderColor = COLOR_RED_FF1213.CGColor;
-            self.predictBtn.layer.borderWidth = 1;
-        }
-    }
-    
+ 
     self.addressLabel.text = [NSString stringWithFormat:@"地址：%@",_model.spaceDetail.address];
     
     self.phoneField.text = _model.spaceDetail.contactMobile;
@@ -296,9 +311,35 @@
     
     self.desField.text = _model.spaceDetail.remark;
 
+    NSString *lefttime = [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime];
+    if ([lefttime isEqualToString:@"剩余:00:00"]) {
+        [kNotificationCenter postNotificationName:topaytimeout object:nil];
+        
+    }
+    
+    NSString *start = [[_model.order.days componentsSeparatedByString:@","]firstObject];
+    NSString *end = [[_model.order.days componentsSeparatedByString:@","]lastObject];
+    NSArray * orderArray = [_model.order.days componentsSeparatedByString:@","];
+    NSString *days = [NSString stringWithFormat:@"拼租日期(共%ld天)",orderArray.count];
+    self.rentStartDayLabel.text = start;
+    self.rentEndDayLabel.text = end;
+    self.rentDaysLabel.text = days;
+    self.priceLabel.text = [NSString stringWithFormat:@"¥%@",self.model.order.totalFee];
+    self.orderListView.model = self.model;
+}
+
+- (void)paytimeOutClick
+{
+    [self pushVCByClassName:@"HPOwnnerTimeOutViewController" withParam:@{@"model":_model}];
+}
+
+- (void)dealloc{
+    [kNotificationCenter removeObserver:self];
 }
 - (void)setUpCommitSubviews
 {
+    [kNotificationCenter addObserver:self selector:@selector(paytimeOutClick) name:topaytimeout object:nil];
+    
     [self.view addSubview:self.scrollView];
 
     [self.scrollView addSubview:self.headerView];
@@ -309,8 +350,9 @@
     
     [self.headerView addSubview:self.warningBtn];
     
-    NSString *lefttime = @"剩余:23小时49分";
-    self.leftLabel = [HPAttributeLabel getTitle:lefttime andFromFont:kFont_Medium(12.f) andToFont:kFont_Bold(14.f) andFromColor:COLOR_GRAY_FFFFFF andToColor:COLOR_GRAY_FFFFFF andFromRange:NSMakeRange(0, 3) andToRange:NSMakeRange(3,lefttime.length - 3) andLineSpace:0 andNumbersOfLine:0 andTextAlignment:NSTextAlignmentCenter andLineBreakMode:NSLineBreakByWordWrapping];
+    NSString *leftTime = [NSString stringWithFormat:@"剩余:%@", [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime]];
+   
+    self.leftLabel = [HPAttributeLabel getTitle:leftTime andFromFont:kFont_Medium(12.f) andToFont:kFont_Bold(14.f) andFromColor:COLOR_GRAY_FFFFFF andToColor:COLOR_GRAY_FFFFFF andFromRange:NSMakeRange(0, 3) andToRange:NSMakeRange(3,leftTime.length - 3) andLineSpace:0 andNumbersOfLine:0 andTextAlignment:NSTextAlignmentCenter andLineBreakMode:NSLineBreakByWordWrapping];
     
     [self.headerView addSubview:self.leftLabel];
 
@@ -409,6 +451,7 @@
     [self.view addSubview:self.quitView];
     
     [self.quitView show:NO];
+    
 }
 
 -(void)setUpCommitSubviewsmasonry
@@ -469,9 +512,10 @@
         make.height.mas_equalTo(self.nameLabel.font.pointSize);
     }];
     
+    CGFloat locW = BoundWithSize(self.locationLabel.text, kScreenWidth, 12.f).size.width;
     [self.locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.width.mas_equalTo(self.nameLabel);
-        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
+        make.left.mas_equalTo(self.nameLabel);
+        make.width.mas_equalTo(locW); make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
         make.height.mas_equalTo(self.locationLabel.font.pointSize);
     }];
     
@@ -479,7 +523,7 @@
         make.left.mas_equalTo(self.locationLabel.mas_right);
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
         make.height.mas_equalTo(self.rentOutsideLabel.font.pointSize);
-        make.width.mas_equalTo(getWidth(35.f));
+        make.width.mas_equalTo(getWidth(30.f));
     }];
     
     [self.spaceInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -715,8 +759,8 @@
     }];
     
     [self.orderListView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.scrollView);
-        make.bottom.mas_equalTo(self.bottomView.mas_top);
+        make.top.left.right.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.view).offset(getWidth(-60.f)-g_bottomSafeAreaHeight);
     }];
     
     [self.predictView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -891,7 +935,7 @@
         _rentOutsideLabel.backgroundColor = COLOR_RED_EA0000;
         _rentOutsideLabel.font = kFont_Medium(12.f);
         _rentOutsideLabel.text = @"室内";
-        _rentOutsideLabel.textAlignment = NSTextAlignmentLeft;
+        _rentOutsideLabel.textAlignment = NSTextAlignmentCenter;
         _rentOutsideLabel.numberOfLines = 0;
         [_rentOutsideLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     }
@@ -967,7 +1011,7 @@
     if (!_rentStartDayLabel) {
         _rentStartDayLabel = [UILabel new];
         _rentStartDayLabel.text = @"请选择起始日期";
-        _rentStartDayLabel.textAlignment = NSTextAlignmentLeft;
+        _rentStartDayLabel.textAlignment = NSTextAlignmentCenter;
         _rentStartDayLabel.font = kFont_Regular(14.f);
         _rentStartDayLabel.textColor = COLOR_GRAY_CCCCCC;
     }
@@ -989,7 +1033,7 @@
     if (!_rentEndDayLabel) {
         _rentEndDayLabel = [UILabel new];
         _rentEndDayLabel.text = @"请选择结束日期";
-        _rentEndDayLabel.textAlignment = NSTextAlignmentLeft;
+        _rentEndDayLabel.textAlignment = NSTextAlignmentCenter;
         _rentEndDayLabel.font = kFont_Regular(14.f);
         _rentEndDayLabel.textColor = COLOR_GRAY_CCCCCC;
     }
@@ -1249,9 +1293,9 @@
 {
     if (!_priceLabel) {
         _priceLabel = [UILabel new];
-        _priceLabel.text = @"¥ 99.00";
+        _priceLabel.text = @"¥ 0.00";
         _priceLabel.textAlignment = NSTextAlignmentLeft;
-        _priceLabel.font = kFont_Medium(13.f);
+        _priceLabel.font = kFont_Medium(19.f);
         _priceLabel.textColor = COLOR_RED_EA0000;
         
     }
@@ -1349,6 +1393,7 @@
         _predictView = [HPPredictView new];
         kWEAKSELF
         _predictView.knownBlock = ^{
+            [weakSelf.predictView show:NO];
             for (UIViewController *controller in weakSelf.navigationController.viewControllers) {
                 if ([controller isKindOfClass:[HPShareShopListController class]]) {
 //                    HPShareShopListController *shopList = [HPShareShopListController new];

@@ -5,11 +5,15 @@
 //  Created by HP on 2019/3/25.
 //  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
+#define carlenderhasOrderArrayName @"carlenderhasOrderArrayName"
+
 #import "HPHasOrderModel.h"
 
-#import "HPCommitOrderViewController.h"
+#import "HPTimeString.h"
 
-#import "HPShareDetailModel.h"
+#import "HPImergencyManagerViewController.h"
+
+#import "HOOrderListModel.h"
 
 #import "HPAttributeLabel.h"
 
@@ -21,7 +25,7 @@
 
 #import "YZXCalendarHelper.h"
 
-#import "HPRentDuringView.h"
+#import "HPRentTimePicker.h"
 
 #import "HPOrderInfoListView.h"
 
@@ -33,12 +37,16 @@
 
 #import "JCHATConversationViewController.h"
 
+#import "HPQuitOrderView.h"
+
 #import "HPSingleton.h"
 
 #import "HPCalenderView.h"
 
+#define topaytimeout @"topaytimeout"
+@interface HPImergencyManagerViewController ()
 
-@interface HPCommitOrderViewController ()
+@property (strong, nonatomic) NSMutableArray *orderArray;
 
 @property (strong, nonatomic) NSMutableArray *hasOrderArray;
 
@@ -46,11 +54,11 @@
 
 @property (nonatomic, copy) NSString *leaveTime;
 
-@property (nonatomic, strong) HPCalenderView *calenderView;
+@property (nonatomic, strong) HPQuitOrderView *quitView;
 
 @property (nonatomic, strong) HPOrderInfoListView *orderListView;
 
-@property (nonatomic, strong) HPRentDuringView *picker;
+@property (nonatomic, strong) HPRentTimePicker *picker;
 
 @property (nonatomic, strong) HPPredictView *predictView;
 
@@ -61,6 +69,17 @@
 @property (nonatomic, strong) UIButton *backBtn;
 
 @property (nonatomic, strong) UILabel *titleLabel;
+
+@property (nonatomic, strong) UIButton *warningBtn;
+
+/**
+ 室内、室外
+ */
+@property (strong, nonatomic) UILabel *rentOutsideLabel;
+/**
+ 剩余时间
+ */
+@property (nonatomic, strong) HPAttributeLabel *leftLabel;
 
 @property (nonatomic, strong) UIView *storeInfoView;
 
@@ -74,7 +93,7 @@
 
 @property (nonatomic, strong) UILabel *addressLabel;
 
-@property (nonatomic, strong) HPShareDetailModel *model;
+@property (nonatomic, strong) HOOrderListModel *model;
 
 @property (nonatomic, strong) UIView *rentInfoView;
 
@@ -105,6 +124,10 @@
 @property (nonatomic, strong) UIView *contactView;
 
 @property (nonatomic, strong) UILabel *contactLabel;
+//沟通
+@property (nonatomic, strong) UIButton *communicateBtn;
+//电话
+@property (nonatomic, strong) UIButton *phoneBtn;
 
 @property (nonatomic, strong) UIView *contactInfoView;
 
@@ -134,7 +157,9 @@
 
 @property (nonatomic, strong) HPRightImageButton *priceListBtn;
 
-@property (nonatomic, strong) UIControl *predictBtn;
+@property (nonatomic, strong) UIButton *quitBtn;
+
+@property (nonatomic, strong) UIButton *predictBtn;
 
 @property (nonatomic, strong) UIImageView *cartView;
 
@@ -146,34 +171,34 @@
 @property (nonatomic, strong) YZXCalendarView             *calendarView;
 
 @property (nonatomic, assign) YZXTimeToChooseType         selectedType;
-
 @property (nonatomic, copy) NSString             *startDate;
-
 @property (nonatomic, copy) NSString             *endDate;
+
+@property (nonatomic, strong) HPCalenderView *calenderView;
 
 @end
 
-@implementation HPCommitOrderViewController
+@implementation HPImergencyManagerViewController
+
 
 - (HPCalenderView *)calenderView
 {
     if (!_calenderView) {
         _calenderView = [HPCalenderView new];
         kWEAKSELF
-        _calenderView.confirmTheDateBlock = ^(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType) {
+        _calenderView.calenderBlock = ^(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType) {
             weakSelf.rentStartDayLabel.text = startDate;
             if (endDate) {
                 weakSelf.rentEndDayLabel.text = endDate;
-                weakSelf.rentLineLabel.hidden = NO;
-                weakSelf.rentEndDayLabel.hidden = NO;
             }else{
                 weakSelf.rentLineLabel.hidden = YES;
                 weakSelf.rentEndDayLabel.hidden = YES;
-            }            
+            } 
         };
     }
     return _calenderView;
 }
+
 
 - (void)onClickBack:(UIButton *)UIButton
 {
@@ -185,26 +210,50 @@
     [super viewWillAppear:animated];
     
     [self.navigationController setNavigationBarHidden:YES animated:YES];
-    
     self.hasOrderArray = [NSMutableArray array];
-    
-    
+
+    [self getHasPredictOrderApi];
+
     [self.view addSubview:self.calenderView];
-
-    [self.calenderView show:YES];
     
-//    self.calenderView.calendarView.daysMenuView.userActivity = YES;
-
+    self.calenderView.calendarView.daysMenuView.userActivity = NO;
+    
+    [self.calenderView show:YES];
 }
 
+#pragma mark - 获取已经预定的订单
+- (void)getHasPredictOrderApi
+{
+    NSString *method = [NSString stringWithFormat:@"/v1/order/spaceId/%@/orderedDays",_model.order.spaceId];
+    [HPHTTPSever HPGETServerWithMethod:method isNeedToken:YES paraments:@{@"spaceId":_model.order.spaceId?_model.order.spaceId:@""} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            NSArray *orderArray = [HPHasOrderModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+            [self.hasOrderArray addObjectsFromArray:orderArray];
+            
+            [kNotificationCenter postNotificationName:carlenderhasOrderArrayName object:nil userInfo:@{@"array":self.hasOrderArray}];
+            
+            self.calenderView.calendarView.hasOrderArray = self.hasOrderArray;
+
+            if (orderArray.count == 0) {
+                HPLog(@"暂无已预订的数据");
+            }
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    self.orderArray = [NSMutableArray array];
+
     [self.view setBackgroundColor:COLOR_GRAY_F9FAFD];
     
-    self.model = self.param[@"order"];
+//    [self setupNavigationBarWithTitle:@"提交订单"];
+    self.model = self.param[@"model"];
     
     if (@available(iOS 11.0, *)) {
         
@@ -222,28 +271,22 @@
 
 - (void)loadData
 {
-    self.nameLabel.text = _model.title;
+    [self.storeView sd_setImageWithURL:[NSURL URLWithString:_model.spaceDetail.picture.url] placeholderImage:ImageNamed(@"loading_logo_small")];
     
-    self.locationLabel.text = _model.address;
-
-    [self.storeView sd_setImageWithURL:@"" placeholderImage:ImageNamed(@"")];
+    self.nameLabel.text = [NSString stringWithFormat:@"拼租位置：%@",_model.spaceDetail.address];
     
-    self.addressLabel.text = _model.address;
+//    self.locationLabel.text = _model.address;
     
-    self.ownnerField.text = _model.contact;
-
-    self.phoneField.text = _model.contactMobile;
-    
-    /*if (_model.area && [_model.area isEqualToString:@"0"]) {
-        if ([_model.areaRange intValue] == 1) {
+    if (_model.spaceDetail.area && [_model.spaceDetail.area isEqualToString:@"0"]) {
+        if ([_model.spaceDetail.areaRange intValue] == 1) {
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"不限"]];
-        }else if ([_model.areaRange intValue] == 2){
+        }else if ([_model.spaceDetail.areaRange intValue] == 2){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"小于5㎡"]];
-        }else if ([_model.areaRange intValue] == 3){
+        }else if ([_model.spaceDetail.areaRange intValue] == 3){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"5-10㎡"]];
-        }else if ([_model.areaRange intValue] == 4){
+        }else if ([_model.spaceDetail.areaRange intValue] == 4){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"10-20㎡"]];
-        }else if ([_model.areaRange intValue] == 5){
+        }else if ([_model.spaceDetail.areaRange intValue] == 5){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"20㎡以上"]];
         }else {
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:面议"]];
@@ -251,17 +294,69 @@
     }
     else{
         [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:不限"]];
-    }*/
+    }
+
+    if (_model.spaceDetail.rentOutside) {
+        [self.rentOutsideLabel setText:@"室外"];
+    }else{
+        [self.rentOutsideLabel setText:@"室内"];
+
+    }
+ 
+    self.addressLabel.text = [NSString stringWithFormat:@"地址：%@",_model.spaceDetail.address];
+    
+    self.phoneField.text = _model.spaceDetail.contactMobile;
+    
+    self.ownnerField.text = _model.spaceDetail.contact;
+    
+    self.desField.text = _model.spaceDetail.remark;
+
+    NSString *lefttime = [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime];
+    if ([lefttime isEqualToString:@"剩余:00:00"]) {
+        [kNotificationCenter postNotificationName:topaytimeout object:nil];
+        
+    }
+    
+    NSString *start = [[_model.order.days componentsSeparatedByString:@","]firstObject];
+    NSString *end = [[_model.order.days componentsSeparatedByString:@","]lastObject];
+    NSArray * orderArray = [_model.order.days componentsSeparatedByString:@","];
+    NSString *days = [NSString stringWithFormat:@"拼租日期(共%ld天)",orderArray.count];
+    self.rentStartDayLabel.text = start;
+    self.rentEndDayLabel.text = end;
+    self.rentDaysLabel.text = days;
+    self.priceLabel.text = [NSString stringWithFormat:@"¥%@",self.model.order.totalFee];
+    self.orderListView.model = self.model;
+
+}
+
+- (void)paytimeOutClick
+{
+    [self pushVCByClassName:@"HPOwnnerTimeOutViewController" withParam:@{@"model":_model}];
+}
+
+- (void)dealloc{
+    [kNotificationCenter removeObserver:self];
 }
 - (void)setUpCommitSubviews
 {
+    [kNotificationCenter addObserver:self selector:@selector(paytimeOutClick) name:topaytimeout object:nil];
+    
     [self.view addSubview:self.scrollView];
 
     [self.scrollView addSubview:self.headerView];
     
-    [self.scrollView addSubview:self.backBtn];
+    [self.headerView addSubview:self.backBtn];
     
-    [self.scrollView addSubview:self.titleLabel];
+    [self.headerView addSubview:self.titleLabel];
+    
+    [self.headerView addSubview:self.warningBtn];
+    
+    NSString *leftTime = [NSString stringWithFormat:@"剩余:%@", [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime]];
+   
+//    NSString *lefttime = @"剩余:23小时49分";
+    self.leftLabel = [HPAttributeLabel getTitle:leftTime andFromFont:kFont_Medium(12.f) andToFont:kFont_Bold(14.f) andFromColor:COLOR_GRAY_FFFFFF andToColor:COLOR_GRAY_FFFFFF andFromRange:NSMakeRange(0, 3) andToRange:NSMakeRange(3,leftTime.length - 3) andLineSpace:0 andNumbersOfLine:0 andTextAlignment:NSTextAlignmentCenter andLineBreakMode:NSLineBreakByWordWrapping];
+    
+    [self.headerView addSubview:self.leftLabel];
 
     [self.scrollView addSubview:self.storeInfoView];
     
@@ -270,6 +365,8 @@
     [self.storeInfoView addSubview:self.nameLabel];
 
     [self.storeInfoView addSubview:self.locationLabel];
+
+    [self.storeInfoView addSubview:self.rentOutsideLabel];
 
     [self.storeInfoView addSubview:self.spaceInfoLabel];
 
@@ -304,6 +401,8 @@
     [self.scrollView addSubview:self.contactInfoView];
     
     [self.contactInfoView addSubview:self.contactLabel];
+//即时通讯按钮
+    [self.contactInfoView addSubview:self.communicateBtn];
 
     [self.contactInfoView addSubview:self.contactView];
 
@@ -321,6 +420,8 @@
     
     [self.phoneInfoView addSubview:self.phoneField];
     
+    [self.phoneInfoView addSubview:self.phoneBtn];
+
     [self.scrollView addSubview:self.desView];
 
     [self.desView addSubview:self.desLabel];
@@ -333,31 +434,33 @@
     
     [self.bottomView addSubview:self.priceListBtn];
     
+    [self.bottomView addSubview:self.quitBtn];
+
     [self.bottomView addSubview:self.predictBtn];
-    //预定按钮
-    [self.predictBtn addSubview:self.cartView];
-    
-    [self.predictBtn addSubview:self.predictLabel];
-    
-    [self.predictBtn addSubview:self.confirmLabel];
+
     //明细列表
     [self.scrollView addSubview:self.orderListView];
 //预定
     [self.view addSubview:self.predictView];
     
     [self.predictView show:NO];
+    //放弃
+    [self.view addSubview:self.quitView];
+    
+    [self.quitView show:NO];
+    
 }
 
 -(void)setUpCommitSubviewsmasonry
 {
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(g_bottomSafeAreaHeight + getWidth(60.f));
+        make.bottom.mas_equalTo(self.view.mas_bottom).offset(-g_bottomSafeAreaHeight + getWidth(-60.f));
     }];
     
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(getWidth(107.f));
+        make.left.top.right.mas_equalTo(self.scrollView);
+        make.height.mas_equalTo(getWidth(140.f));
     }];
     
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -367,16 +470,30 @@
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.scrollView);
-        make.width.left.mas_equalTo(self.scrollView);
+        make.centerX.mas_equalTo(self.headerView);
+        make.width.left.mas_equalTo(self.headerView);
         make.top.mas_equalTo(g_statusBarHeight + 13.f);
     }];
     
+    [self.warningBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.headerView);
+        make.width.left.mas_equalTo(self.headerView);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(getWidth(13.f));
+        make.height.mas_equalTo(self.warningBtn.titleLabel.font.pointSize);
+    }];
+    
+    [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.headerView);
+        make.width.left.mas_equalTo(self.headerView);
+        make.top.mas_equalTo(self.warningBtn.mas_bottom).offset(getWidth(10.f));
+        make.height.mas_equalTo(self.leftLabel.font.pointSize);
+    }];
+    
     [self.storeInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.scrollView);
+        make.centerX.mas_equalTo(self.headerView);
         make.left.mas_equalTo(getWidth(15.f));
         make.size.mas_equalTo(CGSizeMake(getWidth(345.f), getWidth(115.f)));
-        make.top.mas_equalTo(g_statusBarHeight + 44 + getWidth(4.f));
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(getWidth(-28.f));
     }];
     
     [self.storeView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -392,10 +509,18 @@
         make.height.mas_equalTo(self.nameLabel.font.pointSize);
     }];
     
+    CGFloat locW = BoundWithSize(self.locationLabel.text, kScreenWidth, 12.f).size.width;
     [self.locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.width.mas_equalTo(self.nameLabel);
-        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
+        make.left.mas_equalTo(self.nameLabel);
+        make.width.mas_equalTo(locW); make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
         make.height.mas_equalTo(self.locationLabel.font.pointSize);
+    }];
+    
+    [self.rentOutsideLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.locationLabel.mas_right);
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
+        make.height.mas_equalTo(self.rentOutsideLabel.font.pointSize);
+        make.width.mas_equalTo(getWidth(30.f));
     }];
     
     [self.spaceInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -513,9 +638,16 @@
     }];
     
     [self.contactLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(getWidth(-15.f));
+        make.width.mas_equalTo(kScreenWidth/2);
         make.left.top.mas_equalTo(getWidth(15.f));
         make.height.mas_equalTo(self.contactLabel.font.pointSize);
+    }];
+    
+    [self.communicateBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(getWidth(-15.f));
+        make.width.mas_equalTo(kScreenWidth/2);
+        make.centerY.mas_equalTo(self.contactLabel);
+        make.height.mas_equalTo(getWidth(25.f));
     }];
     
     [self.contactView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -558,15 +690,25 @@
         make.centerY.mas_equalTo(self.phoneInfoView);
     }];
     
-    [self.phoneField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.width.height.mas_equalTo(self.ownnerField);
+    [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(getWidth(15.f));
         make.centerY.mas_equalTo(self.phoneInfoView);
+        make.right.mas_equalTo(getWidth(-13.f));
+        
+    }];
+    
+    [self.phoneField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.height.mas_equalTo(self.ownnerField);
+        make.centerY.mas_equalTo(self.phoneInfoView);
+        make.right.mas_equalTo(self.phoneBtn.mas_left);
+
     }];
     
     [self.desView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.width.mas_equalTo(self.rentInfoView);
-        make.height.mas_equalTo(getWidth(45.f));
-        make.top.mas_equalTo(self.contactInfoView.mas_bottom).offset(getWidth(15.f));
+        make.height.mas_equalTo(getWidth(45.f));        make.top.mas_equalTo(self.contactInfoView.mas_bottom).offset(getWidth(15.f));
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom);
+
     }];
     
     [self.desLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -584,56 +726,109 @@
     }];
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.width.mas_equalTo(self.view);
-        make.height.mas_equalTo(getWidth(60.f));
+        make.left.right.mas_equalTo(self.view);
+        make.height.mas_equalTo(getWidth(60.f)+g_bottomSafeAreaHeight);
+        make.top.mas_equalTo(self.view).offset(kScreenHeight getWidth(-60.f)-g_bottomSafeAreaHeight);
     }];
     
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.top.mas_equalTo(self.bottomView);
         make.left.mas_equalTo(getWidth(15.f));
-        make.height.mas_equalTo(getWidth(60.f));
-        make.width.mas_equalTo(kScreenWidth/3);
-    }];
-    
-    [self.priceListBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.top.mas_equalTo(self.bottomView);
-        make.left.mas_equalTo(self.priceLabel.mas_right);
-        make.width.mas_equalTo(kScreenWidth/5);
+        make.width.mas_equalTo(kScreenWidth/4);
     }];
     
     [self.predictBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.top.right.mas_equalTo(self.bottomView);
-        make.left.mas_equalTo(self.priceListBtn.mas_right);
-    }];
-    
-    CGFloat predictW = BoundWithSize(@"拼租预定", kScreenWidth, 14.f).size.width;
-    [self.predictLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.cartView);
-        make.centerX.mas_equalTo(self.predictBtn);
-        make.height.mas_equalTo(self.predictLabel.font.pointSize);
-        make.width.mas_equalTo(predictW);
-    }];
-    
-    [self.cartView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(getWidth(15.f));
-        make.right.mas_equalTo(self.predictLabel.mas_left).offset(getWidth(-3.f));
-        make.width.height.mas_equalTo(getWidth(13.f));
+        make.right.mas_equalTo(self.bottomView).offset(getWidth(-15.f));
+        make.centerY.mas_equalTo(self.bottomView);
+        make.width.mas_equalTo(kScreenWidth/4);
+        make.height.mas_equalTo(getWidth(30));
 
     }];
     
-    [self.confirmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.predictLabel.mas_bottom).offset(getWidth(10.f));
-        make.left.right.bottom.mas_equalTo(self.predictBtn);
+    [self.priceListBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.bottomView);
+        make.right.mas_equalTo(self.predictBtn.mas_left).offset(getWidth(-15.f));
+        make.width.mas_equalTo(kScreenWidth/5);
+        make.height.mas_equalTo(getWidth(30));
+
+    }];
+    
+    [self.quitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.top.mas_equalTo(self.bottomView);
+        make.right.mas_equalTo(self.predictBtn.mas_left);
+        make.width.mas_equalTo(0);
     }];
     
     [self.orderListView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.scrollView);
-        make.bottom.mas_equalTo(self.scrollView);
+        make.top.left.right.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.view).offset(getWidth(-60.f)-g_bottomSafeAreaHeight);
     }];
     
     [self.predictView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.view);
+    }];
+    
+    [self.quitView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.view);
+    }];
+}
+
+- (UIButton *)quitBtn
+{
+    if (!_quitBtn) {
+        _quitBtn = [UIButton new];
+        _quitBtn.backgroundColor = COLOR_YELLOW_FFB400;
+        [_quitBtn setTitle:@"放弃此单" forState:UIControlStateNormal];
+        [_quitBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+        _quitBtn.titleLabel.font = kFont_Medium(14.f);
+        _quitBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        [_quitBtn addTarget:self action:@selector(onClickQuitBtn:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _quitBtn;
+}
+
+- (void)onClickQuitBtn:(UIButton *)button
+{
+    HPLog(@"quit");
+    [self.quitView show:YES];
+}
+
+- (HPQuitOrderView *)quitView
+{
+    if (!_quitView) {
+        _quitView = [HPQuitOrderView new];
+        kWEAKSELF
+        _quitView.holderBlock = ^{
+            HPLog(@"dfsdg");
+            [weakSelf.quitView show:NO];
+        };
+        
+        _quitView.quitBlock = ^{
+            HPLog(@"5555");
+            [weakSelf getBossCancelOrder];
+        };
+    }
+    return _quitView;
+}
+#pragma mark - 商家放弃订单o拼租
+- (void)getBossCancelOrder
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"cancelReason"] = self.quitView.signTextView.text;
+    dic[@"orderId"] = _model.order.orderId;
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/order/bossCancel" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+        
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+            [self.quitView show:NO];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
     }];
 }
 
@@ -675,9 +870,24 @@
         _titleLabel.textColor = COLOR_GRAY_FFFFFF;
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.font = kFont_Bold(18.f);
-        _titleLabel.text = @"提交订单";
+        _titleLabel.text = @"待付款";
     }
     return _titleLabel;
+}
+
+- (UIButton *)warningBtn
+{
+    if (!_warningBtn) {
+        _warningBtn = [UIButton new];
+        [_warningBtn setImage:ImageNamed(@"laba") forState:UIControlStateNormal];
+        [_warningBtn setTitle:@"用户发起新的拼租，请在24小时内进行处理" forState:UIControlStateNormal];
+        [_warningBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+        [_warningBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(5.f), 0, 0)];
+        _warningBtn.titleLabel.font = kFont_Medium(14.f);
+        [_warningBtn addTarget:self action:@selector(onClickLoundBtn:) forControlEvents:UIControlEventTouchUpInside];
+        _warningBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    }
+    return _warningBtn;
 }
 
 - (UIView *)storeInfoView
@@ -697,7 +907,7 @@
         _nameLabel = [UILabel new];
         _nameLabel.text = @"小女当家场地拼租";
         _nameLabel.textAlignment = NSTextAlignmentLeft;
-        _nameLabel.font = kFont_Medium(16.f);
+        _nameLabel.font = kFont_Medium(14.f);
         _nameLabel.textColor = COLOR_BLACK_333333;
     }
     return _nameLabel;
@@ -716,6 +926,23 @@
     return _locationLabel;
 }
 
+- (UILabel *)rentOutsideLabel
+{
+    if (!_rentOutsideLabel) {
+        _rentOutsideLabel = [UILabel new];
+        _rentOutsideLabel.layer.cornerRadius = 2.f;
+        _rentOutsideLabel.layer.masksToBounds = YES;
+        _rentOutsideLabel.textColor = COLOR_GRAY_FFFFFF;
+        _rentOutsideLabel.backgroundColor = COLOR_RED_EA0000;
+        _rentOutsideLabel.font = kFont_Medium(12.f);
+        _rentOutsideLabel.text = @"室内";
+        _rentOutsideLabel.textAlignment = NSTextAlignmentCenter;
+        _rentOutsideLabel.numberOfLines = 0;
+        [_rentOutsideLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    }
+    return _rentOutsideLabel;
+}
+
 - (UILabel *)spaceInfoLabel
 {
     if (!_spaceInfoLabel) {
@@ -727,7 +954,6 @@
     }
     return _spaceInfoLabel;
 }
-
 - (UILabel *)addressLabel
 {
     if (!_addressLabel) {
@@ -788,7 +1014,7 @@
         _rentStartDayLabel.text = @"请选择起始日期";
         _rentStartDayLabel.textAlignment = NSTextAlignmentCenter;
         _rentStartDayLabel.font = kFont_Regular(14.f);
-        _rentStartDayLabel.textColor = COLOR_BLACK_333333;
+        _rentStartDayLabel.textColor = COLOR_GRAY_CCCCCC;
     }
     return _rentStartDayLabel;
 }
@@ -810,7 +1036,7 @@
         _rentEndDayLabel.text = @"请选择结束日期";
         _rentEndDayLabel.textAlignment = NSTextAlignmentCenter;
         _rentEndDayLabel.font = kFont_Regular(14.f);
-        _rentEndDayLabel.textColor = COLOR_BLACK_333333;
+        _rentEndDayLabel.textColor = COLOR_GRAY_CCCCCC;
     }
     return _rentEndDayLabel;
 }
@@ -992,6 +1218,16 @@
     return _phoneLabel;
 }
 
+- (UIButton *)phoneBtn
+{
+    if (!_phoneBtn) {
+        _phoneBtn = [UIButton new];
+        [_phoneBtn setBackgroundImage:ImageNamed(@"tel_phone") forState:UIControlStateNormal];
+        [_phoneBtn addTarget:self action:@selector(onClickPhoneUser:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _phoneBtn;
+}
+
 - (UITextField *)phoneField
 {
     if (!_phoneField) {
@@ -1000,6 +1236,7 @@
         _phoneField.textAlignment = NSTextAlignmentLeft;
         _phoneField.tintColor = COLOR_RED_EA0000;
         _phoneField.placeholder = @"请输入手机号码";
+        _phoneField.textColor = COLOR_GREEN_2DC22A;
         _phoneField.keyboardType = UIKeyboardTypeNumberPad;
         [_phoneField setValue:COLOR_GRAY_CCCCCC forKeyPath:@"_placeholderLabel.textColor"];
         [_phoneField setValue:kFont_Regular(13.f) forKeyPath:@"_placeholderLabel.font"];
@@ -1057,9 +1294,9 @@
 {
     if (!_priceLabel) {
         _priceLabel = [UILabel new];
-        _priceLabel.text = @"¥ 99.00";
+        _priceLabel.text = @"¥ 0.00";
         _priceLabel.textAlignment = NSTextAlignmentLeft;
-        _priceLabel.font = kFont_Medium(13.f);
+        _priceLabel.font = kFont_Medium(19.f);
         _priceLabel.textColor = COLOR_RED_EA0000;
         
     }
@@ -1072,19 +1309,28 @@
         _priceListBtn = [HPRightImageButton new];
         _priceListBtn.image = ImageNamed(@"arrow_down");
         [_priceListBtn setText:@"明细"];
+        [_priceListBtn setFont:kFont_Medium(14)];
         [_priceListBtn setColor:COLOR_GRAY_999999];
-
-        [_priceListBtn setRightSpace: getWidth(-20.f)];
+        [_priceListBtn setRightSpace: getWidth(-30.f)];
+        [_priceListBtn setAlignMode:HPRightImageBtnAlignModeLeftOrRight];
         [_priceListBtn addTarget:self action:@selector(onClickOrderListBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _priceListBtn;
 }
 
-- (UIControl *)predictBtn
+- (UIButton *)predictBtn
 {
     if (!_predictBtn) {
-        _predictBtn = [UIControl new];
-        _predictBtn.backgroundColor = COLOR_RED_EA0000;
+        _predictBtn = [UIButton new];
+        _predictBtn.backgroundColor = COLOR_GRAY_FFFFFF;
+        _predictBtn.layer.cornerRadius = 15;
+        _predictBtn.layer.borderColor = COLOR_RED_FF1213.CGColor;
+        _predictBtn.layer.borderWidth = 1;
+        _predictBtn.layer.masksToBounds = YES;
+        [_predictBtn setTitle:@"在线催单" forState:UIControlStateNormal];
+        [_predictBtn setTitleColor:COLOR_RED_FF1213 forState:UIControlStateNormal];
+        _predictBtn.titleLabel.font = kFont_Medium(12.f);
+        _predictBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [_predictBtn addTarget:self action:@selector(onClickPredictBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _predictBtn;
@@ -1132,14 +1378,33 @@
     return _orderListView;
 }
 
+- (UIButton *)communicateBtn
+{
+    if (!_communicateBtn) {
+        _communicateBtn = [UIButton new];
+        [_communicateBtn setTitle:@"免费沟通" forState:UIControlStateNormal];
+        [_communicateBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+        [_communicateBtn setImage:ImageNamed(@"communicate_serve") forState:UIControlStateNormal];
+        [_communicateBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(6.f), 0, 0)];
+        [_communicateBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, getWidth(6.f))];
+        _communicateBtn.titleLabel.font = kFont_Medium(12.f);
+        _communicateBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        [_communicateBtn addTarget:self action:@selector(onClickFreeCommicateBtn:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _communicateBtn;
+}
+
 - (HPPredictView *)predictView
 {
     if (!_predictView) {
         _predictView = [HPPredictView new];
         kWEAKSELF
         _predictView.knownBlock = ^{
+            [weakSelf.predictView show:NO];
             for (UIViewController *controller in weakSelf.navigationController.viewControllers) {
                 if ([controller isKindOfClass:[HPShareShopListController class]]) {
+//                    HPShareShopListController *shopList = [HPShareShopListController new];
+//                    shopList.isPop = YES;
                     [weakSelf.navigationController popToViewController:controller animated:YES];
                 }
             }
@@ -1149,9 +1414,26 @@
         _predictView.onlineBlock = ^{
             [weakSelf createConversationWithFriend:nil];
         };
+        
+        [_predictView setOnlineText:@"付款提醒"];
     }
     return _predictView;
 }
+
+- (void)onClickFreeCommicateBtn:(UIButton *)button
+{
+    HPLog(@"free");
+}
+
+- (void)onClickPhoneUser:(UIButton *)button
+{
+    NSString *telNumber = [NSString stringWithFormat:@"tel:%@", _model.spaceDetail.contactMobile];
+    
+    NSURL *aURL = [NSURL URLWithString: telNumber];
+    
+    if ([[UIApplication sharedApplication] canOpenURL:aURL]) {
+        [[UIApplication sharedApplication] openURL:aURL];
+    }}
 
 #pragma mark - 开启会话
 - (void)createConversationWithFriend:(UIButton *)button
@@ -1162,7 +1444,7 @@
     sendMessageCtl.hidesBottomBarWhenPushed = YES;
     [HUD HUDNotHidden:@"正在添加用户..."];
     
-    NSString *storeOwnner = [NSString stringWithFormat:@"hepai%@",_model.userId];
+    NSString *storeOwnner = [NSString stringWithFormat:@"hepai%@",_model.order.userId];
     kWEAKSELF
     [JMSGConversation createSingleConversationWithUsername:storeOwnner appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
         
@@ -1185,7 +1467,28 @@
 - (void)onClickPredictBtn:(UIControl *)button
 {
     
-    [self createSpaceRentOrder];
+    [self getConfirmReceiveOrderApi];
+}
+
+#pragma mark - 确认接单
+- (void)getConfirmReceiveOrderApi
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"isBoss"] = @([HPSingleton sharedSingleton].identifyTag);
+    dic[@"orderId"] = _model.order.orderId;
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/order/bossAcceptOrder" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+            [self.predictView show:YES];
+            [self.predictView.tipBtn setTitle:@"接单成功" forState:UIControlStateNormal];
+            self.predictView.messageLabel.text = @"租客付款后请按预定给租客提供场地";
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 - (void)onClickSelectedDaysbtn:(UIButton *)button
@@ -1193,35 +1496,27 @@
     [self.calenderView show:YES];
 }
 
-- (HPRentDuringView *)picker{
-    if (!_picker) {
-        kWEAKSELF
-        _picker = [HPRentDuringView new];
-        _picker.timeBlock = ^(NSString *startTime, NSString *endTime) {
-            
-            if (!startTime) {
-                [HPProgressHUD alertMessage:@"请选择入店时间"];
-                return;
-            }
-            
-            if (!endTime) {
-                [HPProgressHUD alertMessage:@"请选择离店时间"];
-                return;
-            }
-            weakSelf.arriveTime = startTime;
-            weakSelf.leaveTime = endTime;
-            
-            [weakSelf.arrivalLabel setText:[NSString stringWithFormat:@"入店：%@",startTime]];
-            [weakSelf.leaveLabel setText:[NSString stringWithFormat:@"离店：%@",endTime]];
-            
-        };
-    }
-    return _picker;
-}
-
 - (void)onClickManagerTimesBtn:(UIButton *)button
 {
-    [self.view addSubview:self.picker];
+    kWEAKSELF
+    self.picker = [HPRentTimePicker new];
+    self.picker.timeBlock = ^(NSString *startTime, NSString *endTime) {
+        
+        if (!startTime) {
+            [HPProgressHUD alertMessage:@"请选择入店时间"];
+            return;
+        }
+        
+        if (!endTime) {
+            [HPProgressHUD alertMessage:@"请选择离店时间"];
+            return;
+        }
+        weakSelf.arriveTime = startTime;
+        weakSelf.leaveTime = endTime;
+        [weakSelf.arrivalLabel setText:startTime];
+        [weakSelf.leaveLabel setText:endTime];
+
+    };
     [self.picker show:YES];
 }
 
@@ -1233,46 +1528,15 @@
         [self.orderListView show:YES];
 
     }else{
-        _priceListBtn.image = ImageNamed(@"arrow_down");
+        _priceListBtn.selectedImage = ImageNamed(@"arrow_down");
         [self.orderListView show:NO];
     }
 }
 
-- (void)createSpaceRentOrder
+- (void)onClickLoundBtn:(UIButton *)button
 {
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    NSArray *closeTimeArr = [self.leaveTime componentsSeparatedByString:@":"];
-    NSString *closeTime = [NSString stringWithFormat:@"%@%@",closeTimeArr.firstObject,closeTimeArr.lastObject];
-    
-    NSArray *openTimeArr = [self.arriveTime componentsSeparatedByString:@":"];
-
-    NSString *openTime = [NSString stringWithFormat:@"%@%@",openTimeArr.firstObject,openTimeArr.lastObject];
-
-    dic[@"closeTime"] = closeTime;
-    dic[@"contact"] = self.model.contact;
-    dic[@"contactMobile"] = self.model.contactMobile;
-    dic[@"days"] = @"20190302,20190415";
-    dic[@"openTime"] = openTime;
-    dic[@"remark"] = self.desField.text;
-    dic[@"shareOrder"] = @"";
-    dic[@"spaceId"] = _model.spaceId;
-    dic[@"totalFee"] = @(1);//@([_model.rent integerValue]);
-
-    [HPHTTPSever HPPostServerWithMethod:@"/v1/order" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
-//        if ([HPSingleton sharedSingleton].identifyTag == 0) {
-//
-//        }
-        if (CODE == 200) {
-            [self.predictView show:YES];
-            [HPProgressHUD alertMessage:MSG];
-
-
-        }else
-        {
-            [HPProgressHUD alertMessage:MSG];
-        }
-    } Failure:^(NSError * _Nonnull error) {
-        ErrorNet
-    }];
+    if ([self.warningBtn.currentTitle isEqualToString:@"00:00"]) {
+        [self pushVCByClassName:@"HPOwnnerTimeOutViewController" withParam:@{@"model":_model}];
+    }
 }
 @end

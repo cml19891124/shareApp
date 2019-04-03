@@ -76,7 +76,7 @@
 {
     if (!_feeLabel) {
         _feeLabel = [UILabel new];
-        _feeLabel.text = @"¥ 793.00";
+        _feeLabel.text = @"";
         _feeLabel.textColor = COLOR_RED_EA0000;
         _feeLabel.textAlignment = NSTextAlignmentRight;
         _feeLabel.font = kFont_Medium(14.f);

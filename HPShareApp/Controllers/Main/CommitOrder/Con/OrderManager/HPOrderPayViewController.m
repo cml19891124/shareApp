@@ -21,7 +21,9 @@
 
 #import "HPPayStyleCell.h"
 
+#import "HOOrderListModel.h"
 @interface HPOrderPayViewController ()<UITableViewDelegate,UITableViewDataSource>
+@property (strong, nonatomic) HOOrderListModel *model;
 
 @property (nonatomic, strong) UIImageView *headerView;
 
@@ -69,7 +71,7 @@ static NSString *payStyleCell = @"payStyleCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-
+    self.model = self.param[@"model"];
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     
     [self setPayConfig];
@@ -314,16 +316,10 @@ static NSString *payStyleCell = @"payStyleCell";
 
 #pragma mark - 确认订单详情
 
-- (void)onClickConfirmPay
-{
- 
-}
-
-
 - (void)onClickConfirmBtn:(UIButton *)button
 {
     [HPProgressHUD alertWithLoadingText:@"正在调起支付..."];
-    [self pushVCByClassName:@"HPPayResultViewController" withParam:@{}];
+    
     [self realyToPay];
     
 }
@@ -349,8 +345,8 @@ static NSString *payStyleCell = @"payStyleCell";
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
-    dict[@"totalFee"] = @(1);
-    
+    dict[@"totalFee"] = @(100);
+    dict[@"orderId"] = _model.order.orderId;
     dict[@"tradeType"] = @"APP";
     
     [HPHTTPSever HPPostServerWithMethod:@"/v1/wxpay/unifiedOrder" paraments:dict needToken:YES complete:^(id  _Nonnull responseObject) {

@@ -49,6 +49,7 @@
     
     self.day.layer.cornerRadius = 2;
     self.day.layer.masksToBounds = YES;
+
 }
 
 - (void)setIsHidden:(BOOL)isHidden
@@ -100,6 +101,8 @@
     }else{
         self.day.textColor = COLOR_GRAY_E4E4E4;
     }
+    
+
 }
 - (void)drawLine
 {

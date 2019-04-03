@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) HPOrderlModel *order;
 
-@property (nonatomic, copy) NSString *orderDetail;
-
 @property (nonatomic, strong) HPSpaceDetailModel *spaceDetail;
 
 @end

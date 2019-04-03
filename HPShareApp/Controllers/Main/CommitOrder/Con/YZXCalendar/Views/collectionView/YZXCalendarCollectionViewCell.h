@@ -25,6 +25,8 @@
 
 @property (nonatomic, assign) BOOL isHidden;
 
+@property (assign, nonatomic) BOOL userActivity;
+
 - (void)layoutContentViewOfCollectionViewCellWithCellIndxePath:(NSIndexPath *)indexPath model:(YZXCalendarModel *)model;
 
 - (void)changeContentViewBackgroundColor:(UIColor *)backgroundColor;

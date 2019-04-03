@@ -95,6 +95,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     YZXCalendarCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:collectionViewCellIdentify forIndexPath:indexPath];
     [cell layoutContentViewOfCollectionViewCellWithCellIndxePath:indexPath
                                                            model:self.collectionViewData[indexPath.section]];
+    cell.userActivity = self.userActivity;
     //默认情况下显示的状态
     if (cell.day.text.length) {
         cell.isHidden = NO;

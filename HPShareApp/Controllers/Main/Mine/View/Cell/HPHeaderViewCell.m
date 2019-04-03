@@ -28,6 +28,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        [self.subviews performSelector:@selector(removeAllObjects)];
         self.orderNameArray = @[@"待接单",@"待付款",@"待拼租",@"退款/售后",@"待评价"];
         
         self.businessImageArray = @[@"me_business_store",@"me_business_order",@"me_bussness_wallet",@"me_business_name"];
@@ -66,8 +67,6 @@
 
     [self.contentView addSubview:self.editBtn];
 
-    if ([HPSingleton sharedSingleton].identifyTag == 0) {//租客的
-//        [self.optionalBtn setTitle:@"切换为店主" forState:UIControlStateNormal];
         [self.contentView addSubview:self.myInfoView];
 
         CGFloat orderBtnW = 60.f;
@@ -75,14 +74,14 @@
         CGFloat space = (kScreenWidth - orderBtnW * 4)/5;
         
         for (int i = 0; i < self.myInfoArray.count; i++) {
-            HPOrderBtn *orderBtn = [HPOrderBtn new];
-            orderBtn.nameLabel.text = self.myInfoArray[i];
-            orderBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
-            orderBtn.nameLabel.font = kFont_Medium(13.f);
-            orderBtn.tag = 4000 + i;
-            [self.myInfoView addSubview:orderBtn];
-            [orderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
-            [orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            self.orderBtn = [HPOrderBtn new];
+            self.orderBtn.nameLabel.text = self.myInfoArray[i];
+            self.orderBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
+            self.orderBtn.nameLabel.font = kFont_Medium(13.f);
+            self.orderBtn.tag = 4000 + i;
+            [self.myInfoView addSubview:self.orderBtn];
+            [self.orderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
+            [self.orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(space + i * (orderBtnW + space));
                 make.top.mas_equalTo(getWidth(2.f));
                 make.width.mas_equalTo(orderBtnW);
@@ -95,12 +94,12 @@
         [self.rentView addSubview:self.orderTipLabel];
         
         for (int i = 0; i < self.rentImageArray.count; i ++) {
-            HPAlignCenterButton *busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.rentImageArray[i])];
-            [busiBtn setText:self.rentArray[i]];
-            busiBtn.tag = 4500 + i;
-            [busiBtn addTarget:self action:@selector(onClickedRentOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
-            [self.rentView addSubview:busiBtn];
-            [busiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            self.busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.rentImageArray[i])];
+            [self.busiBtn setText:self.rentArray[i]];
+            self.busiBtn.tag = 4500 + i;
+            [self.busiBtn addTarget:self action:@selector(onClickedRentOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
+            [self.rentView addSubview:self.busiBtn];
+            [self.busiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(getWidth(20.f) + i * getWidth(68.f));
                 make.width.height.mas_equalTo(getWidth(40.f));
                 make.top.mas_equalTo(self.orderTipLabel.mas_bottom).offset(getWidth(30.f));
@@ -108,14 +107,25 @@
                 
             }];
         }
-        
-    }else{
-//        [self.optionalBtn setTitle:@"切换为租客" forState:UIControlStateNormal];
-
-    }
 
     [self.contentView addSubview:self.optionalBtn];
     
+}
+
+- (HPAlignCenterButton *)busiBtn
+{
+    if (!_busiBtn) {
+        _busiBtn = [HPAlignCenterButton new];
+    }
+    return _busiBtn;
+}
+
+- (HPOrderBtn *)orderBtn
+{
+    if (!_orderBtn) {
+        _orderBtn = [HPOrderBtn new];
+    }
+    return _orderBtn;
 }
 
 - (void)onClickedOrderBtn:(HPAlignCenterButton *)button
@@ -224,7 +234,6 @@
         _iconImageView.userInteractionEnabled = YES;
         _iconImageView.layer.cornerRadius = getWidth(50.f)/2;
         _iconImageView.layer.masksToBounds = YES;
-//        _iconImageView.image = ImageNamed(@"personal_center_not_login_head");
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapHeaderView:)];
         [_iconImageView addGestureRecognizer:tap];
     }
@@ -385,7 +394,7 @@
 - (void)setIdentifyTag:(NSInteger)identifyTag
 {
     _identifyTag = identifyTag;
-    
+        
     [self updateSubviewsUI];
     
     [self updateSubviewsUIMasonry];
@@ -394,12 +403,6 @@
 - (void)updateSubviewsUI
 {
     if (self.identifyTag == 0) {//租客的
-        
-        self.orderStatesView.hidden = YES;
-        
-        self.myInfoView.hidden = NO;
-        
-        self.rentView.hidden = NO;
 
         [self.contentView addSubview:self.myInfoView];
         
@@ -428,12 +431,12 @@
         [self.rentView addSubview:self.orderTipLabel];
         
         for (int i = 0; i < self.rentImageArray.count; i ++) {
-            HPAlignCenterButton *busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.rentImageArray[i])];
-            [busiBtn setText:self.rentArray[i]];
-            busiBtn.tag = 4500 + i;
-            [busiBtn addTarget:self action:@selector(onClickedRentOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
-            [self.rentView addSubview:busiBtn];
-            [busiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            self.busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.rentImageArray[i])];
+            [self.busiBtn setText:self.rentArray[i]];
+            self.busiBtn.tag = 4500 + i;
+            [self.busiBtn addTarget:self action:@selector(onClickedRentOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
+            [self.rentView addSubview:self.busiBtn];
+            [self.busiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(getWidth(20.f) + i * getWidth(68.f));
                 make.width.height.mas_equalTo(getWidth(40.f));
                 make.top.mas_equalTo(self.orderTipLabel.mas_bottom).offset(getWidth(30.f));
@@ -441,14 +444,13 @@
                 
             }];
         }
+        self.orderStatesView.hidden = YES;
+        
+        self.myInfoView.hidden = NO;
+        
+        self.rentView.hidden = NO;
         
     }else{//店主的
-        
-        self.myInfoView.hidden = YES;
-
-        self.orderStatesView.hidden = NO;
-
-        self.rentView.hidden = YES;
 
         [self.contentView addSubview:self.orderStatesView];
         
@@ -459,25 +461,25 @@
         CGFloat space = (kScreenWidth - orderBtnW * 5)/6;
         
         for (int i = 0; i < self.orderNameArray.count; i++) {
-            HPOrderBtn *orderBtn = [HPOrderBtn new];
-            orderBtn.nameLabel.text = self.orderNameArray[i];
-            orderBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
-            orderBtn.nameLabel.font = kFont_Medium(13.f);
-            orderBtn.tag = 4600 + i;
+            self.orderBtn = [HPOrderBtn new];
+            self.orderBtn.nameLabel.text = self.orderNameArray[i];
+            self.orderBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
+            self.orderBtn.nameLabel.font = kFont_Medium(13.f);
+            self.orderBtn.tag = 4600 + i;
             if (i == 4600) {
-                self.receiveBtn = orderBtn;
+                self.receiveBtn = self.orderBtn;
             }else if (i == 4601) {
-                self.topayBtn = orderBtn;
+                self.topayBtn = self.orderBtn;
             }else if (i == 4602) {
-                self.toRentBtn = orderBtn;
+                self.toRentBtn = self.orderBtn;
             }else if (i == 4603) {
-                self.returnBtn = orderBtn;
+                self.returnBtn = self.orderBtn;
             }else if (i == 4604) {
-                self.commentBtn = orderBtn;
+                self.commentBtn = self.orderBtn;
             }
-            [self.orderStatesView addSubview:orderBtn];
-            [orderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
-            [orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            [self.orderStatesView addSubview:self.orderBtn];
+            [self.orderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
+            [self.orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(space + i * (orderBtnW + space));
                 make.top.mas_equalTo(getWidth(2.f));
                 make.width.mas_equalTo(orderBtnW);
@@ -486,12 +488,12 @@
         }
         
         for (int j = 0; j < self.businessNameArray.count; j ++) {
-            HPAlignCenterButton *busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.businessImageArray[j])];
-            [busiBtn setText:self.businessNameArray[j]];
-            busiBtn.tag = 4100 + j;
-            [busiBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
-            [self.businessView addSubview:busiBtn];
-            [busiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            self.busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.businessImageArray[j])];
+            [self.busiBtn setText:self.businessNameArray[j]];
+            self.busiBtn.tag = 4100 + j;
+            [self.busiBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
+            [self.businessView addSubview:self.busiBtn];
+            [self.busiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(getWidth(30.f) + j * getWidth(80.f));
                 make.width.height.mas_equalTo(getWidth(40.f));
                 make.top.mas_equalTo(getWidth(15.f));
@@ -499,6 +501,11 @@
                 
             }];
         }
+        self.myInfoView.hidden = YES;
+        
+        self.orderStatesView.hidden = NO;
+        
+        self.rentView.hidden = YES;
     }
     
 }

@@ -151,6 +151,27 @@
 
 }
 
++ (NSString *)gettimeInternalFromPassedTimeToNowDate:(NSString *)passTime
+{
+    NSDate *nowDate = [NSDate date]; // 当前时间
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyy-MM-dd HH-mm-ss";
+//    NSDate *creat = [formatter dateFromString:passTime]; // 传入的时间
+    
+    // 这里有个需要注意的地方，不要将时间戳的字符串直接作为creat_time ，如果是时间戳，那么
+//    NSString *timeString = @"1532754000"; // 时间戳字符串
+    NSTimeInterval time = [passTime doubleValue]/1000;//传入的时间戳str如果是精确到毫秒的记得要/1000 (注意： 这句话不要全盘复制，如果传入的时间戳没有精确到毫秒不要除1000)
+    NSDate *creat =[NSDate dateWithTimeIntervalSince1970:time];
+    
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendarUnit unit = NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+    NSDateComponents *compas = [calendar components:unit fromDate:creat toDate:nowDate options:0];
+    HPLog(@"year=%zd  month=%zd  day=%zd hour=%zd  minute=%zd",compas.year,compas.month,compas.day,compas.hour,compas.minute);
+    NSString *leftTime = [NSString stringWithFormat:@"%zd小时:%zd分钟",compas.hour,compas.minute];
+    return leftTime;
+}
+
 + (NSString *)getPassTimeSometimeWithHorFormatter:(NSDate *)date
 {
     //首先，我们设置一下时间格式：

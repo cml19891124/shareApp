@@ -42,8 +42,8 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
-        make.bottom.mas_equalTo(self).offset(-g_bottomSafeAreaHeight + getWidth(-60.f));
-        make.height.mas_equalTo(getWidth(40.f) * 8);
+        make.bottom.mas_equalTo(self);
+        make.height.mas_equalTo(getWidth(40.f) * (self.days.count + 1));
     }];
 
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -105,7 +105,7 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
 {
     if (!_feeLabel) {
         _feeLabel = [UILabel new];
-        _feeLabel.text = @"¥ 793.00";
+        _feeLabel.text = @"¥ 0.00";
         _feeLabel.textColor = COLOR_RED_EA0000;
         _feeLabel.textAlignment = NSTextAlignmentRight;
         _feeLabel.font = kFont_Medium(14.f);
@@ -142,7 +142,7 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
         _tableView.separatorColor = UIColor.clearColor;
         [_tableView setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
         [_tableView registerClass:HPOrderInfoListCell.class forCellReuseIdentifier:orderInfoListCell];
-        [_tableView registerClass:HPTotalFeeCell.class forCellReuseIdentifier:totalFeeCell];
+//        [_tableView registerClass:HPTotalFeeCell.class forCellReuseIdentifier:totalFeeCell];
 
     }
     return _tableView;
@@ -152,7 +152,7 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 7;
+    return self.days.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -163,11 +163,8 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     HPOrderInfoListCell *cell = [tableView dequeueReusableCellWithIdentifier:orderInfoListCell];
-    
-    if (indexPath.row == 6) {
-        HPTotalFeeCell *cell = [tableView dequeueReusableCellWithIdentifier:totalFeeCell];
-        return cell;
-    }
+    cell.dateLabel.text = self.days[indexPath.row];
+    cell.priceLabel.text = [NSString stringWithFormat:@"¥%.2f",self.model.order.totalFee.floatValue/self.days.count];
     return cell;
 }
 
@@ -179,5 +176,16 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
 - (void)onTapModalOutSide
 {
     [self show:NO];
+}
+
+- (void)setModel:(HOOrderListModel *)model
+{
+    _model = model;
+    self.days = [model.order.days componentsSeparatedByString:@","];
+    [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(getWidth(40.f) * (self.days.count + 1)+getWidth(50.f));
+    }];
+    self.feeLabel.text = self.model.order.totalFee?[NSString stringWithFormat:@"¥%@",self.model.order.totalFee]:@"--";
+    [self.tableView reloadData];
 }
 @end

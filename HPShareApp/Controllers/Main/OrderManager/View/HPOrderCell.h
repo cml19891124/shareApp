@@ -19,7 +19,7 @@ typedef void (^PayOrderClickBlock)(NSInteger payOrder);
 typedef NS_ENUM(NSInteger, PayOrder){
     
     PayOrderToCancel = 3000,//待支付
-    PayOrderToPay//退款
+    PayOrderToPay//右边支付按钮
 };
 NS_ASSUME_NONNULL_BEGIN
 

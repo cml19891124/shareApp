@@ -49,7 +49,7 @@
 
     }];
     
-    CGFloat priceW = BoundWithSize(self.priceLabel.text, kScreenWidth, 14.f).size.width;
+    CGFloat priceW = BoundWithSize(self.priceLabel.text, kScreenWidth, 14.f).size.width + 20;
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(getWidth(-15.f));
         make.centerY.mas_equalTo(self.contentView);

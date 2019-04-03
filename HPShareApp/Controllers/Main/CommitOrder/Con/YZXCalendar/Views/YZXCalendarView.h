@@ -13,6 +13,7 @@
 
 @interface YZXCalendarView : UIView <YZXCalendarDelegate>
 
+@property (strong, nonatomic) NSMutableArray *hasOrderArray;
 
 /**
  自定义初始化

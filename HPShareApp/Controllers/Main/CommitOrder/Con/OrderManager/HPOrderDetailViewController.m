@@ -14,6 +14,8 @@
 
 #import "HPAttributeLabel.h"
 
+#import "HPQuitOrderView.h"
+
 @interface HPOrderDetailViewController ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -26,6 +28,7 @@
 
 @property (nonatomic, strong) UIButton *warningBtn;
 
+@property (strong, nonatomic) HPQuitOrderView *quitView;
 
 /**
  剩余时间
@@ -129,7 +132,7 @@
     }
     [self.view setBackgroundColor:COLOR_GRAY_F9FAFD];
     
-    self.model = self.param[@"order"];
+    self.model = self.param[@"model"];
 
     [self setUpCommitSubviews];
     
@@ -141,15 +144,28 @@
 
 - (void)loadData
 {
-//    [self.thumbView sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:ImageNamed(@"loading_logo_small")];
+    [self.thumbView sd_setImageWithURL:[NSURL URLWithString:_model.spaceDetail.picture.url] placeholderImage:ImageNamed(@"loading_logo_small")];
+    
+    self.nameLabel.text = _model.spaceDetail.title;
+    
+    self.rentDaysLabel.text = [NSString stringWithFormat:@"租期:%@",_model.order.days];
+    
+    self.duringDayslabel.text = [NSString stringWithFormat:@"入离店:%@",_model.spaceDetail.shareTime];
+    
+    self.addressLabel.text = [NSString stringWithFormat:@"地址:%@",_model.spaceDetail.address];
+    
+    self.ownnerSubLabel.text = _model.spaceDetail.contact;
+    
+    self.phoneSubLabel.text = _model.spaceDetail.contactMobile;
+    
+    self.orderSubLabel.text = _model.order.orderNo;
+    
+    self.createOrderSubLabel.text = _model.order.createTime;
+    
+    self.amountSubLabel.text = _model.spaceDetail.rent;
+    
+    self.toPaySubLabel.text = [NSString stringWithFormat:@"¥%@",_model.spaceDetail.rent];
 
-//    self.nameLabel.text = _model.title;
-    
-    //    self.locationLabel.text = _model.address;
-    //
-    //    self.spaceInfoLabel.text = _model.address;
-    
-//    self.addressLabel.text = _model.address;
 }
 
 - (UILabel *)nameLabel
@@ -188,8 +204,8 @@
     
     [self.headerView addSubview:self.warningBtn];
 
-    NSString *lefttime = @"剩余：23小时49分";
-    self.leftLabel = [HPAttributeLabel getTitle:lefttime andFromFont:kFont_Medium(12.f) andToFont:kFont_Bold(14.f) andFromColor:COLOR_GRAY_FFFFFF andToColor:COLOR_GRAY_FFFFFF andFromRange:NSMakeRange(0, 3) andToRange:NSMakeRange(3,lefttime.length - 3) andLineSpace:0 andNumbersOfLine:0 andTextAlignment:NSTextAlignmentCenter andLineBreakMode:NSLineBreakByWordWrapping];
+    NSString *leftTime = [NSString stringWithFormat:@"剩余:%@", [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime]];
+    self.leftLabel = [HPAttributeLabel getTitle:leftTime andFromFont:kFont_Medium(12.f) andToFont:kFont_Bold(14.f) andFromColor:COLOR_GRAY_FFFFFF andToColor:COLOR_GRAY_FFFFFF andFromRange:NSMakeRange(0, 3) andToRange:NSMakeRange(3,leftTime.length - 3) andLineSpace:0 andNumbersOfLine:0 andTextAlignment:NSTextAlignmentCenter andLineBreakMode:NSLineBreakByWordWrapping];
     
     [self.headerView addSubview:self.leftLabel];
 
@@ -274,7 +290,7 @@
     }else if(kScreenHeight == 568){
         
     }else{
-        height = getWidth(100.f);
+        height = getWidth(110.f);
     }
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.mas_equalTo(self.scrollView);
@@ -979,12 +995,60 @@
 
 - (void)onClickCancelBtn:(UIButton *)button
 {
+    kWEAKSELF
+    [self.view addSubview:weakSelf.quitView];
+    self.quitView.signTextView.placehText = @"  请填写取消此订单原因";
     
+    [self.quitView show:YES];
+    self.quitView.quitBlock = ^{
+        HPLog(@"5555");
+        [weakSelf.quitView show:NO];
+        [weakSelf cancelOrder:weakSelf.model];
+        
+    };
 }
 
+- (HPQuitOrderView *)quitView
+{
+    if (!_quitView) {
+        
+        _quitView = [HPQuitOrderView new];
+        kWEAKSELF
+        _quitView.holderBlock = ^{
+            HPLog(@"dfsdg");
+            [weakSelf.quitView show:NO];
+        };
+        
+    }
+    return _quitView;
+}
+
+//租客取消订单
+- (void)cancelOrder:(HOOrderListModel *)model
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"cancelReason"] = self.quitView.signTextView.text;
+    dic[@"orderId"] = model.order.orderId;
+    
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/order/tenantCancel" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+            
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
 - (void)onClickPayBtn:(UIButton *)button
 {
-    [self pushVCByClassName:@"HPOrderPayViewController" withParam:@{@"order":@"gsgffg"}];
+    if (self.focusBtn.selected) {
+        [self pushVCByClassName:@"HPOrderPayViewController" withParam:@{@"model":_model}];
+
+    }else{
+        [HPProgressHUD alertMessage:@"请先阅读下单须知"];
+    }
 }
 
 - (void)onClickAddOrderBtn:(UIButton *)button

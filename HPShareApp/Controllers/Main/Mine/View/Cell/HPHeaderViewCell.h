@@ -99,7 +99,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSArray *rentImageArray;
 
-@property (nonatomic, strong) HPAlignCenterButton *orderBtn;
+@property (nonatomic, strong) HPOrderBtn *orderBtn;
+
+@property (strong, nonatomic) HPAlignCenterButton *busiBtn;
 
 @property (nonatomic, strong) HPOrderBtn *receiveBtn;
 

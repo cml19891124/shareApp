@@ -14,9 +14,15 @@
 
 #import "HPTotalFeeCell.h"
 
+#import "HOOrderListModel.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPOrderInfoListView : HPBaseDialogView<UITableViewDelegate,UITableViewDataSource>
+
+@property (strong, nonatomic) NSArray * days;
+
+@property (strong, nonatomic) HOOrderListModel *model;
 
 @property (nonatomic, strong) UITableView *tableView;
 

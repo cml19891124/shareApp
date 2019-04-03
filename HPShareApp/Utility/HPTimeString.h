@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 //获取当前时间戳  （以毫秒为单位）
 
 +(NSString *)getNowTimeTimestamp:(NSString *)timeStr;
+//计算时间差
++ (NSString *)gettimeInternalFromPassedTimeToNowDate:(NSString *)passTime;
 
 /**
  今天/昨天的时间字符串
