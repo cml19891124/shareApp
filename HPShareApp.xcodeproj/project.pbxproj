@@ -48,6 +48,8 @@
 		7A09A2DA2254D19500A68FBD /* HPImergencyManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2D92254D19400A68FBD /* HPImergencyManagerViewController.m */; };
 		7A09A2E52254E73F00A68FBD /* HPUserReceiveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2E42254E73F00A68FBD /* HPUserReceiveView.m */; };
 		7A09A2EA2255DA4100A68FBD /* HPUserImergencyDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2E92255DA4100A68FBD /* HPUserImergencyDetailViewController.m */; };
+		7A09A2ED22562A1B00A68FBD /* HPCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2EC22562A1B00A68FBD /* HPCommentViewController.m */; };
+		7A09A2F02256302D00A68FBD /* MyTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2EE2256302D00A68FBD /* MyTextView.m */; };
 		7A54483F21BAD9B2001301F3 /* HPAreaModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54483E21BAD9B2001301F3 /* HPAreaModel.m */; };
 		7A54485721C169AE001301F3 /* HPPartyCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485621C169AE001301F3 /* HPPartyCenterController.m */; };
 		7A54485A21C16A48001301F3 /* HPPartyCenterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485921C16A48001301F3 /* HPPartyCenterModel.m */; };
@@ -594,6 +596,10 @@
 		7A09A2E42254E73F00A68FBD /* HPUserReceiveView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUserReceiveView.m; sourceTree = "<group>"; };
 		7A09A2E82255DA4100A68FBD /* HPUserImergencyDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPUserImergencyDetailViewController.h; sourceTree = "<group>"; };
 		7A09A2E92255DA4100A68FBD /* HPUserImergencyDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPUserImergencyDetailViewController.m; sourceTree = "<group>"; };
+		7A09A2EB22562A1B00A68FBD /* HPCommentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPCommentViewController.h; sourceTree = "<group>"; };
+		7A09A2EC22562A1B00A68FBD /* HPCommentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPCommentViewController.m; sourceTree = "<group>"; };
+		7A09A2EE2256302D00A68FBD /* MyTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTextView.m; sourceTree = "<group>"; };
+		7A09A2EF2256302D00A68FBD /* MyTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTextView.h; sourceTree = "<group>"; };
 		7A54483D21BAD9B2001301F3 /* HPAreaModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaModel.h; sourceTree = "<group>"; };
 		7A54483E21BAD9B2001301F3 /* HPAreaModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAreaModel.m; sourceTree = "<group>"; };
 		7A54485521C169AE001301F3 /* HPPartyCenterController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPartyCenterController.h; sourceTree = "<group>"; };
@@ -3147,6 +3153,8 @@
 				E6801FBF2236558C002B1133 /* HPPayResultViewController.m */,
 				E67C68802237483600CF2297 /* HPReturnFundsViewController.h */,
 				E67C68812237483600CF2297 /* HPReturnFundsViewController.m */,
+				7A09A2EB22562A1B00A68FBD /* HPCommentViewController.h */,
+				7A09A2EC22562A1B00A68FBD /* HPCommentViewController.m */,
 			);
 			path = Con;
 			sourceTree = "<group>";
@@ -3160,6 +3168,8 @@
 				E6801FBC2236402E002B1133 /* HPOrderCell.m */,
 				7A09A2C32253629A00A68FBD /* HPRentCancelView.h */,
 				7A09A2C42253629A00A68FBD /* HPRentCancelView.m */,
+				7A09A2EF2256302D00A68FBD /* MyTextView.h */,
+				7A09A2EE2256302D00A68FBD /* MyTextView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4281,8 +4291,10 @@
 				E622A9CD21C376E8007C35BC /* HPlaceholdTextView.m in Sources */,
 				E61E27AB21C8D68000CD5288 /* EBBannerView+Categories.m in Sources */,
 				E629AB12224A014600CF0378 /* YZXCustomDateBottomView.m in Sources */,
+				7A09A2F02256302D00A68FBD /* MyTextView.m in Sources */,
 				E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */,
 				E69E0E8E21F95F2D0094837A /* HPAttributeLabel.m in Sources */,
+				7A09A2ED22562A1B00A68FBD /* HPCommentViewController.m in Sources */,
 				E6D75F2821AD463000B2067C /* HPLoginByPasswordController.m in Sources */,
 				E68A77BD21F321BD00083A90 /* MJPhotoProgressView.m in Sources */,
 				7A09A2E52254E73F00A68FBD /* HPUserReceiveView.m in Sources */,

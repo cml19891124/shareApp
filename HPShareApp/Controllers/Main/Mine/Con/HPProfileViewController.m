@@ -571,7 +571,7 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
     
     if (indexPath.section == 1) {
         HPLog(@"application");
-        
+        [self pushVCByClassName:@"HPCommentViewController"];
     }
     
     if (indexPath.section == 2) {

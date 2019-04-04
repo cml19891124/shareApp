@@ -203,8 +203,6 @@ static NSString *orderCell = @"orderCell";
     
     [self.headerView addSubview:self.titleLabel];
     
-    [self.headerView addSubview:self.backBtn];
-    
     [self.view addSubview:self.orderItemView];
     
     [self setupShadowOfPanel:self.orderItemView];
