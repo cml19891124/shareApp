@@ -18,8 +18,6 @@
 
 #import "HPOrderInfoListView.h"
 
-#import "HPRightImageButton.m"
-
 #import "HPUserReceiveView.h"
 
 @interface HPUserImergencyDetailViewController ()<UIScrollViewDelegate>
@@ -130,10 +128,50 @@
 
 @implementation HPUserImergencyDetailViewController
 
+- (HPUserReceiveView *)receiveView
+{
+    if (!_receiveView) {
+        kWEAKSELF
+        _receiveView = [HPUserReceiveView new];
+        _receiveView.okBlock = ^{
+            [weakSelf getConfirmOrderApi];
+        };
+    }
+    return _receiveView;
+}
+
+- (void)getConfirmOrderApi
+{
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/order/confirm" isNeedToken:YES paraments:@{@"orderId":@(_model.order.orderId.integerValue)} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+            [self.receiveView show:NO];
+            [self.navigationController popViewControllerAnimated:YES];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
 
 - (void)onClickBack:(UIButton *)UIButton
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self.view addSubview:self.receiveView];
+    
+    [self.receiveView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
+    [self.receiveView show:NO];
 }
 
 - (void)viewDidLoad {
@@ -164,7 +202,7 @@
     
     self.rentDaysLabel.text = [NSString stringWithFormat:@"租期:%@",_model.order.days];
     
-    self.duringDayslabel.text = [NSString stringWithFormat:@"入离店:%@",_model.spaceDetail.shareTime];
+    self.duringDayslabel.text = [NSString stringWithFormat:@"入离店:%@-%@",_model.order.openTime,_model.order.closeTime];
     
     self.addressLabel.text = [NSString stringWithFormat:@"地址:%@",_model.spaceDetail.address];
     
@@ -176,19 +214,26 @@
     
     self.createOrderSubLabel.text = _model.order.createTime;
     
-    self.amountSubLabel.text = _model.spaceDetail.rent;
+    self.amountSubLabel.text = [NSString stringWithFormat:@"¥%@",_model.order.totalFee];
     
     self.toPaySubLabel.text = [NSString stringWithFormat:@"¥%@",_model.spaceDetail.rent];
     
-    NSArray * orderArray = [_model.order.days componentsSeparatedByString:@","];
+//    NSArray * orderArray = [_model.order.days componentsSeparatedByString:@","];
 
     self.priceLabel.text = [NSString stringWithFormat:@"¥%@",self.model.order.totalFee];
     self.orderListView.model = self.model;
 
     
     if ([HPSingleton sharedSingleton].identifyTag == 0) {
-        [self.quitBtn setTitle:@"订单投诉" forState:UIControlStateNormal];
-        [self.predictBtn setTitle:@"确认收货" forState:UIControlStateNormal];
+        if (_model.order.status.integerValue == 3) {
+            self.titleLabel.text = @"待收货";
+            [self.cancelBtn setTitle:@"订单投诉" forState:UIControlStateNormal];
+            [self.payBtn setTitle:@"确认收货" forState:UIControlStateNormal];
+        }else if (_model.order.status.integerValue == 11){
+            self.titleLabel.text = @"交易完成";
+            [self.cancelBtn setTitle:@"查看评价" forState:UIControlStateNormal];
+            [self.payBtn setTitle:@"再来一单" forState:UIControlStateNormal];
+        }
         
     }
 }
@@ -200,7 +245,7 @@
         _priceListBtn.image = ImageNamed(@"arrow_down");
         [_priceListBtn setText:@"明细"];
         [_priceListBtn setColor:COLOR_GRAY_999999];
-        [_priceListBtn setRightSpace: getWidth(-30.f)];
+//        [_priceListBtn setRightSpace: getWidth(-30.f)];
         [_priceListBtn addTarget:self action:@selector(onClickOrderListBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _priceListBtn;
@@ -345,7 +390,7 @@
 {
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view.mas_bottom).offset(-g_bottomSafeAreaHeight + getWidth(-75.f));
+        make.bottom.mas_equalTo(self.view.mas_bottom).offset(-g_bottomSafeAreaHeight + getWidth(-50.f));
     }];
     
     CGFloat height = 0.00;
@@ -408,18 +453,17 @@
 
     }];
     
-    CGFloat rentW = BoundWithSize(self.rentDaysLabel.text, kScreenWidth, 14.f).size.width;
     [self.rentDaysLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
         make.height.mas_equalTo(self.rentDaysLabel.font.pointSize);
         make.left.mas_equalTo(self.nameLabel);
-        make.width.mas_equalTo(rentW);
+        make.width.mas_equalTo((kScreenWidth - getWidth(115))/2 - 20);
     }];
     
     [self.duringDayslabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
         make.height.mas_equalTo(self.duringDayslabel.font.pointSize);
-        make.left.mas_equalTo(self.rentDaysLabel.mas_right).offset(getWidth(20.f));
+        make.left.mas_equalTo(self.rentDaysLabel.mas_right);
         make.right.mas_equalTo(getWidth(-15.f));
     }];
     
@@ -596,24 +640,26 @@
         make.width.mas_equalTo(kScreenWidth/4);
     }];
     
-    [self.priceListBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.top.mas_equalTo(self.bottomView);
-        make.left.mas_equalTo(self.priceLabel.mas_right);
-        make.width.mas_equalTo(kScreenWidth/5);
-    }];
-    
+    CGFloat btnW = BoundWithSize(self.payBtn.titleLabel.text, kScreenWidth, 12.f).size.width + 20;
     [self.payBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.bottomView).offset(getWidth(-15.f));
         make.centerY.mas_equalTo(self.bottomView);
-        make.width.mas_equalTo(kScreenWidth/4);
+        make.width.mas_equalTo(btnW);
         make.height.mas_equalTo(getWidth(30));
     }];
     
     [self.cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.payBtn.mas_left).offset(getWidth(-15.f));
         make.centerY.mas_equalTo(self.bottomView);
-        make.width.mas_equalTo(kScreenWidth/4);
+        make.width.mas_equalTo(btnW);
         make.height.mas_equalTo(getWidth(30));
+    }];
+    
+    CGFloat listW = BoundWithSize(self.priceListBtn.text, kScreenWidth, 14.f).size.width + 30.f;
+    [self.priceListBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.top.mas_equalTo(self.bottomView);
+        make.right.mas_equalTo(self.cancelBtn.mas_left).offset(getWidth(-15.f));
+        make.width.mas_equalTo(listW);
     }];
     
     [self.orderListView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -650,7 +696,10 @@
         _cancelBtn.layer.borderColor = COLOR_GRAY_CCCCCC.CGColor;
         _cancelBtn.layer.borderWidth = 1;
         _cancelBtn.layer.masksToBounds = YES;
+        [_cancelBtn setTitleColor:COLOR_GRAY_666666 forState:UIControlStateNormal];
         [_cancelBtn setTitle:@"取消订单" forState:UIControlStateNormal];
+        _cancelBtn.titleLabel.font = kFont_Medium(12.f);
+
         _cancelBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [_cancelBtn addTarget:self action:@selector(onClickCancelBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -666,7 +715,9 @@
         _payBtn.layer.borderColor = COLOR_RED_FF1213.CGColor;
         _payBtn.layer.borderWidth = 1;
         _payBtn.layer.masksToBounds = YES;
+        _payBtn.titleLabel.font = kFont_Medium(12.f);
         [_payBtn setTitle:@"在线催单" forState:UIControlStateNormal];
+        [_payBtn setTitleColor:COLOR_RED_FF1213 forState:UIControlStateNormal];
         _payBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [_payBtn addTarget:self action:@selector(onClickPayBtn:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -761,7 +812,7 @@
         _rentDaysLabel.textColor = COLOR_GRAY_999999;
         _rentDaysLabel.textAlignment = NSTextAlignmentLeft;
         _rentDaysLabel.font = kFont_Regular(14.f);
-        _rentDaysLabel.text = @"租期：7天";
+        _rentDaysLabel.text = @"租期：0天";
     }
     return _rentDaysLabel;
 }
@@ -989,7 +1040,7 @@
         _amountSubLabel.textColor = COLOR_GRAY_666666;
         _amountSubLabel.textAlignment = NSTextAlignmentRight;
         _amountSubLabel.font = kFont_Regular(14.f);
-        _amountSubLabel.text = @"¥ 10000";
+        _amountSubLabel.text = @"¥ 0.00";
     }
     return _amountSubLabel;
 }
@@ -1129,10 +1180,11 @@
     }];
 }
 
-- (HPReceiveView *)receiView
+- (HPUserReceiveView *)receiView
 {
     if (!_receiveView) {
-        _receiveView = [HPReceiveView new];
+        _receiveView = [HPUserReceiveView new];
+        
     }
     return _receiveView;
 }
@@ -1142,7 +1194,10 @@
     if ([button.currentTitle  isEqualToString:@"确认收货"]) {
         [self.receiveView show:YES];
         
-//        self.receiveView.
+        
+    }else if([button.currentTitle  isEqualToString:@"评价此单"])
+    {
+        
     }
 }
 

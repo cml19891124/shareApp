@@ -633,7 +633,7 @@
     
     [self.contactInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.rentInfoView);
-        make.top.mas_equalTo(self.rentInfoView.mas_bottom).offset(getWidth(15.f));
+        make.top.mas_equalTo(self.rentInfoView.mas_bottom);
         make.height.mas_equalTo(getWidth(140.f));
     }];
     

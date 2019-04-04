@@ -14,7 +14,6 @@ typedef NS_ENUM(NSInteger, HPMineOrderCellIndex) {
     HPMineOrderCellToReceive = 4400,
     HPMineOrderCellToPay,
     HPMineOrderCellToRent,
-    HPMineOrderCellToReturnFuns,
     HPMineOrderCellToComment,
     HPMineOrderCellAllOrders
 };

@@ -156,7 +156,7 @@
         make.top.mas_equalTo(self.desLabel.mas_bottom).offset(getWidth(10.f));
     }];
     
-    CGFloat topayW = BoundWithSize(self.topayBtn.currentTitle, kScreenWidth, 12.f).size.width + 20.f;
+    CGFloat topayW = BoundWithSize(@"在线催单", kScreenWidth, 12.f).size.width + 20.f;
 
     [self.topayBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(getWidth(-10.f));
@@ -357,7 +357,7 @@
         _topayBtn.backgroundColor = COLOR_GRAY_FFFFFF;
         _topayBtn.layer.borderColor = COLOR_RED_EA0000.CGColor;
         _topayBtn.layer.borderWidth = 1;
-        [_topayBtn setTitle:@"在线催单" forState:UIControlStateNormal];
+        [_topayBtn setTitle:@"" forState:UIControlStateNormal];
         [_topayBtn setTitleColor:COLOR_RED_EA0000 forState:UIControlStateNormal];
         [_topayBtn addTarget:self action:@selector(clickManagerFunds:) forControlEvents:UIControlEventTouchUpInside];
         _topayBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
@@ -440,8 +440,7 @@
     
     if ([model.order.status integerValue] == 1) {
         self.waitingReceiveLabel.text = @"等待商家接单";
-        [self.cancelBtn setTitle:@"取消订单" forState:UIControlStateNormal];
-        [self.topayBtn setTitle:@"在线催单" forState:UIControlStateNormal];
+
         [self.dustbinBtn mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(0);
         }];
@@ -500,10 +499,20 @@
         
 
     }else if ([model.order.status integerValue] == 11) {
-        self.waitingReceiveLabel.text = @"待收货";
-        [self.cancelBtn setTitle:@"评价此单" forState:UIControlStateNormal];
+       
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+            self.waitingReceiveLabel.text = @"已确认收货";
 
-        [self.topayBtn setTitle:@"再来一单" forState:UIControlStateNormal];
+            [self.cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+            [self.topayBtn setTitle:@"查看评价" forState:UIControlStateNormal];
+        }else{
+            self.waitingReceiveLabel.text = @"交易已完成";
+            [self.cancelBtn setTitle:@"评价此单" forState:UIControlStateNormal];
+            
+            [self.topayBtn setTitle:@"再来一单" forState:UIControlStateNormal];
+        }
     }else if ([model.order.status integerValue] == 12) {
         if ([HPSingleton sharedSingleton].identifyTag == 0) {
             [self.cancelBtn setTitle:@"查看原因" forState:UIControlStateNormal];

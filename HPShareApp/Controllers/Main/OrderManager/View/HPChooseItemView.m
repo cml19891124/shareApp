@@ -16,7 +16,7 @@
         
         [self setBackgroundColor:COLOR_GRAY_FFFFFF];
         NSString *lastObj;
-        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+        if ([HPSingleton sharedSingleton].identifyTag == 1) {
             lastObj = @"已完成";
         }else{
             lastObj = @"待评价";
@@ -86,7 +86,7 @@
 
             btn.selected = YES;
             self.selectedBtn = btn;
-            [self clickItemBtn:btn];
+//            [self clickItemBtn:btn];
         }
     }
 }

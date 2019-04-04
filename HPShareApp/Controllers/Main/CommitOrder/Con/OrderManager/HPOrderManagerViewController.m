@@ -636,7 +636,7 @@
     
     [self.contactInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.rentInfoView);
-        make.top.mas_equalTo(self.rentInfoView.mas_bottom).offset(getWidth(15.f));
+        make.top.mas_equalTo(self.rentInfoView.mas_bottom);
         make.height.mas_equalTo(getWidth(140.f));
     }];
     
@@ -1393,9 +1393,10 @@
         _predictView = [HPPredictView new];
         kWEAKSELF
         _predictView.knownBlock = ^{
-            [weakSelf.predictView show:NO];
             for (UIViewController *controller in weakSelf.navigationController.viewControllers) {
                 if ([controller isKindOfClass:[HPShareShopListController class]]) {
+                    [weakSelf.predictView show:NO];
+
 //                    HPShareShopListController *shopList = [HPShareShopListController new];
 //                    shopList.isPop = YES;
                     [weakSelf.navigationController popToViewController:controller animated:YES];

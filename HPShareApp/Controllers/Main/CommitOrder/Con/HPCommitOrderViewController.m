@@ -1242,26 +1242,36 @@
 {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     NSArray *closeTimeArr = [self.leaveTime componentsSeparatedByString:@":"];
-    NSString *closeTime = [NSString stringWithFormat:@"%@%@",closeTimeArr.firstObject,closeTimeArr.lastObject];
+    NSString *closeTime = [NSString stringWithFormat:@"%@%@",closeTimeArr.firstObject?closeTimeArr.firstObject:@"18",closeTimeArr.lastObject?closeTimeArr.lastObject:@"00"];
     
     NSArray *openTimeArr = [self.arriveTime componentsSeparatedByString:@":"];
 
-    NSString *openTime = [NSString stringWithFormat:@"%@%@",openTimeArr.firstObject,openTimeArr.lastObject];
+    NSString *openTime = [NSString stringWithFormat:@"%@%@",openTimeArr.firstObject?openTimeArr.firstObject:@"09",openTimeArr.lastObject?openTimeArr.lastObject:@"00"];
+    
+    if (_rentStartDayLabel.text.length == 0) {
+        [HPProgressHUD alertMessage:@"请选择拼租日期"];
+        return;
+    }
+    
+    NSString *rentDays;
+    if (_rentEndDayLabel.text.length == 0) {
+        rentDays = _rentStartDayLabel.text;
+    }else{
+        rentDays = [NSString stringWithFormat:@"%@,%@",_rentStartDayLabel.text,_rentEndDayLabel.text];
+    }
 
     dic[@"closeTime"] = closeTime;
     dic[@"contact"] = self.model.contact;
     dic[@"contactMobile"] = self.model.contactMobile;
-    dic[@"days"] = @"20190302,20190415";
+    dic[@"days"] = rentDays;
     dic[@"openTime"] = openTime;
     dic[@"remark"] = self.desField.text;
     dic[@"shareOrder"] = @"";
     dic[@"spaceId"] = _model.spaceId;
     dic[@"totalFee"] = @(1);//@([_model.rent integerValue]);
-
+    dic[@"unitFee"] = @(1);//@(1/[rentDays componentsSeparatedByString:@","].count);
     [HPHTTPSever HPPostServerWithMethod:@"/v1/order" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
-//        if ([HPSingleton sharedSingleton].identifyTag == 0) {
-//
-//        }
+
         if (CODE == 200) {
             [self.predictView show:YES];
             [HPProgressHUD alertMessage:MSG];

@@ -63,6 +63,8 @@ typedef NS_ENUM(NSInteger, HPOrderType) {
 /**
  订单状态
  */
+@property (assign, nonatomic) NSNumber *status;
+
 @property (assign, nonatomic) NSNumber *orderStaus;
 @end
 
@@ -96,7 +98,7 @@ static NSString *orderCell = @"orderCell";
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:COLOR_GRAY_EEEEEE];
     
-    self.orderStaus = @(0);
+    self.status = @(0);
     _model = self.param[@"order"];
     
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
@@ -116,18 +118,27 @@ static NSString *orderCell = @"orderCell";
     self.orderStaus = self.param[@"orderStaus"];
     
     NSInteger add = 0;
+    self.status = @(0);
     if (self.orderStaus.integerValue == 0) {
         add = 0;
-    }else if (self.orderStaus.integerValue == 11){
-        add = 4;
-    }else if (self.orderStaus.integerValue == 4){
-        add = 3;
+        self.status = @(0);
+
     }else if (self.orderStaus.integerValue == 1){
         add = 1;
+        self.status = @(1);
+
     }else if (self.orderStaus.integerValue == 2){
         add = 2;
-    }else if (self.orderStaus.integerValue == 4){
-        add = 0;
+        self.status = @(2);
+
+    }else if (self.orderStaus.integerValue == 3){// 待收货
+        add = 3;
+        self.status = @(3);
+
+    }else if (self.orderStaus.integerValue == 4){// 已完成/待评论
+        add = 4;
+        self.status = @(4);
+
     }
     [self.orderItemView scrolling:2200 + add];
     [self getOrderListApiReload:YES];
@@ -150,7 +161,7 @@ static NSString *orderCell = @"orderCell";
     dic[@"isBoss"] = [NSString stringWithFormat:@"%ld",[HPSingleton sharedSingleton].identifyTag];//商家还是租户：1商家，0租户
     dic[@"page"] = @(self.shareListParam.page);
     dic[@"pageSize"] = @(self.shareListParam.pageSize);
-    dic[@"status"] = self.orderStaus.integerValue == 0?@"":self.orderStaus.stringValue;
+    dic[@"status"] = self.status.integerValue == 0?@"":self.status.stringValue;
 //    dic[@"isReviewed"] = @"1";//交易完成是否评价 1 是 0 否
     [HPHTTPSever HPGETServerWithMethod:@"/v1/order" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
@@ -211,19 +222,17 @@ static NSString *orderCell = @"orderCell";
         _orderItemView.block = ^(NSInteger menuItem) {
             HPLog(@"fsgfsg");
             if (menuItem == HPAreaItemsMenuAllOrder) {
-                weakSelf.orderStaus = @(0);
+                weakSelf.status = @(0);
             }else if (menuItem == HPAreaItemsMenuToReceive){
-                weakSelf.orderStaus = @(1);
+                weakSelf.status = @(1);
             }else if (menuItem == HPAreaItemsMenuToPay){
-                weakSelf.orderStaus = @(2);
+                weakSelf.status = @(2);
             }else if (menuItem == HPAreaItemsMenuToRent){
-                weakSelf.orderStaus = @(3);
+                weakSelf.status = @(3);
             }else if (menuItem == HPAreaItemsMenuToComment){
-                weakSelf.orderStaus = @(11);
-            }else if (menuItem == HPAreaItemsMenuToReturnFuns){
-                weakSelf.orderStaus = @(12);
+                weakSelf.status = @(4);
             }
-            [weakSelf.orderItemView scrolling:menuItem + 1];
+            [weakSelf.orderItemView scrolling:menuItem];
             [weakSelf getOrderListApiReload:YES];
         };
     }
@@ -265,7 +274,7 @@ static NSString *orderCell = @"orderCell";
 }
 
 - (void)setupShadowOfPanel:(UIView *)view {
-    [view.layer setShadowColor:COLOR_GRAY_DDDDDD.CGColor];
+    [view.layer setShadowColor:COLOR_GRAY_D5D5D5.CGColor];
     [view.layer setShadowOffset:CGSizeMake(0.f, 3.f)];
     [view.layer setShadowRadius:6.f];
     [view.layer setShadowOpacity:0.9f];
@@ -325,6 +334,9 @@ static NSString *orderCell = @"orderCell";
     HOOrderListModel *model = self.orderArray[indexPath.row];
     HPOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:orderCell];
     
+    if (!cell) {
+        cell = [[HPOrderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:orderCell];
+    }
     self.cell = cell;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.model = model;
@@ -333,10 +345,14 @@ static NSString *orderCell = @"orderCell";
         if (payOrder == 4800) {
             [weakSelf deleteOrderFromList:model];
             
-        }else if (payOrder == PayOrderToCancel){
+        }else if (payOrder == PayOrderToCancel){///{version}/orderReview/orderReview 订单评价
+            ///{version}/orderReview/queryOrderReview
+            //查看订单评价
+            
             [weakSelf.view addSubview:weakSelf.quitView];
+            
             weakSelf.quitView.signTextView.placehText = @"  请填写取消此订单原因";
-
+            
             [weakSelf.quitView show:YES];
             weakSelf.quitView.quitBlock = ^{
                 HPLog(@"5555");
@@ -344,6 +360,7 @@ static NSString *orderCell = @"orderCell";
                 [weakSelf cancelOrder:model];
                 
             };
+            
         }else if (payOrder == PayOrderToPay){
             
             [self clickToPayBtn:weakSelf.cell with:model];
@@ -380,16 +397,22 @@ static NSString *orderCell = @"orderCell";
                 
             }
            
+        }else
+        {//确认接单
+                [self pushVCByClassName:@"HPOrderManagerViewController" withParam:@{@"model":model}];
         }
     }else if( model.order.status.integerValue == 3){
-        if ([HPSingleton sharedSingleton].identifyTag == 0) {
-            if([cell.topayBtn.currentTitle isEqualToString:@"确认收货"]){
-                [self pushVCByClassName:@"HPImergencyManagerViewController" withParam:@{@"model":model}];
-                
-            }
-            
+        if ([HPSingleton sharedSingleton].identifyTag == 0) {//付款后 确认收货
+            [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
+
         }
     }
+//    else if( model.order.status.integerValue == 11){
+//        if ([HPSingleton sharedSingleton].identifyTag == 0) {//评价
+//            [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
+//
+//        }
+//    }
 }
 
 - (void)cancelOrder:(HOOrderListModel *)model
@@ -435,15 +458,24 @@ static NSString *orderCell = @"orderCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return getWidth(200.f);
+    HOOrderListModel *model = self.orderArray[indexPath.row];
+    if (model.order.status.integerValue == 13 || model.order.status.integerValue == 3 || model.order.status.integerValue == 14 || model.order.status.integerValue == 15 || model.order.status.integerValue == 12) {
+        if ([HPSingleton sharedSingleton].identifyTag == 1) {
+            return getWidth(154.f);
 
+        }else{
+            return getWidth(200.f);
+
+        }
+    }
+    return getWidth(200.f);
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    HOOrderListModel *model = self.orderArray[indexPath.row];
+//    HOOrderListModel *model = self.orderArray[indexPath.row];
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self pushVCByClassName:@"HPOrderDetailViewController" withParam:@{@"model":model}];
 }
 
 #pragma mark - 确认订单详情

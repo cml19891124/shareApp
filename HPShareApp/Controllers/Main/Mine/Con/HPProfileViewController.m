@@ -161,8 +161,10 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
         if (CODE == 200) {
             self.ownnerModel = [HPOwnnerOrderModel mj_objectWithKeyValues:responseObject[@"data"]];
             [self.tableView reloadData];
-        }else{
-            [HPProgressHUD alertMessage:MSG];
+        }else if (CODE == 401){
+            [HPUserTool deleteAccount];
+            [self pushVCByClassName:@"HPLoginController"];
+            [HPSingleton sharedSingleton].identifyTag = 0;
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
@@ -335,13 +337,7 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
     if (indexPath.section == 0) {
-//        if ([HPSingleton sharedSingleton].identifyTag == 0) {
-//            HPHeaderViewCell *cell = [self setUpHeaderViewCell:tableView];
-//            return cell;
-//        }else{
-//            HPOwnnerHeaderCell *cell = [self setUpOwnnerHeaderViewCell:tableView];
-//            return cell;
-//        }
+
         HPHeaderViewCell *cell = [self setUpHeaderViewCell:tableView];
 
         return cell;
@@ -389,18 +385,16 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
     HPOrderItemCell *cell = [tableView dequeueReusableCellWithIdentifier:orderItemCell];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.returnBlock = ^(NSInteger HPReturnOrderIndex) {
-        if (HPReturnOrderIndex == HPMineOrderCellAllOrders) {//全部订单
+        if (HPReturnOrderIndex == 4405) {//全部订单
             [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(0)}];
         }else if(HPReturnOrderIndex == HPMineOrderCellToReceive){
             [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(1)}];
         }else if(HPReturnOrderIndex == HPMineOrderCellToPay){
             [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(2)}];
-        }else if(HPReturnOrderIndex == HPMineOrderCellToRent){
-//            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(3)}];
+        }else if(HPReturnOrderIndex == HPMineOrderCellToRent){//待收货
+            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(3)}];
         }else if(HPReturnOrderIndex == HPMineOrderCellToComment){
-//            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(11)}];
-        }else if(HPReturnOrderIndex == HPMineOrderCellToReturnFuns){
-//            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(12)}];
+            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(4)}];
         }
     };
 

@@ -156,6 +156,7 @@
 #define COLOR_GRAY_F9F9F9 [UIColor colorWithHexString:@"#F9F9F9"]
 #define COLOR_BLUE_841307 [UIColor colorWithHexString:@"#841307"]
 #define COLOR_GRAY_DCDCDC [UIColor colorWithHexString:@"#DCDCDC"]
+#define COLOR_GRAY_D5D5D5 [UIColor colorWithHexString:@"#D5D5D5"]
 
 #define kAppleSecret @"1447187764"
 

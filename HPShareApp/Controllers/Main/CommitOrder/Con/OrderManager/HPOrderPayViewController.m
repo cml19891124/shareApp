@@ -345,7 +345,7 @@ static NSString *payStyleCell = @"payStyleCell";
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
-    dict[@"totalFee"] = @(100);
+    dict[@"totalFee"] = _model.order.totalFee;
     dict[@"orderId"] = _model.order.orderId;
     dict[@"tradeType"] = @"APP";
     

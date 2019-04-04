@@ -5,6 +5,7 @@
 //  Created by HP on 2019/3/27.
 //  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
+#import "HPRightImageButton.h"
 
 #import "HPOrderDetailViewController.h"
 
@@ -50,7 +51,7 @@
 
 @property (nonatomic, strong) UIView *contactLine;
 
-@property (nonatomic, strong) UIButton *consumerBtn;
+@property (nonatomic, strong) HPRightImageButton *consumerBtn;
 
 @property (nonatomic, strong) UIButton *phoneBtn;
 
@@ -164,7 +165,7 @@
     
     self.amountSubLabel.text = _model.spaceDetail.rent;
     
-    self.toPaySubLabel.text = [NSString stringWithFormat:@"¥%@",_model.spaceDetail.rent];
+    self.toPaySubLabel.text = [NSString stringWithFormat:@"¥%@",_model.order.totalFee];
 
 }
 
@@ -225,7 +226,7 @@
 
     [self.communicateView addSubview:self.consumerBtn];
     
-    [self.communicateView addSubview:self.phoneBtn];
+//    [self.communicateView addSubview:self.phoneBtn];
 
     [self.scrollView addSubview:self.ownnerView];
 
@@ -375,17 +376,17 @@
     [self.consumerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(10.f));
         make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-10.f));
-        make.left.mas_equalTo(getWidth(40.f));
-        make.width.mas_equalTo(getWidth(345.f)/3);
+        make.left.mas_equalTo(getWidth(15.f));
+        make.right.mas_equalTo(getWidth(-15.f));
 
     }];
     
-    [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-10.f));
-        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(10.f));
-        make.right.mas_equalTo(getWidth(-40.f));
-        make.width.mas_equalTo(getWidth(345.f)/3);
-    }];
+//    [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-10.f));
+//        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(10.f));
+//        make.right.mas_equalTo(getWidth(-40.f));
+//        make.width.mas_equalTo(getWidth(345.f)/3);
+//    }];
     
     [self.ownnerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(15.f));
@@ -700,16 +701,20 @@
     return _contactLine;
 }
 
-- (UIButton *)consumerBtn
+- (HPRightImageButton *)consumerBtn
 {
     if (!_consumerBtn) {
-        _consumerBtn = [UIButton new];
-        [_consumerBtn setTitle:@"联系客服" forState:UIControlStateNormal];
-        _consumerBtn.titleLabel.font = kFont_Medium(14.f);
-        [_consumerBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-        [_consumerBtn setImage:ImageNamed(@"communicate_serve") forState:UIControlStateNormal];
-        [_consumerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(6.f), 0, 0)];
-        _consumerBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        _consumerBtn = [HPRightImageButton new];
+        [_consumerBtn setTintColor:UIColor.greenColor];
+        [_consumerBtn setText:@"联系客服"];
+        [_consumerBtn setFont:kFont_Bold(14.f)];
+        [_consumerBtn setImage:ImageNamed(@"communicate_serve")];
+//        [_consumerBtn setTitle:@"联系客服" forState:UIControlStateNormal];
+//        _consumerBtn.titleLabel.font = kFont_Medium(14.f);
+//        [_consumerBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
+//        [_consumerBtn setImage:ImageNamed(@"communicate_serve") forState:UIControlStateNormal];
+//        [_consumerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(6.f), 0, 0)];
+//        _consumerBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [_consumerBtn addTarget:self action:@selector(onClickConsumerBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _consumerBtn;
@@ -976,7 +981,7 @@
     return _bottomView;
 }
 
-- (void)onClickPhoneBtn:(UIButton *)button
+- (void)onClickPhoneBtn:(HPRightImageButton *)button
 {
     
 }

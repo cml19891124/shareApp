@@ -20,6 +20,7 @@
 #import "HPQueryproductersModel.h"
 #import "HPTextDialogView.h"
 #import <JMessage/JMessage.h>
+#import "HPSingleton.h"
 
 #import "HPUpdateVersionView.h"
 
@@ -418,6 +419,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (error == nil) {
                         HPLog(@"Action logout success");
+                        [HPSingleton sharedSingleton].identifyTag = 0;
                     }
                 });
             }];

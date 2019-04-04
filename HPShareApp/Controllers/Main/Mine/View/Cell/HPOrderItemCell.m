@@ -117,6 +117,7 @@
     if (!_allOrderBtn) {
         _allOrderBtn = [UIButton new];
         [_allOrderBtn setTitle:@"全部订单" forState:UIControlStateNormal];
+        _allOrderBtn.tag = 4405;
         [_allOrderBtn setTitleColor:COLOR_GRAY_666666 forState:UIControlStateNormal];;
         _allOrderBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         [_allOrderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];

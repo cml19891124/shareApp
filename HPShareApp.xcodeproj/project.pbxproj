@@ -47,6 +47,7 @@
 		7A09A2D72254A56D00A68FBD /* HPHasOrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2D62254A56D00A68FBD /* HPHasOrderModel.m */; };
 		7A09A2DA2254D19500A68FBD /* HPImergencyManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2D92254D19400A68FBD /* HPImergencyManagerViewController.m */; };
 		7A09A2E52254E73F00A68FBD /* HPUserReceiveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2E42254E73F00A68FBD /* HPUserReceiveView.m */; };
+		7A09A2EA2255DA4100A68FBD /* HPUserImergencyDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2E92255DA4100A68FBD /* HPUserImergencyDetailViewController.m */; };
 		7A54483F21BAD9B2001301F3 /* HPAreaModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54483E21BAD9B2001301F3 /* HPAreaModel.m */; };
 		7A54485721C169AE001301F3 /* HPPartyCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485621C169AE001301F3 /* HPPartyCenterController.m */; };
 		7A54485A21C16A48001301F3 /* HPPartyCenterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485921C16A48001301F3 /* HPPartyCenterModel.m */; };
@@ -589,10 +590,10 @@
 		7A09A2D62254A56D00A68FBD /* HPHasOrderModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPHasOrderModel.m; sourceTree = "<group>"; };
 		7A09A2D82254D19400A68FBD /* HPImergencyManagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPImergencyManagerViewController.h; sourceTree = "<group>"; };
 		7A09A2D92254D19400A68FBD /* HPImergencyManagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPImergencyManagerViewController.m; sourceTree = "<group>"; };
-		7A09A2E02254DEE300A68FBD /* HPUserImergencyDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPUserImergencyDetailViewController.h; sourceTree = "<group>"; };
-		7A09A2E12254DEE300A68FBD /* HPUserImergencyDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPUserImergencyDetailViewController.m; sourceTree = "<group>"; };
 		7A09A2E32254E73F00A68FBD /* HPUserReceiveView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPUserReceiveView.h; sourceTree = "<group>"; };
 		7A09A2E42254E73F00A68FBD /* HPUserReceiveView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUserReceiveView.m; sourceTree = "<group>"; };
+		7A09A2E82255DA4100A68FBD /* HPUserImergencyDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPUserImergencyDetailViewController.h; sourceTree = "<group>"; };
+		7A09A2E92255DA4100A68FBD /* HPUserImergencyDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPUserImergencyDetailViewController.m; sourceTree = "<group>"; };
 		7A54483D21BAD9B2001301F3 /* HPAreaModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaModel.h; sourceTree = "<group>"; };
 		7A54483E21BAD9B2001301F3 /* HPAreaModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAreaModel.m; sourceTree = "<group>"; };
 		7A54485521C169AE001301F3 /* HPPartyCenterController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPartyCenterController.h; sourceTree = "<group>"; };
@@ -2872,8 +2873,8 @@
 				7A09A2CA2253C11300A68FBD /* HPOwnnerTimeOutViewController.m */,
 				7A09A2D82254D19400A68FBD /* HPImergencyManagerViewController.h */,
 				7A09A2D92254D19400A68FBD /* HPImergencyManagerViewController.m */,
-				7A09A2E02254DEE300A68FBD /* HPUserImergencyDetailViewController.h */,
-				7A09A2E12254DEE300A68FBD /* HPUserImergencyDetailViewController.m */,
+				7A09A2E82255DA4100A68FBD /* HPUserImergencyDetailViewController.h */,
+				7A09A2E92255DA4100A68FBD /* HPUserImergencyDetailViewController.m */,
 			);
 			path = OrderManager;
 			sourceTree = "<group>";
@@ -4361,6 +4362,7 @@
 				E677C7CB21FAA1910099E2C9 /* HPMenuItemCell.m in Sources */,
 				E661B12C21A28E8500C86CF5 /* JTCalendarWeekView.m in Sources */,
 				E6E89D1E2212A08A00D04F34 /* NSMutableDictionary+AvoidCrash.m in Sources */,
+				7A09A2EA2255DA4100A68FBD /* HPUserImergencyDetailViewController.m in Sources */,
 				E6B4CEDE21C5286F00429C11 /* SDCollectionViewCell.m in Sources */,
 				E61B5EC721CCF70800DC8A59 /* CDZPicker.m in Sources */,
 				E68A76FE21F2D2F200083A90 /* JCHATAlertToSendImage.m in Sources */,

@@ -40,31 +40,51 @@
         make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
     
+    CGFloat conW = BoundWithSize(@"确认收货后商家即可到账", kScreenWidth, 16).size.width;
     [self.confirmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.width.mas_equalTo(self.bgView);
-        make.height.mas_equalTo(getWidth(160));
-        
+        make.top.mas_equalTo(getWidth(30.f));
+        make.width.mas_equalTo(conW);
+        make.centerX.mas_equalTo(self.bgView);
     }];
     
     [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.width.mas_equalTo(self.bgView);
+        make.left.width.mas_equalTo(self.bgView);
         make.height.mas_equalTo(1);
-        
+        make.bottom.mas_equalTo(self.okbtn.mas_top);
     }];
     
     [self.noBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.mas_equalTo(self.bgView);
-        make.width.mas_equalTo(getWidth(160)/2);
-        make.top.mas_equalTo(self.lineView.mas_bottom);
+        make.width.mas_equalTo(getWidth(140));
+        make.height.mas_equalTo(getWidth(43.f));
     }];
     
     [self.okbtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.bottom.mas_equalTo(self.bgView);
-        make.width.mas_equalTo(getWidth(160)/2);
-        make.top.mas_equalTo(self.lineView.mas_bottom);
+        make.width.mas_equalTo(getWidth(140));
+        make.height.mas_equalTo(getWidth(43.f));
     }];
 }
 
+- (UILabel *)confirmLabel
+{
+    if (!_confirmLabel) {
+        _confirmLabel = [UILabel new];
+        _confirmLabel.text = @"确认收货后商家即可到账\n    请确保拼租完成!";
+
+        NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithString:_confirmLabel.text];
+        [attributeStr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_666666 range:NSMakeRange(0, _confirmLabel.text.length)];
+        [attributeStr addAttribute:NSFontAttributeName value:kFont_Medium(16.f) range:NSMakeRange(0, _confirmLabel.text.length)];
+        //设置行间距
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        paragraphStyle.alignment = NSTextAlignmentCenter;;
+        [paragraphStyle setLineSpacing:24.f];
+        _confirmLabel.attributedText = attributeStr;
+        _confirmLabel.numberOfLines = 0;
+        [_confirmLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    }
+    return _confirmLabel;
+}
 
 - (UIView *)lineView
 {
@@ -93,6 +113,7 @@
         [_noBtn setTitle:@"再想一想" forState:UIControlStateNormal];
         _noBtn.backgroundColor = COLOR_GRAY_FFFFFF;
         [_noBtn setTitleColor:COLOR_RED_FF1213 forState:UIControlStateNormal];
+        _noBtn.titleLabel.font = kFont_Regular(16.f);
         [_noBtn addTarget:self action:@selector(onClickNoBtn:) forControlEvents:UIControlEventTouchUpInside];
         _noBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     }
@@ -104,8 +125,9 @@
     if (!_okbtn) {
         _okbtn = [UIButton new];
         [_okbtn setTitle:@"确认收货" forState:UIControlStateNormal];
-        _okbtn.backgroundColor = COLOR_GRAY_FFFFFF;
-        [_okbtn setTitleColor:COLOR_RED_EA0000 forState:UIControlStateNormal];
+        _okbtn.backgroundColor = COLOR_RED_FF1213;
+        [_okbtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+        _okbtn.titleLabel.font = kFont_Regular(16.f);
         _okbtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         
         [_okbtn addTarget:self action:@selector(onClickOkBtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -115,9 +137,10 @@
 
 - (void)onClickNoBtn:(UIButton *)button
 {
-    if (self.noBlock) {
-        self.noBlock();
-    }
+//    if (self.noBlock) {
+//        self.noBlock();
+//    }
+    [self show:NO];
 }
 
 - (void)onClickOkBtn:(UIButton *)button
