@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "YZXCalendarDelegate.h"
 
+#define carlenderhasOrderArrayName @"carlenderhasOrderArrayName"
+
 @interface YZXDaysMenuView : UIView
 
 /**
@@ -43,4 +45,7 @@
  是否可以交互点击
  */
 @property (assign, nonatomic) BOOL userActivity;
+
+@property (strong, nonatomic) NSMutableArray *hasOrderArray;
+
 @end

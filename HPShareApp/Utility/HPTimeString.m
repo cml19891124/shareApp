@@ -54,6 +54,17 @@
      return [formatter stringFromDate:date];
 }
 
+//20190408转字符串日期2019年04月08日
++ (NSString *)noPortraitLineToDateStr:(NSString *)dateTime
+{
+    NSMutableString *time = [[NSMutableString alloc] initWithString:dateTime];
+    [time insertString:@"年" atIndex:4];
+    [time insertString:@"月" atIndex:7];
+    [time insertString:@"日" atIndex:10];
+
+    return time;
+}
+
 + (NSString *)getDatesStringWithStartTime:(long long)startTime andEndTime:(long long)endTime
 {
     NSMutableArray *dates = [NSMutableArray array];

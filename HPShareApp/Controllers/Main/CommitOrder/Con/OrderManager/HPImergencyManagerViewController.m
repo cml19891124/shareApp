@@ -232,8 +232,6 @@
             
             [kNotificationCenter postNotificationName:carlenderhasOrderArrayName object:nil userInfo:@{@"array":self.hasOrderArray}];
             
-            self.calenderView.calendarView.hasOrderArray = self.hasOrderArray;
-
             if (orderArray.count == 0) {
                 HPLog(@"暂无已预订的数据");
             }

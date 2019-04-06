@@ -5,6 +5,8 @@
 //  Created by 尹星 on 2017/6/27.
 //  Copyright © 2017年 尹星. All rights reserved.
 //
+#import "HPSingleton.h"
+#import "HPTimeString.h"
 
 #import "YZXDaysMenuView.h"
 #import "YZXCalendarCollectionViewCell.h"
@@ -48,6 +50,17 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
+        
+        self.hasOrderArray = [NSMutableArray array];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(operationHasOrderArray:) name:carlenderhasOrderArrayName object:nil];
+        NSArray *dates = [@"20190404,20190408" componentsSeparatedByString:@","];
+        for (int i = 0; i < dates.count; i ++) {
+            NSString *date = [HPTimeString noPortraitLineToDateStr:dates[i]];
+            if (![self.hasOrderArray containsObject:date]) {
+                [self.hasOrderArray addObject:date];
+            }
+        }
+        
         _startDateString = startDateString;
         _endDateString = endDateString;
         [self p_initData];
@@ -90,6 +103,25 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     return self.collectionViewData[section].sectionRow * 7;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)operationHasOrderArray:(NSNotification *)noti
+{
+    NSLog(@"ddddddd:%@",noti.userInfo[@"array"]);
+    NSArray *dates = @[@"20190404,20190408"];
+    for (int i = 0; i < dates.count; i ++) {
+        NSString *date = [HPTimeString noPortraitLineToDateStr:dates[i]];
+        if (![self.hasOrderArray containsObject:date]) {
+            [self.hasOrderArray addObject:date];
+        }
+    }
+//    self.hasOrderArray = @[@"20190404,20190408"].mutableCopy;//noti.userInfo[@"array"];
+    
+}
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     YZXCalendarCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:collectionViewCellIdentify forIndexPath:indexPath];
@@ -106,17 +138,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
         cell.isHidden = YES;
         cell.priceLabel.hidden = YES;
     }
-    
-    if ([cell.day.text isEqualToString:@"9"]) {
-        cell.priceLabel.text = @"已预订";
-        cell.priceLabel.textColor = COLOR_GRAY_CCCCCC;
-        cell.priceLabel.font = kFont_Medium(10.f);
-        [cell changeDayBackgroundColor:COLOR_GRAY_CCCCCC];
-    }else{
-        cell.priceLabel.text = cell.originalPrice;
-        cell.priceLabel.textColor = cell.originalColor;
-        cell.priceLabel.font = cell.originalFont;
-    }
+
     //未选择情况
     if (_selectedArray.count == 0 && [YZXCalendarHelper.helper determineWhetherForTodayWithIndexPaht:indexPath model:self.collectionViewData[indexPath.section]] == YZXDateEqualToToday && !self.customSelect) {
         [_selectedArray addObject:indexPath];
@@ -183,8 +205,31 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     if (indexPath.section != self.collectionViewData.count -1 && indexPath.section != self.collectionViewData.count -2 && indexPath.section != self.collectionViewData.count -3) {
         [cell changeDayBackgroundColor:[UIColor whiteColor]];
         cell.isHidden = YES;
+
     }
     
+    for (int i = 0 ;i < self.hasOrderArray.count;i++) {
+        if ([self.collectionViewData[indexPath.section].headerTitle isEqualToString:[self.hasOrderArray[i] substringToIndex:8]]){
+            NSInteger hasday = [[self.hasOrderArray[i] substringWithRange:NSMakeRange(8, 2)] integerValue];
+            NSInteger day = indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2);
+            HPLog(@"000000:%@ day:%ld",cell.day.text,day);
+            if (hasday == day) {
+                cell.priceLabel.text = @"已预订";
+                cell.priceLabel.textColor = COLOR_GRAY_CCCCCC;
+                cell.priceLabel.font = kFont_Medium(10.f);
+                [cell changeDayBackgroundColor:COLOR_GRAY_CCCCCC];
+                
+            }else{
+                cell.priceLabel.font = cell.originalFont;
+            }
+        }
+        if ([HPSingleton sharedSingleton].identifyTag == 1) {
+            cell.userInteractionEnabled = NO;
+        }else{
+            cell.userInteractionEnabled = YES;
+
+        }
+    }
     return cell;
 }
 

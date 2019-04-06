@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 //秒数转字符串日期
 + (NSString *)secondsToDateStr:(NSTimeInterval)seconds;
 
+//20190408转字符串日期2019年04月08日
++ (NSString *)noPortraitLineToDateStr:(NSString *)dateTime;
 /**
  获取日期数组字符串
  */

@@ -8,7 +8,6 @@
 
 #import "YZXCalendarView.h"
 #import "YZXWeekMenuView.h"
-#define carlenderhasOrderArrayName @"carlenderhasOrderArrayName"
 
 @interface YZXCalendarView ()
 
@@ -25,9 +24,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(operationHasOrderArray:) name:carlenderhasOrderArrayName object:nil];
-        
+                
         _startDateString = startDateString;
         _endDateString = endDateString;
         [self p_initData];
@@ -36,20 +33,11 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
 - (void)p_initData
 {
     
 }
 
-- (void)operationHasOrderArray:(NSNotification *)noti
-{
-    NSLog(@"ddddddd:%@",noti.userInfo[@"array"]);
-    self.hasOrderArray = noti.userInfo[@"array"];
-}
 
 - (void)p_initView
 {

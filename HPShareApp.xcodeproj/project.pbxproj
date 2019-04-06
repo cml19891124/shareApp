@@ -2326,11 +2326,11 @@
 			children = (
 				E629AAE0224A014600CF0378 /* YZXCalendarHeader.h */,
 				E629AAE1224A014600CF0378 /* YZXCalendarHelper.h */,
+				E629AAED224A014600CF0378 /* YZXCalendarHelper.m */,
 				E629AAE2224A014600CF0378 /* Categroy */,
 				E629AAE5224A014600CF0378 /* YZXCalendarHeader.pch */,
 				E629AAE6224A014600CF0378 /* Base */,
 				E629AAE9224A014600CF0378 /* Vendor */,
-				E629AAED224A014600CF0378 /* YZXCalendarHelper.m */,
 			);
 			path = EngineeringDocuments;
 			sourceTree = "<group>";

@@ -31,12 +31,37 @@
         helper.monthReportStartDate = @"1970年01月";
         helper.monthReportEndDate = [helper.yearAndMonthFormatter stringFromDate:[NSDate date]];
         helper.dayReportStartDate = @"1970年01月01日";
-        helper.dayReportEndDate = [helper.yearMonthAndDayFormatter stringFromDate:[NSDate date]];
+        NSDate *date = (NSDate *)[self getNDay:60];
+        helper.dayReportEndDate = [helper.yearMonthAndDayFormatter stringFromDate:date];
         helper.customDateStartDate = helper.dayReportStartDate;
         helper.customDateEndDate = helper.dayReportEndDate;
     });
     return helper;
 }
+
++ (NSDate *)getNDay:(NSInteger)n{
+
+    NSDate*nowDate = [NSDate date];
+    
+    NSDate* theDate;
+    
+    if(n!=0){
+        
+        NSTimeInterval  oneDay = 24*60*60*1;  //1天的长度
+        theDate = [nowDate initWithTimeIntervalSinceNow: oneDay*n ];//initWithTimeIntervalSinceNow是从现在往前后推的秒数
+        
+        }else{
+            
+            theDate = nowDate;
+            }
+    
+//    NSDateFormatter *date_formatter = [[NSDateFormatter alloc] init];
+//    [date_formatter setDateFormat:@"yyyy-MM-dd"];
+//    NSString *the_date_str = [date_formatter stringFromDate:theDate];
+    
+    return theDate;
+    }
+
 
 - (NSCalendar *)calendar
 {
