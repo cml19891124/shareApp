@@ -1135,7 +1135,7 @@
 {
     kWEAKSELF
     [self.view addSubview:weakSelf.quitView];
-    self.quitView.signTextView.placehText = @"  请填写取消此订单原因";
+    self.quitView.textView.placeholder = @"  请填写取消此订单原因";
     
     [self.quitView show:YES];
     self.quitView.quitBlock = ^{

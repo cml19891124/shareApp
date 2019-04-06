@@ -12,6 +12,8 @@
 
 #import "HOOrderListModel.h"
 
+#import "HPSingleton.h"
+
 @interface HPCommentViewController ()
 
 @property (strong, nonatomic) HOOrderListModel *model;
@@ -90,14 +92,28 @@
     }
     
     [self.view addSubview:self.commentView];
-    
+
     [self.commentView addSubview:self.dealLabel];
 
     [self.commentView addSubview:self.textView];
+    
+    if ([HPSingleton sharedSingleton].identifyTag == 0) {
+        
+        if (_model.order.status.integerValue == 11) {
+            self.textView.userInteractionEnabled = YES;
+        }
+        self.textView.placeholder = @"请发表一下此次合作的感受吧...";
+    }else{
+        if (_model.order.status.integerValue == 11) {
+            self.textView.userInteractionEnabled = NO;
+        }
+        self.textView.placeholder = @"这是一次比较满意的合作，总体合作下来就一句话，和您合作真实太愉快啦";
+    }
 
     [self.view addSubview:self.releaseBtn];
 
-    [self changeState:nil with:5];
+    UIButton *btn = [self.view viewWithTag:5004];
+    [self changeState:btn with:5];
 }
 
 - (void)setUpCommentSubviewsMasonry
@@ -198,8 +214,9 @@
     if (!_textView) {
         _textView = [MyTextView new];
         _textView.backgroundColor = COLOR_GRAY_FFFFFF;
-
-        _textView.placeholder = @"请发表一下此次合作的感受吧...";
+        _textView.textColor = COLOR_GRAY_666666;
+        _textView.placeholderColor = COLOR_GRAY_999999;
+        _textView.font = kFont_Regular(14.f);
     }
     return _textView;
 }

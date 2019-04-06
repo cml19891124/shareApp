@@ -14,7 +14,11 @@
 
 #import "HPCancelView.h"
 
+#import "MyTextView.h"
+
 @interface HPCancelViewController ()
+
+@property (nonatomic, strong) MyTextView *textView;
 
 @property (nonatomic, strong) UIView *navTitleView;
 
@@ -75,7 +79,7 @@
 
     [self.view addSubview:self.signContentView];
     
-    [self.signContentView addSubview:self.signTextView];
+    [self.signContentView addSubview:self.textView];
     
     [self.view addSubview:self.userBtn];
 
@@ -119,8 +123,8 @@
         make.height.mas_equalTo(getWidth(120.f));
     }];
     
-    [_signTextView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(getWidth(10.f), getWidth(11.f), getWidth(11.f), getWidth(10.f)));
+    [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
     
     [self.userBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -217,6 +221,20 @@
     return _signTextView;
 }
 
+- (MyTextView *)textView
+{
+    if (!_textView) {
+        _textView = [MyTextView new];
+        _textView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _textView.textColor = COLOR_GRAY_666666;
+        _textView.placeholderColor = COLOR_GRAY_999999;
+        _textView.placeholder = @"  账号注销后，正在进行中的交易以及所有账户信息将不再保存";
+        _textView.font = kFont_Regular(14.f);
+        _textView.tintColor = COLOR_RED_FF1213;
+    }
+    return _textView;
+}
+
 - (UIButton *)userBtn
 {
     if (!_userBtn) {
@@ -250,12 +268,12 @@
 
 - (void)applyCancelAccount:(UIButton *)button
 {
-    if (_signTextView.text.length == 0) {
+    if (_textView.text.length == 0) {
         [HPProgressHUD alertMessage:@"申请原因不能为空"];
         return;
     }
     
-    if (_signTextView.text.length != 0) {
+    if (_textView.text.length != 0) {
         HPLog(@"申请");
         [self.cancelView show:YES];
 

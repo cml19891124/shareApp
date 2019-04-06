@@ -23,7 +23,7 @@
     
     [self.bgView addSubview:self.signContentView];
     
-    [self.signContentView addSubview:self.signTextView];
+    [self.signContentView addSubview:self.textView];
     
     [self.bgView addSubview:self.holderBtn];
     
@@ -48,10 +48,8 @@
         make.height.mas_equalTo(getWidth(120.f));
     }];
     
-    [_signTextView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.mas_equalTo(UIEdgeInsetsMake(getWidth(10.f), getWidth(11.f), getWidth(11.f), getWidth(10.f)));
-        make.left.top.right.mas_equalTo(self.signContentView);
-        make.height.mas_equalTo(getWidth(50.f));
+    [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.bottom.mas_equalTo(self.signContentView);
     }];
     
     [self.holderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -120,6 +118,20 @@
         
     }
     return _signTextView;
+}
+
+- (MyTextView *)textView
+{
+    if (!_textView) {
+        _textView = [MyTextView new];
+        _textView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _textView.textColor = COLOR_GRAY_666666;
+        _textView.placeholderColor = COLOR_GRAY_999999;
+        _textView.placeholder = @"  请填写放弃此订单原因";
+        _textView.font = kFont_Regular(14.f);
+        _textView.tintColor = COLOR_RED_FF1213;
+    }
+    return _textView;
 }
 
 - (UIButton *)holderBtn

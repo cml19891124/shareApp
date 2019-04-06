@@ -10,12 +10,16 @@
 
 #import "HPlaceholdTextView.h"
 
+#import "MyTextView.h"
+
 typedef void(^OnClickHolderBtnBlock)(void);
 
 typedef void(^OnClickQuitBtnBlock)(void);
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPQuitOrderView : HPBaseModalView<UITextViewDelegate>
+
+@property (nonatomic, strong) MyTextView *textView;
 
 @property (nonatomic, strong) UIView *bgView;
 
