@@ -45,11 +45,11 @@
 
 - (void)setUpOwnnerSubviewsMasonry
 {
-    CGFloat orderBtnW = 60.f;
+    CGFloat orderBtnW = (kScreenWidth - getWidth(30.f))/4;
     
-    CGFloat space = (kScreenWidth - orderBtnW * 4)/5;
+    CGFloat space = 0;//(kScreenWidth - orderBtnW * 4)/5;
     [self.toReceiveBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(space + (orderBtnW + space));
+        make.left.mas_equalTo(space);
         make.top.mas_equalTo(getWidth(2.f));
         make.width.mas_equalTo(orderBtnW);
         make.height.mas_equalTo(getWidth(60.f));
@@ -78,8 +78,8 @@
     
     [self.businessView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
-        make.top.mas_equalTo(self.toReceiveBtn.mas_bottom);
-        make.height.mas_equalTo(getWidth(60.f));
+        make.top.mas_equalTo(self.toReceiveBtn.mas_bottom).offset(getWidth(15.f));
+        make.height.mas_equalTo(getWidth(95.f));
     }];
     
     [self.storeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -90,7 +90,7 @@
     }];
     
     [self.orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.orderBtn.mas_right).offset(getWidth(40.f));
+        make.left.mas_equalTo(self.storeBtn.mas_right).offset(getWidth(40.f));
         make.width.height.mas_equalTo(getWidth(40.f));
         make.top.mas_equalTo(getWidth(15.f));
         make.bottom.mas_equalTo(getWidth(-15.f));
@@ -193,7 +193,7 @@
 - (HPAlignCenterButton *)orderBtn
 {
     if (!_orderBtn) {
-        _orderBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"me_business_store")];
+        _orderBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"me_business_order")];
         [_orderBtn setText:@"订单"];
         _orderBtn.tag = 4101;
         [_orderBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -204,7 +204,7 @@
 - (HPAlignCenterButton *)walletBtn
 {
     if (!_walletBtn) {
-        _walletBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"me_business_store")];
+        _walletBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"me_bussness_wallet")];
         [_walletBtn setText:@"钱包"];
         _walletBtn.tag = 4102;
         [_walletBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -215,7 +215,7 @@
 - (HPAlignCenterButton *)creditCardBtn
 {
     if (!_creditCardBtn) {
-        _creditCardBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"me_business_store")];
+        _creditCardBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"me_business_name")];
         [_creditCardBtn setText:@"名片"];
         _creditCardBtn.tag = 4103;
         [_creditCardBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];

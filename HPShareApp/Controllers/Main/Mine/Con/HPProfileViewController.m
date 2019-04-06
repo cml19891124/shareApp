@@ -5,7 +5,6 @@
 //  Created by HP on 2019/3/20.
 //  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
-#import "HPOwnnerHeaderCell.h"
 
 #import "HPProfileViewController.h"
 
@@ -70,8 +69,6 @@ static NSString *headerViewCell = @"HPHeaderViewCell";
 static NSString *relationViewCell = @"HPRelationViewCell";
 
 static NSString *orderItemCell = @"HPOrderItemCell";
-
-static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
 
 #pragma mark - HPHeaderViewCellDelegate
 
@@ -215,6 +212,7 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+
     if (@available(iOS 11.0, *)) {
         
         _tableView.estimatedRowHeight = 0;
@@ -264,7 +262,6 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
         [_tableView registerClass:HPHeaderViewCell.class forCellReuseIdentifier:headerViewCell];
         [_tableView registerClass:HPRelationViewCell.class forCellReuseIdentifier:relationViewCell];
         [_tableView registerClass:HPOrderItemCell.class forCellReuseIdentifier:orderItemCell];
-        [_tableView registerClass:HPOwnnerHeaderCell.class forCellReuseIdentifier:ownnerHeaderCell];
 
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.tableFooterView = [UIView new];
@@ -298,7 +295,7 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
             return getWidth(315.f);
 
         }else{
-            return getWidth(285.f);
+            return getWidth(295.f);
         }
     }else if (indexPath.section == 1){
         if ([HPSingleton sharedSingleton].identifyTag == 0) {
@@ -427,10 +424,10 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
             cell.identifiLabel.text = @"店主信息，资质认证";
             //商家订单信息数量
             
-            cell.receiveBtn.numLabel.text = self.ownnerModel.needAdmittedNum;
-            cell.topayBtn.numLabel.text = self.ownnerModel.needPaidNum;
-            cell.toRentBtn.numLabel.text = self.ownnerModel.cooperatingNum;
-            cell.returnBtn.numLabel.text = self.ownnerModel.finishedNum;
+            cell.ownnerView.toReceiveBtn.numLabel.text = self.ownnerModel.needAdmittedNum;
+            cell.ownnerView.toPayBtn.numLabel.text = self.ownnerModel.needPaidNum;
+            cell.ownnerView.toGetBtn.numLabel.text = self.ownnerModel.cooperatingNum;
+            cell.ownnerView.compelteBtn.numLabel.text = self.ownnerModel.finishedNum;
 
         }
         [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];
@@ -447,7 +444,7 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
         }
     }
     
-    cell.orderBlock = ^(NSInteger orderIndex) {
+    cell.userView.profileBlock = ^(NSInteger orderIndex) {
         if (orderIndex == HPOrderCellIndexToCollection) {
             HPLog(@"toreceive");
             [self pushVCByClassName:@"HPKeepController"];
@@ -460,7 +457,7 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
         }
     };
     
-    cell.busiBlock = ^(NSInteger businessIndex) {
+    cell.ownnerView.busiBlock = ^(NSInteger businessIndex) {
         if (businessIndex == HPBusinessCellIndexStores) {
             [self pushVCByClassName:@"HPShareManageController"];
         }else if (businessIndex == HPBusinessCellIndexOrder){
@@ -475,80 +472,6 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
     return cell;
 }
 
-- (HPOwnnerHeaderCell *)setUpOwnnerHeaderViewCell:(UITableView *)tableView
-{
-    HPOwnnerHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:ownnerHeaderCell];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    /*cell.delegate = self;
-     cell.identifyTag = [HPSingleton sharedSingleton].identifyTag;
-     
-     HPLoginModel *account = [HPUserTool account];
-     
-     if (!account.token) {
-     cell.optionalBtn.hidden = YES;
-     [cell.phoneBtn setTitle:@"登录/注册" forState:UIControlStateNormal];
-     cell.identifiLabel.text = @"登录即可在线拼租";
-     cell.iconImageView.image = ImageNamed(@"personal_center_not_login_head");
-     }else{
-     cell.optionalBtn.hidden = NO;
-     if ([HPSingleton sharedSingleton].identifyTag == 0) {
-     cell.identifiLabel.text = @"租客信息，资质认证";
-     [cell.optionalBtn setTitle:@"切换为店主" forState:UIControlStateNormal];
-     
-     }else{
-     [cell.optionalBtn setTitle:@"切换为租客" forState:UIControlStateNormal];
-     
-     cell.identifiLabel.text = @"店主信息，资质认证";
-     //商家订单信息数量
-     
-     cell.receiveBtn.numLabel.text = self.ownnerModel.needAdmittedNum;
-     cell.topayBtn.numLabel.text = self.ownnerModel.needPaidNum;
-     cell.toRentBtn.numLabel.text = self.ownnerModel.cooperatingNum;
-     cell.returnBtn.numLabel.text = self.ownnerModel.finishedNum;
-     cell.commentBtn.numLabel.text = @"0";
-     
-     }
-     [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];
-     if (account.userInfo.avatarUrl) {
-     [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:account.userInfo.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
-     }else{
-     [self uploadLocalImageGetAvatarUrl];
-     }
-     
-     if (account.userInfo.avatarUrl) {
-     [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:account.userInfo.avatarUrl] placeholderImage:ImageNamed(@"personal_center_not_login_head")];
-     }else{
-     [self uploadLocalImageGetAvatarUrl];
-     }
-     }
-     
-     cell.orderBlock = ^(NSInteger orderIndex) {
-     if (orderIndex == HPOrderCellIndexToCollection) {
-     HPLog(@"toreceive");
-     [self pushVCByClassName:@"HPKeepController"];
-     }else if (orderIndex == HPOrderCellIndexToFocus){
-     [self pushVCByClassName:@"HPFollowController"];
-     }else if (orderIndex == HPOrderCellIndexToFoot){
-     [self pushVCByClassName:@"HPHistoryController"];
-     }else if (orderIndex == HPOrderCellIndexTodiscount){
-     HPLog(@"to return");
-     }
-     };
-     
-     cell.busiBlock = ^(NSInteger businessIndex) {
-     if (businessIndex == HPBusinessCellIndexStores) {
-     [self pushVCByClassName:@"HPShareManageController"];
-     }else if (businessIndex == HPBusinessCellIndexOrder){
-     [self pushVCByClassName:@"HPOrderListViewController"];
-     }else if (businessIndex == HPBusinessCellIndexWallet){
-     HPLog(@"wallet");
-     }else if (businessIndex == HPBusinessCellIndexName){
-     HPLog(@"name");
-     [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":account.userInfo.userId}];
-     }
-     };*/
-    return cell;
-}
 //设置分割线的位置 在willDisplayCell上增加如下代码
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{

@@ -38,7 +38,7 @@
         _numLabel = [UILabel new];
         _numLabel.textColor = COLOR_GRAY_FFFFFF;
         _numLabel.font = kFont_Medium(13.f);
-        _numLabel.text = @"0";
+        _numLabel.text = @"--";
         _numLabel.backgroundColor = UIColor.clearColor;
         _numLabel.textAlignment = NSTextAlignmentCenter;
     }

@@ -28,18 +28,6 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        [self.subviews performSelector:@selector(removeAllObjects)];
-        self.orderNameArray = @[@"待接单",@"待付款",@"待收货",@"已完成"];
-        
-        self.businessImageArray = @[@"me_business_store",@"me_business_order",@"me_bussness_wallet",@"me_business_name"];
-
-        self.businessNameArray = @[@"店铺",@"订单",@"钱包",@"名片"];
-        
-        self.myInfoArray = @[@"收藏",@"关注",@"足迹",@"卡券"];
-
-        self.rentImageArray = @[@"find_store",@"send_query",@"receive_order",@"rentPay",@"start_rent"];
-        
-        self.rentArray = @[@"线上找店",@"发送请求",@"店主接单",@"拼租付款",@"开始拼租"];
 
         self.contentView.backgroundColor = COLOR_GRAY_f9fafd;
         
@@ -66,79 +54,19 @@
     [self.contentView addSubview:self.identifiLabel];
 
     [self.contentView addSubview:self.editBtn];
+    
+    [self.contentView addSubview:self.ownnerView];
 
-        [self.contentView addSubview:self.myInfoView];
-
-        CGFloat orderBtnW = 60.f;
-        
-        CGFloat space = (kScreenWidth - orderBtnW * 4)/5;
-        /*
-        for (int i = 0; i < self.myInfoArray.count; i++) {
-            self.orderBtn = [HPOrderBtn new];
-            self.orderBtn.nameLabel.text = self.myInfoArray[i];
-            self.orderBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
-            self.orderBtn.nameLabel.font = kFont_Medium(13.f);
-            self.orderBtn.tag = 4000 + i;
-            [self.myInfoView addSubview:self.orderBtn];
-            [self.orderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
-            [self.orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(space + i * (orderBtnW + space));
-                make.top.mas_equalTo(getWidth(2.f));
-                make.width.mas_equalTo(orderBtnW);
-                make.height.mas_equalTo(getWidth(60.f));
-            }];
-        }*/
-        
-        [self.contentView addSubview:self.rentView];
-        
-        [self.rentView addSubview:self.orderTipLabel];
-        /*
-        for (int i = 0; i < self.rentImageArray.count; i ++) {
-            self.busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.rentImageArray[i])];
-            [self.busiBtn setText:self.rentArray[i]];
-            self.busiBtn.tag = 4500 + i;
-            [self.busiBtn addTarget:self action:@selector(onClickedRentOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
-            [self.rentView addSubview:self.busiBtn];
-            [self.busiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(getWidth(20.f) + i * getWidth(68.f));
-                make.width.height.mas_equalTo(getWidth(40.f));
-                make.top.mas_equalTo(self.orderTipLabel.mas_bottom).offset(getWidth(30.f));
-                make.bottom.mas_equalTo(getWidth(-17.f));
-                
-            }];
-        }*/
+    [self.contentView addSubview:self.userView];
 
     [self.contentView addSubview:self.optionalBtn];
     
-}
-
-- (HPAlignCenterButton *)busiBtn
-{
-    if (!_busiBtn) {
-        _busiBtn = [HPAlignCenterButton new];
-    }
-    return _busiBtn;
-}
-
-- (HPOrderBtn *)orderBtn
-{
-    if (!_orderBtn) {
-        _orderBtn = [HPOrderBtn new];
-    }
-    return _orderBtn;
-}
-
-- (void)onClickedOrderBtn:(HPAlignCenterButton *)button
-{
-    if (self.orderBlock) {
-        self.orderBlock(button.tag);
-    }
-}
-
-- (void)onClickedBusinessbtn:(UIButton *)button
-{
-    if (self.busiBlock) {
-        self.busiBlock(button.tag);
+    if ([HPSingleton sharedSingleton].identifyTag == 0) {
+        self.ownnerView.hidden = YES;
+        self.userView.hidden = NO;
+    }else{
+        self.ownnerView.hidden = NO;
+        self.userView.hidden = YES;
     }
 }
 
@@ -186,35 +114,44 @@
     }];
     
     [_optionalBtn setCornerRadius:13.f addRectCorners:UIRectCornerBottomLeft|UIRectCornerTopLeft];
-/*
-    if (self.identifyTag == 0) {//租客的
-        
-        [self.myInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self);
+
+    if (self.identifyTag == 0) {
+        [self.userView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(getWidth(15.f));
             make.top.mas_equalTo(self.iconImageView.mas_bottom).offset(getWidth(30.f));
-            make.height.mas_equalTo(getWidth(60.f));
-        }];
-        
-        [self.rentView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(getWidth(15.f));
-            make.top.mas_equalTo(self.bgImageView.mas_bottom).offset(getWidth(-28.f));
-            make.height.mas_equalTo(getWidth(120.f));
             make.right.mas_equalTo(getWidth(-15.f));
+            make.height.mas_equalTo(getWidth(172.f));
         }];
-        
-        [self.orderTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    }else{
+        [self.ownnerView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(getWidth(15.f));
-            make.top.mas_equalTo(getWidth(13.f));
-            make.height.mas_equalTo(self.orderTipLabel.font.pointSize);
+            make.top.mas_equalTo(self.iconImageView.mas_bottom).offset(getWidth(30.f));
             make.right.mas_equalTo(getWidth(-15.f));
+            make.height.mas_equalTo(getWidth(180.f));
         }];
-        
-    }*/
-    
+    }
     
 }
 
 #pragma mark - 初始化控件
+
+- (HPOwnnerItemView *)ownnerView
+{
+    if (!_ownnerView) {
+        _ownnerView = [HPOwnnerItemView new];
+        _ownnerView.backgroundColor = UIColor.clearColor;
+    }
+    return _ownnerView;
+}
+
+- (HPUserHeaderView *)userView
+{
+    if (!_userView) {
+        _userView = [HPUserHeaderView new];
+        _userView.backgroundColor = UIColor.clearColor;
+    }
+    return _userView;
+}
 
 - (UIImageView *)bgImageView
 {
@@ -275,35 +212,6 @@
     return _editBtn;
 }
 
-- (UIView *)orderStatesView
-{
-    if (!_orderStatesView) {
-        _orderStatesView = [UIView new];
-        [_orderStatesView setBackgroundColor:UIColor.clearColor];
-    }
-    return _orderStatesView;
-}
-
-- (UIView *)myInfoView
-{
-    if (!_myInfoView) {
-        _myInfoView = [UIView new];
-        [_myInfoView setBackgroundColor:UIColor.clearColor];
-    }
-    return _myInfoView;
-}
-
-- (UIView *)businessView
-{
-    if (!_businessView) {
-        _businessView = [UIView new];
-        _businessView.backgroundColor = COLOR_GRAY_FFFFFF;
-        _businessView.layer.cornerRadius = 4.f;
-        _businessView.layer.masksToBounds = YES;
-    }
-    return _businessView;
-}
-
 - (UIButton *)optionalBtn
 {
     if (!_optionalBtn) {
@@ -311,48 +219,12 @@
         [_optionalBtn setImage:ImageNamed(@"optional") forState:UIControlStateNormal];
         _optionalBtn.backgroundColor = COLOR_BLACK_333333;
         _optionalBtn.alpha = 0.4;
-//        [_optionalBtn setTitle:@"切换为租客" forState:UIControlStateNormal];
-//        [_optionalBtn setTitle:@"切换为店主" forState:UIControlStateSelected];
         _optionalBtn.titleLabel.font = kFont_Medium(10.f);
         [_optionalBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal|UIControlStateSelected];
         [_optionalBtn addTarget:self action:@selector(onClickedOptionalBtn:) forControlEvents:UIControlEventTouchUpInside];
 
     }
     return _optionalBtn;
-}
-
-- (UIView *)rentView
-{
-    if (!_rentView) {
-        _rentView = [UIView new];
-        _rentView.backgroundColor = COLOR_GRAY_FFFFFF;
-        _rentView.layer.cornerRadius = 2.f;
-        _rentView.layer.masksToBounds = YES;
-    }
-    return _rentView;
-}
-
-- (UILabel *)orderTipLabel
-{
-    if (!_orderTipLabel) {
-        _orderTipLabel = [UILabel new];
-        _orderTipLabel.text = @"拼租流程";
-        _orderTipLabel.textColor = COLOR_BLACK_333333;
-        _orderTipLabel.textAlignment = NSTextAlignmentLeft;
-        _orderTipLabel.font = kFont_Bold(16.f);
-    }
-    return _orderTipLabel;
-}
-
-- (UIView *)rentLineView
-{
-    if (!_rentLineView) {
-        _rentLineView = [UIView new];
-        _rentLineView.backgroundColor = COLOR_GRAY_FAFAFA;
-        _rentLineView.layer.cornerRadius = 2.f;
-        _rentLineView.layer.masksToBounds = YES;
-    }
-    return _rentLineView;
 }
 
 - (void)onClickedEditProfileInfo:(UIButton *)button
@@ -383,171 +255,29 @@
     }
 }
 
-
-- (void)onClickedRentOrderBtn:(UIButton *)button
-{
-    if (self.onlineBlock) {
-        self.onlineBlock(button.tag);
-    }
-}
-
 - (void)setIdentifyTag:(NSInteger)identifyTag
 {
     _identifyTag = identifyTag;
         
-    [self updateSubviewsUI];
-    
-    [self updateSubviewsUIMasonry];
-}
-
-- (void)updateSubviewsUI
-{
-    if (self.identifyTag == 0) {//租客的
-
-        [self.contentView addSubview:self.myInfoView];
-        
-        CGFloat orderBtnW = 60.f;
-        
-        CGFloat space = (kScreenWidth - orderBtnW * 4)/5;
-        
-        for (int i = 0; i < self.myInfoArray.count; i++) {
-            HPOrderBtn *orderBtn = [HPOrderBtn new];
-            orderBtn.nameLabel.text = self.myInfoArray[i];
-            orderBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
-            orderBtn.nameLabel.font = kFont_Medium(13.f);
-            orderBtn.tag = 4000 + i;
-            [self.myInfoView addSubview:orderBtn];
-            [orderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
-            [orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(space + i * (orderBtnW + space));
-                make.top.mas_equalTo(getWidth(2.f));
-                make.width.mas_equalTo(orderBtnW);
-                make.height.mas_equalTo(getWidth(60.f));
-            }];
-        }
-        
-        [self.contentView addSubview:self.rentView];
-        
-        [self.rentView addSubview:self.orderTipLabel];
-        
-        for (int i = 0; i < self.rentImageArray.count; i ++) {
-            self.busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.rentImageArray[i])];
-            [self.busiBtn setText:self.rentArray[i]];
-            self.busiBtn.tag = 4500 + i;
-            [self.busiBtn addTarget:self action:@selector(onClickedRentOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
-            [self.rentView addSubview:self.busiBtn];
-            [self.busiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(getWidth(20.f) + i * getWidth(68.f));
-                make.width.height.mas_equalTo(getWidth(40.f));
-                make.top.mas_equalTo(self.orderTipLabel.mas_bottom).offset(getWidth(30.f));
-                make.bottom.mas_equalTo(getWidth(-17.f));
-                
-            }];
-        }
-        self.orderStatesView.hidden = YES;
-        
-        self.myInfoView.hidden = NO;
-        
-        self.rentView.hidden = NO;
-        
-    }else{//店主的
-
-        [self.contentView addSubview:self.orderStatesView];
-        
-        [self.contentView addSubview:self.businessView];
-        
-        CGFloat orderBtnW = 60.f;
-        
-        CGFloat space = (kScreenWidth - orderBtnW * 4)/5;
-        
-        for (int i = 0; i < self.orderNameArray.count; i++) {
-            self.orderBtn = [HPOrderBtn new];
-            self.orderBtn.nameLabel.text = self.orderNameArray[i];
-            self.orderBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
-            self.orderBtn.nameLabel.font = kFont_Medium(13.f);
-            self.orderBtn.tag = 4600 + i;
-            if (i == 4600) {
-                self.receiveBtn = self.orderBtn;
-            }else if (i == 4601) {
-//                self.topayBtn = self.orderBtn;
-            }else if (i == 4602) {
-                self.toRentBtn = self.orderBtn;
-            }else if (i == 4603) {
-                self.returnBtn = self.orderBtn;
-            }
-            [self.orderStatesView addSubview:self.orderBtn];
-            [self.orderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];
-            [self.orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(space + i * (orderBtnW + space));
-                make.top.mas_equalTo(getWidth(2.f));
-                make.width.mas_equalTo(orderBtnW);
-                make.height.mas_equalTo(getWidth(60.f));
-            }];
-        }
-        
-        for (int j = 0; j < self.businessNameArray.count; j ++) {
-            self.busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.businessImageArray[j])];
-            [self.busiBtn setText:self.businessNameArray[j]];
-            self.busiBtn.tag = 4100 + j;
-            [self.busiBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
-            [self.businessView addSubview:self.busiBtn];
-            [self.busiBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(getWidth(30.f) + j * getWidth(80.f));
-                make.width.height.mas_equalTo(getWidth(40.f));
-                make.top.mas_equalTo(getWidth(15.f));
-                make.bottom.mas_equalTo(getWidth(-15.f));
-                
-            }];
-        }
-        self.myInfoView.hidden = YES;
-        
-        self.orderStatesView.hidden = NO;
-        
-        self.rentView.hidden = YES;
-    }
-    
-}
-
-- (void)updateSubviewsUIMasonry
-{
-    if (self.identifyTag == 0) {//租客的
-        
-        [self.myInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self);
+    if (self.identifyTag == 0) {
+        self.ownnerView.hidden = YES;
+        self.userView.hidden = NO;
+        [self.userView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(getWidth(15.f));
             make.top.mas_equalTo(self.iconImageView.mas_bottom).offset(getWidth(30.f));
-            make.height.mas_equalTo(getWidth(60.f));
-        }];
-        
-        [self.rentView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(getWidth(15.f));
-            make.top.mas_equalTo(self.bgImageView.mas_bottom).offset(getWidth(-28.f));
-            make.height.mas_equalTo(getWidth(120.f));
             make.right.mas_equalTo(getWidth(-15.f));
+            make.height.mas_equalTo(getWidth(172.f));
         }];
-        
-        [self.orderTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    }else{
+        self.ownnerView.hidden = NO;
+        self.userView.hidden = YES;
+        [self.ownnerView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(getWidth(15.f));
-            make.top.mas_equalTo(getWidth(13.f));
-            make.height.mas_equalTo(self.orderTipLabel.font.pointSize);
-            make.right.mas_equalTo(getWidth(-15.f));
-        }];
-        
-    }else{//店主的
-        
-        [self.orderStatesView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self);
             make.top.mas_equalTo(self.iconImageView.mas_bottom).offset(getWidth(30.f));
-            make.height.mas_equalTo(getWidth(60.f));
-        }];
-        
-        [self.businessView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(getWidth(15.f));
-            make.top.mas_equalTo(self.bgImageView.mas_bottom).offset(getWidth(-28.f));
-            make.height.mas_equalTo(getWidth(95.f));
             make.right.mas_equalTo(getWidth(-15.f));
+            make.height.mas_equalTo(getWidth(180.f));
         }];
-        
     }
-    
 }
+
 @end

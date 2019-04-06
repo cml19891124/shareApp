@@ -12,32 +12,11 @@
 
 #import "HPOrderBtn.h"
 
-typedef void(^OrderBtnClickBlcok)(NSInteger orderIndex);
+#import "HPOwnnerItemView.h"
 
-typedef void(^BusinessBtnClickBlcok)(NSInteger businessIndex);
+#import "HPUserHeaderView.h"
 
-typedef void(^OnClickOnlineBlock)(NSInteger HPOnlineOrderIndex);
-
-typedef NS_ENUM(NSInteger, HPOrderCellIndex) {
-    HPOrderCellIndexToCollection = 4000,
-    HPOrderCellIndexToFocus,
-    HPOrderCellIndexToFoot,
-    HPOrderCellIndexTodiscount
-};
-
-typedef NS_ENUM(NSInteger, HPBusinessCellIndex) {
-    HPBusinessCellIndexStores = 4100,
-    HPBusinessCellIndexOrder,
-    HPBusinessCellIndexWallet,
-    HPBusinessCellIndexName,
-};
-
-typedef NS_ENUM(NSInteger, HPMineCellRecordIndex) {//我的售后
-    HPMineCellWaitingToReceive = 4600,
-    HPMineCellWaitingToPay,
-    HPMineCellWaitingToGet,
-    HPMineCellComplete,
-};
+#import "HPSingleton.h"
 
 @class HPHeaderViewCell;
 
@@ -69,6 +48,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HPHeaderViewCell : HPBaseTableViewCell
 
+@property (strong, nonatomic) HPOwnnerItemView *ownnerView;
+
+@property (strong, nonatomic) HPUserHeaderView *userView;
+
 @property (nonatomic, strong) UIImageView *bgImageView;
 
 @property (nonatomic, strong) UIImageView *iconImageView;
@@ -83,40 +66,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIButton *editBtn;
 
-@property (nonatomic, strong) UIView *orderStatesView;
-
-@property (nonatomic, strong) UIView *myInfoView;
-
-@property (nonatomic, strong) NSArray *myInfoArray;
-
-@property (nonatomic, strong) NSArray *orderNameArray;
-
-@property (nonatomic, strong) NSArray *businessImageArray;
-
-@property (nonatomic, strong) NSArray *businessNameArray;
-
-@property (nonatomic, strong) NSArray *rentArray;
-
-@property (nonatomic, strong) NSArray *rentImageArray;
-
-@property (nonatomic, strong) HPOrderBtn *orderBtn;
-
-@property (strong, nonatomic) HPAlignCenterButton *busiBtn;
-
-@property (nonatomic, strong) HPOrderBtn *receiveBtn;
-
-@property (nonatomic, strong) HPOrderBtn *topayBtn;
-
-@property (nonatomic, strong) HPOrderBtn *toRentBtn;
-
-@property (nonatomic, strong) HPOrderBtn *returnBtn;
-
-@property (nonatomic, copy) OrderBtnClickBlcok orderBlock;
-
-@property (nonatomic, copy) BusinessBtnClickBlcok busiBlock;
-
-@property (nonatomic, strong) UIView *businessView;
-
 @property (nonatomic, strong) UIButton *optionalBtn;
 
 @property (nonatomic, weak) id<HPHeaderViewCellDelegate> delegate;
@@ -126,13 +75,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) NSInteger identifyTag;
 
-@property (nonatomic, strong) UIView *rentView;
-
-@property (nonatomic, strong) UILabel *orderTipLabel;
-
-@property (nonatomic, strong) UILabel *rentTipLabel;
-
-@property (nonatomic, copy) OnClickOnlineBlock onlineBlock;
 @end
 
 NS_ASSUME_NONNULL_END
