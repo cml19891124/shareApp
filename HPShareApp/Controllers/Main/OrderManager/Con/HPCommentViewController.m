@@ -10,7 +10,11 @@
 
 #import "MyTextView.h"
 
+#import "HOOrderListModel.h"
+
 @interface HPCommentViewController ()
+
+@property (strong, nonatomic) HOOrderListModel *model;
 
 @property (nonatomic, strong) UIImageView *headerView;
 
@@ -29,6 +33,8 @@
 @property (nonatomic, strong) MyTextView *textView;
 
 @property (strong, nonatomic) UIButton *releaseBtn;
+
+@property (strong, nonatomic) NSNumber *currentStar;
 @end
 
 @implementation HPCommentViewController
@@ -38,6 +44,11 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = COLOR_GRAY_FFFFFF;
     
+    self.model = self.param[@"model"];
+    
+    if (self.model.order.status.integerValue == 11) {
+        self.textView.userInteractionEnabled = NO;
+    }
     [self setUpCommentSubviews];
     
     [self setUpCommentSubviewsMasonry];
@@ -86,6 +97,7 @@
 
     [self.view addSubview:self.releaseBtn];
 
+    [self changeState:nil with:5];
 }
 
 - (void)setUpCommentSubviewsMasonry
@@ -257,6 +269,7 @@
 {
     [self.view endEditing:YES];
     NSInteger i = (star.tag)/5000;
+    self.currentStar = @(j);
     for (NSInteger j=0; j<5; j++) {
         if (j<=star.tag-5000*i) {
             ((UIButton*)[self.view viewWithTag:5000*i+j]).selected = YES;
@@ -271,6 +284,20 @@
 
 - (void)releaseCommentWords:(UIButton *)button
 {
-    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"context"] = self.textView.text;
+    dic[@"orderId"] = self.model.order.orderId;
+    dic[@"star"] = self.currentStar.stringValue;
+
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/orderReview/orderReview" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 @end

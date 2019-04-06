@@ -35,6 +35,28 @@
     
 }
 
++(NSString*)getCurrentTimesWithSeconds{
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    
+    // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+    
+        [formatter setDateFormat:PATTERN_STANDARD08W];
+    
+    //现在时间,你可以输出来看下是什么格式
+    
+    NSDate *datenow = [NSDate date];
+    
+    //----------将nsdate按formatter格式转成nsstring
+    
+    NSString *currentTimeString = [formatter stringFromDate:datenow];
+    
+    NSLog(@"currentTimeString =  %@",currentTimeString);
+    
+    return currentTimeString;
+    
+}
+
 //获取当前时间戳有两种方法(以秒为单位)
 
 +(NSString *)getNowTimeTimestamp{
@@ -107,6 +129,51 @@
     
     return dateStr;
     
+}
+
++ (NSString *)getYearMonthDayDates:(long long)startTime andEndTime:(long long)endTime
+{
+    NSMutableArray *dates = [NSMutableArray array];
+    startTime = 1471491674; //开始时间
+    endTime = 1472528474;//结束时间
+    long dayTime = 24*60*60;
+    long time = startTime - startTime%dayTime;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyyMMdd"];
+    
+    while (time < endTime) {
+        NSString *showOldDate = [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:time]];
+        [dates addObject:showOldDate];
+        time += dayTime;
+    }
+    return [dates componentsJoinedByString:@","];
+}
+
++ (NSString *)getDatesWithStartDate:(NSString *)startDate endDate:(NSString *)endDate {
+    
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier: NSCalendarIdentifierGregorian];
+    
+    //字符串转时间
+    NSDateFormatter *matter = [[NSDateFormatter alloc] init];
+    matter.dateFormat = @"yyyyMMdd";
+    NSDate *start = [matter dateFromString:startDate];
+    NSDate *end = [matter dateFromString:endDate];
+    
+    NSMutableArray *componentAarray = [NSMutableArray array];
+    NSComparisonResult result = [start compare:end];
+    NSDateComponents *comps;
+    while (result != NSOrderedDescending) {
+        comps = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay |  NSCalendarUnitWeekday fromDate:start];
+        [componentAarray addObject:start];
+        
+        //后一天
+        [comps setDay:([comps day]+1)];
+        start = [calendar dateFromComponents:comps];
+        
+        //对比日期大小
+        result = [start compare:end];
+    }
+    return [componentAarray componentsJoinedByString:@","];
 }
 
 + (NSString *)getPassTimeSometimeWith:(NSDate *)date

@@ -431,7 +431,6 @@ static NSString *ownnerHeaderCell = @"HPOwnnerHeaderCell";
             cell.topayBtn.numLabel.text = self.ownnerModel.needPaidNum;
             cell.toRentBtn.numLabel.text = self.ownnerModel.cooperatingNum;
             cell.returnBtn.numLabel.text = self.ownnerModel.finishedNum;
-            cell.commentBtn.numLabel.text = @"0";
 
         }
         [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];

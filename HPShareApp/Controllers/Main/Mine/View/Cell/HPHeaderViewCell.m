@@ -29,7 +29,7 @@
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         [self.subviews performSelector:@selector(removeAllObjects)];
-        self.orderNameArray = @[@"待接单",@"待付款",@"待拼租",@"退款/售后",@"待评价"];
+        self.orderNameArray = @[@"待接单",@"待付款",@"待收货",@"已完成"];
         
         self.businessImageArray = @[@"me_business_store",@"me_business_order",@"me_bussness_wallet",@"me_business_name"];
 
@@ -72,7 +72,7 @@
         CGFloat orderBtnW = 60.f;
         
         CGFloat space = (kScreenWidth - orderBtnW * 4)/5;
-        
+        /*
         for (int i = 0; i < self.myInfoArray.count; i++) {
             self.orderBtn = [HPOrderBtn new];
             self.orderBtn.nameLabel.text = self.myInfoArray[i];
@@ -87,12 +87,12 @@
                 make.width.mas_equalTo(orderBtnW);
                 make.height.mas_equalTo(getWidth(60.f));
             }];
-        }
+        }*/
         
         [self.contentView addSubview:self.rentView];
         
         [self.rentView addSubview:self.orderTipLabel];
-        
+        /*
         for (int i = 0; i < self.rentImageArray.count; i ++) {
             self.busiBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(self.rentImageArray[i])];
             [self.busiBtn setText:self.rentArray[i]];
@@ -106,7 +106,7 @@
                 make.bottom.mas_equalTo(getWidth(-17.f));
                 
             }];
-        }
+        }*/
 
     [self.contentView addSubview:self.optionalBtn];
     
@@ -156,7 +156,7 @@
         make.top.mas_equalTo(getWidth(46.f));
     }];
 
-    CGFloat phoneW = BoundWithSize(self.phoneBtn.currentTitle, kScreenWidth, 18.f).size.width + 10;
+    CGFloat phoneW = BoundWithSize(@"15817479363", kScreenWidth, 18.f).size.width + 10;
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(phoneW);
         make.left.mas_equalTo(self.iconImageView.mas_right).offset(getWidth(11.f));
@@ -164,8 +164,6 @@
         make.height.mas_equalTo(self.phoneBtn.titleLabel.font.pointSize);
     }];
     
-//    CGFloat identifiW = BoundWithSize(self.identifiLabel.text, kScreenWidth, 12.f).size.width + 10;
-
     [self.identifiLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(kScreenWidth/3);
         make.left.mas_equalTo(self.iconImageView.mas_right).offset(getWidth(11.f));
@@ -188,7 +186,7 @@
     }];
     
     [_optionalBtn setCornerRadius:13.f addRectCorners:UIRectCornerBottomLeft|UIRectCornerTopLeft];
-
+/*
     if (self.identifyTag == 0) {//租客的
         
         [self.myInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -211,7 +209,9 @@
             make.right.mas_equalTo(getWidth(-15.f));
         }];
         
-    }
+    }*/
+    
+    
 }
 
 #pragma mark - 初始化控件
@@ -244,7 +244,7 @@
 {
     if (!_phoneBtn) {
         _phoneBtn = [UIButton new];
-        [_phoneBtn setTitle:@"15817479363" forState:UIControlStateNormal];
+        [_phoneBtn setTitle:@"" forState:UIControlStateNormal];
         [_phoneBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
         [_phoneBtn addTarget:self action:@selector(onClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
         _phoneBtn.titleLabel.font = kFont_Medium(18.f);
@@ -458,7 +458,7 @@
         
         CGFloat orderBtnW = 60.f;
         
-        CGFloat space = (kScreenWidth - orderBtnW * 5)/6;
+        CGFloat space = (kScreenWidth - orderBtnW * 4)/5;
         
         for (int i = 0; i < self.orderNameArray.count; i++) {
             self.orderBtn = [HPOrderBtn new];
@@ -469,13 +469,11 @@
             if (i == 4600) {
                 self.receiveBtn = self.orderBtn;
             }else if (i == 4601) {
-                self.topayBtn = self.orderBtn;
+//                self.topayBtn = self.orderBtn;
             }else if (i == 4602) {
                 self.toRentBtn = self.orderBtn;
             }else if (i == 4603) {
                 self.returnBtn = self.orderBtn;
-            }else if (i == 4604) {
-                self.commentBtn = self.orderBtn;
             }
             [self.orderStatesView addSubview:self.orderBtn];
             [self.orderBtn addTarget:self action:@selector(onClickedOrderBtn:) forControlEvents:UIControlEventTouchUpInside];

@@ -29,6 +29,17 @@ NS_ASSUME_NONNULL_BEGIN
 +(NSString*)getCurrentTimes;
 //获取当前时间戳有两种方法(以秒为单位)
 
+/**
+ 20190319格式 的当前日期
+ */
++(NSString*)getCurrentTimesWithSeconds;
+
+
++ (NSString *)getYearMonthDayDates:(long long)startTime andEndTime:(long long)endTime;
+
+//获取两天之间的所有日期
++ (NSString *)getDatesWithStartDate:(NSString *)startDate endDate:(NSString *)endDate;
+
 +(NSString *)getNowTimeTimestamp;
 
 +(NSString *)getNowTimeTimestamp2;

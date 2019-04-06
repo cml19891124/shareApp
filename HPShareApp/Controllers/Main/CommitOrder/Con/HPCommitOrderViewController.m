@@ -5,6 +5,8 @@
 //  Created by HP on 2019/3/25.
 //  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
+#import "HPTimeString.h"
+
 #import "HPHasOrderModel.h"
 
 #import "HPCommitOrderViewController.h"
@@ -1259,7 +1261,10 @@
     }else{
         rentDays = [NSString stringWithFormat:@"%@,%@",_rentStartDayLabel.text,_rentEndDayLabel.text];
     }
-
+    
+    NSString *date = [HPTimeString getCurrentTimesWithSeconds];
+    
+    rentDays = [HPTimeString getDatesWithStartDate:_rentStartDayLabel.text endDate:_rentEndDayLabel.text];
     dic[@"closeTime"] = closeTime;
     dic[@"contact"] = self.model.contact;
     dic[@"contactMobile"] = self.model.contactMobile;

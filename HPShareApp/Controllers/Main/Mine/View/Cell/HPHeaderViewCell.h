@@ -33,10 +33,10 @@ typedef NS_ENUM(NSInteger, HPBusinessCellIndex) {
 };
 
 typedef NS_ENUM(NSInteger, HPMineCellRecordIndex) {//我的售后
-    HPMineCellRecordIndexStores = 4600,
-    HPMineCellRecordIndexOrder,
-    HPMineCellRecordIndexWallet,
-    HPMineCellRecordIndexName,
+    HPMineCellWaitingToReceive = 4600,
+    HPMineCellWaitingToPay,
+    HPMineCellWaitingToGet,
+    HPMineCellComplete,
 };
 
 @class HPHeaderViewCell;
@@ -110,9 +110,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) HPOrderBtn *toRentBtn;
 
 @property (nonatomic, strong) HPOrderBtn *returnBtn;
-
-@property (nonatomic, strong) HPOrderBtn *commentBtn;
-
 
 @property (nonatomic, copy) OrderBtnClickBlcok orderBlock;
 
