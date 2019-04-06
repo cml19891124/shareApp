@@ -35,6 +35,64 @@
     
 }
 
+//字符串日期转秒数
++ (NSTimeInterval)dateStrToSeconds:(NSString *)str
+{
+     NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+     [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+     NSDate *date = [formatter dateFromString:str];
+     NSTimeInterval seconds = [date timeIntervalSince1970];
+     return seconds;
+}
+
+//秒数转字符串日期
++ (NSString *)secondsToDateStr:(NSTimeInterval)seconds
+{
+     NSDate *date = [NSDate dateWithTimeIntervalSince1970:seconds];
+     NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+     [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+     return [formatter stringFromDate:date];
+}
+
++ (NSString *)getDatesStringWithStartTime:(long long)startTime andEndTime:(long long)endTime
+{
+    NSMutableArray *dates = [NSMutableArray array];
+//    long long nowTime = 1471491674, //开始时间
+//    endTime = 1472528474,//结束时间
+    long long dayTime = 24*60*60,
+    time = startTime - startTime%dayTime;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyyMMdd"];
+    
+    while (time < endTime) {
+        NSString *showOldDate = [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:time]];
+        [dates addObject:showOldDate];
+        time += dayTime;
+    }
+    return [dates componentsJoinedByString:@","];
+}
+
+//服务器要的日期格式2019-04-08 00:00:00
++ (NSString *)getNeedLineDateFormatter:(NSString *)date
+{
+    NSString *firstDate = [date stringByReplacingOccurrencesOfString:@"年" withString:@"-"];
+    NSString *monthDate = [firstDate stringByReplacingOccurrencesOfString:@"月" withString:@"-"];
+
+    NSString *finalDate = [monthDate stringByReplacingOccurrencesOfString:@"日" withString:@""];
+    
+    return [NSString stringWithFormat:@"%@ 00:00:01",finalDate];
+}
+
+//服务器要的日期格式
++ (NSString *)getNeedDateFormatter:(NSString *)time
+{
+    NSString *y = [time substringToIndex:4];
+    NSString *m = [time substringWithRange:NSMakeRange(5, 2)];
+    NSString *d = [time substringWithRange:NSMakeRange(time.length - 3, 2)];
+    NSString *stTime = [NSString stringWithFormat:@"%@%@%@",y,m,d];
+    return stTime;
+}
+
 +(NSString*)getCurrentTimesWithSeconds{
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];

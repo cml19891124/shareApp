@@ -213,7 +213,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
                     NSString *m = [self.collectionViewData[indexPath.section].headerTitle substringWithRange:NSMakeRange(5, 2)];
                     NSString *d = [NSString stringWithFormat:@"%02ld",@(indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2)).integerValue];
                     NSString *stTime = [NSString stringWithFormat:@"%@%@%@",y,m,d];
-                    [_delegate clickCalendarWithStartDate:stTime andEndDate:nil];
+                    [_delegate clickCalendarWithStartDate:startString andEndDate:nil];
                 }
             }
                 break;
@@ -269,7 +269,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
                 NSString *eTime = [NSString stringWithFormat:@"%@%@%@",ye,me,de];
                 //代理返回数据
                 if (_delegate && [_delegate respondsToSelector:@selector(clickCalendarWithStartDate:andEndDate:)]) {
-                    [_delegate clickCalendarWithStartDate:stTime andEndDate:eTime];
+                    [_delegate clickCalendarWithStartDate:startDate andEndDate:endDate];
                 }
             }
                 break;
@@ -290,7 +290,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
                     NSString *m = [self.collectionViewData[indexPath.section].headerTitle substringWithRange:NSMakeRange(5, 2)];
                     NSString *d = [NSString stringWithFormat:@"%02ld",@(indexPath.item - self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2).integerValue];
                     NSString *stTime = [NSString stringWithFormat:@"%@%@%@",y,m,d];
-                    [_delegate clickCalendarWithStartDate:stTime andEndDate:nil];
+                    [_delegate clickCalendarWithStartDate:startString andEndDate:nil];
                 }
             }
                 break;

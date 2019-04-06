@@ -42,6 +42,8 @@
 
 @interface HPCommitOrderViewController ()
 
+@property (strong, nonatomic) NSMutableArray *rentDaysArray;
+
 @property (strong, nonatomic) NSMutableArray *hasOrderArray;
 
 @property (nonatomic, copy) NSString *arriveTime;
@@ -203,6 +205,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.rentDaysArray = [NSMutableArray array];
     
     [self.view setBackgroundColor:COLOR_GRAY_F9FAFD];
     
@@ -1262,13 +1266,28 @@
         rentDays = [NSString stringWithFormat:@"%@,%@",_rentStartDayLabel.text,_rentEndDayLabel.text];
     }
     
-    NSString *date = [HPTimeString getCurrentTimesWithSeconds];
+    NSString *startFormatter = [HPTimeString getNeedLineDateFormatter:_rentStartDayLabel.text];
     
-    rentDays = [HPTimeString getDatesWithStartDate:_rentStartDayLabel.text endDate:_rentEndDayLabel.text];
+    NSString *endFormatter = [HPTimeString getNeedLineDateFormatter:_rentEndDayLabel.text];
+
+    NSTimeInterval startSecond = [HPTimeString dateStrToSeconds:startFormatter];
+    
+    NSTimeInterval endSecond = [HPTimeString dateStrToSeconds:endFormatter];
+
+    rentDays = [HPTimeString getDatesStringWithStartTime:startSecond andEndTime:endSecond];
+    NSArray *rentDaysArray = [rentDays componentsSeparatedByString:@","];
+    
+    [self.rentDaysArray addObjectsFromArray:rentDaysArray];
+    if (self.hasOrderArray) {
+        [self.rentDaysArray addObjectsFromArray:self.hasOrderArray];
+    }
+    
+    NSArray *resultDays = [rentDaysArray valueForKeyPath:@"@distinctUnionOfObjects.self"];
+
     dic[@"closeTime"] = closeTime;
     dic[@"contact"] = self.model.contact;
     dic[@"contactMobile"] = self.model.contactMobile;
-    dic[@"days"] = rentDays;
+    dic[@"days"] = resultDays;
     dic[@"openTime"] = openTime;
     dic[@"remark"] = self.desField.text;
     dic[@"shareOrder"] = @"";

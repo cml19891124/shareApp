@@ -1476,6 +1476,7 @@
             [self.predictView show:YES];
             [self.predictView.tipBtn setTitle:@"接单成功" forState:UIControlStateNormal];
             self.predictView.messageLabel.text = @"租客付款后请按预定给租客提供场地";
+            [kNotificationCenter postNotificationName:confirmReceiveOrderMessage object:nil userInfo:@{@"model":self.model}];
         }else{
             [HPProgressHUD alertMessage:MSG];
 

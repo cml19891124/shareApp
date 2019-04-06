@@ -30,7 +30,11 @@
 
 #import "HPNewOrderView.h"
 
+#import "HPUserNewOrderView.h"
+
 #import "HPOwnnerOrderModel.h"
+
+#import "HOOrderListModel.h"
 
 typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
     HPProfileSelectedRowIdentify = 0,//资格认证
@@ -46,6 +50,8 @@ typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
 
 @property (nonatomic, strong) HPNewOrderView *newOrderView;
 
+@property (strong, nonatomic) HPUserNewOrderView *userOrderView;
+
 @property (nonatomic, weak) HPUpdateVersionView *updateView;
 
 @property (nonatomic, weak) HPCustomerServiceModalView *customerServiceModalView;
@@ -60,6 +66,7 @@ typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
 
 @property (strong, nonatomic) HPOwnnerOrderModel *ownnerModel;
 
+@property (strong, nonatomic) HOOrderListModel *model;
 @end
 
 @implementation HPProfileViewController
@@ -103,6 +110,26 @@ static NSString *orderItemCell = @"HPOrderItemCell";
     return _newOrderView;
 }
 
+- (HPUserNewOrderView *)userOrderView
+{
+    if (!_userOrderView) {
+        kWEAKSELF
+        _userOrderView = [[HPUserNewOrderView alloc] initWithParent:self.tabBarController.view];
+        _userOrderView.newBlock = ^(NSInteger userindex) {
+            if (userindex == UserNewOrderStateCommunicate) {
+                HPLog(@"communciate");
+            }else if (userindex == UserNewOrderStateReceive){
+                HPLog(@"receive");
+                
+            }else if (userindex == UserNewOrderStateCloseOrder){
+                HPLog(@"CloseOrder");
+                [weakSelf.userOrderView show:NO];
+            }
+        };
+    }
+    return _userOrderView;
+}
+
 - (void)onTapped:(HPHeaderViewCell *)tableviewCell HeaderView:(UITapGestureRecognizer *)tap
 {
     HPLog(@"tap");
@@ -137,17 +164,60 @@ static NSString *orderItemCell = @"HPOrderItemCell";
         [self.newOrderView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.view);
         }];
-        
+        [kNotificationCenter addObserver:self selector:@selector(showUserNewOrederView:) name:confirmUserReceiveOrderMessage object:nil];
+
 //        [self.newOrderView show:YES];
         
     }else{
         [HPSingleton sharedSingleton].identifyTag = 0;
-
+        [kNotificationCenter addObserver:self selector:@selector(showNewOrederView:) name:confirmReceiveOrderMessage object:nil];
     }
     [self.tableView reloadData];
 }
 
+- (void)dealloc
+{
+    [kNotificationCenter removeObserver:self];
+    [kNotificationCenter removeObserver:self];
 
+}
+
+- (void)showNewOrederView:(NSNotification *)noti
+{
+    self.model = noti.userInfo[@"model"];
+    if (self.model.order.status.integerValue == 2) {
+        [self.userOrderView show:YES];
+        self.userOrderView.tipLabel.text = [NSString stringWithFormat:@"新订单提醒（%@）",self.model.spaceDetail.shortName];
+        NSString *leftTime = [NSString stringWithFormat:@"%@前", [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime]];
+
+        self.userOrderView.timeLabel.text = leftTime;
+        self.userOrderView.nameLabel.text = self.model.spaceDetail.contact;
+        NSArray *rentDays = [self.model.order.days componentsSeparatedByString:@","];
+        self.userOrderView.rentDaysLabel.text = [NSString stringWithFormat:@"租（%ld天",rentDays.count];
+        self.userOrderView.toPayLabel.text = [NSString stringWithFormat:@"¥%@",self.model.order.totalFee];
+
+    }
+}
+
+
+- (void)showUserNewOrederView:(NSNotification *)noti
+{
+    self.model = noti.userInfo[@"model"];
+    if (self.model.order.status.integerValue == 1) {
+        [self.newOrderView show:YES];
+        self.newOrderView.tipLabel.text = [NSString stringWithFormat:@"新订单提醒（%@）",self.model.spaceDetail.shortName];
+        NSString *leftTime = [NSString stringWithFormat:@"%@前", [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime]];
+        
+        self.newOrderView.timeLabel.text = leftTime;
+        self.newOrderView.nameLabel.text = self.model.spaceDetail.contact;
+        self.newOrderView.phoneLabel.text = self.model.spaceDetail.contactMobile;
+        NSArray *rentDays = [self.model.order.days componentsSeparatedByString:@","];
+        self.newOrderView.rentDaysLabel.text = [NSString stringWithFormat:@"拼租日期（共%ld天）",rentDays.count];
+        self.newOrderView.daysLabel.text = self.model.order.days;
+        self.newOrderView.rentDesLabel.text = self.model.spaceDetail.remark;
+        
+    }
+}
 /**
  商家订单数量
  */

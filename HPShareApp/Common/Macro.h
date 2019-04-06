@@ -277,7 +277,8 @@ static NSInteger const st_settingTag = 12;
 
 static NSString * const st_receiveUnknowMessageDes = @"收到新消息类型无法解析的数据，请升级查看";
 static NSString * const st_receiveErrorMessageDes = @"接收消息错误";
-
+static NSString * const confirmReceiveOrderMessage = @"confirmReceiveOrderMessage";
+static NSString * const confirmUserReceiveOrderMessage = @"confirmUserReceiveOrderMessage";
 //通知
 
 #define notice_AliPayReturnData @"notice_AliPayReturnData" //支付宝支付返回结果
