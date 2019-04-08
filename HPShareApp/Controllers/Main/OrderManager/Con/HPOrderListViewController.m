@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, HPOrderType) {
     HPOrderTypeOwnnerRenterTimerOutOfToPayCancel//超时未付款取消
 };
 
-@interface HPOrderListViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface HPOrderListViewController ()<UITableViewDelegate,UITableViewDataSource,OrderCellDelegate>
 
 @property (strong, nonatomic) HPOrderCell *cell;
 
@@ -338,7 +338,7 @@ static NSString *orderCell = @"orderCell";
     self.cell = cell;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.model = model;
-    
+    cell.delegate = self;
     cell.payBlock = ^(NSInteger payOrder) {
         if (payOrder == 4800) {
             [weakSelf deleteOrderFromList:model];
@@ -353,56 +353,11 @@ static NSString *orderCell = @"orderCell";
             
         }else if (payOrder == PayOrderToPay){
             
-            [self clickToPayBtn:weakSelf.cell with:model];
             
         }
     };
 
     return cell;
-}
-
-- (void)clickToPayBtn:(HPOrderCell *)cell with:(HOOrderListModel *)model
-{
-    HPLog(@"---:%ld",(long)[HPSingleton sharedSingleton].identifyTag);
-    
-    if ( model.order.status.integerValue == 2) {
-        if ([HPSingleton sharedSingleton].identifyTag == 0) {
-            [self pushVCByClassName:@"HPOrderDetailViewController" withParam:@{@"model":model}];
-        }else{
-            if ([cell.topayBtn.currentTitle isEqualToString:@"在线催单"]) {
-                [self pushVCByClassName:@"HPImergencyManagerViewController" withParam:@{@"model":model}];
-                
-            }else if([cell.topayBtn.currentTitle isEqualToString:@"确认接单"]){
-                [self pushVCByClassName:@"HPOrderManagerViewController" withParam:@{@"model":model}];
-
-            }else if ([cell.topayBtn.currentTitle isEqualToString:@"立即支付"]) {
-                [self pushVCByClassName:@"HPOrderDetailViewController" withParam:@{@"model":model}];
-            }
-        }
-        
-    }else if( model.order.status.integerValue == 1){
-        if ([HPSingleton sharedSingleton].identifyTag == 0) {
-//            if([cell.topayBtn.currentTitle isEqualToString:@"在线催单"]){
-                [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
-            
-//            }
-           
-        }else
-        {//确认接单
-                [self pushVCByClassName:@"HPOrderManagerViewController" withParam:@{@"model":model}];
-        }
-    }else if( model.order.status.integerValue == 3){
-        if ([HPSingleton sharedSingleton].identifyTag == 0) {//付款后 确认收货
-            [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
-
-        }
-    }
-//    else if( model.order.status.integerValue == 11){
-//        if ([HPSingleton sharedSingleton].identifyTag == 0) {//评价
-//            [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
-//
-//        }
-//    }
 }
 
 - (void)cancelOrder:(HOOrderListModel *)model
@@ -483,6 +438,21 @@ static NSString *orderCell = @"orderCell";
     
 }
 
-#pragma mark - 确认订单详情
+#pragma mark - OrderCellDelegate
 
+- (void)onClickCell:(HPOrderCell *)cell toCancelOrderBtn:(UIButton *)cancelButton
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)onClickCell:(HPOrderCell *)cell toPayOrderBtn:(UIButton *)payButton andModel:(HOOrderListModel *)model
+{
+    [self pushVCByClassName:@"HPOrderPayViewController" withParam:@{@"model":model}];
+}
+
+- (void)onClickCell:(HPOrderCell *)cell toCommentOrderBtn:(UIButton *)commentButton andModel:(HOOrderListModel *)model
+{
+    [self pushVCByClassName:@"HPCommentViewController" withParam:@{@"model":model}];
+
+}
 @end

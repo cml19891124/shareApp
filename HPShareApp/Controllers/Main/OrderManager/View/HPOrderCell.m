@@ -427,21 +427,31 @@
 //    }
     if ([button.currentTitle isEqualToString:@"确认接单"]) {
         [self getConfirmReceiveOrderApi];
-    }else if([button.currentTitle isEqualToString:@"取消订单"]){
-        kWEAKSELF
-//        [self.contentView addSubview:weakSelf.quitView];
-        self.quitView.textView.placeholder = @"  请填写取消此订单原因";
-        
-        [self.quitView show:YES];
-        self.quitView.quitBlock = ^{
-            HPLog(@"5555");
-            [weakSelf.quitView show:NO];
-            [weakSelf cancelOrder:weakSelf.model];
-            
-        };
     }else if([button.currentTitle isEqualToString:@"确认收货"]){
         [self getConfirmOrderApi];
 
+    }else if([button.currentTitle isEqualToString:@"立即支付"]){
+        if ([self.delegate respondsToSelector:@selector(onClickCell:toPayOrderBtn:andModel:)]) {
+            [self.delegate onClickCell:self toCommentOrderBtn:self.topayBtn andModel:self.model];
+        }
+    }
+    if (button.tag == PayOrderToCancel) {
+        if([button.currentTitle isEqualToString:@"取消订单"]){
+            kWEAKSELF
+            self.quitView.textView.placeholder = @"  请填写取消此订单原因";
+            
+            [self.quitView show:YES];
+            self.quitView.quitBlock = ^{
+                HPLog(@"5555");
+                [weakSelf.quitView show:NO];
+                [weakSelf cancelOrder:weakSelf.model];
+                
+            };
+        }else if ([button.currentTitle isEqualToString:@"评价此单"]){
+            if ([self.delegate respondsToSelector:@selector(onClickCell:toCommentOrderBtn:andModel:)]) {
+                [self.delegate onClickCell:self toPayOrderBtn:self.topayBtn andModel:self.model];
+            }
+        }
     }
 }
 
@@ -486,13 +496,22 @@
 //租客取消订单
 - (void)cancelOrder:(HOOrderListModel *)model
 {
+    NSString *method;
+    if ([HPSingleton sharedSingleton].identifyTag == 0) {
+        method = @"/v1/order/tenantCancel";
+    }else{
+        method = @"/v1/order/bossCancel";
+    }
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"cancelReason"] = self.quitView.signTextView.text;
     dic[@"orderId"] = model.order.orderId;
     
-    [HPHTTPSever HPPostServerWithMethod:@"/v1/order/tenantCancel" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPPostServerWithMethod:method paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:MSG];
+            if ([self.delegate respondsToSelector:@selector(onClickCell:toCancelOrderBtn:)]) {
+                [self.delegate onClickCell:self toCancelOrderBtn:self.cancelBtn];
+            }
         }else{
             [HPProgressHUD alertMessage:MSG];
             

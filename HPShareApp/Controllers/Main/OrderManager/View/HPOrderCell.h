@@ -20,6 +20,8 @@
 
 #import "HPUserReceiveView.h"
 
+@class HPOrderCell;
+
 typedef void (^PayOrderClickBlock)(NSInteger payOrder);
 
 typedef NS_ENUM(NSInteger, PayOrder){
@@ -27,6 +29,24 @@ typedef NS_ENUM(NSInteger, PayOrder){
     PayOrderToCancel = 3000,//待支付
     PayOrderToPay//右边支付按钮
 };
+
+@protocol OrderCellDelegate  <NSObject>
+
+/**
+ 取消订单事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toCancelOrderBtn:(UIButton *)cancelButton;
+
+/**
+ 支付订单事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toPayOrderBtn:(UIButton *)payButton andModel:(HOOrderListModel *)model;
+
+/**
+ 评价订单事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toCommentOrderBtn:(UIButton *)commentButton andModel:(HOOrderListModel *)model;
+@end
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPOrderCell : HPBaseTableViewCell
@@ -81,6 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) PayOrderClickBlock payBlock;
 
+@property (nonatomic, weak) id<OrderCellDelegate> delegate;
 @end
 
 NS_ASSUME_NONNULL_END

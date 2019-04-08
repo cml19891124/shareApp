@@ -306,7 +306,7 @@
         [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:不限"]];
     }
 
-    if (_model.spaceDetail.rentOutside) {
+    if (_model.spaceDetail.rentOutside.integerValue == 0) {
         [self.rentOutsideLabel setText:@"室外"];
     }else{
         [self.rentOutsideLabel setText:@"室内"];
