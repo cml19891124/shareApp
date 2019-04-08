@@ -312,7 +312,6 @@
     NSString *lefttime = [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime];
     if ([lefttime isEqualToString:@"剩余:00:00"]) {
         [kNotificationCenter postNotificationName:topaytimeout object:nil];
-        
     }
     
     NSString *start = [[_model.order.days componentsSeparatedByString:@","]firstObject];
@@ -1522,7 +1521,7 @@
 {
     button.selected = !button.selected;
     if (button.selected) {
-        _priceListBtn.image = ImageNamed(@"arrow_up");
+        _priceListBtn.selectedImage = ImageNamed(@"arrow_up");
         [self.orderListView show:YES];
 
     }else{

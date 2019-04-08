@@ -664,7 +664,7 @@
     
     [self.orderListView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view).offset(getWidth(-60.f)-g_bottomSafeAreaHeight);
+        make.bottom.mas_equalTo(self.view).offset(getWidth(-50.f)-g_bottomSafeAreaHeight);
     }];
 }
 
@@ -1217,7 +1217,7 @@
 {
     button.selected = !button.selected;
     if (button.selected) {
-        _priceListBtn.image = ImageNamed(@"arrow_up");
+        _priceListBtn.selectedImage = ImageNamed(@"arrow_up");
         [self.orderListView show:YES];
         
     }else{

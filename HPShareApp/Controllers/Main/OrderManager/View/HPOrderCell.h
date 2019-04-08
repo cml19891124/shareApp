@@ -14,6 +14,12 @@
 
 #import "HOOrderListModel.h"
 
+#import "HPPredictView.h"
+
+#import "HPQuitOrderView.h"
+
+#import "HPUserReceiveView.h"
+
 typedef void (^PayOrderClickBlock)(NSInteger payOrder);
 
 typedef NS_ENUM(NSInteger, PayOrder){
@@ -24,6 +30,12 @@ typedef NS_ENUM(NSInteger, PayOrder){
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPOrderCell : HPBaseTableViewCell
+
+@property (strong, nonatomic) HPUserReceiveView *receiveView;
+
+@property (strong, nonatomic) HPQuitOrderView *quitView;
+
+@property (strong, nonatomic) HPPredictView *predictView;
 
 @property (strong, nonatomic) HOOrderListModel *model;
 

@@ -12,6 +12,8 @@
 
 #import "HPTimeString.h"
 
+#import "HPSingleton.h"
+
 @implementation HPCalenderView
 
 - (void)setupModalView:(UIView *)view
@@ -39,6 +41,16 @@
     [self.view addSubview:self.customCalendarView];
     
     [self setUpSubviewsMasonry];
+    
+    if ([HPSingleton sharedSingleton].identifyTag == 1) {
+        self.resetBtn.userInteractionEnabled = NO;
+        self.confirmButton.userInteractionEnabled = NO;
+
+    }else{
+        self.confirmButton.userInteractionEnabled = YES;
+        self.resetBtn.userInteractionEnabled = YES;
+
+    }
 }
 
 - (UIView *)bottomView

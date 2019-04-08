@@ -165,9 +165,15 @@
         _calenderView = [HPCalenderView new];
         kWEAKSELF
         _calenderView.confirmTheDateBlock = ^(NSString *startDate, NSString *endDate, YZXTimeToChooseType selectedType) {
-            weakSelf.rentStartDayLabel.text = startDate;
+            
+            weakSelf.startDate = startDate;
+            weakSelf.endDate = endDate;
+            NSArray *selectedDays = [[weakSelf verbSelectedDaysArray] componentsSeparatedByString:@","];
+            weakSelf.rentDaysLabel.text = [NSString stringWithFormat:@"拼租日期（共%ld天）",selectedDays.count];
+            weakSelf.orderListView.days = selectedDays;
+            weakSelf.rentStartDayLabel.text = [startDate substringFromIndex:5];
             if (endDate) {
-                weakSelf.rentEndDayLabel.text = endDate;
+                weakSelf.rentEndDayLabel.text = [endDate substringFromIndex:5];
                 weakSelf.rentLineLabel.hidden = NO;
                 weakSelf.rentEndDayLabel.hidden = NO;
             }else{
@@ -197,8 +203,6 @@
 
     [self.calenderView show:YES];
     
-//    self.calenderView.calendarView.daysMenuView.userActivity = YES;
-
 }
 
 
@@ -240,6 +244,7 @@
 
     self.phoneField.text = _model.contactMobile;
     
+    self.priceLabel.text = [NSString stringWithFormat:@"¥ %@",_model.rent];
     /*if (_model.area && [_model.area isEqualToString:@"0"]) {
         if ([_model.areaRange intValue] == 1) {
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"不限"]];
@@ -1235,11 +1240,37 @@
 {
     button.selected = !button.selected;
     if (button.selected) {
-        _priceListBtn.image = ImageNamed(@"arrow_up");
-        [self.orderListView show:YES];
+        _priceListBtn.selectedImage = ImageNamed(@"arrow_up");
+        NSArray *verbDaysArray = [[self verbSelectedDaysArray] componentsSeparatedByString:@","];
+        if (verbDaysArray.count >= 1) {
+            self.orderListView.days = verbDaysArray;
+            
+            NSString *dayRent;
+            if (self.model.rent.length != 0 && self.model.type == 1) {
+                if ([_model.rent isEqualToString:@"0"]) {
+                    dayRent = @"面议";
+                }
+                if (_model.rentType == 1) {
+                    dayRent = [NSString stringWithFormat:@"%.2f",_model.rent.floatValue/24.0];
+
+                }else if (_model.rentType == 2){
+                    dayRent = [NSString stringWithFormat:@"%.2f",_model.rent.floatValue];
+                }else if (_model.rentType == 3){
+                    dayRent = [NSString stringWithFormat:@"%.2f",_model.rent.floatValue/30.0];
+                }else if (_model.rentType == 4){
+                    dayRent = [NSString stringWithFormat:@"%.2f",_model.rent.floatValue/12/30.0];
+                }else {
+                    dayRent = @"面议";
+                }
+            }
+            self.orderListView.dayRent = dayRent;
+            [self.orderListView show:YES];
+        }else{
+            [HPProgressHUD alertMessage:@"请选择日期"];
+        }
 
     }else{
-        _priceListBtn.image = ImageNamed(@"arrow_down");
+        _priceListBtn.selectedImage = ImageNamed(@"arrow_down");
         [self.orderListView show:NO];
     }
 }
@@ -1259,35 +1290,12 @@
         return;
     }
     
-    NSString *rentDays;
-    if (_rentEndDayLabel.text.length == 0) {
-        rentDays = _rentStartDayLabel.text;
-    }else{
-        rentDays = [NSString stringWithFormat:@"%@,%@",_rentStartDayLabel.text,_rentEndDayLabel.text];
-    }
+//    NSString *resultDays = [self verbSelectedDaysArray];
     
-    NSString *startFormatter = [HPTimeString getNeedLineDateFormatter:_rentStartDayLabel.text];
-    
-    NSString *endFormatter = [HPTimeString getNeedLineDateFormatter:_rentEndDayLabel.text];
-
-    NSTimeInterval startSecond = [HPTimeString dateStrToSeconds:startFormatter];
-    
-    NSTimeInterval endSecond = [HPTimeString dateStrToSeconds:endFormatter];
-
-    rentDays = [HPTimeString getDatesStringWithStartTime:startSecond andEndTime:endSecond];
-    NSArray *rentDaysArray = [rentDays componentsSeparatedByString:@","];
-    
-    [self.rentDaysArray addObjectsFromArray:rentDaysArray];
-    if (self.hasOrderArray) {
-        [self.rentDaysArray addObjectsFromArray:self.hasOrderArray];
-    }
-    
-    NSArray *resultDays = [rentDaysArray valueForKeyPath:@"@distinctUnionOfObjects.self"];
-
     dic[@"closeTime"] = closeTime;
     dic[@"contact"] = self.model.contact;
     dic[@"contactMobile"] = self.model.contactMobile;
-    dic[@"days"] = resultDays;
+    dic[@"days"] = [self verbSelectedDaysArray];
     dic[@"openTime"] = openTime;
     dic[@"remark"] = self.desField.text;
     dic[@"shareOrder"] = @"";
@@ -1308,5 +1316,39 @@
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
     }];
+}
+
+
+/**
+ 对勾选的日期进行去重和格式化处理
+ */
+- (NSString *)verbSelectedDaysArray
+{
+    NSString *rentDays;
+    if (_endDate.length == 0) {
+        rentDays = [HPTimeString getNeedDateFormatter:_startDate];
+    }else{
+        
+        NSString *startFormatter = [HPTimeString getNeedLineDateFormatter:_startDate];
+        
+        NSString *endFormatter = [HPTimeString getNeedLineDateFormatter:_endDate];
+        
+        NSTimeInterval startSecond = [HPTimeString dateStrToSeconds:startFormatter];
+        
+        NSTimeInterval endSecond = [HPTimeString dateStrToSeconds:endFormatter];
+        
+        NSString *selectRentDays = [HPTimeString getDatesStringWithStartTime:startSecond andEndTime:endSecond];
+        NSArray *rentDaysArray = [selectRentDays componentsSeparatedByString:@","];
+        
+        [self.rentDaysArray addObjectsFromArray:rentDaysArray];
+        if (self.hasOrderArray) {
+            [self.rentDaysArray addObjectsFromArray:self.hasOrderArray];
+        }
+        
+        NSArray *resultDaysArray = [rentDaysArray valueForKeyPath:@"@distinctUnionOfObjects.self"];
+        rentDays = [resultDaysArray componentsJoinedByString:@","];
+    }
+
+    return rentDays;
 }
 @end

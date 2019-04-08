@@ -52,14 +52,16 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
         self.backgroundColor = [UIColor whiteColor];
         
         self.hasOrderArray = [NSMutableArray array];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(operationHasOrderArray:) name:carlenderhasOrderArrayName object:nil];
-        NSArray *dates = [@"20190404,20190408" componentsSeparatedByString:@","];
-        for (int i = 0; i < dates.count; i ++) {
-            NSString *date = [HPTimeString noPortraitLineToDateStr:dates[i]];
-            if (![self.hasOrderArray containsObject:date]) {
-                [self.hasOrderArray addObject:date];
-            }
-        }
+        
+//        NSArray *dates = [@"20190404,20190408" componentsSeparatedByString:@","];
+//        for (int i = 0; i < dates.count; i ++) {
+//            NSString *date = [HPTimeString noPortraitLineToDateStr:dates[i]];
+//            if (![self.hasOrderArray containsObject:date]) {
+//                [self.hasOrderArray addObject:date];
+//            }
+//        }
         
         _startDateString = startDateString;
         _endDateString = endDateString;
@@ -67,6 +69,14 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
         [self p_initView];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    /*
+     *移除指定通知
+     */
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:carlenderhasOrderArrayName object:nil];
 }
 
 - (void)p_initData
@@ -103,23 +113,17 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     return self.collectionViewData[section].sectionRow * 7;
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (void)operationHasOrderArray:(NSNotification *)noti
 {
     NSLog(@"ddddddd:%@",noti.userInfo[@"array"]);
-    NSArray *dates = @[@"20190404,20190408"];
+    NSArray *dates = noti.userInfo[@"array"];
     for (int i = 0; i < dates.count; i ++) {
         NSString *date = [HPTimeString noPortraitLineToDateStr:dates[i]];
         if (![self.hasOrderArray containsObject:date]) {
             [self.hasOrderArray addObject:date];
         }
-    }
-//    self.hasOrderArray = @[@"20190404,20190408"].mutableCopy;//noti.userInfo[@"array"];
-    
+        [self.collectionView reloadData];
+    }    
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -212,13 +216,14 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
         if ([self.collectionViewData[indexPath.section].headerTitle isEqualToString:[self.hasOrderArray[i] substringToIndex:8]]){
             NSInteger hasday = [[self.hasOrderArray[i] substringWithRange:NSMakeRange(8, 2)] integerValue];
             NSInteger day = indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2);
-            HPLog(@"000000:%@ day:%ld",cell.day.text,day);
+//            HPLog(@"000000:%@ day:%ld",cell.day.text,day);
             if (hasday == day) {
-                cell.priceLabel.text = @"已预订";
-                cell.priceLabel.textColor = COLOR_GRAY_CCCCCC;
+//                cell.priceLabel.text = @"已预订";
                 cell.priceLabel.font = kFont_Medium(10.f);
-                [cell changeDayBackgroundColor:COLOR_GRAY_CCCCCC];
-                
+                [cell changeDayBackgroundColor:COLOR_RED_EA0000];
+                cell.priceLabel.textColor = cell.originalColor;
+                cell.day.textColor = COLOR_GRAY_FFFFFF;
+
             }else{
                 cell.priceLabel.font = cell.originalFont;
             }
@@ -242,10 +247,10 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
         switch (self.selectedArray.count) {
             case 0://选择第一个时间
             {
-                if ([cell.day.text isEqualToString:@"9"]) {
-                    [HPProgressHUD alertMessage:@"已预订，请重新选择"];
-                    return;
-                }
+//                if ([cell.day.text isEqualToString:@"9"]) {
+//                    [HPProgressHUD alertMessage:@"已预订，请重新选择"];
+//                    return;
+//                }
                 //设置点击的cell的样式
                 [self p_changeTheSelectedCellStyleWithIndexPath:indexPath];
                 //记录当前点击的cell
@@ -254,10 +259,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 
                 if (_delegate && [_delegate respondsToSelector:@selector(clickCalendarWithStartDate:andEndDate:)]) {
                     NSString *startString = [NSString stringWithFormat:@"%@%02ld日",self.collectionViewData[indexPath.section].headerTitle,indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2)];
-                    NSString *y = [self.collectionViewData[indexPath.section].headerTitle substringToIndex:4];
-                    NSString *m = [self.collectionViewData[indexPath.section].headerTitle substringWithRange:NSMakeRange(5, 2)];
-                    NSString *d = [NSString stringWithFormat:@"%02ld",@(indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2)).integerValue];
-                    NSString *stTime = [NSString stringWithFormat:@"%@%@%@",y,m,d];
+                    
                     [_delegate clickCalendarWithStartDate:startString andEndDate:nil];
                 }
             }
@@ -302,16 +304,6 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
                 //时间选择完毕，刷新界面
                 [self.collectionView reloadData];
                 
-                
-                NSString *ys = [self.collectionViewData[self.selectedArray.firstObject.section].headerTitle substringToIndex:4];
-                NSString *ms = [self.collectionViewData[self.selectedArray.firstObject.section].headerTitle substringWithRange:NSMakeRange(5, 2)];
-                NSString *ds = [NSString stringWithFormat:@"%02ld",@(self.selectedArray.firstObject.item - (self.collectionViewData[self.selectedArray.firstObject.section].firstDayOfTheMonth - 2)).integerValue];
-                NSString *stTime = [NSString stringWithFormat:@"%@%@%@",ys,ms,ds];
-                
-                NSString *ye = [self.collectionViewData[self.selectedArray.lastObject.section].headerTitle substringToIndex:4];
-                NSString *me = [self.collectionViewData[self.selectedArray.lastObject.section].headerTitle substringWithRange:NSMakeRange(5, 2)];
-                NSString *de = [NSString stringWithFormat:@"%02ld",@(self.selectedArray.lastObject.item - (self.collectionViewData[self.selectedArray.lastObject.section].firstDayOfTheMonth - 2)).integerValue];
-                NSString *eTime = [NSString stringWithFormat:@"%@%@%@",ye,me,de];
                 //代理返回数据
                 if (_delegate && [_delegate respondsToSelector:@selector(clickCalendarWithStartDate:andEndDate:)]) {
                     [_delegate clickCalendarWithStartDate:startDate andEndDate:endDate];
@@ -331,10 +323,6 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
                 if (_delegate && [_delegate respondsToSelector:@selector(clickCalendarWithStartDate:andEndDate:)]) {
                     NSString *startString = [NSString stringWithFormat:@"%@%02ld日",self.collectionViewData[indexPath.section].headerTitle,indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2)];
                     
-                    NSString *y = self.collectionViewData[indexPath.section].headerTitle;
-                    NSString *m = [self.collectionViewData[indexPath.section].headerTitle substringWithRange:NSMakeRange(5, 2)];
-                    NSString *d = [NSString stringWithFormat:@"%02ld",@(indexPath.item - self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2).integerValue];
-                    NSString *stTime = [NSString stringWithFormat:@"%@%@%@",y,m,d];
                     [_delegate clickCalendarWithStartDate:startString andEndDate:nil];
                 }
             }

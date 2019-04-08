@@ -437,15 +437,15 @@ static NSString *payStyleCell = @"payStyleCell";
     PayResp * payResp = notification.object;
     if(payResp.errCode == 0){
         
-        [HUD HUDHidden];
+//        [HUD HUDHidden];
         [self pushVCByClassName:@"HPPayResultViewController" withParam:@{@"orderNo":self.payModel.out_trade_no}];
         if(self.paySuccessBlock){
             self.paySuccessBlock();
         }
     }else{
-        [HUD HUDWithString:@"支付失败！"];
-        [HUD HUDHidden];
-        
+//        [HUD HUDWithString:@"支付失败！"];
+//        [HUD HUDHidden];
+        [HPProgressHUD alertMessage:@"支付失败！"];
     }
     
 }

@@ -185,7 +185,7 @@
         _tipLabel.textColor = COLOR_GRAY_FFFFFF;
         _tipLabel.font = kFont_Medium(14.f);
         _tipLabel.textAlignment = NSTextAlignmentLeft;
-        _tipLabel.text = @"新订单提醒（小女当家场地拼租）";
+        _tipLabel.text = @"您的订单已同意，请及时前往付款";
     }
     return _tipLabel;
 }

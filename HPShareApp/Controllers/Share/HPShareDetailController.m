@@ -1225,7 +1225,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [intentionLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_GRAY_999999 range:NSMakeRange(0, 4)];
     [intentionLabelattr addAttribute:NSForegroundColorAttributeName value:COLOR_BLACK_333333 range:NSMakeRange(4, intentString.length - 4)];
     [intentionLabelattr addAttribute:NSFontAttributeName value:kFont_Medium(14.f) range:NSMakeRange(0, 4)];
-    [intentionLabelattr addAttribute:NSFontAttributeName value:kFont_Bold(14.f) range:NSMakeRange(4, _intentionLabel.text.length - 4)];
+    [intentionLabelattr addAttribute:NSFontAttributeName value:kFont_Bold(14.f) range:NSMakeRange(4, intentString.length - 4)];
     _intentionLabel.attributedText = intentionLabelattr;
     
     if (model.shareTime && ![model.shareTime isEqualToString:@""]) {

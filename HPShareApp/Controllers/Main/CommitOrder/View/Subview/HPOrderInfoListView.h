@@ -16,6 +16,8 @@
 
 #import "HOOrderListModel.h"
 
+#import "HPTimeString.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPOrderInfoListView : HPBaseDialogView<UITableViewDelegate,UITableViewDataSource>
@@ -35,6 +37,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *feeLabel;
 
 @property (nonatomic, strong) UILabel *totalFeeLabel;
+
+/**
+ 日租金
+ */
+@property (nonatomic, copy) NSString *dayRent;
+
+@property (strong, nonatomic) UIView *lineView;
 
 @end
 

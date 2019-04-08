@@ -184,8 +184,8 @@
 #define kFont_Heavy(font)  [UIFont fontWithName:@"PingFangSC-Semibold"size:font]
 #define kRect(x, y, w, h)   CGRectMake(x, y, w, h)
 //#define kBaseUrl  @"https://inner.hepaicn.com"
-#define kBaseUrl  @"https://app.hepaicn.com"
-//#define kBaseUrl  @"http://192.168.0.104:8083"//测试
+//#define kBaseUrl  @"https://app.hepaicn.com"
+#define kBaseUrl  @"http://192.168.0.104:8083"//测试
 //#define kBaseUrl  @"http://192.168.0.60:8083"//罗
 //#define kBaseUrl  @"http://192.168.0.148:8083"//胜光
 
@@ -277,8 +277,8 @@ static NSInteger const st_settingTag = 12;
 
 static NSString * const st_receiveUnknowMessageDes = @"收到新消息类型无法解析的数据，请升级查看";
 static NSString * const st_receiveErrorMessageDes = @"接收消息错误";
-static NSString * const confirmReceiveOrderMessage = @"confirmReceiveOrderMessage";
-static NSString * const confirmUserReceiveOrderMessage = @"confirmUserReceiveOrderMessage";
+//static NSString * const confirmReceiveOrderMessage = @"confirmReceiveOrderMessage";
+//static NSString * const confirmUserReceiveOrderMessage = @"confirmUserReceiveOrderMessage";
 //通知
 
 #define notice_AliPayReturnData @"notice_AliPayReturnData" //支付宝支付返回结果

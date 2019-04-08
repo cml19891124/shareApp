@@ -35,6 +35,17 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
 
     [self.footerView addSubview:self.feeLabel];
 
+    [self.footerView addSubview:self.lineView];
+
+}
+
+- (UIView *)lineView
+{
+    if (!_lineView) {
+        _lineView = [UIView new];
+        _lineView.backgroundColor = COLOR_GRAY_CCCCCC;
+    }
+    return _lineView;
 }
 
 - (void)setUpOrderViewMasonry
@@ -44,6 +55,7 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
         make.left.right.mas_equalTo(self);
         make.bottom.mas_equalTo(self);
         make.height.mas_equalTo(getWidth(40.f) * (self.days.count + 1));
+        make.top.mas_equalTo(kScreenHeight/2);
     }];
 
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -76,6 +88,12 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
         make.height.mas_equalTo(getWidth(40.f));
         make.right.mas_equalTo(getWidth(-15.f));
         make.width.mas_equalTo(feeW);
+    }];
+    
+    [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.footerView);
+        make.height.mas_equalTo(1);
+        
     }];
 }
 
@@ -140,10 +158,10 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorColor = UIColor.clearColor;
-        [_tableView setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+//        [_tableView setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+//        _tableView.contentInset = UIEdgeInsetsMake(0, 0, getWidth(-60.f), 0);
+        _tableView.scrollEnabled = YES;
         [_tableView registerClass:HPOrderInfoListCell.class forCellReuseIdentifier:orderInfoListCell];
-//        [_tableView registerClass:HPTotalFeeCell.class forCellReuseIdentifier:totalFeeCell];
-
     }
     return _tableView;
 }
@@ -164,7 +182,7 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
 {
     HPOrderInfoListCell *cell = [tableView dequeueReusableCellWithIdentifier:orderInfoListCell];
     cell.dateLabel.text = self.days[indexPath.row];
-    cell.priceLabel.text = [NSString stringWithFormat:@"¥%.2f",self.model.order.totalFee.floatValue/self.days.count];
+    cell.priceLabel.text = self.model?[NSString stringWithFormat:@"¥%.02f",self.model.order.totalFee.floatValue/self.days.count]:[NSString stringWithFormat:@"¥%.02f",self.dayRent.floatValue/self.days.count];
     return cell;
 }
 
@@ -187,5 +205,26 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
     }];
     self.feeLabel.text = self.model.order.totalFee?[NSString stringWithFormat:@"¥%@",self.model.order.totalFee]:@"--";
     [self.tableView reloadData];
+}
+
+- (void)setDays:(NSArray *)days
+{
+    _days = days;
+    //tableView的高度
+    CGFloat tbTopHeight = getWidth(40.f) * (self.days.count + 1)+getWidth(50.f);
+
+    [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+        if (tbTopHeight > kScreenHeight/2) {
+            make.height.mas_equalTo(getWidth(300.f));
+                                    
+        }else{
+            make.height.mas_equalTo(tbTopHeight);
+            
+        }
+    }];
+    [self layoutIfNeeded];
+    self.feeLabel.text = self.dayRent?[NSString stringWithFormat:@"¥%@",self.dayRent]:@"--";
+    [self.tableView reloadData];
+
 }
 @end

@@ -164,27 +164,17 @@ static NSString *orderItemCell = @"HPOrderItemCell";
         [self.newOrderView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.view);
         }];
-        [kNotificationCenter addObserver:self selector:@selector(showUserNewOrederView:) name:confirmUserReceiveOrderMessage object:nil];
-
-//        [self.newOrderView show:YES];
         
     }else{
         [HPSingleton sharedSingleton].identifyTag = 0;
-        [kNotificationCenter addObserver:self selector:@selector(showNewOrederView:) name:confirmReceiveOrderMessage object:nil];
     }
     [self.tableView reloadData];
 }
 
-- (void)dealloc
+#pragma mark - 店主接到新订单的弹框
+- (void)showNewOrederView
 {
-    [kNotificationCenter removeObserver:self];
-    [kNotificationCenter removeObserver:self];
-
-}
-
-- (void)showNewOrederView:(NSNotification *)noti
-{
-    self.model = noti.userInfo[@"model"];
+//    self.model = noti.userInfo[@"model"];
     if (self.model.order.status.integerValue == 2) {
         [self.userOrderView show:YES];
         self.userOrderView.tipLabel.text = [NSString stringWithFormat:@"新订单提醒（%@）",self.model.spaceDetail.shortName];
@@ -199,10 +189,11 @@ static NSString *orderItemCell = @"HPOrderItemCell";
     }
 }
 
+#pragma mark - 租客接到新订单的弹框
 
-- (void)showUserNewOrederView:(NSNotification *)noti
+- (void)showUserNewOrederView
 {
-    self.model = noti.userInfo[@"model"];
+//    self.model = noti.userInfo[@"model"];
     if (self.model.order.status.integerValue == 1) {
         [self.newOrderView show:YES];
         self.newOrderView.tipLabel.text = [NSString stringWithFormat:@"新订单提醒（%@）",self.model.spaceDetail.shortName];

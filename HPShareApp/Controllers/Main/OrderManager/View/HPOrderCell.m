@@ -63,11 +63,8 @@
     [self.bgView addSubview:self.desLabel];
     
     [self.bgView addSubview:self.totalLabel];
-    
 
     [self.bgView addSubview:self.payLine];
-    
-//    [self.bgView addSubview:self.returnBtn];
     
     [self.bgView addSubview:self.topayBtn];
 
@@ -133,6 +130,7 @@
     [self.rentDuringLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.shopIcon.mas_right).offset(getWidth(10.f));
         make.top.mas_equalTo(self.shopNameLabel.mas_bottom).offset(getWidth(18.f));
+        make.right.mas_equalTo(self.bgView.mas_right).offset(getWidth(-15.f));
     }];
     
     [self.desLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -289,11 +287,11 @@
     if (!_rentDuringLabel) {
         _rentDuringLabel = [UILabel new];
         _rentDuringLabel.textColor = COLOR_BLACK_333333;
-        _rentDuringLabel.font = kFont_Medium(12.f);
+        _rentDuringLabel.font = kFont_Regular(12.f);
         _rentDuringLabel.text = @"租期（共7天）：3月21、3月22、3月23...";
         _rentDuringLabel.textAlignment = NSTextAlignmentLeft;
-        _rentDuringLabel.numberOfLines = 2;
-        [_rentDuringLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+//        _rentDuringLabel.numberOfLines = 2;
+//        [_rentDuringLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
     }
     return _rentDuringLabel;
 }
@@ -303,7 +301,7 @@
     if (!_desLabel) {
         _desLabel = [UILabel new];
         _desLabel.textColor = COLOR_BLACK_333333;
-        _desLabel.font = kFont_Medium(12.f);
+        _desLabel.font = kFont_Regular(12.f);
         _desLabel.text = @"拼租说明：我想用来做做推广，奶茶免费试喝";
         _desLabel.textAlignment = NSTextAlignmentLeft;
     }
@@ -387,11 +385,138 @@
     return _returnBtn;
 }
 
+- (HPPredictView *)predictView
+{
+    if (!_predictView) {
+        _predictView = [HPPredictView new];
+        kWEAKSELF
+        _predictView.knownBlock = ^{
+            [weakSelf.predictView show:NO];
+            if ([weakSelf.topayBtn.currentTitle isEqualToString:@"确认接单"]) {
+                if (weakSelf.payBlock) {
+                    weakSelf.payBlock(weakSelf.topayBtn.tag);
+                }
+            }
+        };
+        
+        _predictView.onlineBlock = ^{//即时通讯
+
+        };
+        
+        [_predictView setOnlineText:@"付款提醒"];
+    }
+    return _predictView;
+}
+
+- (HPUserReceiveView *)receiveView
+{
+    if (!_receiveView) {
+        kWEAKSELF
+        _receiveView = [HPUserReceiveView new];
+        _receiveView.noBlock = ^{
+            [weakSelf.receiveView show:NO];
+        };
+    }
+    return _receiveView;
+}
+
 - (void)clickManagerFunds:(UIButton *)button
 {
-    if (self.payBlock) {
-        self.payBlock(button.tag);
+//    if (self.payBlock) {
+//        self.payBlock(button.tag);
+//    }
+    if ([button.currentTitle isEqualToString:@"确认接单"]) {
+        [self getConfirmReceiveOrderApi];
+    }else if([button.currentTitle isEqualToString:@"取消订单"]){
+        kWEAKSELF
+//        [self.contentView addSubview:weakSelf.quitView];
+        self.quitView.textView.placeholder = @"  请填写取消此订单原因";
+        
+        [self.quitView show:YES];
+        self.quitView.quitBlock = ^{
+            HPLog(@"5555");
+            [weakSelf.quitView show:NO];
+            [weakSelf cancelOrder:weakSelf.model];
+            
+        };
+    }else if([button.currentTitle isEqualToString:@"确认收货"]){
+        [self getConfirmOrderApi];
+
     }
+}
+
+
+- (HPQuitOrderView *)quitView
+{
+    if (!_quitView) {
+        
+        _quitView = [HPQuitOrderView new];
+        kWEAKSELF
+        _quitView.holderBlock = ^{
+            HPLog(@"dfsdg");
+            [weakSelf.quitView show:NO];
+        };
+        
+    }
+    return _quitView;
+}
+
+#pragma mark - 确认接单
+- (void)getConfirmReceiveOrderApi
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"isBoss"] = @([HPSingleton sharedSingleton].identifyTag);
+    dic[@"orderId"] = _model.order.orderId;
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/order/bossAcceptOrder" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+            [self.predictView show:YES];
+            [self.predictView.tipBtn setTitle:@"接单成功" forState:UIControlStateNormal];
+            self.predictView.messageLabel.text = @"租客付款后请按预定给租客提供场地";
+            //            [kNotificationCenter postNotificationName:confirmReceiveOrderMessage object:nil userInfo:@{@"model":self.model}];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+            
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+//租客取消订单
+- (void)cancelOrder:(HOOrderListModel *)model
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"cancelReason"] = self.quitView.signTextView.text;
+    dic[@"orderId"] = model.order.orderId;
+    
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/order/tenantCancel" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+            
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+//确认收货
+- (void)getConfirmOrderApi
+{
+    
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/order/confirm" isNeedToken:YES paraments:@{@"orderId":@(_model.order.orderId.integerValue)} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+            [self.receiveView show:NO];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+            
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 - (void)setModel:(HOOrderListModel *)model
@@ -413,10 +538,10 @@
     }else{
         self.rentDuringLabel.text = [NSString stringWithFormat:@"租期:%@",model.order.days];
     }
-    if (kObjectIsEmpty(model.spaceDetail.remark)) {
+    if (kObjectIsEmpty(model.order.remark)) {
         self.desLabel.text = [NSString stringWithFormat:@"拼租说明:--"];
     }else{
-        self.desLabel.text = [NSString stringWithFormat:@"拼租说明:%@",model.spaceDetail.remark];
+        self.desLabel.text = [NSString stringWithFormat:@"拼租说明:%@",model.order.remark];
     }
     
     self.totalLabel.text = [NSString stringWithFormat:@"合计：¥%@",model.order.totalFee];

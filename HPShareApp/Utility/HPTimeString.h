@@ -34,7 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 +(NSString*)getCurrentTimesWithSeconds;
 
-//服务器要的日期格式
+/*
+ *服务器要的日期格式
+*/
 + (NSString *)getNeedDateFormatter:(NSString *)time;
 
 //服务器要的日期格式2019-04-08 00:00:00
@@ -45,8 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 //秒数转字符串日期
 + (NSString *)secondsToDateStr:(NSTimeInterval)seconds;
-
-//20190408转字符串日期2019年04月08日
+/*
+ *20190408转字符串日期2019年04月08日
+ */
 + (NSString *)noPortraitLineToDateStr:(NSString *)dateTime;
 /**
  获取日期数组字符串
@@ -55,7 +58,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)getYearMonthDayDates:(long long)startTime andEndTime:(long long)endTime;
 
-//获取两天之间的所有日期
+/*
+ *获取两天之间的所有日期
+ */
 + (NSString *)getDatesWithStartDate:(NSString *)startDate endDate:(NSString *)endDate;
 
 +(NSString *)getNowTimeTimestamp;

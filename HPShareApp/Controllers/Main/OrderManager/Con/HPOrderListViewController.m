@@ -344,20 +344,12 @@ static NSString *orderCell = @"orderCell";
             [weakSelf deleteOrderFromList:model];
             
         }else if (payOrder == PayOrderToCancel){///{version}/orderReview/orderReview 订单评价
-            ///{version}/orderReview/queryOrderReview
-            //查看订单评价
-            
-            [weakSelf.view addSubview:weakSelf.quitView];
-            
-            weakSelf.quitView.signTextView.placehText = @"  请填写取消此订单原因";
-            
-            [weakSelf.quitView show:YES];
-            weakSelf.quitView.quitBlock = ^{
-                HPLog(@"5555");
-                [weakSelf.quitView show:NO];
-                [weakSelf cancelOrder:model];
-                
-            };
+            if ([HPSingleton sharedSingleton].identifyTag == 0) {
+                if (model.order.status.integerValue == 3) {
+                    [self pushVCByClassName:@"HPCommentViewController" withParam:@{@"model":model}];
+
+                }
+            }
             
         }else if (payOrder == PayOrderToPay){
             
@@ -390,10 +382,10 @@ static NSString *orderCell = @"orderCell";
         
     }else if( model.order.status.integerValue == 1){
         if ([HPSingleton sharedSingleton].identifyTag == 0) {
-            if([cell.topayBtn.currentTitle isEqualToString:@"在线催单"]){
+//            if([cell.topayBtn.currentTitle isEqualToString:@"在线催单"]){
                 [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
-                
-            }
+            
+//            }
            
         }else
         {//确认接单
@@ -471,9 +463,24 @@ static NSString *orderCell = @"orderCell";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    HOOrderListModel *model = self.orderArray[indexPath.row];
+    HOOrderListModel *model = self.orderArray[indexPath.row];
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ([HPSingleton sharedSingleton].identifyTag == 0) {
+        if( model.order.status.integerValue == 1){
+            [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
+
+        }else if(model.order.status.integerValue == 2){
+            [self pushVCByClassName:@"HPImergencyManagerViewController" withParam:@{@"model":model}];
+            
+        }else if (model.order.status.integerValue == 3){
+            [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
+
+        }else{
+
+        }
+    }
+    
 }
 
 #pragma mark - 确认订单详情

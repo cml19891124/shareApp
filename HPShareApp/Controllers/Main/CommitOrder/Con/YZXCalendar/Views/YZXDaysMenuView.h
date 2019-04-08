@@ -48,4 +48,6 @@
 
 @property (strong, nonatomic) NSMutableArray *hasOrderArray;
 
+@property (strong, nonatomic) NSArray *hasOrderNewArray;
+
 @end
