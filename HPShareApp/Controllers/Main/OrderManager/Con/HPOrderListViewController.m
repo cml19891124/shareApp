@@ -23,6 +23,8 @@
 
 #import "HPSingleton.h"
 
+#import "YYLRefreshNoDataView.h"
+
 typedef NS_ENUM(NSInteger, HPOrderType) {
     HPOrderTypeRentCreateOrder = 4901,//租客下单，等待商家确认
     HPOrderTypeOwnnerConfirmOrder,//商家确认，等待租客确认
@@ -34,7 +36,7 @@ typedef NS_ENUM(NSInteger, HPOrderType) {
     HPOrderTypeOwnnerRenterTimerOutOfToPayCancel//超时未付款取消
 };
 
-@interface HPOrderListViewController ()<UITableViewDelegate,UITableViewDataSource,OrderCellDelegate>
+@interface HPOrderListViewController ()<UITableViewDelegate,UITableViewDataSource,OrderCellDelegate,YYLRefreshNoDataViewDelegate>
 
 @property (strong, nonatomic) HPOrderCell *cell;
 
@@ -100,6 +102,12 @@ static NSString *orderCell = @"orderCell";
     
     self.status = @(0);
     _model = self.param[@"order"];
+    
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        
+        self.shareListParam.page = 1;
+        [self getOrderListApiReload:YES];
+    }];
     
     self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         [self getOrderListApiReload:NO];
@@ -175,7 +183,17 @@ static NSString *orderCell = @"orderCell";
             }
             
             if ([responseObject[@"data"][@"total"] integerValue] == 0 || self.orderArray.count == 0) {
-                [HPProgressHUD alertMessage:@"暂无数据"];
+//                [HPProgressHUD alertMessage:@"暂无数据"];
+                self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
+                self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"tixian");
+                self.tableView.refreshNoDataView.tipLabel.text = @"列表空空如也，快去逛逛吧~";
+                [self.tableView.refreshNoDataView.tipBtn setTitle:@"去逛逛" forState:UIControlStateNormal];
+                self.tableView.refreshNoDataView.tipBtn.backgroundColor = COLOR_GRAY_FFFFFF;
+                self.tableView.refreshNoDataView.tipBtn.layer.cornerRadius = 6;
+                self.tableView.refreshNoDataView.tipBtn.layer.masksToBounds = YES;
+                self.tableView.refreshNoDataView.tipBtn.layer.borderColor = COLOR_RED_FF1213.CGColor;
+                self.tableView.refreshNoDataView.tipBtn.layer.borderWidth = 1;
+                self.tableView.refreshNoDataView.delegate = self;
             }
             
             if (listArray.count < 10) {
@@ -308,7 +326,7 @@ static NSString *orderCell = @"orderCell";
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.orderItemView.mas_bottom);
+        make.top.mas_equalTo(self.orderItemView.mas_bottom).offset(getWidth(2.f));
     }];
 }
 
@@ -536,5 +554,11 @@ static NSString *orderCell = @"orderCell";
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
     }];
+}
+
+#pragma mark - YYLRefreshNoDataViewDelegate
+
+- (void)clickToCheckSTHForRequirments {
+    [self pushVCByClassName:@"HPShareShopListController"];
 }
 @end

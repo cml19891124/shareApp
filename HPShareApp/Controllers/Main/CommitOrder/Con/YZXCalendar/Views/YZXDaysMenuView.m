@@ -228,7 +228,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
                 cell.priceLabel.font = cell.originalFont;
             }
         }
-        if ([HPSingleton sharedSingleton].identifyTag == 1) {
+        if (self.hasOrderArray.count > 0) {
             cell.userInteractionEnabled = NO;
         }else{
             cell.userInteractionEnabled = YES;

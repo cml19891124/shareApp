@@ -74,11 +74,13 @@
 
 @property (nonatomic, strong) UILabel *locationLabel;
 
+@property (strong, nonatomic) UILabel *rentOutsideLabel;
+
 @property (nonatomic, strong) UILabel *spaceInfoLabel;
 
 @property (nonatomic, strong) UILabel *addressLabel;
 
-@property (nonatomic, strong) HPShareDetailModel *model;
+@property (nonatomic, strong) HPShareListModel *model;
 
 @property (nonatomic, strong) UIView *rentInfoView;
 
@@ -236,27 +238,27 @@
 {
     self.nameLabel.text = _model.title;
     
-    self.locationLabel.text = _model.address;
+    self.locationLabel.text = [NSString stringWithFormat:@"拼租位置:%@",_model.address];
 
-    [self.storeView sd_setImageWithURL:@"" placeholderImage:ImageNamed(@"")];
+    [self.storeView sd_setImageWithURL:[NSURL URLWithString:_model.picture.url] placeholderImage:ImageNamed(@"")];
     
-    self.addressLabel.text = _model.address;
+    self.addressLabel.text = [NSString stringWithFormat:@"地址:%@",_model.address];
     
     self.ownnerField.text = _model.contact;
 
     self.phoneField.text = _model.contactMobile;
     
     self.priceLabel.text = [NSString stringWithFormat:@"¥ %@",_model.rent];
-    /*if (_model.area && [_model.area isEqualToString:@"0"]) {
-        if ([_model.areaRange intValue] == 1) {
+    if (_model.area && ![_model.area isEqualToString:@"0"]) {
+        if ([_model.area intValue] == 1) {
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"不限"]];
-        }else if ([_model.areaRange intValue] == 2){
+        }else if ([_model.area intValue] == 2){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"小于5㎡"]];
-        }else if ([_model.areaRange intValue] == 3){
+        }else if ([_model.area intValue] == 3){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"5-10㎡"]];
-        }else if ([_model.areaRange intValue] == 4){
+        }else if ([_model.area intValue] == 4){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"10-20㎡"]];
-        }else if ([_model.areaRange intValue] == 5){
+        }else if ([_model.area intValue] == 5){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"20㎡以上"]];
         }else {
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:面议"]];
@@ -264,7 +266,7 @@
     }
     else{
         [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:不限"]];
-    }*/
+    }
 }
 - (void)setUpCommitSubviews
 {
@@ -283,6 +285,8 @@
     [self.storeInfoView addSubview:self.nameLabel];
 
     [self.storeInfoView addSubview:self.locationLabel];
+
+    [self.storeInfoView addSubview:self.rentOutsideLabel];
 
     [self.storeInfoView addSubview:self.spaceInfoLabel];
 
@@ -405,8 +409,16 @@
         make.height.mas_equalTo(self.nameLabel.font.pointSize);
     }];
     
+    [self.rentOutsideLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(getWidth(-15.f));
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
+        make.height.mas_equalTo(self.rentOutsideLabel.font.pointSize);
+        make.width.mas_equalTo(30.f);
+    }];
+    
     [self.locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.width.mas_equalTo(self.nameLabel);
+        make.left.mas_equalTo(self.nameLabel);
+        make.right.mas_equalTo(self.rentOutsideLabel.mas_left).offset(getWidth(-2.f));
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
         make.height.mas_equalTo(self.locationLabel.font.pointSize);
     }];
@@ -727,6 +739,21 @@
         _locationLabel.textColor = COLOR_GRAY_999999;
     }
     return _locationLabel;
+}
+
+- (UILabel *)rentOutsideLabel
+{
+    if (!_rentOutsideLabel) {
+        _rentOutsideLabel = [UILabel new];
+        _rentOutsideLabel.layer.cornerRadius = 2;
+        _rentOutsideLabel.layer.masksToBounds= YES;
+        _rentOutsideLabel.backgroundColor = COLOR_RED_EA0000;
+        _rentOutsideLabel.text = @"室外";
+        _rentOutsideLabel.textAlignment = NSTextAlignmentCenter;
+        _rentOutsideLabel.font = kFont_Medium(12.f);
+        _rentOutsideLabel.textColor = COLOR_GRAY_FFFFFF;
+    }
+    return _rentOutsideLabel;
 }
 
 - (UILabel *)spaceInfoLabel
