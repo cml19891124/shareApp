@@ -216,8 +216,6 @@
 
     [self.view addSubview:self.calenderView];
     
-    self.calenderView.calendarView.daysMenuView.userActivity = NO;
-    
     [self.calenderView show:YES];
 }
 
@@ -272,8 +270,6 @@
     [self.storeView sd_setImageWithURL:[NSURL URLWithString:_model.spaceDetail.picture.url] placeholderImage:ImageNamed(@"loading_logo_small")];
     
     self.nameLabel.text = [NSString stringWithFormat:@"拼租位置：%@",_model.spaceDetail.address];
-    
-//    self.locationLabel.text = _model.address;
     
     if (_model.spaceDetail.area && [_model.spaceDetail.area isEqualToString:@"0"]) {
         if ([_model.spaceDetail.areaRange intValue] == 1) {

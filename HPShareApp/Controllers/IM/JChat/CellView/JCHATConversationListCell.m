@@ -12,7 +12,7 @@
 #import <CoreText/CoreText.h>
 #import "Masonry.h"
 #import "Macro.h"
-#define kSeparationLineColor UIColorFromRGB(0xd0d0d0)
+#define kSeparationLineColor UIColorFromRGB(0x999999)
 
 #define UIColorFromRGB(rgbValue) [UIColor  colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0  green:((float)((rgbValue & 0xFF00) >> 8))/255.0  blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
@@ -39,7 +39,7 @@
     make.height.mas_equalTo(0.5);
     make.bottom.mas_equalTo(self);
   }];
-  _cellLine.backgroundColor = kSeparationLineColor;
+  _cellLine.backgroundColor = COLOR_GRAY_F9FAFD;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

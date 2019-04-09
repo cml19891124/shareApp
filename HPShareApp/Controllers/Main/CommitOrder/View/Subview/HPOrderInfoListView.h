@@ -20,7 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HPOrderInfoListView : HPBaseDialogView<UITableViewDelegate,UITableViewDataSource>
+@interface HPOrderInfoListView : HPBaseModalView<UITableViewDelegate,UITableViewDataSource>
 
 @property (strong, nonatomic) NSArray * days;
 
@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UILabel *totalFeeLabel;
 
+@property (strong, nonatomic) UIView *view;
 /**
  日租金
  */

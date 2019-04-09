@@ -864,7 +864,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         [self pushVCByClassName:@"HPCommitOrderViewController" withParam:@{@"order":model}];
 
     }else{
-        [self pushVCByClassName:@"HPCommitOrderViewController" withParam:@{@"order":model}];
+//        [self pushVCByClassName:@"HPCommitOrderViewController" withParam:@{@"order":model}];
 
     }
 }

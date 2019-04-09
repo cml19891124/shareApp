@@ -16,7 +16,10 @@
 #import "HPAttributeLabel.h"
 
 @interface HPOwnnerTimeOutViewController ()<UIScrollViewDelegate>
-
+/**
+ 室内、室外
+ */
+@property (strong, nonatomic) UILabel *rentOutsideLabel;
 
 @property (strong, nonatomic) UILabel *timeoutLabel;
 
@@ -41,9 +44,9 @@
 
 @property (nonatomic, strong) UILabel *nameLabel;
 
-@property (nonatomic, strong) UILabel *rentDaysLabel;
+@property (nonatomic, strong) UILabel *locationLabel;
 
-@property (nonatomic, strong) UILabel *duringDayslabel;
+@property (nonatomic, strong) UILabel *spaceInfoLabel;
 
 @property (nonatomic, strong) UIView *contactLine;
 
@@ -189,9 +192,7 @@
 {
     [self.thumbView sd_setImageWithURL:[NSURL URLWithString:_model.spaceDetail.picture.url] placeholderImage:ImageNamed(@"loading_logo_small")];
     
-    self.nameLabel.text = [NSString stringWithFormat:@"拼租位置：%@",_model.spaceDetail.address];
-    
-    //    self.locationLabel.text = _model.address;
+    self.nameLabel.text = _model.spaceDetail.title;
     
     if ([HPSingleton sharedSingleton].identifyTag == 1) {
         
@@ -214,7 +215,51 @@
 
     self.orderSubLabel.text = _model.order.orderNo;
     
-    self.rentDaysLabel.text = [NSString stringWithFormat:@"拼租：%@",_model.order.days];
+    self.locationLabel.text = [NSString stringWithFormat:@"拼租位置：%@",_model.spaceDetail.address];
+    
+    if (_model.spaceDetail.rentOutside.integerValue == 0) {
+        [self.rentOutsideLabel setText:@"室外"];
+    }else{
+        [self.rentOutsideLabel setText:@"室内"];
+        
+    }
+    
+    if (_model.spaceDetail.area && [_model.spaceDetail.area isEqualToString:@"0"]) {
+        if ([_model.spaceDetail.areaRange intValue] == 1) {
+            [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"不限"]];
+        }else if ([_model.spaceDetail.areaRange intValue] == 2){
+            [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"小于5㎡"]];
+        }else if ([_model.spaceDetail.areaRange intValue] == 3){
+            [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"5-10㎡"]];
+        }else if ([_model.spaceDetail.areaRange intValue] == 4){
+            [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"10-20㎡"]];
+        }else if ([_model.spaceDetail.areaRange intValue] == 5){
+            [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"20㎡以上"]];
+        }else {
+            [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:面议"]];
+        }
+    }
+    else{
+        [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:不限"]];
+    }
+
+}
+
+- (UILabel *)rentOutsideLabel
+{
+    if (!_rentOutsideLabel) {
+        _rentOutsideLabel = [UILabel new];
+        _rentOutsideLabel.layer.cornerRadius = 2.f;
+        _rentOutsideLabel.layer.masksToBounds = YES;
+        _rentOutsideLabel.textColor = COLOR_GRAY_FFFFFF;
+        _rentOutsideLabel.backgroundColor = COLOR_RED_EA0000;
+        _rentOutsideLabel.font = kFont_Medium(12.f);
+        _rentOutsideLabel.text = @"室内";
+        _rentOutsideLabel.textAlignment = NSTextAlignmentCenter;
+        _rentOutsideLabel.numberOfLines = 0;
+        [_rentOutsideLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    }
+    return _rentOutsideLabel;
 }
 
 - (UILabel *)nameLabel
@@ -263,9 +308,9 @@
     
     [self.communicateView addSubview:self.nameLabel];
     
-    [self.communicateView addSubview:self.rentDaysLabel];
+    [self.communicateView addSubview:self.locationLabel];
     
-    [self.communicateView addSubview:self.duringDayslabel];
+    [self.communicateView addSubview:self.spaceInfoLabel];
     
     [self.communicateView addSubview:self.addressLabel];
     
@@ -379,37 +424,43 @@
     }];
     
     [self.thumbView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(getWidth(65.f));
+        make.width.height.mas_equalTo(getWidth(85.f));
         make.top.left.mas_equalTo(getWidth(15.f));
     }];
     
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(getWidth(18.f));
+        make.top.mas_equalTo(getWidth(15.f));
         make.height.mas_equalTo(self.nameLabel.font.pointSize);
         make.left.mas_equalTo(self.thumbView.mas_right).offset(getWidth(15.f));
         make.right.mas_equalTo(getWidth(-15.f));
         
     }];
     
-    CGFloat rentW = BoundWithSize(self.rentDaysLabel.text, kScreenWidth, 14.f).size.width;
-    [self.rentDaysLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    CGFloat rentW = BoundWithSize(self.locationLabel.text, kScreenWidth, 14.f).size.width;
+    [self.locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
-        make.height.mas_equalTo(self.rentDaysLabel.font.pointSize);
-        make.left.mas_equalTo(self.nameLabel);
+        make.height.mas_equalTo(self.locationLabel.font.pointSize);
+        make.left.mas_equalTo(self.thumbView.mas_right).offset(getWidth(15.f));
         make.width.mas_equalTo(rentW);
     }];
     
-    [self.duringDayslabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.rentOutsideLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.locationLabel.mas_right).offset(getWidth(10.f));
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
-        make.height.mas_equalTo(self.duringDayslabel.font.pointSize);
-        make.left.mas_equalTo(self.rentDaysLabel.mas_right).offset(getWidth(20.f));
-        make.right.mas_equalTo(getWidth(-15.f));
+        make.height.mas_equalTo(self.rentOutsideLabel.font.pointSize);
+        make.width.mas_equalTo(getWidth(30.f));
     }];
     
+    [self.spaceInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.locationLabel.mas_bottom).offset(getWidth(10.f));
+        make.height.mas_equalTo(self.spaceInfoLabel.font.pointSize);
+        make.left.mas_equalTo(self.thumbView.mas_right).offset(getWidth(15.f));
+        make.right.mas_equalTo(getWidth(-15.f));
+    }];
     [self.addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.rentDaysLabel.mas_bottom).offset(getWidth(15.f));
-        make.height.mas_equalTo(self.duringDayslabel.font.pointSize);
-        make.left.mas_equalTo(self.rentDaysLabel);
+        make.top.mas_equalTo(self.spaceInfoLabel.mas_bottom).offset(getWidth(10.f));
+        make.height.mas_equalTo(self.addressLabel.font.pointSize);
+        make.left.mas_equalTo(self.thumbView.mas_right).offset(getWidth(10.f));
         make.right.mas_equalTo(getWidth(-15.f));
     }];
     
@@ -690,7 +741,7 @@
         _titleLabel.textColor = COLOR_GRAY_FFFFFF;
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.font = kFont_Bold(18.f);
-        _titleLabel.text = @"订单详情";
+        _titleLabel.text = @"交易关闭";
     }
     return _titleLabel;
 }
@@ -715,28 +766,28 @@
     return _thumbView;
 }
 
-- (UILabel *)rentDaysLabel
+- (UILabel *)locationLabel
 {
-    if (!_rentDaysLabel) {
-        _rentDaysLabel = [UILabel new];
-        _rentDaysLabel.textColor = COLOR_GRAY_999999;
-        _rentDaysLabel.textAlignment = NSTextAlignmentLeft;
-        _rentDaysLabel.font = kFont_Regular(14.f);
-        _rentDaysLabel.text = @"租期：7天";
+    if (!_locationLabel) {
+        _locationLabel = [UILabel new];
+        _locationLabel.textColor = COLOR_GRAY_999999;
+        _locationLabel.textAlignment = NSTextAlignmentLeft;
+        _locationLabel.font = kFont_Regular(14.f);
+        _locationLabel.text = @"租期：7天";
     }
-    return _rentDaysLabel;
+    return _locationLabel;
 }
 
-- (UILabel *)duringDayslabel
+- (UILabel *)spaceInfoLabel
 {
-    if (!_duringDayslabel) {
-        _duringDayslabel = [UILabel new];
-        _duringDayslabel.textColor = COLOR_GRAY_999999;
-        _duringDayslabel.textAlignment = NSTextAlignmentLeft;
-        _duringDayslabel.font = kFont_Regular(14.f);
-        _duringDayslabel.text = @"入离店：09:00-18:00";
+    if (!_spaceInfoLabel) {
+        _spaceInfoLabel = [UILabel new];
+        _spaceInfoLabel.textColor = COLOR_GRAY_999999;
+        _spaceInfoLabel.textAlignment = NSTextAlignmentLeft;
+        _spaceInfoLabel.font = kFont_Regular(14.f);
+        _spaceInfoLabel.text = @"入离店：09:00-18:00";
     }
-    return _duringDayslabel;
+    return _spaceInfoLabel;
 }
 
 - (UIView *)contactLine

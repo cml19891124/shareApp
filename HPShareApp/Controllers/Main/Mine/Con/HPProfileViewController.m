@@ -36,6 +36,8 @@
 
 #import "HOOrderListModel.h"
 
+#import "HPPersonCenterModel.h"
+
 typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
     HPProfileSelectedRowIdentify = 0,//资格认证
     HPProfileSelectedRowAccountSafe,//账号安全
@@ -67,6 +69,9 @@ typedef NS_ENUM(NSInteger, HPProfileSelectedRow) {
 @property (strong, nonatomic) HPOwnnerOrderModel *ownnerModel;
 
 @property (strong, nonatomic) HOOrderListModel *model;
+
+@property (nonatomic, strong) HPPersonCenterModel *infoModel;
+
 @end
 
 @implementation HPProfileViewController
@@ -233,11 +238,29 @@ static NSString *orderItemCell = @"HPOrderItemCell";
 {
     [super viewWillAppear:animated];
     
+    [self getUserInfosListData];
+    
     [self updateAppVersionInfo];
 
 //    [HPSingleton sharedSingleton].identifyTag = 0;
     
     [self.tableView reloadData];
+}
+
+#pragma mark - 获取个心中心统计数据
+- (void)getUserInfosListData
+{
+        kWEAKSELF
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/user/center" isNeedToken:YES paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            weakSelf.infoModel = [HPPersonCenterModel mj_objectWithKeyValues:responseObject[@"data"]];
+            [self.tableView reloadData];
+        }else{
+            HPLog(@"个人数据获取失败");
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 #pragma  mark - 上传一张图片
@@ -479,16 +502,29 @@ static NSString *orderItemCell = @"HPOrderItemCell";
             cell.identifiLabel.text = @"租客信息，资质认证";
             [cell.optionalBtn setTitle:@"切换为店主" forState:UIControlStateNormal];
             
+            //个人订单信息数据
+            NSString *collection = [NSString stringWithFormat:@"%ld",self.infoModel.collectionNum];
+            NSString *followingNum = [NSString stringWithFormat:@"%ld",self.infoModel.followingNum];
+
+            NSString *browseNum = [NSString stringWithFormat:@"%ld",self.infoModel.browseNum];
+
+            NSString *spaceNum = [NSString stringWithFormat:@"%ld",self.infoModel.spaceNum];
+
+            cell.userView.collectionBtn.numLabel.text = collection?collection:@"--";
+            cell.userView.focusBtn.numLabel.text = followingNum?followingNum:@"--";
+            cell.userView.footerBtn.numLabel.text = browseNum?browseNum:@"--";
+            cell.userView.couperBtn.numLabel.text = spaceNum?spaceNum:@"--";
+
         }else{
             [cell.optionalBtn setTitle:@"切换为租客" forState:UIControlStateNormal];
             
             cell.identifiLabel.text = @"店主信息，资质认证";
             //商家订单信息数量
             
-            cell.ownnerView.toReceiveBtn.numLabel.text = self.ownnerModel.needAdmittedNum;
-            cell.ownnerView.toPayBtn.numLabel.text = self.ownnerModel.needPaidNum;
-            cell.ownnerView.toGetBtn.numLabel.text = self.ownnerModel.cooperatingNum;
-            cell.ownnerView.compelteBtn.numLabel.text = self.ownnerModel.finishedNum;
+            cell.ownnerView.toReceiveBtn.numLabel.text = self.ownnerModel.needAdmittedNum?self.ownnerModel.needAdmittedNum:@"--";
+            cell.ownnerView.toPayBtn.numLabel.text = self.ownnerModel.needPaidNum?self.ownnerModel.needPaidNum:@"--";
+            cell.ownnerView.toGetBtn.numLabel.text = self.ownnerModel.cooperatingNum?self.ownnerModel.cooperatingNum:@"--";
+            cell.ownnerView.compelteBtn.numLabel.text = self.ownnerModel.finishedNum?self.ownnerModel.finishedNum:@"--";
 
         }
         [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];
@@ -551,11 +587,6 @@ static NSString *orderItemCell = @"HPOrderItemCell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     HPLoginModel *account = [HPUserTool account];
-    
-    if (indexPath.section == 1) {
-        HPLog(@"application");
-        [self pushVCByClassName:@"HPCommentViewController"];
-    }
     
     if (indexPath.section == 2) {
         if (indexPath.row == HPProfileSelectedRowIdentify) {

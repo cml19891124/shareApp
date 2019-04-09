@@ -709,12 +709,6 @@
         [_consumerBtn setText:@"联系客服"];
         [_consumerBtn setFont:kFont_Bold(14.f)];
         [_consumerBtn setImage:ImageNamed(@"communicate_serve")];
-//        [_consumerBtn setTitle:@"联系客服" forState:UIControlStateNormal];
-//        _consumerBtn.titleLabel.font = kFont_Medium(14.f);
-//        [_consumerBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-//        [_consumerBtn setImage:ImageNamed(@"communicate_serve") forState:UIControlStateNormal];
-//        [_consumerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(6.f), 0, 0)];
-//        _consumerBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [_consumerBtn addTarget:self action:@selector(onClickConsumerBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _consumerBtn;
@@ -988,14 +982,13 @@
 
 - (void)onClickConsumerBtn:(UIButton *)button
 {
-    
+    HPLog(@"联系客服");
+
 }
 
 - (void)onClickLoundBtn:(UIButton *)button
 {
-    if ([self.warningBtn.currentTitle isEqualToString:@"00:00"]) {
-        [self pushVCByClassName:@"HPOwnnerTimeOutViewController" withParam:@{@"model":_model}];
-    }
+
 }
 
 - (void)onClickCancelBtn:(UIButton *)button

@@ -47,6 +47,9 @@
     }
   }
 }
+- (IBAction)emotionBtnClick:(id)sender {
+    HPLog(@"自定义键盘按钮");
+}
 
 - (IBAction)voiceBtnClick:(id)sender {
   [self switchInputMode];
@@ -133,7 +136,7 @@
   [self.startRecordButton setTitle:@"按住 说话" forState:UIControlStateNormal];
   [self.startRecordButton setTitle:@"松开 结束" forState:UIControlStateHighlighted];
   self.startRecordButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin;
-  [self.startRecordButton setBackgroundColor:UIColorFromRGB(0x3f80dc)];
+  [self.startRecordButton setBackgroundColor:COLOR_RED_EA0000];
   [self.startRecordButton addTarget:self action:@selector(holdDownButtonTouchDown) forControlEvents:UIControlEventTouchDown];
   [self.startRecordButton addTarget:self action:@selector(holdDownButtonTouchUpOutside) forControlEvents:UIControlEventTouchUpOutside];
   [self.startRecordButton addTarget:self action:@selector(holdDownButtonTouchUpInside) forControlEvents:UIControlEventTouchUpInside];

@@ -27,11 +27,16 @@ typedef void (^PayOrderClickBlock)(NSInteger payOrder);
 typedef NS_ENUM(NSInteger, PayOrder){
     
     PayOrderToCancel = 3000,//待支付
-    PayOrderToPay//右边支付按钮
+    PayOrderToPay,//右边支付按钮
+    PayOrderToDelete//删除订单
 };
 
 @protocol OrderCellDelegate  <NSObject>
 
+/**
+ 删除订单事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toDeleteOrderBtn:(UIButton *)deleteButton andModel:(HOOrderListModel *)model;
 /**
  取消订单事件
  */
@@ -46,6 +51,41 @@ typedef NS_ENUM(NSInteger, PayOrder){
  评价订单事件
  */
 - (void)onClickCell:(HPOrderCell *)cell toCommentOrderBtn:(UIButton *)commentButton andModel:(HOOrderListModel *)model;
+
+/**
+ 查看评价事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toCheckCommentOrderBtn:(UIButton *)checkButton andModel:(HOOrderListModel *)model;
+
+/**
+ 订单投诉事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toComplainOrderBtn:(UIButton *)complainButton andModel:(HOOrderListModel *)model;
+
+/**
+ 催单事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toImergencyOrderBtn:(UIButton *)imergencyButton andModel:(HOOrderListModel *)model;
+
+/**
+ 再来一单事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toCreateAnotherOrderBtn:(UIButton *)createButton andModel:(HOOrderListModel *)model;
+
+/**
+ 查看原因事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toCheckReasonOrderBtn:(UIButton *)reasonButton andModel:(HOOrderListModel *)model;
+
+/**
+ 付款提醒事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toWarnRenterToPayOrderBtn:(UIButton *)warnButton andModel:(HOOrderListModel *)model;
+
+/**
+ 确认收货事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toConfirmToReceiveOrderBtn:(UIButton *)receiveButton andModel:(HOOrderListModel *)model;
 @end
 NS_ASSUME_NONNULL_BEGIN
 

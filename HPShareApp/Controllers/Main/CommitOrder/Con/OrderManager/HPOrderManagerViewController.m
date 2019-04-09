@@ -225,8 +225,6 @@
 
     [self.view addSubview:self.calenderView];
     
-    self.calenderView.calendarView.daysMenuView.userActivity = NO;
-    
     [self.calenderView show:YES];
     
     if (self.orderNewArray.count) {
@@ -264,7 +262,6 @@
 
     [self.view setBackgroundColor:COLOR_GRAY_F9FAFD];
     
-//    [self setupNavigationBarWithTitle:@"提交订单"];
     self.model = self.param[@"model"];
     
     if (@available(iOS 11.0, *)) {
@@ -316,11 +313,10 @@
     self.addressLabel.text = [NSString stringWithFormat:@"地址：%@",_model.spaceDetail.address];
     
     self.phoneField.text = _model.spaceDetail.contactMobile;
+    self.phoneField.delegate = self;
     
-    self.ownnerField.text = _model.spaceDetail.contact;
+    self.ownnerField.text = _model.spaceDetail.contact?_model.spaceDetail.contact:@"--";
     
-    self.desField.text = _model.spaceDetail.remark;
-
     NSString *lefttime = [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime];
     if ([lefttime isEqualToString:@"剩余:00:00"]) {
         [kNotificationCenter postNotificationName:topaytimeout object:nil];
@@ -875,6 +871,7 @@
         if (CODE == 200) {
             [HPProgressHUD alertMessage:MSG];
             [self.quitView show:NO];
+            [self.navigationController popViewControllerAnimated:YES];
         }else{
             [HPProgressHUD alertMessage:MSG];
 
@@ -1478,17 +1475,17 @@
 #pragma mark - 开启会话
 - (void)createConversationWithFriend:(UIButton *)button
 {
-    [[JCHATAlertViewWait ins] showInView];
+//    [[JCHATAlertViewWait ins] showInView];
     __block JCHATConversationViewController *sendMessageCtl = [[JCHATConversationViewController alloc] init];
     sendMessageCtl.superViewController = self;
     sendMessageCtl.hidesBottomBarWhenPushed = YES;
-    [HUD HUDNotHidden:@"正在添加用户..."];
+//    [HUD HUDNotHidden:@"正在添加用户..."];
     
     NSString *storeOwnner = [NSString stringWithFormat:@"hepai%@",_model.order.userId];
     kWEAKSELF
     [JMSGConversation createSingleConversationWithUsername:storeOwnner appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
         
-        [[JCHATAlertViewWait ins] hidenAll];
+//        [[JCHATAlertViewWait ins] hidenAll];
         
         if (error == nil) {
             kSTRONGSELF
@@ -1578,4 +1575,15 @@
 {
 
 }
+
+#pragma mark - textField detegate
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    
+    return NO;
+    
+}
+
 @end

@@ -114,6 +114,7 @@
 #define COLOR_RED_FFE6E2 [UIColor colorWithHexString:@"#FFE6E2"]
 #define COLOR_RED_FF7878 [UIColor colorWithHexString:@"#FF7878"]
 #define COLOR_RED_FF1213 [UIColor colorWithHexString:@"#FF1213"]
+#define COLOR_RED_FF2F46 [UIColor colorWithHexString:@"#FF2F46"]
 
 #define COLOR_GRAY_F6F6F6 [UIColor colorWithHexString:@"#F6F6F6"]
 #define COLOR_GRAY_F7F7F7 [UIColor colorWithHexString:@"#F7F7F7"]

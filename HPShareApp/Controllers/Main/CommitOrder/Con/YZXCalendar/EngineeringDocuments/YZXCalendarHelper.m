@@ -30,7 +30,10 @@
         helper.yearReportEndDate = [helper.yearFormatter stringFromDate:[NSDate date]];
         helper.monthReportStartDate = @"1970年01月";
         helper.monthReportEndDate = [helper.yearAndMonthFormatter stringFromDate:[NSDate date]];
-        helper.dayReportStartDate = @"1970年01月01日";
+        NSDate *startDate = (NSDate *)[self getNDay:-15];
+//        helper.dayReportStartDate = @"1970年01月01日";
+        helper.dayReportStartDate = [helper.yearMonthAndDayFormatter stringFromDate:startDate];
+
         NSDate *date = (NSDate *)[self getNDay:60];
         helper.dayReportEndDate = [helper.yearMonthAndDayFormatter stringFromDate:date];
         helper.customDateStartDate = helper.dayReportStartDate;
@@ -54,10 +57,6 @@
             
             theDate = nowDate;
             }
-    
-//    NSDateFormatter *date_formatter = [[NSDateFormatter alloc] init];
-//    [date_formatter setDateFormat:@"yyyy-MM-dd"];
-//    NSString *the_date_str = [date_formatter stringFromDate:theDate];
     
     return theDate;
     }

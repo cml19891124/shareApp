@@ -16,6 +16,11 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
 
 - (void)setupModalView:(UIView *)view
 {
+    self.view = view;
+    [view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self);
+        make.height.mas_equalTo(kScreenWidth/2);
+    }];
     [self setUpOrderView:view];
 
     [self setUpOrderViewMasonry];
@@ -43,7 +48,7 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
 {
     if (!_lineView) {
         _lineView = [UIView new];
-        _lineView.backgroundColor = COLOR_GRAY_CCCCCC;
+        _lineView.backgroundColor = COLOR_GRAY_F9FAFD;
     }
     return _lineView;
 }
@@ -52,10 +57,11 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
 {
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self);
-        make.bottom.mas_equalTo(self);
-        make.height.mas_equalTo(getWidth(40.f) * (self.days.count + 1));
-        make.top.mas_equalTo(kScreenHeight/2);
+//        make.left.right.mas_equalTo(self);
+//        make.bottom.mas_equalTo(self);
+//        make.height.mas_equalTo(getWidth(40.f) * (self.days.count + 1));
+//        make.top.mas_equalTo(kScreenHeight/2);
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
 
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -92,7 +98,7 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
     
     [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(self.footerView);
-        make.height.mas_equalTo(1);
+        make.height.mas_equalTo(0.5);
         
     }];
 }
@@ -181,7 +187,7 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     HPOrderInfoListCell *cell = [tableView dequeueReusableCellWithIdentifier:orderInfoListCell];
-    cell.dateLabel.text = self.days[indexPath.row];
+    cell.dateLabel.text = [HPTimeString noPortraitLineToDateStr:self.days[indexPath.row]];
     cell.priceLabel.text = self.model?[NSString stringWithFormat:@"¥%.02f",self.model.order.totalFee.floatValue/self.days.count]:[NSString stringWithFormat:@"¥%.02f",self.dayRent.floatValue/self.days.count];
     return cell;
 }
@@ -203,7 +209,7 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(getWidth(40.f) * (self.days.count + 1)+getWidth(50.f));
     }];
-    self.feeLabel.text = self.model.order.totalFee?[NSString stringWithFormat:@"¥%@",self.model.order.totalFee]:@"--";
+    self.feeLabel.text = self.model.order.totalFee?[NSString stringWithFormat:@"¥%.02f",self.model.order.totalFee.floatValue]:@"--";
     [self.tableView reloadData];
 }
 
@@ -213,9 +219,10 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
     //tableView的高度
     CGFloat tbTopHeight = getWidth(40.f) * (self.days.count + 1)+getWidth(50.f);
 
-    [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+    
+    [self.view mas_updateConstraints:^(MASConstraintMaker *make) {
         if (tbTopHeight > kScreenHeight/2) {
-            make.height.mas_equalTo(getWidth(300.f));
+            make.height.mas_equalTo(kScreenHeight/2);
                                     
         }else{
             make.height.mas_equalTo(tbTopHeight);

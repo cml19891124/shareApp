@@ -217,8 +217,7 @@
     if (!_optionalBtn) {
         _optionalBtn = [UIButton new];
         [_optionalBtn setImage:ImageNamed(@"optional") forState:UIControlStateNormal];
-        _optionalBtn.backgroundColor = COLOR_BLACK_333333;
-        _optionalBtn.alpha = 0.4;
+        _optionalBtn.backgroundColor = COLOR(255, 255, 255, 0.4);
         _optionalBtn.titleLabel.font = kFont_Medium(10.f);
         [_optionalBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal|UIControlStateSelected];
         [_optionalBtn addTarget:self action:@selector(onClickedOptionalBtn:) forControlEvents:UIControlEventTouchUpInside];

@@ -91,7 +91,7 @@
 
     NSString *finalDate = [monthDate stringByReplacingOccurrencesOfString:@"日" withString:@""];
     
-    return [NSString stringWithFormat:@"%@ 00:00:01",finalDate];
+    return [NSString stringWithFormat:@"%@ 23:59:59",finalDate];
 }
 
 //服务器要的日期格式

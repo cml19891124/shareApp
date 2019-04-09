@@ -43,11 +43,12 @@
         [btn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
         [btn addTarget:self action:@selector(clickItemBtn:) forControlEvents:UIControlEventTouchUpInside];
         btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        btn.selected = NO;
         [self addSubview:btn];
         [self.buttonArray addObject:btn];
         self.btn = btn;
         
-        float itemW = (kScreenWidth - getWidth(30.f) - getWidth(35.f) * 4)/5;//BoundWithSize(self.areaArray[i], kScreenWidth, 14.f).size.width + 20;
+        float itemW = (kScreenWidth - getWidth(30.f) - getWidth(35.f) * 4)/5;
         [btn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(getWidth(5.f) + (itemW + getWidth(35.f)) * i);
             make.top.mas_equalTo(self);
@@ -118,16 +119,17 @@
     self.selectedBtn.selected = NO;
     button.selected = YES;
     self.selectedBtn = button;
-    if (button.selected) {
-        button.titleLabel.font = kFont_Bold(16.f);
-        [button setTitleColor:COLOR_GRAY_666666 forState:UIControlStateNormal];
-    }else{
-        [button setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
 
-        button.titleLabel.font = kFont_Medium(14.f);
+    for (int i = 0; i < self.areaArray.count; i++) {
+        UIButton *btn = (UIButton *)[[button superview]viewWithTag:2200 + i];
+        [btn setSelected:NO];
+        btn.titleLabel.font = kFont_Medium(14.f);
+
     }
-    
-    [self scrolling:button.tag];
+    UIButton *btn = (UIButton *)button;
+    [btn setSelected:YES];
+    btn.titleLabel.font = kFont_Bold(16.f);
+    [self scrolling:btn.tag];
 }
 
 @end

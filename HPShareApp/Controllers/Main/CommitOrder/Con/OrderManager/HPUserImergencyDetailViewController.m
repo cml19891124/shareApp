@@ -62,7 +62,7 @@
 
 @property (nonatomic, strong) UIView *contactLine;
 
-@property (nonatomic, strong) UIButton *consumerBtn;
+@property (nonatomic, strong) HPRightImageButton *consumerBtn;
 
 @property (nonatomic, strong) UIButton *phoneBtn;
 
@@ -136,6 +136,10 @@
         _receiveView.okBlock = ^{
             [weakSelf getConfirmOrderApi];
         };
+        
+        _receiveView.noBlock = ^{
+            [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+        };
     }
     return _receiveView;
 }
@@ -202,11 +206,23 @@
     
     self.rentDaysLabel.text = [NSString stringWithFormat:@"租期:%@",_model.order.days];
     
-    self.duringDayslabel.text = [NSString stringWithFormat:@"入离店:%@-%@",_model.order.openTime,_model.order.closeTime];
+    NSString *openTime,*closeTime;
+    if ([_model.order.openTime isEqualToString:@"0"]) {
+        openTime = @"00:00";
+    }else{
+        openTime = [NSString stringWithFormat:@"%@:%@",[_model.order.openTime substringToIndex:_model.order.openTime.length - 2],[_model.order.openTime substringFromIndex:_model.order.openTime.length - 2]];
+    }
+    
+    if ([_model.order.closeTime isEqualToString:@"0"]) {
+        closeTime = @"00:00";
+    }else{
+        closeTime = [NSString stringWithFormat:@"%@:%@",[_model.order.closeTime substringToIndex:_model.order.closeTime.length - 2],[_model.order.closeTime substringFromIndex:_model.order.closeTime.length - 2]];
+    }
+    self.duringDayslabel.text = [NSString stringWithFormat:@"入离店:%@-%@",openTime,closeTime];
     
     self.addressLabel.text = [NSString stringWithFormat:@"地址:%@",_model.spaceDetail.address];
     
-    self.ownnerSubLabel.text = _model.spaceDetail.contact;
+    self.ownnerSubLabel.text = _model.spaceDetail.contact?_model.spaceDetail.contact:@"--";
     
     self.phoneSubLabel.text = _model.spaceDetail.contactMobile;
     
@@ -216,10 +232,8 @@
     
     self.amountSubLabel.text = [NSString stringWithFormat:@"¥%@",_model.order.totalFee];
     
-    self.toPaySubLabel.text = [NSString stringWithFormat:@"¥%@",_model.spaceDetail.rent];
+    self.toPaySubLabel.text = [NSString stringWithFormat:@"¥%@",_model.order.totalFee];
     
-//    NSArray * orderArray = [_model.order.days componentsSeparatedByString:@","];
-
     self.priceLabel.text = [NSString stringWithFormat:@"¥%@",self.model.order.totalFee];
     self.orderListView.model = self.model;
 
@@ -231,10 +245,22 @@
             [self.payBtn setTitle:@"确认收货" forState:UIControlStateNormal];
         }else if (_model.order.status.integerValue == 11){
             self.titleLabel.text = @"交易完成";
-            [self.cancelBtn setTitle:@"查看评价" forState:UIControlStateNormal];
+            [self.cancelBtn setTitle:@"评价此单" forState:UIControlStateNormal];
             [self.payBtn setTitle:@"再来一单" forState:UIControlStateNormal];
+        }else if (_model.order.status.integerValue == 1){
+            self.titleLabel.text = @"等待商家接单";
+            [self.cancelBtn setTitle:@"取消订单" forState:UIControlStateNormal];
+            [self.payBtn setTitle:@"在线催单" forState:UIControlStateNormal];
         }
         
+    }else{
+        if (_model.order.status.integerValue == 2){
+            self.titleLabel.text = @"等待租客付款";
+            [self.cancelBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+            [self.payBtn setTitle:@"付款提醒" forState:UIControlStateNormal];
+        }
     }
 }
 
@@ -245,7 +271,6 @@
         _priceListBtn.image = ImageNamed(@"arrow_down");
         [_priceListBtn setText:@"明细"];
         [_priceListBtn setColor:COLOR_GRAY_999999];
-//        [_priceListBtn setRightSpace: getWidth(-30.f)];
         [_priceListBtn addTarget:self action:@selector(onClickOrderListBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _priceListBtn;
@@ -393,17 +418,17 @@
         make.bottom.mas_equalTo(self.view.mas_bottom).offset(-g_bottomSafeAreaHeight + getWidth(-50.f));
     }];
     
-    CGFloat height = 0.00;
-    if (IPHONE_HAS_NOTCH) {
-        height = getWidth(130.f);
-    }else if(kScreenHeight == 568){
-        
-    }else{
-        height = getWidth(110.f);
-    }
+//    CGFloat height = 0.00;
+//    if (IPHONE_HAS_NOTCH) {
+//        height = getWidth(130.f);
+//    }else if(kScreenHeight == 568){
+//
+//    }else{
+//        height = getWidth(110.f);
+//    }
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.mas_equalTo(self.scrollView);
-        make.size.mas_equalTo(CGSizeMake(kScreenWidth, height));
+        make.size.mas_equalTo(CGSizeMake(kScreenWidth, g_statusBarHeight + 44));
     }];
     
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -419,6 +444,7 @@
         make.height.mas_equalTo(self.titleLabel.font.pointSize);
     }];
     
+    /*
     [self.warningBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.scrollView);
         make.width.left.mas_equalTo(self.scrollView);
@@ -432,7 +458,7 @@
         make.top.mas_equalTo(self.warningBtn.mas_bottom).offset(getWidth(10.f));
         make.height.mas_equalTo(self.leftLabel.font.pointSize);
     }];
-    
+    */
     [self.communicateView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.scrollView);
         make.width.mas_equalTo(getWidth(345.f));
@@ -483,17 +509,16 @@
     [self.consumerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(10.f));
         make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-10.f));
-        make.left.mas_equalTo(getWidth(40.f));
-        make.width.mas_equalTo(getWidth(345.f)/3);
-
+        make.left.mas_equalTo(getWidth(15.f));
+        make.right.mas_equalTo(getWidth(-15.f));
     }];
     
-    [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-10.f));
-        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(10.f));
-        make.right.mas_equalTo(getWidth(-40.f));
-        make.width.mas_equalTo(getWidth(345.f)/3);
-    }];
+//    [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-10.f));
+//        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(10.f));
+//        make.right.mas_equalTo(getWidth(-40.f));
+//        make.width.mas_equalTo(getWidth(345.f)/3);
+//    }];
     
     [self.ownnerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(15.f));
@@ -838,15 +863,14 @@
     return _contactLine;
 }
 
-- (UIButton *)consumerBtn
+- (HPRightImageButton *)consumerBtn
 {
     if (!_consumerBtn) {
-        _consumerBtn = [UIButton new];
-        [_consumerBtn setTitle:@"联系客服" forState:UIControlStateNormal];
-        _consumerBtn.titleLabel.font = kFont_Medium(14.f);
-        [_consumerBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-        [_consumerBtn setImage:ImageNamed(@"communicate_serve") forState:UIControlStateNormal];
-        [_consumerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(6.f), 0, 0)];
+        _consumerBtn = [HPRightImageButton new];
+        [_consumerBtn setColor:UIColor.greenColor];
+        [_consumerBtn setText:@"在线客服"];
+        [_consumerBtn setFont:kFont_Bold(14.f)];
+        [_consumerBtn setImage:ImageNamed(@"communicate_serve")];
         _consumerBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [_consumerBtn addTarget:self action:@selector(onClickConsumerBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -1119,9 +1143,9 @@
     
 }
 
-- (void)onClickConsumerBtn:(UIButton *)button
+- (void)onClickConsumerBtn:(HPRightImageButton *)button
 {
-    
+    HPLog(@"联系客服");
 }
 
 - (void)onClickLoundBtn:(UIButton *)button
@@ -1134,16 +1158,25 @@
 - (void)onClickCancelBtn:(UIButton *)button
 {
     kWEAKSELF
-    [self.view addSubview:weakSelf.quitView];
-    self.quitView.textView.placeholder = @"  请填写取消此订单原因";
     
-    [self.quitView show:YES];
-    self.quitView.quitBlock = ^{
-        HPLog(@"5555");
-        [weakSelf.quitView show:NO];
-        [weakSelf cancelOrder:weakSelf.model];
+    if ([button.currentTitle isEqualToString:@"取消订单"]) {
+        self.quitView.textView.placeholder = @"  请填写取消此订单原因";
         
-    };
+        [self.quitView show:YES];
+        self.quitView.quitBlock = ^{
+            HPLog(@"5555");
+            [weakSelf.quitView.textView resignFirstResponder];
+            [weakSelf.quitView show:NO];
+            [weakSelf cancelOrder:weakSelf.model];
+        };
+    }else if([button.currentTitle  isEqualToString:@"评价此单"])
+    {
+        [self pushVCByClassName:@"HPCommentViewController" withParam:@{@"model":self.model}];
+    }else if([button.currentTitle  isEqualToString:@"订单投诉"])
+    {
+        HPLog(@"订单投诉");
+        
+    }
 }
 
 - (HPQuitOrderView *)quitView
@@ -1164,13 +1197,20 @@
 //租客取消订单
 - (void)cancelOrder:(HOOrderListModel *)model
 {
+    NSString *method;
+    if ([HPSingleton sharedSingleton].identifyTag == 0) {
+        method = @"/v1/order/tenantCancel";
+    }else{
+        method = @"/v1/order/bossCancel";
+    }
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"cancelReason"] = self.quitView.signTextView.text;
+    dic[@"cancelReason"] = self.quitView.textView.text;
     dic[@"orderId"] = model.order.orderId;
     
-    [HPHTTPSever HPPostServerWithMethod:@"/v1/order/tenantCancel" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPPostServerWithMethod:method paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:MSG];
+            [self.navigationController popViewControllerAnimated:YES];
         }else{
             [HPProgressHUD alertMessage:MSG];
             
@@ -1193,10 +1233,13 @@
 
     if ([button.currentTitle  isEqualToString:@"确认收货"]) {
         [self.receiveView show:YES];
-        
-        
-    }else if([button.currentTitle  isEqualToString:@"评价此单"])
+    }else if([button.currentTitle  isEqualToString:@"付款提醒"])
     {
+        HPLog(@"提醒");
+        
+    }else if([button.currentTitle  isEqualToString:@"在线催单"])
+    {
+        HPLog(@"在线催单");
         
     }
 }
@@ -1206,12 +1249,6 @@
     button.selected = !button.selected;
     
 }
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    HPLog(@"dsD:%f",scrollView.contentOffset.y);
-}
-
 
 - (void)onClickOrderListBtn:(HPRightImageButton *)button
 {

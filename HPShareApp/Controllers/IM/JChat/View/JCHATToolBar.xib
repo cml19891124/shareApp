@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="JCHATChatViewController"/>
@@ -12,8 +16,8 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rpU-3b-2dD" customClass="JCHATMessageTextView">
-                    <rect key="frame" x="47" y="5" width="230" height="36"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <rect key="frame" x="47" y="5" width="195" height="36"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="send" enablesReturnKeyAutomatically="YES"/>
                 </textView>
@@ -24,7 +28,7 @@
                         <constraint firstAttribute="height" constant="27" id="V4b-qe-SqG"/>
                     </constraints>
                     <state key="normal" image="add01.png">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <state key="highlighted" image="add01_pre"/>
                     <connections>
@@ -38,39 +42,56 @@
                         <constraint firstAttribute="width" constant="31" id="pq5-AN-2Np"/>
                     </constraints>
                     <state key="normal">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <connections>
                         <action selector="voiceBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="jsz-Bu-lQG"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3XJ-z9-RH7">
+                    <rect key="frame" x="250" y="9" width="27" height="27"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="27" id="JEQ-qi-Bbx"/>
+                        <constraint firstAttribute="height" constant="27" id="hnn-Bh-MeG"/>
+                    </constraints>
+                    <state key="normal" image="biaoqing">
+                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="emotionBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="Zve-Rs-LSw"/>
+                    </connections>
+                </button>
             </subviews>
-            <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="VuO-mV-udy" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="2RI-hn-OwK"/>
                 <constraint firstItem="YCs-zm-hKL" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="3Sh-tX-tIC"/>
-                <constraint firstItem="VuO-mV-udy" firstAttribute="leading" secondItem="rpU-3b-2dD" secondAttribute="trailing" constant="8" id="ILu-91-9Uh"/>
+                <constraint firstItem="VuO-mV-udy" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="CQF-AN-UTH"/>
+                <constraint firstItem="VuO-mV-udy" firstAttribute="leading" secondItem="3XJ-z9-RH7" secondAttribute="trailing" constant="8" id="Ntr-rW-SlT"/>
                 <constraint firstItem="YCs-zm-hKL" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="SKu-EB-2Ey"/>
                 <constraint firstItem="rpU-3b-2dD" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="5" id="W1Q-Gc-ke8"/>
                 <constraint firstAttribute="trailing" secondItem="VuO-mV-udy" secondAttribute="trailing" constant="8" id="fBX-Bl-jGB"/>
+                <constraint firstItem="3XJ-z9-RH7" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="lUN-cx-24h"/>
                 <constraint firstItem="rpU-3b-2dD" firstAttribute="leading" secondItem="YCs-zm-hKL" secondAttribute="trailing" constant="8" id="o1K-RI-UVr"/>
+                <constraint firstItem="3XJ-z9-RH7" firstAttribute="leading" secondItem="rpU-3b-2dD" secondAttribute="trailing" constant="8" id="vNy-9u-PuG"/>
                 <constraint firstAttribute="bottom" secondItem="rpU-3b-2dD" secondAttribute="bottom" constant="4" id="xTF-p2-3ge"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
-            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="addButton" destination="VuO-mV-udy" id="3e8-Gt-fIU"/>
+                <outlet property="emotionBtn" destination="3XJ-z9-RH7" id="Lq3-cT-Vxi"/>
                 <outlet property="textView" destination="rpU-3b-2dD" id="VMC-2X-lFu"/>
                 <outlet property="voiceButton" destination="YCs-zm-hKL" id="Q4z-sK-tmo"/>
             </connections>
-            <point key="canvasLocation" x="907" y="799.5"/>
+            <point key="canvasLocation" x="1451.2" y="719.19040479760122"/>
         </view>
     </objects>
     <resources>
         <image name="add01.png" width="27" height="27"/>
-        <image name="add01_pre" width="22" height="22"/>
+        <image name="add01_pre" width="25" height="25"/>
+        <image name="biaoqing" width="25" height="25"/>
     </resources>
 </document>

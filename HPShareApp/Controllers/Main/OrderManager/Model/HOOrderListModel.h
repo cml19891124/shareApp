@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *orderId;
 @property (nonatomic, copy) NSString *orderNo;
 @property (nonatomic, copy) NSString *remark;
+@property (nonatomic, copy) NSString *reviewId;
 @property (nonatomic, copy) NSString *spaceId;
 @property (nonatomic, copy) NSString *status;
 @property (nonatomic, copy) NSString *totalFee;

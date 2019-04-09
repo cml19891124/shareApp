@@ -80,7 +80,6 @@
         self.day.text = [NSString stringWithFormat:@"%ld",indexPath.item - (firstDayInMonth - 2)];
         self.userInteractionEnabled = YES;
 
-        [self drawLine];
     }else {
         self.day.text = @"";
         self.userInteractionEnabled = NO;
@@ -103,18 +102,6 @@
     }
     
 
-}
-- (void)drawLine
-{
-    CGSize btnSize = CGSizeMake(getWidth(30.f), getWidth(24.f));
-    UIGraphicsBeginImageContextWithOptions(btnSize, NO, 0.f);
-    CGContextRef contextRef = UIGraphicsGetCurrentContext();
-    [HPGradientUtil drawGradientColor:contextRef rect:CGRectMake(0.f, 0.f, btnSize.width, btnSize.height) startPoint:CGPointMake(0.f,0.f) endPoint:CGPointMake(btnSize.width, btnSize.height) options:kCGGradientDrawsBeforeStartLocation startColor:COLOR_GRAY_CCCCCC endColor:COLOR_GRAY_CCCCCC];
-    UIImage *bgImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    [self addSubview:self.lineBtn];
-    [self.lineBtn setBackgroundImage:bgImage forState:UIControlStateNormal];
 }
 
 - (void)changeContentViewBackgroundColor:(UIColor *)backgroundColor

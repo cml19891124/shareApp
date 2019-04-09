@@ -224,7 +224,7 @@
 {
     if (!_dustbinBtn) {
         _dustbinBtn = [UIButton new];
-        _dustbinBtn.tag = 4800;
+        _dustbinBtn.tag = PayOrderToDelete;
         [_dustbinBtn setBackgroundImage:ImageNamed(@"dustbin") forState:UIControlStateNormal];
         [_dustbinBtn addTarget:self action:@selector(clickManagerFunds:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -416,23 +416,18 @@
         _receiveView.noBlock = ^{
             [weakSelf.receiveView show:NO];
         };
+        _receiveView.okBlock = ^{
+            [weakSelf getConfirmOrderApi];
+        };
     }
     return _receiveView;
 }
 
 - (void)clickManagerFunds:(UIButton *)button
 {
-//    if (self.payBlock) {
-//        self.payBlock(button.tag);
-//    }
-    if ([button.currentTitle isEqualToString:@"确认接单"]) {
-        [self getConfirmReceiveOrderApi];
-    }else if([button.currentTitle isEqualToString:@"确认收货"]){
-        [self getConfirmOrderApi];
-
-    }else if([button.currentTitle isEqualToString:@"立即支付"]){
-        if ([self.delegate respondsToSelector:@selector(onClickCell:toPayOrderBtn:andModel:)]) {
-            [self.delegate onClickCell:self toCommentOrderBtn:self.topayBtn andModel:self.model];
+    if (button.tag == PayOrderToDelete) {
+        if ([self.delegate respondsToSelector:@selector(onClickCell:toDeleteOrderBtn:andModel:)]) {
+            [self.delegate onClickCell:self toDeleteOrderBtn:self.dustbinBtn andModel:self.model];
         }
     }
     if (button.tag == PayOrderToCancel) {
@@ -449,7 +444,42 @@
             };
         }else if ([button.currentTitle isEqualToString:@"评价此单"]){
             if ([self.delegate respondsToSelector:@selector(onClickCell:toCommentOrderBtn:andModel:)]) {
+                [self.delegate onClickCell:self toCommentOrderBtn:self.cancelBtn andModel:self.model];
+            }
+        }else if ([button.currentTitle isEqualToString:@"订单投诉"]){
+            if ([self.delegate respondsToSelector:@selector(onClickCell:toComplainOrderBtn:andModel:)]) {
+                [self.delegate onClickCell:self toComplainOrderBtn:self.cancelBtn andModel:self.model];
+            }
+        }else if ([button.currentTitle isEqualToString:@"查看原因"]){
+            if ([self.delegate respondsToSelector:@selector(onClickCell:toCheckReasonOrderBtn:andModel:)]) {
+                [self.delegate onClickCell:self toCheckReasonOrderBtn:self.cancelBtn andModel:self.model];
+            }
+        }
+    }else if (button.tag == PayOrderToPay){
+        if ([button.currentTitle isEqualToString:@"确认接单"]) {
+            [self getConfirmReceiveOrderApi];
+        }else if([button.currentTitle isEqualToString:@"确认收货"]){
+            [self.receiveView show:YES];
+            
+        }else if([button.currentTitle isEqualToString:@"立即支付"]){
+            if ([self.delegate respondsToSelector:@selector(onClickCell:toPayOrderBtn:andModel:)]) {
                 [self.delegate onClickCell:self toPayOrderBtn:self.topayBtn andModel:self.model];
+            }
+        }else if([button.currentTitle isEqualToString:@"查看评价"]){
+            if ([self.delegate respondsToSelector:@selector(onClickCell:toCheckCommentOrderBtn:andModel:)]) {
+                [self.delegate onClickCell:self toCheckCommentOrderBtn:self.topayBtn andModel:self.model];
+            }
+        }else if([button.currentTitle isEqualToString:@"在线催单"]){
+            if ([self.delegate respondsToSelector:@selector(onClickCell:toImergencyOrderBtn:andModel:)]) {
+                [self.delegate onClickCell:self toImergencyOrderBtn:self.topayBtn andModel:self.model];
+            }
+        }else if([button.currentTitle isEqualToString:@"再来一单"]){
+            if ([self.delegate respondsToSelector:@selector(onClickCell:toCreateAnotherOrderBtn:andModel:)]) {
+                [self.delegate onClickCell:self toCreateAnotherOrderBtn:self.topayBtn andModel:self.model];
+            }
+        }else if([button.currentTitle isEqualToString:@"付款提醒"]){
+            if ([self.delegate respondsToSelector:@selector(onClickCell:toWarnRenterToPayOrderBtn:andModel:)]) {
+                [self.delegate onClickCell:self toWarnRenterToPayOrderBtn:self.topayBtn andModel:self.model];
             }
         }
     }
@@ -503,7 +533,7 @@
         method = @"/v1/order/bossCancel";
     }
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    dic[@"cancelReason"] = self.quitView.signTextView.text;
+    dic[@"cancelReason"] = self.quitView.textView.text;
     dic[@"orderId"] = model.order.orderId;
     
     [HPHTTPSever HPPostServerWithMethod:method paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
@@ -529,6 +559,10 @@
         if (CODE == 200) {
             [HPProgressHUD alertMessage:MSG];
             [self.receiveView show:NO];
+            if ([self.delegate respondsToSelector:@selector(onClickCell:toConfirmToReceiveOrderBtn:andModel:)]) {
+                [self.delegate onClickCell:self toConfirmToReceiveOrderBtn:self.topayBtn andModel:self.model];
+            }
+            
         }else{
             [HPProgressHUD alertMessage:MSG];
             
@@ -644,7 +678,7 @@
 
     }else if ([model.order.status integerValue] == 11) {
        
-        if ([HPSingleton sharedSingleton].identifyTag == 0) {
+        if ([HPSingleton sharedSingleton].identifyTag == 1) {
             self.waitingReceiveLabel.text = @"已确认收货";
 
             [self.cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {

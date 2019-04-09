@@ -228,7 +228,8 @@ static NSString *orderCell = @"orderCell";
             }else if (menuItem == HPAreaItemsMenuToRent){
                 weakSelf.status = @(3);
             }else if (menuItem == HPAreaItemsMenuToComment){
-                weakSelf.status = @(4);
+                
+                weakSelf.status = @(11);
             }
             [weakSelf.orderItemView scrolling:menuItem];
             [weakSelf getOrderListApiReload:YES];
@@ -422,16 +423,28 @@ static NSString *orderCell = @"orderCell";
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ([HPSingleton sharedSingleton].identifyTag == 0) {
-        if( model.order.status.integerValue == 1){
+        if( model.order.status.integerValue == 1 || model.order.status.integerValue == 3 || model.order.status.integerValue == 11){//11 投诉
             [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
 
         }else if(model.order.status.integerValue == 2){
             [self pushVCByClassName:@"HPImergencyManagerViewController" withParam:@{@"model":model}];
             
-        }else if (model.order.status.integerValue == 3){
+        }else if(model.order.status.integerValue == 12 || model.order.status.integerValue == 14 || model.order.status.integerValue == 13){
+            [self pushVCByClassName:@"HPCancelOrderManagerViewController" withParam:@{@"model":model}];
+            
+        }
+    }else{
+        if (model.order.status.integerValue == 11){
+            [self pushVCByClassName:@"HPCommentViewController" withParam:@{@"model":model}];
+            
+        }else if (model.order.status.integerValue == 13){
+            [self pushVCByClassName:@"HPCancelOrderManagerViewController" withParam:@{@"model":model}];
+            
+        }else if (model.order.status.integerValue == 1){
+            [self pushVCByClassName:@"HPOrderManagerViewController" withParam:@{@"model":model}];
+            
+        }else if (model.order.status.integerValue == 2){
             [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
-
-        }else{
 
         }
     }
@@ -454,5 +467,70 @@ static NSString *orderCell = @"orderCell";
 {
     [self pushVCByClassName:@"HPCommentViewController" withParam:@{@"model":model}];
 
+}
+
+- (void)onClickCell:(HPOrderCell *)cell toComplainOrderBtn:(UIButton *)complainButton andModel:(HOOrderListModel *)model
+{
+    HPLog(@"投诉");
+}
+
+- (void)onClickCell:(HPOrderCell *)cell toImergencyOrderBtn:(UIButton *)imergencyButton andModel:(HOOrderListModel *)model
+{
+    HPLog(@"催单");
+}
+
+- (void)onClickCell:(HPOrderCell *)cell toCreateAnotherOrderBtn:(UIButton *)createButton andModel:(HOOrderListModel *)model
+{
+    HPLog(@"再来-单");
+
+}
+
+- (void)onClickCell:(HPOrderCell *)cell toCheckReasonOrderBtn:(UIButton *)reasonButton andModel:(HOOrderListModel *)model
+{
+    HPLog(@"查看原因");
+    [self pushVCByClassName:@"HPCancelOrderManagerViewController" withParam:@{@"model":model}];
+}
+
+- (void)onClickCell:(HPOrderCell *)cell toDeleteOrderBtn:(UIButton *)deleteButton andModel:(HOOrderListModel *)model
+{
+    HPLog(@"删除");
+    [self getConfirmDeleteOrderApi:model];
+}
+
+- (void)onClickCell:(HPOrderCell *)cell toCheckCommentOrderBtn:(UIButton *)checkButton andModel:(HOOrderListModel *)model
+{
+    if (model.order.reviewId.integerValue > 0) {
+        [self pushVCByClassName:@"HPCommentViewController" withParam:@{@"model":model}];
+
+    }else{
+        [HPProgressHUD alertMessage:@"改订单还没有评价哦~"];
+    }
+
+}
+
+- (void)onClickCell:(HPOrderCell *)cell toWarnRenterToPayOrderBtn:(UIButton *)warnButton andModel:(HOOrderListModel *)model
+{
+    [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
+
+}
+
+#pragma mark - 确认删除订单
+- (void)getConfirmDeleteOrderApi:(HOOrderListModel *)model
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"isBoss"] = @([HPSingleton sharedSingleton].identifyTag);
+    dic[@"orderId"] = model.order.orderId;
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/order/delete" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+            [self.navigationController popViewControllerAnimated:YES];
+            [self getOrderListApiReload:YES];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+            
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 @end

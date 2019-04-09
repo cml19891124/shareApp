@@ -39,6 +39,7 @@
 		6993AD4921CE97B40019506C /* HPShareTempHumanController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993AD4821CE97B40019506C /* HPShareTempHumanController.m */; };
 		6993AD4C21CE97D40019506C /* HPShareTempGoodsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993AD4B21CE97D40019506C /* HPShareTempGoodsController.m */; };
 		786E617DDD64F9CC68E4049B /* Pods_HPShareAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C508ECCC8CC2C9D9701839BE /* Pods_HPShareAppTests.framework */; };
+		7A04216C225C49CB00CBEC7E /* HPCancelOrderManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A04216B225C49CB00CBEC7E /* HPCancelOrderManagerViewController.m */; };
 		7A09A2BE2253076000A68FBD /* HOOrderListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2BD2253076000A68FBD /* HOOrderListModel.m */; };
 		7A09A2C222535BCA00A68FBD /* HPOwnnerOrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2C122535BCA00A68FBD /* HPOwnnerOrderModel.m */; };
 		7A09A2C52253629A00A68FBD /* HPRentCancelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2C42253629A00A68FBD /* HPRentCancelView.m */; };
@@ -580,6 +581,8 @@
 		6993AD4821CE97B40019506C /* HPShareTempHumanController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareTempHumanController.m; sourceTree = "<group>"; };
 		6993AD4A21CE97D40019506C /* HPShareTempGoodsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPShareTempGoodsController.h; sourceTree = "<group>"; };
 		6993AD4B21CE97D40019506C /* HPShareTempGoodsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareTempGoodsController.m; sourceTree = "<group>"; };
+		7A04216A225C49CA00CBEC7E /* HPCancelOrderManagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPCancelOrderManagerViewController.h; sourceTree = "<group>"; };
+		7A04216B225C49CB00CBEC7E /* HPCancelOrderManagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPCancelOrderManagerViewController.m; sourceTree = "<group>"; };
 		7A09A2BC2253076000A68FBD /* HOOrderListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HOOrderListModel.h; sourceTree = "<group>"; };
 		7A09A2BD2253076000A68FBD /* HOOrderListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HOOrderListModel.m; sourceTree = "<group>"; };
 		7A09A2C022535BCA00A68FBD /* HPOwnnerOrderModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOwnnerOrderModel.h; sourceTree = "<group>"; };
@@ -2887,6 +2890,8 @@
 				7A09A2D92254D19400A68FBD /* HPImergencyManagerViewController.m */,
 				7A09A2E82255DA4100A68FBD /* HPUserImergencyDetailViewController.h */,
 				7A09A2E92255DA4100A68FBD /* HPUserImergencyDetailViewController.m */,
+				7A04216A225C49CA00CBEC7E /* HPCancelOrderManagerViewController.h */,
+				7A04216B225C49CB00CBEC7E /* HPCancelOrderManagerViewController.m */,
 			);
 			path = OrderManager;
 			sourceTree = "<group>";
@@ -4147,6 +4152,7 @@
 				E6801FB822363C9B002B1133 /* HPOrderListViewController.m in Sources */,
 				E633525B21F17A7C00999BE7 /* HPProvinceModel.m in Sources */,
 				E68A77D821F321BD00083A90 /* JCHATAlbumViewController.m in Sources */,
+				7A04216C225C49CB00CBEC7E /* HPCancelOrderManagerViewController.m in Sources */,
 				E68A772021F31A2D00083A90 /* JCHATAlertViewWait.m in Sources */,
 				E68A77D721F321BD00083A90 /* JCHATPhotoBrowserViewController.m in Sources */,
 				E61E27A921C8D68000CD5288 /* EBCustomBannerView.m in Sources */,

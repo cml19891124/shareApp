@@ -102,12 +102,12 @@
         if (_model.order.status.integerValue == 11) {
             self.textView.userInteractionEnabled = YES;
         }
-        self.textView.placeholder = @"请发表一下此次合作的感受吧...";
+        self.textView.placeholder = @"    请发表一下此次合作的感受吧...";
     }else{
         if (_model.order.status.integerValue == 11) {
             self.textView.userInteractionEnabled = NO;
         }
-        self.textView.placeholder = @"这是一次比较满意的合作，总体合作下来就一句话，和您合作真实太愉快啦";
+        self.textView.placeholder = @"    这是一次比较满意的合作，总体合作下来就一句话，和您合作真实太愉快啦";
     }
 
     [self.view addSubview:self.releaseBtn];
@@ -191,12 +191,14 @@
 {
     if (!_releaseBtn) {
         _releaseBtn = [UIButton new];
+        _releaseBtn.backgroundColor = COLOR_RED_EA0000;
         _releaseBtn.layer.cornerRadius = 2.f;
         _releaseBtn.layer.masksToBounds = YES;
         [_releaseBtn setTitle:@"发布" forState:UIControlStateNormal];
         _releaseBtn.titleLabel.font = kFont_Medium(16.f);
         [_releaseBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
         _releaseBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        [_releaseBtn addTarget:self action:@selector(releaseCommentWords:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _releaseBtn;
 }
@@ -213,10 +215,12 @@
 {
     if (!_textView) {
         _textView = [MyTextView new];
-        _textView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _textView.backgroundColor = COLOR_GRAY_F9FAFD;
         _textView.textColor = COLOR_GRAY_666666;
         _textView.placeholderColor = COLOR_GRAY_999999;
         _textView.font = kFont_Regular(14.f);
+        _textView.textContainerInset = UIEdgeInsetsMake(7, 16, 0, 16);
+        _textView.tintColor = COLOR_RED_EA0000;
     }
     return _textView;
 }
@@ -309,6 +313,7 @@
     [HPHTTPSever HPGETServerWithMethod:@"/v1/orderReview/orderReview" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:MSG];
+            [self.navigationController popToRootViewControllerAnimated:YES];
         }else{
             [HPProgressHUD alertMessage:MSG];
 

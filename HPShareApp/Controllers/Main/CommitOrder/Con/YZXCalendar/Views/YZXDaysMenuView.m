@@ -115,7 +115,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 
 - (void)operationHasOrderArray:(NSNotification *)noti
 {
-    NSLog(@"ddddddd:%@",noti.userInfo[@"array"]);
+//    NSLog(@"ddddddd:%@",noti.userInfo[@"array"]);
     NSArray *dates = noti.userInfo[@"array"];
     for (int i = 0; i < dates.count; i ++) {
         NSString *date = [HPTimeString noPortraitLineToDateStr:dates[i]];
@@ -240,8 +240,6 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    YZXCalendarCollectionViewCell *cell = (YZXCalendarCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-
     //自定义选择
     if (self.customSelect) {
         switch (self.selectedArray.count) {

@@ -95,6 +95,11 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewHeight;
 
 /**
+ 自定义表情键盘按钮
+ */
+@property (weak, nonatomic) IBOutlet UIButton *emotionBtn;
+
+/**
  *  开始录音button
  */
 @property (strong, nonatomic) UIButton *startRecordButton;

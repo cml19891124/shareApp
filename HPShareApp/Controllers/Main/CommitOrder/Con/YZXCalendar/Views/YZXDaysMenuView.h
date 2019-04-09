@@ -41,11 +41,6 @@
 
 @property (nonatomic, strong) UICollectionView                          *collectionView;
 
-/**
- 是否可以交互点击
- */
-@property (assign, nonatomic) BOOL userActivity;
-
 @property (strong, nonatomic) NSMutableArray *hasOrderArray;
 
 @property (strong, nonatomic) NSArray *hasOrderNewArray;

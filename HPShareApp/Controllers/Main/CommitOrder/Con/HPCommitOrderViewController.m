@@ -171,6 +171,8 @@
             NSArray *selectedDays = [[weakSelf verbSelectedDaysArray] componentsSeparatedByString:@","];
             weakSelf.rentDaysLabel.text = [NSString stringWithFormat:@"拼租日期（共%ld天）",selectedDays.count];
             weakSelf.orderListView.days = selectedDays;
+            weakSelf.orderListView.dayRent = weakSelf.model.rent;
+
             weakSelf.rentStartDayLabel.text = [startDate substringFromIndex:5];
             if (endDate) {
                 weakSelf.rentEndDayLabel.text = [endDate substringFromIndex:5];
@@ -638,8 +640,8 @@
     }];
     
     [self.orderListView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.scrollView);
-        make.bottom.mas_equalTo(self.scrollView);
+        make.top.left.right.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.view).offset(getWidth(-60.f)-g_bottomSafeAreaHeight);
     }];
     
     [self.predictView mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -2,6 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "keyboard_toolbar.png",
       "scale" : "1x"
     },
     {
