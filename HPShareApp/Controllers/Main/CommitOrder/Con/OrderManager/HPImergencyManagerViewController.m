@@ -307,7 +307,7 @@
 
     NSString *lefttime = [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime];
     if ([lefttime isEqualToString:@"剩余:00:00"]) {
-        [kNotificationCenter postNotificationName:topaytimeout object:nil];
+//        [kNotificationCenter postNotificationName:topaytimeout object:nil];
     }
     
     NSString *start = [[_model.order.days componentsSeparatedByString:@","]firstObject];
@@ -322,18 +322,8 @@
 
 }
 
-- (void)paytimeOutClick
-{
-    [self pushVCByClassName:@"HPOwnnerTimeOutViewController" withParam:@{@"model":_model}];
-}
-
-- (void)dealloc{
-    [kNotificationCenter removeObserver:self];
-}
 - (void)setUpCommitSubviews
-{
-    [kNotificationCenter addObserver:self selector:@selector(paytimeOutClick) name:topaytimeout object:nil];
-    
+{    
     [self.view addSubview:self.scrollView];
 
     [self.scrollView addSubview:self.headerView];

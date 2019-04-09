@@ -429,9 +429,11 @@ static NSString *orderCell = @"orderCell";
         }else if(model.order.status.integerValue == 2){
             [self pushVCByClassName:@"HPImergencyManagerViewController" withParam:@{@"model":model}];
             
-        }else if(model.order.status.integerValue == 12 || model.order.status.integerValue == 14 || model.order.status.integerValue == 13){
+        }else if(model.order.status.integerValue == 12 || model.order.status.integerValue == 13){
             [self pushVCByClassName:@"HPCancelOrderManagerViewController" withParam:@{@"model":model}];
             
+        }else if(model.order.status.integerValue == 14){
+            [self pushVCByClassName:@"HPOwnnerTimeOutViewController" withParam:@{@"model":model}];
         }
     }else{
         if (model.order.status.integerValue == 11){
@@ -446,6 +448,8 @@ static NSString *orderCell = @"orderCell";
         }else if (model.order.status.integerValue == 2){
             [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
 
+        }else if(model.order.status.integerValue == 14){
+            [self pushVCByClassName:@"HPOwnnerTimeOutViewController" withParam:@{@"model":model}];
         }
     }
     

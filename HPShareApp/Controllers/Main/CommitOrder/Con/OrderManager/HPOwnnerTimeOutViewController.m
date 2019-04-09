@@ -201,6 +201,12 @@
         [self.payBtn mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(0);
         }];
+    }else{
+        [self.cancelBtn setTitleColor:COLOR_GRAY_666666 forState:UIControlStateNormal];
+        self.cancelBtn.layer.borderColor= COLOR_GRAY_666666.CGColor;
+        [self.payBtn setTitle:@"重新下单" forState:UIControlStateNormal];
+        [self.payBtn setTitleColor:COLOR_RED_EA0000 forState:UIControlStateNormal];
+        self.payBtn.layer.borderColor= COLOR_RED_EA0000.CGColor;
     }
     
     self.addressLabel.text = [NSString stringWithFormat:@"地址：%@",_model.spaceDetail.address];
@@ -1121,7 +1127,7 @@
 //重新下单
 - (void)onClickPayBtn:(UIButton *)button
 {
-//    [self pushVCByClassName:@"HPOrderPayViewController" withParam:@{@"order":@"gsgffg"}];
+    HPLog(@"重新下单");
 }
 
 - (void)onClickAddOrderBtn:(UIButton *)button

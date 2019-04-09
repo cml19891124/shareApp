@@ -40,6 +40,8 @@
 		6993AD4C21CE97D40019506C /* HPShareTempGoodsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993AD4B21CE97D40019506C /* HPShareTempGoodsController.m */; };
 		786E617DDD64F9CC68E4049B /* Pods_HPShareAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C508ECCC8CC2C9D9701839BE /* Pods_HPShareAppTests.framework */; };
 		7A04216C225C49CB00CBEC7E /* HPCancelOrderManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A04216B225C49CB00CBEC7E /* HPCancelOrderManagerViewController.m */; };
+		7A042170225CB71100CBEC7E /* HPWalletViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A04216F225CB71100CBEC7E /* HPWalletViewController.m */; };
+		7A042177225CB91300CBEC7E /* HPWalletCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A042176225CB91300CBEC7E /* HPWalletCell.m */; };
 		7A09A2BE2253076000A68FBD /* HOOrderListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2BD2253076000A68FBD /* HOOrderListModel.m */; };
 		7A09A2C222535BCA00A68FBD /* HPOwnnerOrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2C122535BCA00A68FBD /* HPOwnnerOrderModel.m */; };
 		7A09A2C52253629A00A68FBD /* HPRentCancelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2C42253629A00A68FBD /* HPRentCancelView.m */; };
@@ -583,6 +585,10 @@
 		6993AD4B21CE97D40019506C /* HPShareTempGoodsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPShareTempGoodsController.m; sourceTree = "<group>"; };
 		7A04216A225C49CA00CBEC7E /* HPCancelOrderManagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPCancelOrderManagerViewController.h; sourceTree = "<group>"; };
 		7A04216B225C49CB00CBEC7E /* HPCancelOrderManagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPCancelOrderManagerViewController.m; sourceTree = "<group>"; };
+		7A04216E225CB71100CBEC7E /* HPWalletViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPWalletViewController.h; sourceTree = "<group>"; };
+		7A04216F225CB71100CBEC7E /* HPWalletViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPWalletViewController.m; sourceTree = "<group>"; };
+		7A042175225CB91300CBEC7E /* HPWalletCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPWalletCell.h; sourceTree = "<group>"; };
+		7A042176225CB91300CBEC7E /* HPWalletCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPWalletCell.m; sourceTree = "<group>"; };
 		7A09A2BC2253076000A68FBD /* HOOrderListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HOOrderListModel.h; sourceTree = "<group>"; };
 		7A09A2BD2253076000A68FBD /* HOOrderListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HOOrderListModel.m; sourceTree = "<group>"; };
 		7A09A2C022535BCA00A68FBD /* HPOwnnerOrderModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOwnnerOrderModel.h; sourceTree = "<group>"; };
@@ -1696,6 +1702,49 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
+		7A04216D225CB6E500CBEC7E /* Wallet */ = {
+			isa = PBXGroup;
+			children = (
+				7A042172225CB8E800CBEC7E /* View */,
+				7A042171225CB8DC00CBEC7E /* Con */,
+			);
+			path = Wallet;
+			sourceTree = "<group>";
+		};
+		7A042171225CB8DC00CBEC7E /* Con */ = {
+			isa = PBXGroup;
+			children = (
+				7A04216E225CB71100CBEC7E /* HPWalletViewController.h */,
+				7A04216F225CB71100CBEC7E /* HPWalletViewController.m */,
+			);
+			path = Con;
+			sourceTree = "<group>";
+		};
+		7A042172225CB8E800CBEC7E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7A042174225CB8FA00CBEC7E /* Cell */,
+				7A042173225CB8EF00CBEC7E /* Subviews */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7A042173225CB8EF00CBEC7E /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Subviews;
+			sourceTree = "<group>";
+		};
+		7A042174225CB8FA00CBEC7E /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				7A042175225CB91300CBEC7E /* HPWalletCell.h */,
+				7A042176225CB91300CBEC7E /* HPWalletCell.m */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		7A09A2BF22535BB600A68FBD /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -2520,6 +2569,7 @@
 		E661B091219BAC4300C86CF5 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				7A04216D225CB6E500CBEC7E /* Wallet */,
 				E629AAC72248E65A00CF0378 /* CommitOrder */,
 				E629AABF2248C6E000CF0378 /* Identify */,
 				E679B84222420D0A004A2CFA /* Mine */,
@@ -4203,6 +4253,7 @@
 				E677C7DC21FB06F80099E2C9 /* HPAreaStoreItemListViewController.m in Sources */,
 				E68A780821F3276C00083A90 /* JCHATGroupDetailFooterReusableView.m in Sources */,
 				7A8C806F22525BE800E275EB /* HPRentTimePicker.m in Sources */,
+				7A042177225CB91300CBEC7E /* HPWalletCell.m in Sources */,
 				E68A76BD21F2C6D100083A90 /* JCHATShowTimeCell.m in Sources */,
 				E6D75F7F21B6463400B2067C /* HPShareManageCell.m in Sources */,
 				E661B14621A68BE300C86CF5 /* HPRoundedRectPageControl.m in Sources */,
@@ -4264,6 +4315,7 @@
 				E657A2E421F6B670008198C9 /* JCHATConversationListViewController.m in Sources */,
 				69165CE421BFB36500593D25 /* HPPictureModel.m in Sources */,
 				E6B4CEE221C5286F00429C11 /* TAAbstractDotView.m in Sources */,
+				7A042170225CB71100CBEC7E /* HPWalletViewController.m in Sources */,
 				E6830E5121D20594000E0F39 /* HPMenuOpenStoreView.m in Sources */,
 				E6D75F8B21B69D0D00B2067C /* HPShareMapController.m in Sources */,
 				E68A76EC21F2D26100083A90 /* JCHATChatModel.m in Sources */,

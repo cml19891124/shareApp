@@ -561,6 +561,8 @@ static NSString *orderItemCell = @"HPOrderItemCell";
             [self pushVCByClassName:@"HPOrderListViewController"];
         }else if (businessIndex == HPBusinessCellIndexWallet){
             HPLog(@"wallet");
+            [self pushVCByClassName:@"HPWalletViewController"];
+
         }else if (businessIndex == HPBusinessCellIndexName){
             HPLog(@"name");
             [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":account.userInfo.userId}];
