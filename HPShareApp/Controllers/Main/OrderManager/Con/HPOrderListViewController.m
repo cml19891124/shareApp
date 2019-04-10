@@ -170,7 +170,7 @@ static NSString *orderCell = @"orderCell";
     dic[@"page"] = @(self.shareListParam.page);
     dic[@"pageSize"] = @(self.shareListParam.pageSize);
     dic[@"status"] = self.status.integerValue == 0?@"":self.status.stringValue;
-//    dic[@"isReviewed"] = @"1";//交易完成是否评价 1 是 0 否
+//    dic[@"isReviewed"] = @"1";//交易完成是否评价 1 是 0 否 默认全部已完成订单
     [HPHTTPSever HPGETServerWithMethod:@"/v1/order" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             NSArray *listArray = [HOOrderListModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
@@ -188,6 +188,7 @@ static NSString *orderCell = @"orderCell";
                 self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"tixian");
                 self.tableView.refreshNoDataView.tipLabel.text = @"列表空空如也，快去逛逛吧~";
                 [self.tableView.refreshNoDataView.tipBtn setTitle:@"去逛逛" forState:UIControlStateNormal];
+                [self.tableView.refreshNoDataView.tipBtn setTitleColor:COLOR_RED_FF1213 forState:UIControlStateNormal];
                 self.tableView.refreshNoDataView.tipBtn.backgroundColor = COLOR_GRAY_FFFFFF;
                 self.tableView.refreshNoDataView.tipBtn.layer.cornerRadius = 6;
                 self.tableView.refreshNoDataView.tipBtn.layer.masksToBounds = YES;
@@ -504,6 +505,7 @@ static NSString *orderCell = @"orderCell";
 - (void)onClickCell:(HPOrderCell *)cell toCreateAnotherOrderBtn:(UIButton *)createButton andModel:(HOOrderListModel *)model
 {
     HPLog(@"再来-单");
+    [self pushVCByClassName:@"HPShareShopListController"];
 
 }
 

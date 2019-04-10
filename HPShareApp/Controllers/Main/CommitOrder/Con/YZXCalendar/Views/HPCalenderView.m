@@ -18,6 +18,10 @@
 
 - (void)setupModalView:(UIView *)view
 {
+    self.hasOrderArray = [NSMutableArray array];
+
+    [kNotificationCenter addObserver:self selector:@selector(operationHasOrderArray:) name:carlenderhasOrderArrayName object:nil];
+
     self.view = view;
     
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -41,15 +45,26 @@
     [self.view addSubview:self.customCalendarView];
     
     [self setUpSubviewsMasonry];
-    
-    if ([HPSingleton sharedSingleton].identifyTag == 1) {
-        self.resetBtn.userInteractionEnabled = NO;
-        self.confirmButton.userInteractionEnabled = NO;
 
-    }else{
-        self.confirmButton.userInteractionEnabled = YES;
-        self.resetBtn.userInteractionEnabled = YES;
+}
 
+- (void)operationHasOrderArray:(NSNotification *)noti
+{
+    //    NSLog(@"ddddddd:%@",noti.userInfo[@"array"]);
+    NSArray *dates = noti.userInfo[@"array"];
+    for (int i = 0; i < dates.count; i ++) {
+        NSString *date = [HPTimeString noPortraitLineToDateStr:dates[i]];
+        if (![self.hasOrderArray containsObject:date]) {
+            [self.hasOrderArray addObject:date];
+        }
+        if (self.hasOrderArray.count) {
+            self.resetBtn.userInteractionEnabled = NO;
+            self.confirmButton.userInteractionEnabled = NO;
+            
+        }else{
+            self.confirmButton.userInteractionEnabled = YES;
+            self.resetBtn.userInteractionEnabled = YES;
+        }
     }
 }
 

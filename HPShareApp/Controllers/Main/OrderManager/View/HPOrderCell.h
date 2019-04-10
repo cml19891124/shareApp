@@ -86,6 +86,11 @@ typedef NS_ENUM(NSInteger, PayOrder){
  确认收货事件
  */
 - (void)onClickCell:(HPOrderCell *)cell toConfirmToReceiveOrderBtn:(UIButton *)receiveButton andModel:(HOOrderListModel *)model;
+
+/**
+ 重新下单事件
+ */
+- (void)onClickCell:(HPOrderCell *)cell toRecommitOrderBtn:(UIButton *)recommitButton andModel:(HOOrderListModel *)model;
 @end
 NS_ASSUME_NONNULL_BEGIN
 

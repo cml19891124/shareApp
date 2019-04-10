@@ -76,6 +76,9 @@ NS_ASSUME_NONNULL_BEGIN
  自定义时最多选择的天数
  */
 @property (nonatomic, assign) NSInteger         maxChooseNumber;
+
+@property (strong, nonatomic) NSMutableArray *hasOrderArray;
+
 @end
 
 NS_ASSUME_NONNULL_END

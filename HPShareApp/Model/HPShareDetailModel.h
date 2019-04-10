@@ -75,6 +75,15 @@ NS_ASSUME_NONNULL_BEGIN
  租赁模式
  */
 @property (nonatomic, copy) NSString *rentMode;
+
+/**
+ 出租位置
+ */
+@property (nonatomic, copy) NSString *rentPlace;
+/**
+ 室内、室外
+ */
+@property (nonatomic, copy) NSString *rentOutside;
 @end
 
 NS_ASSUME_NONNULL_END

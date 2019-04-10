@@ -1128,6 +1128,10 @@
 - (void)onClickPayBtn:(UIButton *)button
 {
     HPLog(@"重新下单");
+    if ([button.currentTitle isEqualToString:@"重新下单"]) {
+        [self pushVCByClassName:@"HPShareShopListController"];
+
+    }
 }
 
 - (void)onClickAddOrderBtn:(UIButton *)button

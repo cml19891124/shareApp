@@ -858,16 +858,19 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 
 - (void)createOrder:(UIButton *)button
 {
-    HPShareDetailModel *model = self.param[@"model"];
-
-    [self pushVCByClassName:@"HPCommitOrderViewController" withParam:@{@"order":model}];
+    HPLoginModel *account = [HPUserTool account];
+    if ([_model.userId isEqualToString:account.userInfo.userId]) {
+        [HPProgressHUD alertMessage:@"不可以给自己下单哦，亲~"];
+        return;
+    }
+    [self pushVCByClassName:@"HPCommitOrderViewController" withParam:@{@"model":_model}];
 
 }
 
 #pragma mark - 开启会话
 - (void)createConversationWithFriend:(UIButton *)button
 {
-    [[JCHATAlertViewWait ins] showInView];
+//    [[JCHATAlertViewWait ins] showInView];
     __block JCHATConversationViewController *sendMessageCtl = [[JCHATConversationViewController alloc] init];
     sendMessageCtl.superViewController = self;
     sendMessageCtl.hidesBottomBarWhenPushed = YES;
@@ -879,7 +882,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     kWEAKSELF
     [JMSGConversation createSingleConversationWithUsername:storeOwnner appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
         
-        [[JCHATAlertViewWait ins] hidenAll];
+//        [[JCHATAlertViewWait ins] hidenAll];
         
         if (error == nil) {
             kSTRONGSELF

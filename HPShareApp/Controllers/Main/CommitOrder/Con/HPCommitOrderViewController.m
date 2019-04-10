@@ -80,7 +80,7 @@
 
 @property (nonatomic, strong) UILabel *addressLabel;
 
-@property (nonatomic, strong) HPShareListModel *model;
+@property (nonatomic, strong) HPShareDetailModel *model;
 
 @property (nonatomic, strong) UIView *rentInfoView;
 
@@ -218,7 +218,7 @@
     
     [self.view setBackgroundColor:COLOR_GRAY_F9FAFD];
     
-    self.model = self.param[@"order"];
+    self.model = self.param[@"model"];
     
     if (@available(iOS 11.0, *)) {
         
@@ -238,27 +238,26 @@
 {
     self.nameLabel.text = _model.title;
     
-    self.locationLabel.text = [NSString stringWithFormat:@"拼租位置:%@",_model.address];
+    self.locationLabel.text = [NSString stringWithFormat:@"拼租位置:%@",_model.rentPlace?_model.rentPlace:@"--"];
 
-    [self.storeView sd_setImageWithURL:[NSURL URLWithString:_model.picture.url] placeholderImage:ImageNamed(@"")];
+    [self.storeView sd_setImageWithURL:[NSURL URLWithString:_model.pictures[0].url] placeholderImage:ImageNamed(@"loading_logo_small")];
     
     self.addressLabel.text = [NSString stringWithFormat:@"地址:%@",_model.address];
     
-    self.ownnerField.text = _model.contact;
+    self.ownnerField.delegate = self;
 
-    self.phoneField.text = _model.contactMobile;
-    
+    self.phoneField.delegate = self;
     self.priceLabel.text = [NSString stringWithFormat:@"¥ %@",_model.rent];
     if (_model.area && ![_model.area isEqualToString:@"0"]) {
-        if ([_model.area intValue] == 1) {
+        if ([_model.areaRange intValue] == 1) {
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"不限"]];
-        }else if ([_model.area intValue] == 2){
+        }else if ([_model.areaRange intValue] == 2){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"小于5㎡"]];
-        }else if ([_model.area intValue] == 3){
+        }else if ([_model.areaRange intValue] == 3){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"5-10㎡"]];
-        }else if ([_model.area intValue] == 4){
+        }else if ([_model.areaRange intValue] == 4){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"10-20㎡"]];
-        }else if ([_model.area intValue] == 5){
+        }else if ([_model.areaRange intValue] == 5){
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"20㎡以上"]];
         }else {
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:面议"]];
@@ -266,6 +265,13 @@
     }
     else{
         [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:不限"]];
+    }
+    
+    if (_model.rentOutside.integerValue == 1) {
+        self.rentOutsideLabel.text = @"室内";
+    }else
+    {
+        self.rentOutsideLabel.text = @"室外";
     }
 }
 - (void)setUpCommitSubviews
@@ -330,6 +336,9 @@
     
     [self.contactView addSubview:self.ownnerField];
     
+    [kNotificationCenter addObserver:self selector:@selector(didTextFieldChange:) name:UITextFieldTextDidChangeNotification object:self.ownnerField];
+
+    
     [self.contactInfoView addSubview:self.phoneInfoView];
     
     [self.phoneInfoView addSubview:self.phoneStarBtn];
@@ -338,6 +347,8 @@
     
     [self.phoneInfoView addSubview:self.phoneField];
     
+    [kNotificationCenter addObserver:self selector:@selector(didTextFieldChange:) name:UITextFieldTextDidChangeNotification object:self.phoneField];
+
     [self.scrollView addSubview:self.desView];
 
     [self.desView addSubview:self.desLabel];
@@ -363,6 +374,40 @@
     [self.view addSubview:self.predictView];
     
     [self.predictView show:NO];
+}
+
+- (void)dealloc
+{
+    [kNotificationCenter removeObserver:self name:UITextFieldTextDidChangeNotification object:self.ownnerField];
+    [kNotificationCenter removeObserver:self name:UITextFieldTextDidChangeNotification object:self.phoneField];
+
+}
+
+#pragma mark - NSNotification
+
+- (void)didTextFieldChange:(NSNotification *)notification {
+    UITextField *textField = (UITextField *)notification.object;
+    
+    // text field 的内容
+    NSString *contentText = textField.text;
+    
+    // 获取高亮内容的范围
+    UITextRange *selectedRange = [textField markedTextRange];
+    // 这行代码 可以认为是 获取高亮内容的长度
+    NSInteger markedTextLength = [textField offsetFromPosition:selectedRange.start toPosition:selectedRange.end];
+    // 没有高亮内容时,对已输入的文字进行操作
+    if (markedTextLength == 0) {
+        // 如果 text field 的内容长度大于我们限制的内容长度
+
+        if (contentText.length > 11 && textField == self.phoneField) {
+            // 截取从前面开始maxLength长度的字符串
+            //            textField.text = [contentText substringToIndex:maxLength];
+            // 此方法用于在字符串的一个range范围内，返回此range范围内完整的字符串的range
+            NSRange rangeRange = [contentText rangeOfComposedCharacterSequencesForRange:NSMakeRange(0, 12)];
+            textField.text = [contentText substringWithRange:rangeRange];
+            [HPProgressHUD alertMessage:@"手机号码不得超过11位"];
+        }
+    }
 }
 
 -(void)setUpCommitSubviewsmasonry
@@ -409,18 +454,22 @@
         make.height.mas_equalTo(self.nameLabel.font.pointSize);
     }];
     
+    __block CGFloat locW = BoundWithSize(_model.rentPlace?_model.rentPlace:@"拼租位置：--", kScreenWidth, 12.f).size.width;
+    [self.locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.nameLabel);
+        if (locW > kScreenWidth/3) {
+            locW = kScreenWidth/3;
+        }
+        make.width.mas_equalTo(locW);
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
+        make.height.mas_equalTo(self.locationLabel.font.pointSize);
+    }];
+    
     [self.rentOutsideLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(getWidth(-15.f));
+        make.left.mas_equalTo(self.locationLabel.mas_right).offset(getWidth(15.f));
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
         make.height.mas_equalTo(self.rentOutsideLabel.font.pointSize);
         make.width.mas_equalTo(30.f);
-    }];
-    
-    [self.locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.nameLabel);
-        make.right.mas_equalTo(self.rentOutsideLabel.mas_left).offset(getWidth(-2.f));
-        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
-        make.height.mas_equalTo(self.locationLabel.font.pointSize);
     }];
     
     [self.spaceInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -945,7 +994,7 @@
 {
     if (!_contactLabel) {
         _contactLabel = [UILabel new];
-        _contactLabel.text = @"联系人";
+        _contactLabel.text = @"收货人";
         _contactLabel.textAlignment = NSTextAlignmentLeft;
         _contactLabel.font = kFont_Medium(14.f);
         _contactLabel.textColor = COLOR_BLACK_333333;
@@ -1271,6 +1320,10 @@
     if (button.selected) {
         _priceListBtn.selectedImage = ImageNamed(@"arrow_up");
         NSArray *verbDaysArray = [[self verbSelectedDaysArray] componentsSeparatedByString:@","];
+        if (verbDaysArray.count == 1 && [verbDaysArray.firstObject isEqualToString:@""]) {
+            [HPProgressHUD alertMessage:@"请选择拼租日期"];
+            return;
+        }
         if (verbDaysArray.count >= 1) {
             self.orderListView.days = verbDaysArray;
             
@@ -1318,14 +1371,21 @@
         [HPProgressHUD alertMessage:@"请选择拼租日期"];
         return;
     }
-    
+    if (self.ownnerField.text.length == 0) {
+        [HPProgressHUD alertMessage:@"请填写收货人姓名"];
+        return;
+    }
+    if (self.phoneField.text.length == 0) {
+        [HPProgressHUD alertMessage:@"请填写收货人联系方式"];
+        return;
+    }
 //    NSString *resultDays = [self verbSelectedDaysArray];
     
-    dic[@"closeTime"] = closeTime;
-    dic[@"contact"] = self.model.contact;
-    dic[@"contactMobile"] = self.model.contactMobile;
+    dic[@"closeTime"] = closeTime?closeTime:@"18:00";
+    dic[@"contact"] = self.ownnerField.text;
+    dic[@"contactMobile"] = self.phoneField.text;
     dic[@"days"] = [self verbSelectedDaysArray];
-    dic[@"openTime"] = openTime;
+    dic[@"openTime"] = openTime?openTime:@"09:00";
     dic[@"remark"] = self.desField.text;
     dic[@"shareOrder"] = @"";
     dic[@"spaceId"] = _model.spaceId;
@@ -1355,6 +1415,9 @@
 {
     NSString *rentDays;
     if (_endDate.length == 0) {
+        if (!_startDate) {
+            return @"";
+        }
         rentDays = [HPTimeString getNeedDateFormatter:_startDate];
     }else{
         
