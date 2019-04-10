@@ -16,6 +16,8 @@
 
 #import "HPBanksViewController.h"
 
+#import "HPBanksViewController.h"
+
 typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
     HPChooseItemIndexUserInfo = 5100,
     HPChooseItemIndexBank,
@@ -204,7 +206,10 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
 
 - (void)jumpToBanks:(UIButton *)button
 {
-    [self pushVCByClassName:@"HPBanksViewController"];
+    HPBanksViewController *banks = [HPBanksViewController new];
+    banks.delegate = self;
+//    [self pushVCByClassName:@"HPBanksViewController"];
+    [self.navigationController pushViewController:banks animated:YES];
 }
 
 //开户地区

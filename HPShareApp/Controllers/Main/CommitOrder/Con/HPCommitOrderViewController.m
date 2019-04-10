@@ -204,8 +204,6 @@
     
     self.hasOrderArray = [NSMutableArray array];
     
-    self.verbDaysArray = [NSMutableArray array];
-    
     self.fianlOrderArray = [NSMutableArray array];
 
     [self getHasPredictOrderApi];
@@ -748,7 +746,7 @@
     
     [self.orderListView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view).offset(getWidth(-60.f)-g_bottomSafeAreaHeight);
+        make.bottom.mas_equalTo(self.view).offset(getWidth(-60.f));
     }];
     
     [self.predictView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -897,7 +895,7 @@
 {
     if (!_rentDaysLabel) {
         _rentDaysLabel = [UILabel new];
-        _rentDaysLabel.text = @"拼租日期（共3天）";
+        _rentDaysLabel.text = @"拼租日期（共0天）";
         _rentDaysLabel.textAlignment = NSTextAlignmentLeft;
         _rentDaysLabel.font = kFont_Medium(14.f);
         _rentDaysLabel.textColor = COLOR_BLACK_333333;
@@ -1479,8 +1477,6 @@
         NSString *selectRentDays = [HPTimeString getDatesStringWithStartTime:startSecond andEndTime:endSecond];
         NSArray *rentDaysArray = [selectRentDays componentsSeparatedByString:@","];
         
-        [self.rentDaysArray addObjectsFromArray:rentDaysArray];
-        
         NSArray *resultDaysArray = [rentDaysArray valueForKeyPath:@"@distinctUnionOfObjects.self"];
         [self.verbDaysArray addObjectsFromArray:resultDaysArray];
         for (NSString *date in self.hasOrderArray) {
@@ -1493,5 +1489,14 @@
     }
 
     return rentDays;
+}
+
+- (NSMutableArray *)verbDaysArray
+{
+    if (!_verbDaysArray) {
+        _verbDaysArray = [NSMutableArray array];
+
+    }
+    return _verbDaysArray;
 }
 @end

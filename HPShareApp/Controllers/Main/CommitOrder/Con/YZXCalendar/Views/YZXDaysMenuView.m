@@ -233,7 +233,6 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 
             if (lasthasday == day) {
                 cell.priceLabel.text = @"已预订";
-
                 cell.priceLabel.font = kFont_Medium(10.f);
                 [cell changeDayBackgroundColor:COLOR_GRAY_EEEEEE];
                 cell.priceLabel.textColor = COLOR_GRAY_999999;
@@ -274,7 +273,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     //默认只显示近三个月的时间
     if (indexPath.section != self.collectionViewData.count -1 && indexPath.section != self.collectionViewData.count -2 && indexPath.section != self.collectionViewData.count -3) {
         [cell changeDayBackgroundColor:[UIColor whiteColor]];
-        cell.isHidden = YES;
+        cell.isHidden = NO;
         
     }
     return cell;
