@@ -222,7 +222,7 @@
         _findStoreBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"find_store")];
         [_findStoreBtn setText:@"线上找店"];
         [_findStoreBtn setTextColor:COLOR_GRAY_666666];
-        [_findStoreBtn setTextFont:kFont_Medium(12.f)];
+        [_findStoreBtn setTextFont:kFont_Regular(12.f)];
         _findStoreBtn.tag = 4600;
         [_findStoreBtn addTarget:self action:@selector(onClickedUserBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -235,7 +235,7 @@
         _questBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"send_query")];
         [_questBtn setText:@"发送请求"];
         [_questBtn setTextColor:COLOR_GRAY_666666];
-        [_questBtn setTextFont:kFont_Medium(12.f)];
+        [_questBtn setTextFont:kFont_Regular(12.f)];
         _questBtn.tag = 4601;
         [_questBtn addTarget:self action:@selector(onClickedUserBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -248,7 +248,7 @@
         _receiveOrderBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"receive_order")];
         [_receiveOrderBtn setText:@"店主接单"];
         [_receiveOrderBtn setTextColor:COLOR_GRAY_666666];
-        [_receiveOrderBtn setTextFont:kFont_Medium(12.f)];
+        [_receiveOrderBtn setTextFont:kFont_Regular(12.f)];
         _receiveOrderBtn.tag = 4602;
         [_receiveOrderBtn addTarget:self action:@selector(onClickedUserBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -261,7 +261,7 @@
         _rentToPayBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"rentPay")];
         [_rentToPayBtn setText:@"拼租付款"];
         [_rentToPayBtn setTextColor:COLOR_GRAY_666666];
-        [_rentToPayBtn setTextFont:kFont_Medium(12.f)];
+        [_rentToPayBtn setTextFont:kFont_Regular(12.f)];
         _rentToPayBtn.tag = 4603;
         [_rentToPayBtn addTarget:self action:@selector(onClickedUserBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -274,7 +274,7 @@
         _beginRentBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"start_rent")];
         [_beginRentBtn setText:@"开始拼租"];
         [_beginRentBtn setTextColor:COLOR_GRAY_666666];
-        [_beginRentBtn setTextFont:kFont_Medium(12.f)];
+        [_beginRentBtn setTextFont:kFont_Regular(12.f)];
         _beginRentBtn.tag = 4604;
         [_beginRentBtn addTarget:self action:@selector(onClickedUserBtn:) forControlEvents:UIControlEventTouchUpInside];
     }

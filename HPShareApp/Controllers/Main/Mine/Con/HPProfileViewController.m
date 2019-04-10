@@ -376,10 +376,10 @@ static NSString *orderItemCell = @"HPOrderItemCell";
 {
     if (indexPath.section == 0) {
         if ([HPSingleton sharedSingleton].identifyTag == 0) {
-            return getWidth(315.f);
+            return getWidth(315.f) + g_statusBarHeight;
 
         }else{
-            return getWidth(295.f);
+            return getWidth(295.f) + g_statusBarHeight;
         }
     }else if (indexPath.section == 1){
         if ([HPSingleton sharedSingleton].identifyTag == 0) {
@@ -706,6 +706,15 @@ static NSString *orderItemCell = @"HPOrderItemCell";
             [HPProgressHUD alertMessage:@"注册极光失败"];
         }
     }];
+}
+
+#pragma mark - 取消下拉  允许上拉
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGPoint offset = self.tableView.contentOffset;
+    if (offset.y <= 0) {
+        offset.y = 0;
+    }
+    self.tableView.contentOffset = offset;
 }
 
 @end

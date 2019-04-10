@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "YZXCalendarDelegate.h"
 
-#define carlenderhasOrderArrayName @"carlenderhasOrderArrayName"
 
 @interface YZXDaysMenuView : UIView
 
@@ -40,6 +39,11 @@
 @property (nonatomic, strong) NSMutableArray <NSIndexPath *>            *selectedArray;
 
 @property (nonatomic, strong) UICollectionView                          *collectionView;
+
+/**
+ 其他租客已经预订的数组
+ */
+@property (strong, nonatomic) NSMutableArray *lastHasOrderArray;
 
 @property (strong, nonatomic) NSMutableArray *hasOrderArray;
 

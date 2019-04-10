@@ -75,20 +75,20 @@
     
     [self.bgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.width.top.mas_equalTo(self);
-        make.height.mas_equalTo(getWidth(220.f));
+        make.height.mas_equalTo(getWidth(220.f) + g_statusBarHeight);
     }];
     
     [self.iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(getWidth(50.f));
         make.left.mas_equalTo(getWidth(16.f));
-        make.top.mas_equalTo(getWidth(46.f));
+        make.top.mas_equalTo(getWidth(46.f) + g_statusBarHeight);
     }];
 
     CGFloat phoneW = BoundWithSize(@"15817479363", kScreenWidth, 18.f).size.width + 10;
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(phoneW);
         make.left.mas_equalTo(self.iconImageView.mas_right).offset(getWidth(11.f));
-        make.top.mas_equalTo(getWidth(54.f));
+        make.top.mas_equalTo(getWidth(54.f) + g_statusBarHeight);
         make.height.mas_equalTo(self.phoneBtn.titleLabel.font.pointSize);
     }];
     
@@ -102,12 +102,12 @@
     [self.editBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(getWidth(20.f));
         make.left.mas_equalTo(self.phoneBtn.mas_right).offset(getWidth(9.f));
-        make.top.mas_equalTo(self.phoneBtn);
+        make.top.mas_equalTo(self.phoneBtn.mas_top).offset(g_statusBarHeight);
         make.height.mas_equalTo(getWidth(20.f));
     }];
     
     [self.optionalBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(getWidth(50.f));
+        make.top.mas_equalTo(getWidth(50.f) + g_statusBarHeight);
         make.right.mas_equalTo(self.contentView);
         make.width.mas_equalTo(getWidth(90.f));
         make.height.mas_equalTo(getWidth(25.f));

@@ -118,6 +118,18 @@ static NSString *orderCell = @"orderCell";
     [self setUpListSubviesMasonry];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    //  创建需要的毛玻璃特效类型
+//    UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+//    //  毛玻璃view 视图
+//    UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+//    //添加到要有毛玻璃特效的控件中
+//    effectView.frame = self.orderItemView.bounds;
+//    [self.orderItemView addSubview:effectView];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -183,9 +195,9 @@ static NSString *orderCell = @"orderCell";
             }
             
             if ([responseObject[@"data"][@"total"] integerValue] == 0 || self.orderArray.count == 0) {
-//                [HPProgressHUD alertMessage:@"暂无数据"];
+
                 self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
-                self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"tixian");
+                self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"queshengtu");
                 self.tableView.refreshNoDataView.tipLabel.text = @"列表空空如也，快去逛逛吧~";
                 [self.tableView.refreshNoDataView.tipBtn setTitle:@"去逛逛" forState:UIControlStateNormal];
                 [self.tableView.refreshNoDataView.tipBtn setTitleColor:COLOR_RED_FF1213 forState:UIControlStateNormal];
@@ -195,13 +207,19 @@ static NSString *orderCell = @"orderCell";
                 self.tableView.refreshNoDataView.tipBtn.layer.borderColor = COLOR_RED_FF1213.CGColor;
                 self.tableView.refreshNoDataView.tipBtn.layer.borderWidth = 1;
                 self.tableView.refreshNoDataView.delegate = self;
+                self.tableView.refreshNoDataView.hidden = NO;
+
             }
             
             if (listArray.count < 10) {
                 [self.tableView.mj_footer endRefreshingWithNoMoreData];
+                [self.tableView.mj_header endRefreshing];
             }
             else {
+                self.tableView.refreshNoDataView.hidden = YES;
+
                 [self.tableView.mj_footer endRefreshing];
+                [self.tableView.mj_header endRefreshing];
                 self.shareListParam.page ++;
             }
             
@@ -293,10 +311,9 @@ static NSString *orderCell = @"orderCell";
 
 - (void)setupShadowOfPanel:(UIView *)view {
     [view.layer setShadowColor:COLOR_GRAY_D5D5D5.CGColor];
-    [view.layer setShadowOffset:CGSizeMake(0.f, 3.f)];
-    [view.layer setShadowRadius:6.f];
-    [view.layer setShadowOpacity:0.9f];
-    [view.layer setCornerRadius:6.f];
+    [view.layer setShadowOffset:CGSizeMake(0.f, 6.f)];
+//    [view.layer setShadowRadius:6.f];
+    [view.layer setShadowOpacity:0.1f];
     [view setBackgroundColor:UIColor.whiteColor];
 }
 
@@ -322,12 +339,12 @@ static NSString *orderCell = @"orderCell";
     [self.orderItemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.left.mas_equalTo(self.view);
         make.top.mas_equalTo(g_statusBarHeight + 44.f);
-        make.height.mas_equalTo(getWidth(45.f));
+        make.height.mas_equalTo(getWidth(50.f));
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.orderItemView.mas_bottom).offset(getWidth(2.f));
+        make.top.mas_equalTo(self.orderItemView.mas_bottom).offset(getWidth(0.f));
     }];
 }
 

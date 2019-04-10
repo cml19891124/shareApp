@@ -136,8 +136,8 @@
         _priceLabel = [UILabel new];
         _priceLabel.text = @"";
         _priceLabel.font = kFont_Bold(14.f);
-        _priceLabel.textColor = COLOR_BLACK_333333;
-        _priceLabel.textAlignment = NSTextAlignmentCenter;
+        _priceLabel.textColor = COLOR_RED_EA0000;
+        _priceLabel.textAlignment = NSTextAlignmentLeft;
     }
     return _priceLabel;
 }
@@ -249,6 +249,7 @@
         [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:不限"]];
     }
 
+    self.priceLabel.text = [NSString stringWithFormat:@"¥ %@",_model.order.totalFee];
 }
 
 - (UILabel *)rentOutsideLabel
@@ -316,6 +317,8 @@
     
     [self.communicateView addSubview:self.locationLabel];
     
+    [self.communicateView addSubview:self.rentOutsideLabel];
+
     [self.communicateView addSubview:self.spaceInfoLabel];
     
     [self.communicateView addSubview:self.addressLabel];
@@ -442,17 +445,21 @@
         
     }];
     
-    CGFloat rentW = BoundWithSize(self.locationLabel.text, kScreenWidth, 14.f).size.width;
+    __block CGFloat locW = BoundWithSize(_model.spaceDetail.rentPlace?_model.spaceDetail.rentPlace:@"拼租位置:--", kScreenWidth, 14.f).size.width + 50;
     [self.locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.nameLabel);
+        if (locW > kScreenWidth/3) {
+            locW = kScreenWidth/3;
+        }
+        make.width.mas_equalTo(locW);
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
         make.height.mas_equalTo(self.locationLabel.font.pointSize);
-        make.left.mas_equalTo(self.thumbView.mas_right).offset(getWidth(15.f));
-        make.width.mas_equalTo(rentW);
     }];
     
+    
     [self.rentOutsideLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.locationLabel.mas_right).offset(getWidth(10.f));
-        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(15.f));
+        make.left.mas_equalTo(self.locationLabel.mas_right).offset(getWidth(2.f));
+        make.top.mas_equalTo(self.locationLabel.mas_top);
         make.height.mas_equalTo(self.rentOutsideLabel.font.pointSize);
         make.width.mas_equalTo(getWidth(30.f));
     }];
@@ -463,6 +470,7 @@
         make.left.mas_equalTo(self.thumbView.mas_right).offset(getWidth(15.f));
         make.right.mas_equalTo(getWidth(-15.f));
     }];
+    
     [self.addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.spaceInfoLabel.mas_bottom).offset(getWidth(10.f));
         make.height.mas_equalTo(self.addressLabel.font.pointSize);
@@ -1140,8 +1148,13 @@
     
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    HPLog(@"dsD:%f",scrollView.contentOffset.y);
+
+#pragma mark - 取消下拉  允许上拉
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGPoint offset = self.scrollView.contentOffset;
+    if (offset.y <= 0) {
+        offset.y = 0;
+    }
+    self.scrollView.contentOffset = offset;
 }
 @end

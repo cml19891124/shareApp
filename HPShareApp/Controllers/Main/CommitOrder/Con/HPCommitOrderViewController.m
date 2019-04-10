@@ -7,8 +7,6 @@
 //
 #import "HPTimeString.h"
 
-#import "HPHasOrderModel.h"
-
 #import "HPCommitOrderViewController.h"
 
 #import "HPShareDetailModel.h"
@@ -45,6 +43,10 @@
 @property (strong, nonatomic) NSMutableArray *rentDaysArray;
 
 @property (strong, nonatomic) NSMutableArray *hasOrderArray;
+
+@property (strong, nonatomic) NSMutableArray *fianlOrderArray;
+
+@property (strong, nonatomic) NSMutableArray *verbDaysArray;
 
 @property (nonatomic, copy) NSString *arriveTime;
 
@@ -202,11 +204,48 @@
     
     self.hasOrderArray = [NSMutableArray array];
     
+    self.verbDaysArray = [NSMutableArray array];
+    
+    self.fianlOrderArray = [NSMutableArray array];
+
+    [self getHasPredictOrderApi];
     
     [self.view addSubview:self.calenderView];
 
     [self.calenderView show:YES];
     
+}
+
+#pragma mark - 获取已经预定的订单
+- (void)getHasPredictOrderApi
+{
+    NSString *method = [NSString stringWithFormat:@"/v1/order/spaceId/%@/orderedDays",_model.spaceId];
+    [HPHTTPSever HPGETServerWithMethod:method isNeedToken:YES paraments:@{@"spaceId":_model.spaceId?@([_model.spaceId integerValue]):@""} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            NSArray *orderArray = responseObject[@"data"];
+            for (int i = 0; i < orderArray.count; i++) {
+                if (![self.hasOrderArray containsObject:orderArray[i]]) {
+                    [self.hasOrderArray addObject:orderArray[i]];
+//                    NSString *date = [HPTimeString noPortraitLineToDateStr:orderArray[i]];
+//
+//                    if (![self.fianlOrderArray containsObject:date]) {
+//                        [self.fianlOrderArray addObject:date];
+//
+//                    }
+                }
+            }
+            if (orderArray.count == 0) {
+                HPLog(@"暂无已预订的数据");
+            }else{
+                [kNotificationCenter postNotificationName:lastCarlenderhasOrderArrayName object:nil userInfo:@{@"lastArray":self.hasOrderArray}];
+
+            }
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 
@@ -247,6 +286,13 @@
     self.ownnerField.delegate = self;
 
     self.phoneField.delegate = self;
+    
+    HPLoginModel *account = [HPUserTool account];
+    
+    self.phoneField.text = account.userInfo.mobile;
+    
+    self.ownnerField.text = account.userInfo.username;
+
     self.priceLabel.text = [NSString stringWithFormat:@"¥ %@",_model.rent];
     if (_model.area && ![_model.area isEqualToString:@"0"]) {
         if ([_model.areaRange intValue] == 1) {
@@ -1320,6 +1366,7 @@
     if (button.selected) {
         _priceListBtn.selectedImage = ImageNamed(@"arrow_up");
         NSArray *verbDaysArray = [[self verbSelectedDaysArray] componentsSeparatedByString:@","];
+        
         if (verbDaysArray.count == 1 && [verbDaysArray.firstObject isEqualToString:@""]) {
             [HPProgressHUD alertMessage:@"请选择拼租日期"];
             return;
@@ -1433,12 +1480,16 @@
         NSArray *rentDaysArray = [selectRentDays componentsSeparatedByString:@","];
         
         [self.rentDaysArray addObjectsFromArray:rentDaysArray];
-        if (self.hasOrderArray) {
-            [self.rentDaysArray addObjectsFromArray:self.hasOrderArray];
-        }
         
         NSArray *resultDaysArray = [rentDaysArray valueForKeyPath:@"@distinctUnionOfObjects.self"];
-        rentDays = [resultDaysArray componentsJoinedByString:@","];
+        [self.verbDaysArray addObjectsFromArray:resultDaysArray];
+        for (NSString *date in self.hasOrderArray) {
+            if ([self.verbDaysArray containsObject:date]) {
+                [self.verbDaysArray removeObject:date];
+            }
+        }
+        rentDays = [self.verbDaysArray componentsJoinedByString:@","];
+
     }
 
     return rentDays;

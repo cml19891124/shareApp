@@ -53,8 +53,12 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
         
         self.hasOrderArray = [NSMutableArray array];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(operationHasOrderArray:) name:carlenderhasOrderArrayName object:nil];
+        self.lastHasOrderArray = [NSMutableArray array];
+
+        [kNotificationCenter addObserver:self selector:@selector(operationHasOrderArray:) name:carlenderhasOrderArrayName object:nil];
         
+        [kNotificationCenter addObserver:self selector:@selector(operationLastHasOrderArray:) name:lastCarlenderhasOrderArrayName object:nil];
+
 //        NSArray *dates = [@"20190404,20190408" componentsSeparatedByString:@","];
 //        for (int i = 0; i < dates.count; i ++) {
 //            NSString *date = [HPTimeString noPortraitLineToDateStr:dates[i]];
@@ -77,6 +81,9 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
      *移除指定通知
      */
     [[NSNotificationCenter defaultCenter] removeObserver:self name:carlenderhasOrderArrayName object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:lastCarlenderhasOrderArrayName object:nil];
+
 }
 
 - (void)p_initData
@@ -111,6 +118,19 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return self.collectionViewData[section].sectionRow * 7;
+}
+
+#pragma mark - 已经有其他商户预订
+- (void)operationLastHasOrderArray:(NSNotification *)noti
+{
+    NSArray *dates = noti.userInfo[@"lastArray"];
+    for (int i = 0; i < dates.count; i ++) {
+        NSString *date = [HPTimeString noPortraitLineToDateStr:dates[i]];
+        if (![self.lastHasOrderArray containsObject:date]) {
+            [self.lastHasOrderArray addObject:date];
+        }
+    }
+    [self.collectionView reloadData];
 }
 
 - (void)operationHasOrderArray:(NSNotification *)noti
@@ -204,21 +224,36 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 
         }
     }];
-    
-    //默认只显示近三个月的时间
-    if (indexPath.section != self.collectionViewData.count -1 && indexPath.section != self.collectionViewData.count -2 && indexPath.section != self.collectionViewData.count -3) {
-        [cell changeDayBackgroundColor:[UIColor whiteColor]];
-        cell.isHidden = YES;
 
+    //已经被其他用户预订的
+    for (int i = 0 ;i < self.lastHasOrderArray.count;i++) {
+        if ([[self.lastHasOrderArray[i] substringToIndex:8] isEqualToString:self.collectionViewData[indexPath.section].headerTitle]){
+            NSInteger lasthasday = [[self.lastHasOrderArray[i] substringWithRange:NSMakeRange(8, 2)] integerValue];
+            NSInteger day = indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2);
+
+            if (lasthasday == day) {
+                cell.priceLabel.text = @"已预订";
+
+                cell.priceLabel.font = kFont_Medium(10.f);
+                [cell changeDayBackgroundColor:COLOR_GRAY_EEEEEE];
+                cell.priceLabel.textColor = COLOR_GRAY_999999;
+                
+            }else{
+                cell.priceLabel.font = cell.originalFont;
+            }
+        }else{
+            cell.priceLabel.text = cell.originalPrice;
+            cell.priceLabel.textColor = cell.originalColor;
+
+        }
     }
     
+    //当前用户要预订的
     for (int i = 0 ;i < self.hasOrderArray.count;i++) {
         if ([self.collectionViewData[indexPath.section].headerTitle isEqualToString:[self.hasOrderArray[i] substringToIndex:8]]){
             NSInteger hasday = [[self.hasOrderArray[i] substringWithRange:NSMakeRange(8, 2)] integerValue];
             NSInteger day = indexPath.item - (self.collectionViewData[indexPath.section].firstDayOfTheMonth - 2);
-//            HPLog(@"000000:%@ day:%ld",cell.day.text,day);
             if (hasday == day) {
-//                cell.priceLabel.text = @"已预订";
                 cell.priceLabel.font = kFont_Medium(10.f);
                 [cell changeDayBackgroundColor:COLOR_RED_EA0000];
                 cell.priceLabel.textColor = cell.originalColor;
@@ -234,6 +269,13 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
             cell.userInteractionEnabled = YES;
 
         }
+    }
+    
+    //默认只显示近三个月的时间
+    if (indexPath.section != self.collectionViewData.count -1 && indexPath.section != self.collectionViewData.count -2 && indexPath.section != self.collectionViewData.count -3) {
+        [cell changeDayBackgroundColor:[UIColor whiteColor]];
+        cell.isHidden = YES;
+        
     }
     return cell;
 }

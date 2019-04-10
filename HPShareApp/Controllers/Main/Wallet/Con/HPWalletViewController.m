@@ -260,6 +260,9 @@ static NSString *walletCell = @"walletCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.row == 1) {
+        [self pushVCByClassName:@"HPBindCardsViewController"];
+    }
 }
 
 // 将数字转为每隔3位整数由逗号“,”分隔的字符串

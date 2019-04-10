@@ -30,7 +30,7 @@
         helper.yearReportEndDate = [helper.yearFormatter stringFromDate:[NSDate date]];
         helper.monthReportStartDate = @"1970年01月";
         helper.monthReportEndDate = [helper.yearAndMonthFormatter stringFromDate:[NSDate date]];
-        NSDate *startDate = (NSDate *)[self getNDay:-15];
+        NSDate *startDate = (NSDate *)[self getNDay:-6];
 //        helper.dayReportStartDate = @"1970年01月01日";
         helper.dayReportStartDate = [helper.yearMonthAndDayFormatter stringFromDate:startDate];
 

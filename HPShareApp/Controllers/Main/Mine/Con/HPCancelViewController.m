@@ -52,7 +52,6 @@
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     
-//    _navTitleView = [self setupNavigationBarWithTitle:@"账号注销"];
     UIButton *backBtn = [UIButton new];
     [backBtn setBackgroundImage:ImageNamed(@"fanhui") forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
@@ -142,6 +141,16 @@
     }];
 }
 
+- (UIButton *)colorBtn
+{
+    if (!_colorBtn) {
+        _colorBtn = [[UIButton alloc] init];
+        [_colorBtn.layer setCornerRadius:2.f];
+        [_colorBtn.layer setMasksToBounds:YES];
+    }
+    return _colorBtn;
+}
+
 - (HPCancelView *)cancelView
 {
     if (!_cancelView) {
@@ -187,16 +196,6 @@
         
     }
     return _accountCancelLabel;
-}
-
-- (UIButton *)colorBtn
-{
-    if (!_colorBtn) {
-        _colorBtn = [[UIButton alloc] init];
-        [_colorBtn.layer setCornerRadius:2.f];
-        [_colorBtn.layer setMasksToBounds:YES];
-    }
-    return _colorBtn;
 }
 
 - (UILabel *)cancelReasonLabel

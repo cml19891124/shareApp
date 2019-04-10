@@ -149,7 +149,9 @@
     
     self.nameLabel.text = _model.spaceDetail.title;
     
-    self.rentDaysLabel.text = [NSString stringWithFormat:@"租期:%@",_model.order.days];
+    NSArray *daysArray = [_model.order.days componentsSeparatedByString:@","];
+
+    self.rentDaysLabel.text = [NSString stringWithFormat:@"租期:%lu天",(unsigned long)daysArray.count];
     
     self.duringDayslabel.text = [NSString stringWithFormat:@"入离店:%@",_model.spaceDetail.shareTime];
     

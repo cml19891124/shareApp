@@ -132,6 +132,7 @@
 #define COLOR_RED_EC8249 [UIColor colorWithHexString:@"#EC8249"]
 #define COLOR_GRAY_F2F2F2 [UIColor colorWithHexString:@"#F2F2F2"]
 #define COLOR_YELLOW_FF8447 [UIColor colorWithHexString:@"#FF8447"]
+#define COLOR_YELLOW_FFAD56 [UIColor colorWithHexString:@"#FFAD56"]
 
 #define COLOR_GRAY_666666 [UIColor colorWithHexString:@"#666666"]
 #define COLOR_GRAY_C4C4C4 [UIColor colorWithHexString:@"#C4C4C4"]
@@ -288,5 +289,8 @@ static NSString * const st_receiveErrorMessageDes = @"接收消息错误";
 #define notice_WXPayReturnData @"notice_WXPayReturnData" //weixin支付返回结果
 
 #define notice_LoginSuccessToReloadData @"notice_LoginSuccessToReloadData" //登录成功后刷新用户进行中的订单信息
+#define carlenderhasOrderArrayName @"carlenderhasOrderArrayName"
+
+#define lastCarlenderhasOrderArrayName @"lastCarlenderhasOrderArrayName"
 
 #endif /* Macro_h */

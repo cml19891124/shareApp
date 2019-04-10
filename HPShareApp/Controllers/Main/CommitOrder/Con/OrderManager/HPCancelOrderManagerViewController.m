@@ -1,7 +1,5 @@
 #define carlenderhasOrderArrayName @"carlenderhasOrderArrayName"
 
-#import "HPHasOrderModel.h"
-
 #import "HPTimeString.h"
 
 #import "HPCancelOrderManagerViewController.h"
@@ -263,7 +261,7 @@
     NSString *method = [NSString stringWithFormat:@"/v1/order/spaceId/%@/orderedDays",_model.order.spaceId];
     [HPHTTPSever HPGETServerWithMethod:method isNeedToken:YES paraments:@{@"spaceId":_model.order.spaceId?_model.order.spaceId:@""} complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
-            NSArray *orderArray = [HPHasOrderModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+            NSArray *orderArray = responseObject[@"data"];
             [self.hasOrderArray addObjectsFromArray:orderArray];
             
             [kNotificationCenter postNotificationName:carlenderhasOrderArrayName object:nil userInfo:@{@"array":self.hasOrderArray}];
