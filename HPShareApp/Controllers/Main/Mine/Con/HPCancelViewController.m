@@ -145,12 +145,36 @@
 - (HPCancelView *)cancelView
 {
     if (!_cancelView) {
+        kWEAKSELF
         _cancelView = [HPCancelView new];
         [_cancelView setCancelBlock:^{
             HPLog(@"接口服务");
+            [weakSelf destoryAccountApi];
                 }];
     }
     return _cancelView;
+}
+
+#pragma mark - 账号注销
+- (void)destoryAccountApi
+{
+    HPLoginModel *account = [HPUserTool account];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"token"] = account.token;
+    dic[@"applyReason"] = self.textView.text;
+
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/user/applyCancelUser" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+            [self.cancelView show:NO];
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 - (UILabel *)accountCancelLabel
