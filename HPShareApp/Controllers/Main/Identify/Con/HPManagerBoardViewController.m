@@ -88,7 +88,7 @@
     CGSize btnSize = CGSizeMake(getWidth(60.f), getWidth(3.f));
     UIGraphicsBeginImageContextWithOptions(btnSize, NO, 0.f);
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
-    [HPGradientUtil drawGradientColor:contextRef rect:CGRectMake(0.f, 0.f, btnSize.width, btnSize.height) startPoint:CGPointMake(0.f,0.f) endPoint:CGPointMake(btnSize.width, btnSize.height) options:kCGGradientDrawsBeforeStartLocation startColor:COLOR_GRAY_FFFFFF endColor:COLOR_ORANGE_EB0303];
+    [HPGradientUtil drawGradientColor:contextRef rect:CGRectMake(0.f, 0.f, btnSize.width, btnSize.height) startPoint:CGPointMake(0.f,0.f) endPoint:CGPointMake(btnSize.width, btnSize.height) options:kCGGradientDrawsBeforeStartLocation startColor:COLOR(235, 33, 1, 0) endColor:COLOR(235, 33, 1, 1)];
     UIImage *bgImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
@@ -121,7 +121,7 @@
 
     [self.upView addSubview:self.uploadBtn];
 
-    [self.scrollView addSubview:self.confirmBtn];
+    [self.view addSubview:self.confirmBtn];
 
 }
 
@@ -129,7 +129,8 @@
 {
     
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsZero);
+        make.left.top.right.mas_equalTo(UIEdgeInsetsZero);
+        make.bottom.mas_equalTo(getWidth(-64.f));
     }];
     
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -244,9 +245,9 @@
     }];
     
     [self.confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.scrollView);
+        make.centerX.mas_equalTo(self.view);
         make.size.mas_equalTo(CGSizeMake(getWidth(330.f), getWidth(44.f)));
-        make.top.mas_equalTo(self.upView.mas_bottom).offset(getWidth(10.f));
+        make.top.mas_equalTo(self.view.mas_bottom).offset(getWidth(-54.f));
     }];
 }
 

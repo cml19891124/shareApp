@@ -19,8 +19,6 @@
 
 @property (strong, nonatomic) NSMutableArray *banksNameArray;
 
-@property (strong, nonatomic) NSArray *titleArray;
-
 @end
 
 @implementation HPBanksViewController

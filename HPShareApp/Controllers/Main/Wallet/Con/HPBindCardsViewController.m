@@ -18,6 +18,8 @@
 
 #import "HPBanksViewController.h"
 
+#import "HPBotomPickerModalView.h"
+
 typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
     HPChooseItemIndexUserInfo = 5100,
     HPChooseItemIndexBank,
@@ -26,6 +28,8 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
 };
 
 @interface HPBindCardsViewController ()<BanksInfoDelegate>
+
+@property (nonatomic, weak) HPBotomPickerModalView *areaPickerView;
 
 @property (nonatomic, strong) UIImageView *headerView;
 
@@ -46,6 +50,8 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
 @property (strong, nonatomic) HPTextFieldPlaceholderRight *cardField;
 
 @property (strong, nonatomic) UIButton *commitBtn;
+
+@property (strong, nonatomic) HPBanksListModel *model;
 
 @end
 
@@ -249,7 +255,26 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
 
 - (void)callAlertView:(UIButton *)button
 {
+    if (!_areaPickerView) {
+        HPLinkageData *data = [[HPLinkageData alloc] initWithModels:[HPCommonData getAreaData]];
+        [data setChildNameKey:@"name"];
+        [data setParentNameKey:@"name"];
+        HPBotomPickerModalView *areaPickerView = [[HPBotomPickerModalView alloc] initWithData:data];
+        [areaPickerView setConfirmCallBack:^(NSInteger parentIndex, NSInteger childIndex, NSObject *model) {
+            HPDistrictModel *districtModel = (HPDistrictModel *)model;
+            NSString *areaName = [HPCommonData getAreaNameById:districtModel.areaId];
+            HPLog(@"Pick district: %@%@", areaName, districtModel.name);
+            NSString *areaTitle = [NSString stringWithFormat:@"%@", districtModel.name];
+            CGFloat areaW = BoundWithSize(areaTitle, kScreenWidth, 13.f).size.width + 15;
+            [self.chooseAreaBtn setTitle:areaTitle forState:UIControlStateNormal];
+            [self.chooseAreaBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(areaW);
+            }];
+        }];
+        _areaPickerView = areaPickerView;
+    }
     
+    [_areaPickerView show:YES];
 }
 
 //银行卡号
@@ -453,9 +478,48 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
 
 - (void)onClickCommitButtom:(UIButton *)button
 {
-    if ([button.currentTitle isEqualToString:@"请选择开户银行"]) {
-        [HPProgressHUD alertMessage:@"请选择开户银行"];
+    
+    if (self.openAccountField.text.length == 0) {
+        [HPProgressHUD alertMessage:@"请输入开户行姓名"];
+        return;
     }
+    
+    if (self.chooseBankBtn.currentTitle.length == 0 || [self.chooseBankBtn.currentTitle isEqualToString:@"请选择开户银行"]) {
+        [HPProgressHUD alertMessage:@"请选择开户银行"];
+        return;
+    }
+    if (self.chooseAreaBtn.currentTitle.length == 0 || [self.chooseAreaBtn.currentTitle isEqualToString:@"请选择开户地区"]) {
+        [HPProgressHUD alertMessage:@"请选择开户地区"];
+        return;
+    }
+    if (self.cardField.text.length == 0 && self.cardField.text.length < 16) {
+        [HPProgressHUD alertMessage:@"请输入银行卡号"];
+        return;
+    }
+    [self getCardsBindApi];
+}
+
+#pragma mark - 绑定银行卡
+- (void)getCardsBindApi
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"accountNo"] = self.cardField.text;
+    dic[@"address"] = self.chooseAreaBtn.currentTitle;
+    dic[@"realName"] = self.openAccountField.text;
+    dic[@"bankId"] = [NSString stringWithFormat:@"%ld",self.model.bankId];
+
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/bankCard/bindingBankCard" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:MSG];
+            [self pushVCByClassName:@"HPCardsListViewController"];
+
+        }else
+        {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 #pragma mark - BanksInfoDelegate
@@ -463,5 +527,6 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
 - (void)selecetBankRow:(HPBanksViewController *)banks andModel:(HPBanksListModel *)model
 {
     [self.chooseBankBtn setTitle:model.bankName forState:UIControlStateNormal];
+    self.model = model;
 }
 @end

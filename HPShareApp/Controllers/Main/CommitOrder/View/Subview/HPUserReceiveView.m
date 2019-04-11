@@ -137,9 +137,9 @@
 
 - (void)onClickNoBtn:(UIButton *)button
 {
-//    if (self.noBlock) {
-//        self.noBlock();
-//    }
+    if (self.noBlock) {
+        self.noBlock();
+    }
     [self show:NO];
 }
 

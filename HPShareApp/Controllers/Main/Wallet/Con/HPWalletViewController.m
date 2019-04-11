@@ -141,6 +141,7 @@ static NSString *walletCell = @"walletCell";
         _withdrawView.noBlock = ^{
             HPLog(@"dfsdg");
             [weakSelf.withdrawView show:NO];
+            [weakSelf pushVCByClassName:@"HPWithdrawViewController"];
         };
         _withdrawView.okBlock = ^{
             
@@ -261,7 +262,9 @@ static NSString *walletCell = @"walletCell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 1) {
-        [self pushVCByClassName:@"HPBindCardsViewController"];
+        [self pushVCByClassName:@"HPCardsListViewController"];
+    }else{
+        [self pushVCByClassName:@"HPDebateRecordsViewController"];
     }
 }
 
