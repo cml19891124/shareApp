@@ -118,7 +118,7 @@
         _toReceiveBtn.nameLabel.text = @"待接单";
         _toReceiveBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
         _toReceiveBtn.nameLabel.font = kFont_Medium(13.f);
-        _toReceiveBtn.tag = 4600;
+        _toReceiveBtn.tag = HPOrderCellIndexToReceiveOrder;
         [_toReceiveBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
 
     }
@@ -130,7 +130,7 @@
     if (!_toPayBtn) {
         _toPayBtn = [HPOrderBtn new];
         _toPayBtn.nameLabel.text = @"待付款";
-        _toPayBtn.tag = 4601;
+        _toPayBtn.tag = HPOrderCellIndexToPay;
         _toPayBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
         _toPayBtn.nameLabel.font = kFont_Medium(13.f);
         [_toPayBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -144,7 +144,7 @@
     if (!_toGetBtn) {
         _toGetBtn = [HPOrderBtn new];
         _toGetBtn.nameLabel.text = @"待收货";
-        _toGetBtn.tag = 4602;
+        _toGetBtn.tag = HPOrderCellIndexToGet;
         _toGetBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
         _toGetBtn.nameLabel.font = kFont_Medium(13.f);
         [_toGetBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -158,7 +158,7 @@
     if (!_compelteBtn) {
         _compelteBtn = [HPOrderBtn new];
         _compelteBtn.nameLabel.text = @"已完成";
-        _toGetBtn.tag = 4603;
+        _compelteBtn.tag = HPOrderCellIndexComplete;
         _compelteBtn.nameLabel.textColor = COLOR_GRAY_FFFFFF;
         _compelteBtn.nameLabel.font = kFont_Medium(13.f);
         [_compelteBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -184,7 +184,7 @@
     if (!_storeBtn) {
         _storeBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"me_business_store")];
         [_storeBtn setText:@"店铺"];
-        _storeBtn.tag = 4100;
+        _storeBtn.tag = HPBusinessCellIndexStores;
         [_storeBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _storeBtn;
@@ -195,7 +195,7 @@
     if (!_orderBtn) {
         _orderBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"me_business_order")];
         [_orderBtn setText:@"订单"];
-        _orderBtn.tag = 4101;
+        _orderBtn.tag = HPBusinessCellIndexOrder;
         [_orderBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _orderBtn;
@@ -206,7 +206,7 @@
     if (!_walletBtn) {
         _walletBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"me_bussness_wallet")];
         [_walletBtn setText:@"钱包"];
-        _walletBtn.tag = 4102;
+        _walletBtn.tag = HPBusinessCellIndexWallet;
         [_walletBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _walletBtn;
@@ -217,7 +217,7 @@
     if (!_creditCardBtn) {
         _creditCardBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"me_business_name")];
         [_creditCardBtn setText:@"名片"];
-        _creditCardBtn.tag = 4103;
+        _creditCardBtn.tag = HPBusinessCellIndexName;
         [_creditCardBtn addTarget:self action:@selector(onClickedBusinessbtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _creditCardBtn;

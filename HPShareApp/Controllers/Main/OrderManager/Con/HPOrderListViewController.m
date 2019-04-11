@@ -157,8 +157,7 @@ static NSString *orderCell = @"orderCell";
 
     }else if (self.orderStaus.integerValue == 4){// 已完成/待评论
         add = 4;
-        self.status = @(4);
-
+        self.status = @(11);
     }
     [self.orderItemView scrolling:2200 + add];
     [self getOrderListApiReload:YES];

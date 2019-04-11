@@ -525,7 +525,6 @@ static NSString *orderItemCell = @"HPOrderItemCell";
             cell.ownnerView.toPayBtn.numLabel.text = self.ownnerModel.needPaidNum?self.ownnerModel.needPaidNum:@"--";
             cell.ownnerView.toGetBtn.numLabel.text = self.ownnerModel.cooperatingNum?self.ownnerModel.cooperatingNum:@"--";
             cell.ownnerView.compelteBtn.numLabel.text = self.ownnerModel.finishedNum?self.ownnerModel.finishedNum:@"--";
-
         }
         [cell.phoneBtn setTitle:account.userInfo.mobile forState:UIControlStateNormal];
         if (account.userInfo.avatarUrl) {
@@ -566,6 +565,14 @@ static NSString *orderItemCell = @"HPOrderItemCell";
         }else if (businessIndex == HPBusinessCellIndexName){
             HPLog(@"name");
             [self pushVCByClassName:@"HPMyCardController" withParam:@{@"userId":account.userInfo.userId}];
+        }else if (businessIndex == HPOrderCellIndexToReceiveOrder){
+            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(1)}];
+        }else if (businessIndex == HPOrderCellIndexToPay){
+            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(2)}];
+        }else if (businessIndex == HPOrderCellIndexToGet){
+            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(3)}];
+        }else if (businessIndex == HPOrderCellIndexComplete){
+            [self pushVCByClassName:@"HPOrderListViewController" withParam:@{@"orderStaus":@(4)}];
         }
     };
     return cell;

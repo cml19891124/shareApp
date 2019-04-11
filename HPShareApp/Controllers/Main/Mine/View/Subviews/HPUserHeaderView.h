@@ -17,7 +17,7 @@ typedef void(^UserBtnClickBlcok)(NSInteger businessIndex);
 typedef void(^ProfileBtnClickBlcok)(NSInteger profileIndex);
 
 
-typedef NS_ENUM(NSInteger, HPOrderCellIndex) {
+typedef NS_ENUM(NSInteger, HPOrderItemCellIndex) {
     HPOrderCellIndexToCollection = 4000,
     HPOrderCellIndexToFocus,
     HPOrderCellIndexToFoot,

@@ -224,12 +224,6 @@
             for (int i = 0; i < orderArray.count; i++) {
                 if (![self.hasOrderArray containsObject:orderArray[i]]) {
                     [self.hasOrderArray addObject:orderArray[i]];
-//                    NSString *date = [HPTimeString noPortraitLineToDateStr:orderArray[i]];
-//
-//                    if (![self.fianlOrderArray containsObject:date]) {
-//                        [self.fianlOrderArray addObject:date];
-//
-//                    }
                 }
             }
             if (orderArray.count == 0) {

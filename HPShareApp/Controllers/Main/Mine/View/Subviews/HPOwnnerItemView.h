@@ -12,8 +12,6 @@
 
 #import "HPAlignCenterButton.h"
 
-typedef void(^OrderBtnClickBlcok)(NSInteger orderIndex);
-
 typedef void(^BusinessBtnClickBlcok)(NSInteger businessIndex);
 
 typedef NS_ENUM(NSInteger, HPBusinessCellIndex) {
@@ -21,6 +19,13 @@ typedef NS_ENUM(NSInteger, HPBusinessCellIndex) {
     HPBusinessCellIndexOrder,
     HPBusinessCellIndexWallet,
     HPBusinessCellIndexName,
+};
+
+typedef NS_ENUM(NSInteger, HPOrderCellIndex) {
+    HPOrderCellIndexToReceiveOrder = 4601,
+    HPOrderCellIndexToPay,
+    HPOrderCellIndexToGet,
+    HPOrderCellIndexComplete,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -55,8 +60,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) HPAlignCenterButton *walletBtn;
 
 @property (strong, nonatomic) HPAlignCenterButton *creditCardBtn;
-
-@property (nonatomic, copy) OrderBtnClickBlcok orderBlock;
 
 @property (nonatomic, copy) BusinessBtnClickBlcok busiBlock;
 
