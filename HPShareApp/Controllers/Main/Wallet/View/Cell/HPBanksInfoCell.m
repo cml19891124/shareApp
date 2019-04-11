@@ -92,9 +92,23 @@
         _selectedButton = [UIButton new];
         [_selectedButton setBackgroundImage:[UIImage imageNamed:@"pay_unselected"] forState:UIControlStateNormal];
         [_selectedButton setBackgroundImage:[UIImage imageNamed:@"pay_selected"] forState:UIControlStateSelected];
-        [_selectedButton addTarget:self action:@selector(clickToSelectedPay:) forControlEvents:UIControlEventTouchUpInside];
+        [_selectedButton addTarget:self action:@selector(clickToSelectedButton:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _selectedButton;
 }
 
+-(void)clickToSelectedButton:(UIButton *)button
+{
+    if (self.selectBlock) {
+        self.selectBlock();
+    }
+}
+
+- (void)setModel:(HPCardsInfoModel *)model
+{
+    _model = model;
+    [self.iconView sd_setImageWithURL:[NSURL URLWithString:model.logUrl] placeholderImage:ImageNamed(@"")];
+    
+    self.nameLabel.text = [NSString stringWithFormat:@"%@(%@)",model.bankName,[model.accountNo substringFromIndex:model.accountNo.length - 4]];
+}
 @end

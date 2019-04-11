@@ -8,6 +8,8 @@
 
 #import "HPBaseViewController.h"
 
+#import "HPBanksInfoCell.h"
+
 @class HPSwitchCardsViewController;
 
 @protocol CardsInfoDelegate  <NSObject>
@@ -15,7 +17,8 @@
 /**
  选择提现银行的信息
  */
-//- (void)onClickBank:(HPSwitchCardsViewController *)cards andCardsModel:(HPCardInfoCell *)model;
+- (void)onClickBank:(HPSwitchCardsViewController *)cards andCardsModel:(HPCardsInfoModel *)model;
+
 @end;
 NS_ASSUME_NONNULL_BEGIN
 

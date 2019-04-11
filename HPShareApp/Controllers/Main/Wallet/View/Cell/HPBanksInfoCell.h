@@ -8,6 +8,10 @@
 
 #import "HPBaseTableViewCell.h"
 
+#import "HPCardsInfoModel.h"
+
+typedef void(^SelectCardBlock)(void);
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPBanksInfoCell : HPBaseTableViewCell
@@ -17,6 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) UILabel *nameLabel;
 
 @property (nonatomic, strong) UIButton *selectedButton;
+
+@property (strong, nonatomic) HPCardsInfoModel *model;
+
+@property (nonatomic, copy) SelectCardBlock selectBlock;
 
 @end
 

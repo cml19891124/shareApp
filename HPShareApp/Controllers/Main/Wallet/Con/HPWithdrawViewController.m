@@ -12,6 +12,8 @@
 
 #import "HPAcceptView.h"
 
+#import "HPCardsInfoModel.h"
+
 @interface HPWithdrawViewController ()<CardsInfoDelegate>
 
 @property (strong, nonatomic) HPAcceptView *accpetView;
@@ -47,6 +49,9 @@
 @property (strong, nonatomic) UIView *lineView;
 
 @property (strong, nonatomic) UIButton *warnBtn;
+
+@property (strong, nonatomic) HPCardsInfoModel *model;
+
 @end
 
 @implementation HPWithdrawViewController
@@ -426,5 +431,14 @@
 - (void)onclickWithdrawApply:(UIButton *)button
 {
     [self.accpetView show:YES];
+}
+
+- (void)onClickBank:(HPSwitchCardsViewController *)cards andCardsModel:(HPCardsInfoModel *)model
+{
+    self.model = model;
+    
+    [self.bankIcon sd_setImageWithURL:[NSURL URLWithString:model.logUrl] placeholderImage:ImageNamed(@"")];
+    
+    self.bankLabel.text = [NSString stringWithFormat:@"%@(%@)",model.bankName,[model.accountNo substringFromIndex:model.accountNo.length - 4]];
 }
 @end

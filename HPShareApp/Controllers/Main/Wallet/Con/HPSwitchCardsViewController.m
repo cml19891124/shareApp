@@ -8,8 +8,6 @@
 
 #import "HPSwitchCardsViewController.h"
 
-#import "HPBanksInfoCell.h"
-
 @interface HPSwitchCardsViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UIButton *backBtn;
@@ -26,6 +24,12 @@
 
 @property (strong, nonatomic) UIButton *commitBtn;
 
+@property (strong, nonatomic) HPCardsInfoModel *model;
+
+@property (strong, nonatomic) HPCardsInfoModel *selectedModel;
+//选中的row
+@property (assign, nonatomic) NSInteger selectedRow;
+
 @end
 
 @implementation HPSwitchCardsViewController
@@ -37,12 +41,32 @@ static NSString *banksInfoCell = @"banksInfoCell";
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
 
+    self.selectedRow = 0;
+    
     self.banksCardArray = [NSMutableArray array];
     
     [self setUpSwitchCardsView];
     
     [self setUpSwitchCardsViewMasonry];
 
+    [self getCardsInfoListApi];
+
+}
+
+- (void)getCardsInfoListApi
+{
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/bankCard/queryBankCard" paraments:@{} needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [self.banksCardArray removeAllObjects];
+            NSArray *cardsArray = [HPCardsInfoModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+            [self.banksCardArray addObjectsFromArray:cardsArray];
+            [self.tableView reloadData];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
  - (void)setUpSwitchCardsView
@@ -183,7 +207,7 @@ static NSString *banksInfoCell = @"banksInfoCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;//self.banksCardArray.count;
+    return self.banksCardArray.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -193,25 +217,35 @@ static NSString *banksInfoCell = @"banksInfoCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    HPBanksListModel *model = self.banksCardArray[indexPath.row];
+    HPCardsInfoModel *model = self.banksCardArray[indexPath.row];
     HPBanksInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:banksInfoCell];
-//    cell.model = model;
+    if (_selectedRow == indexPath.row) {
+        cell.selectedButton.selected = YES;
+    }else{
+        cell.selectedButton.selected = NO;
+        
+    }
+    cell.model = model;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-//    HPBanksListModel *model = self.banksNameArray[indexPath.row];
     
-    if ([self.delegate respondsToSelector:@selector(selecetBankRow:andModel:)]) {
-//        [self.delegate selecetBankRow:self andModel:model];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
+    self.selectedRow = indexPath.row;
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+
+    self.selectedModel = self.banksCardArray[indexPath.row];
+
 }
 
 - (void)onclickConfirmBtn:(UIButton *)button
 {
     
+    if ([self.cardsDelegate respondsToSelector:@selector(onClickBank:andCardsModel:)]) {
+        [self.cardsDelegate onClickBank:self andCardsModel:self.selectedModel];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 @end
