@@ -1484,7 +1484,9 @@
                 [self.verbDaysArray removeObject:date];
             }
         }
-        rentDays = [self.verbDaysArray componentsJoinedByString:@","];
+        NSArray *array = [self.verbDaysArray valueForKeyPath:@"@distinctUnionOfObjects.self"];
+
+        rentDays = [array componentsJoinedByString:@","];
 
     }
 

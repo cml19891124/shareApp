@@ -493,7 +493,7 @@
 {
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view.mas_bottom).offset(-g_bottomSafeAreaHeight + getWidth(-60.f));
+        make.bottom.mas_equalTo(self.view.mas_bottom).offset(getWidth(-60.f));
     }];
     
     CGFloat height = 0.00;
@@ -803,7 +803,7 @@
     
     [self.orderListView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.view).offset(getWidth(-60.f)-g_bottomSafeAreaHeight);
+        make.bottom.mas_equalTo(self.view).offset(getWidth(-60.f));
     }];
     
     [self.predictView mas_makeConstraints:^(MASConstraintMaker *make) {

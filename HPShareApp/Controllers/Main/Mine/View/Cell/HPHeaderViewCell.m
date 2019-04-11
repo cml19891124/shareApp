@@ -102,7 +102,7 @@
     [self.editBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(getWidth(20.f));
         make.left.mas_equalTo(self.phoneBtn.mas_right).offset(getWidth(9.f));
-        make.top.mas_equalTo(self.phoneBtn.mas_top).offset(g_statusBarHeight);
+        make.top.mas_equalTo(self.phoneBtn.mas_top);
         make.height.mas_equalTo(getWidth(20.f));
     }];
     
