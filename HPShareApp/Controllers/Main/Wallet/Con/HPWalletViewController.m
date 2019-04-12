@@ -14,6 +14,10 @@
 
 #import "HPUserReceiveView.h"
 
+#import "HPOperationNumberTool.h"
+
+#import "HPCardsInfoModel.h"
+
 @interface HPWalletViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (strong, nonatomic) HPUserReceiveView *withdrawView;
@@ -34,7 +38,17 @@
 
 @property (strong, nonatomic) UILabel *balanceLabel;
 
+/**
+ 余额
+ */
+@property (nonatomic, copy) NSString *balance;
+
 @property (strong, nonatomic) HPRightImageButton *withdrawBtn;
+
+/**
+ 已绑定银行卡的数组
+ */
+@property (strong, nonatomic) NSMutableArray *banksCardArray;
 
 @end
 
@@ -52,10 +66,49 @@ static NSString *walletCell = @"walletCell";
     
     self.titleArray = @[@"账单明细",@"绑定银行卡"];
     
+    self.banksCardArray = [NSMutableArray array];
+    
     [self setUpWalletSubviews];
     
     [self setUpWalletSubviewsMasonry];
 
+    [self getBalanceInfoApi];
+    
+    [self getCardsInfoListApi];
+}
+
+#pragma mark - 获取绑定银行卡列表
+- (void)getCardsInfoListApi
+{
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/bankCard/queryBankCard" paraments:@{} needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [self.banksCardArray removeAllObjects];
+            NSArray *cardsArray = [HPCardsInfoModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+            [self.banksCardArray addObjectsFromArray:cardsArray];
+            [self.tableView reloadData];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+#pragma mark - 获取余额
+- (void)getBalanceInfoApi
+{
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/account/queryBalance" paraments:@{} needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            NSNumber *balance = (NSNumber *)[NSString stringWithFormat:@"%@",responseObject[@"data"][@"balance"]];
+            self.balance = [HPOperationNumberTool separateNumberUseCommaWith:[NSString stringWithFormat:@"%ld",[balance integerValue]]];
+            
+            self.balanceLabel.text = [NSString stringWithFormat:@"%@.00元",self.balance];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 - (void)setUpWalletSubviews
@@ -66,10 +119,10 @@ static NSString *walletCell = @"walletCell";
     [self.headerView addSubview:self.backBtn];
     
     [self.headerView addSubview:self.titleLabel];
+        
+    NSString *balance = [HPOperationNumberTool separateNumberUseCommaWith:self.balanceLabel.text];
     
-    self.balanceLabel.text = @"63539853";
-    
-    self.balanceLabel.text = [self separateNumberUseCommaWith:self.balanceLabel.text];
+    self.balanceLabel.text = [NSString stringWithFormat:@"%@.00元",balance];
     
     [self.headerView addSubview:self.accountLabel];
     
@@ -137,12 +190,16 @@ static NSString *walletCell = @"walletCell";
     if (!_withdrawView) {
         
         _withdrawView = [HPUserReceiveView new];
+        CGFloat withW = BoundWithSize(@"目前仅支持银行储蓄卡提现", kScreenWidth, 16.f).size.width + 20;
+        [_withdrawView.confirmLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(withW);
+
+        }];
         kWEAKSELF
         _withdrawView.noBlock = ^{
             HPLog(@"dfsdg");
             [weakSelf.withdrawView show:NO];
-            [weakSelf pushVCByClassName:@"HPWithdrawViewController"];
-        };
+                    };
         _withdrawView.okBlock = ^{
             
             [weakSelf.withdrawView show:NO];
@@ -234,6 +291,7 @@ static NSString *walletCell = @"walletCell";
         [_tableView registerClass:HPWalletCell.class forCellReuseIdentifier:walletCell];
         _tableView.separatorColor = COLOR_GRAY_EEEEEE;
         _tableView.tableFooterView = [UIView new];
+        _tableView.scrollEnabled = NO;
     }
     return _tableView;
 }
@@ -268,72 +326,20 @@ static NSString *walletCell = @"walletCell";
     }
 }
 
-// 将数字转为每隔3位整数由逗号“,”分隔的字符串
-- (NSString *)separateNumberUseCommaWith:(NSString *)number {
-    // 前缀
-    NSString *prefix = @"￥";
-    // 后缀
-    NSString *suffix = @"元";
-    // 分隔符
-    NSString *divide = @",";
-    
-    NSString *integer = @"";
-    NSString *radixPoint = @"";
-    BOOL contains = NO;
-    if ([number containsString:@"."]) {
-        contains = YES;
-        // 若传入浮点数，则需要将小数点后的数字分离出来
-        NSArray *comArray = [number componentsSeparatedByString:@"."];
-        integer = [comArray firstObject];
-        radixPoint = [comArray lastObject];
-    } else {
-        integer = number;
-    }
-    // 将整数按各个字符为一组拆分成数组
-    NSMutableArray *integerArray = [[NSMutableArray alloc] init];
-    for (int i = 0; i < integer.length; i ++) {
-        NSString *subString = [integer substringWithRange:NSMakeRange(i, 1)];
-        [integerArray addObject:subString];
-    }
-    // 将整数数组倒序每隔3个字符添加一个逗号“,”
-    NSString *newNumber = @"";
-    for (NSInteger i = 0 ; i < integerArray.count ; i ++) {
-        NSString *getString = @"";
-        NSInteger index = (integerArray.count-1) - i;
-        if (integerArray.count > index) {
-            getString = [integerArray objectAtIndex:index];
-        }
-        BOOL result = YES;
-        if (index == 0 && integerArray.count%3 == 0) {
-            result = NO;
-        }
-        if ((i+1)%3 == 0 && result) {
-            newNumber = [NSString stringWithFormat:@"%@%@%@",divide,getString,newNumber];
-        } else {
-            newNumber = [NSString stringWithFormat:@"%@%@",getString,newNumber];
-        }
-    }
-    if (contains) {
-        newNumber = [NSString stringWithFormat:@"%@.%@",newNumber,radixPoint];
-    }
-    if (![prefix isEqualToString:@""]) {
-        newNumber = [NSString stringWithFormat:@"%@%@",prefix,newNumber];
-    }
-    if (![suffix isEqualToString:@""]) {
-        newNumber = [NSString stringWithFormat:@"%@.00%@",newNumber,suffix];
-    }
-    
-    return newNumber;
-}
-
 - (void)withdrawClicked:(HPRightImageButton *)button
 {
-    [self.withdrawView show:YES];
-    self.withdrawView.confirmLabel.textColor = COLOR_GRAY_666666;
-    self.withdrawView.confirmLabel.font = kFont_Medium(16.f);
-    [self.withdrawView.noBtn setTitle:@"暂不绑定" forState:UIControlStateNormal];
-    [self.withdrawView.okbtn setTitle:@"前往绑定" forState:UIControlStateNormal];
-    self.withdrawView.confirmLabel.text = @"目前仅支持银行储蓄卡提现\n    请先绑定银行卡";
+    if (self.banksCardArray.count == 0 || !self.banksCardArray) {
+        [self.withdrawView show:YES];
+        self.withdrawView.confirmLabel.textColor = COLOR_GRAY_666666;
+        self.withdrawView.confirmLabel.font = kFont_Medium(16.f);
+        [self.withdrawView.noBtn setTitle:@"暂不绑定" forState:UIControlStateNormal];
+        [self.withdrawView.okbtn setTitle:@"前往绑定" forState:UIControlStateNormal];
+        self.withdrawView.confirmLabel.text = @"目前仅支持银行储蓄卡提现\n    请先绑定银行卡";
 
+    }else{
+        [self pushVCByClassName:@"HPWithdrawViewController" withParam:@{@"balance":self.balance}];
+
+    }
+    
 }
 @end

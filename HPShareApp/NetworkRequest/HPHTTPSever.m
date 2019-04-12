@@ -28,7 +28,7 @@
     
     if (isNeed) {
         HPLoginModel *account = [HPUserTool account];
-        [manager.requestSerializer setValue:@"3ef815416f775098fe977004015c6193" forHTTPHeaderField:@"token"];//account.token?:@""
+        [manager.requestSerializer setValue:account.token?:@"" forHTTPHeaderField:@"token"];//@"3ef815416f775098fe977004015c6193"
     }
     
     [manager.requestSerializer setValue:@"application/json;charset=UTF-8" forHTTPHeaderField:@"Content-Type"];

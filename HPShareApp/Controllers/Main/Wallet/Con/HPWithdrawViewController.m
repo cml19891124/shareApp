@@ -14,7 +14,9 @@
 
 #import "HPCardsInfoModel.h"
 
-@interface HPWithdrawViewController ()<CardsInfoDelegate>
+#import "HPOperationNumberTool.h"
+
+@interface HPWithdrawViewController ()<BankCardsInfoDelegate>
 
 @property (strong, nonatomic) HPAcceptView *accpetView;
 
@@ -52,6 +54,9 @@
 
 @property (strong, nonatomic) HPCardsInfoModel *model;
 
+@property (strong, nonatomic) NSMutableArray *banksCardArray;
+
+@property (nonatomic, copy) NSString *shareBankCardId;
 @end
 
 @implementation HPWithdrawViewController
@@ -59,19 +64,51 @@
 - (HPAcceptView *)accpetView
 {
     if (!_accpetView ) {
+        kWEAKSELF
         _accpetView = [HPAcceptView new];
+        _accpetView.kownBlock = ^{
+            [weakSelf.accpetView show:NO];
+            [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+        };
     }
     return _accpetView;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.banksCardArray = [NSMutableArray array];
+    
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     
     [self setUpRecordsSubviews];
     
     [self setUpRecordsSubviewsMasonry];
     
+    [self getCardsInfoListApi];
+}
+
+- (void)getCardsInfoListApi
+{
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/bankCard/queryBankCard" paraments:@{} needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [self.banksCardArray removeAllObjects];
+            NSArray *cardsArray = [HPCardsInfoModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+            [self.banksCardArray addObjectsFromArray:cardsArray];
+            
+            HPCardsInfoModel *model = self.banksCardArray[0];
+            self.model = model;
+            [self.bankIcon sd_setImageWithURL:[NSURL URLWithString:model.logUrl] placeholderImage:ImageNamed(@"")];
+            
+            self.bankLabel.text = [NSString stringWithFormat:@"%@(%@)",model.bankName,[model.accountNo substringFromIndex:model.accountNo.length - 4]];
+            
+            self.shareBankCardId = self.model.shareBankCardId;
+
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 - (void)setUpRecordsSubviews
@@ -93,12 +130,18 @@
     [self.bankView addSubview:self.rowBtn];
 
     [self.view addSubview:self.withdrawView];
+    
+    NSString *input = [HPOperationNumberTool separateNumberUseCommaWith:self.inputField.text];
+    
+    self.inputField.text = [NSString stringWithFormat:@"%@",input];
 
     [self.withdrawView addSubview:self.inputLabel];
 
     [self.withdrawView addSubview:self.inputField];
 
     [self.withdrawView addSubview:self.withdrawLabel];
+    
+    self.withdrawLabel.text = [NSString stringWithFormat:@"可提现余额：%@.00元",self.param[@"balance"]];
 
     [self.withdrawView addSubview:self.lineView];
 
@@ -106,7 +149,7 @@
     
     [self.view addSubview:self.warnBtn];
 
-    [self.view addSubview:self.commitBtn];
+    [self.withdrawView addSubview:self.commitBtn];
 
 }
 
@@ -124,11 +167,11 @@
         _warnBtn = [UIButton new];
         [_warnBtn setTitle:@"可提现余额=账户总余额-已申请提现金额 \n我们将在1-3个工作日内完成提现申请受\n理，请耐心等候。" forState:UIControlStateNormal];
         [_warnBtn setBackgroundImage:ImageNamed(@"dikaung") forState:UIControlStateNormal];
-//        _warnBtn.backgroundColor = COLOR_GRAY_EEEEEE;
         [_warnBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
         _warnBtn.titleLabel.font = kFont_Regular(12.f);
         _warnBtn.hidden = YES;
         [_warnBtn setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+        _warnBtn.titleLabel.numberOfLines = 0;
     }
     return _warnBtn;
 }
@@ -187,7 +230,7 @@
     
     [self.withdrawView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.left.mas_equalTo(self.view);
-        make.height.mas_equalTo(getWidth(140.f));
+        make.height.mas_equalTo(getWidth(235.f));
         make.top.mas_equalTo(self.bankView.mas_bottom);
     }];
     
@@ -227,17 +270,15 @@
     
     [self.warnBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(getWidth(-15.f));
-        make.bottom.mas_equalTo(self.lineView.mas_bottom);
+        make.bottom.mas_equalTo(self.lineView.mas_bottom).offset(getWidth(7.f));
         make.width.mas_equalTo(getWidth(250.f));
-//        make.height.mas_equalTo(getWidth(100.f));
-
     }];
     
     [self.commitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(getWidth(-23.f));
         make.left.mas_equalTo(getWidth(23.f));
 
-        make.top.mas_equalTo(self.withdrawView.mas_bottom).offset(getWidth(25.f));
+        make.top.mas_equalTo(self.withdrawLabel.mas_bottom).offset(getWidth(40.f));
         make.height.mas_equalTo(getWidth(44.f));
         
     }];
@@ -327,7 +368,7 @@
 {
     if (!_bankLabel) {
         _bankLabel = [UILabel new];
-        _bankLabel.text = @"招商银行（2266）";
+        _bankLabel.text = @"请选择提现银行卡";
         _bankLabel.textColor = COLOR_BLACK_333333;
         _bankLabel.textAlignment = NSTextAlignmentLeft;
         _bankLabel.font = kFont_Medium(16.f);
@@ -364,7 +405,7 @@
         _inputField = [UITextField new];
         _inputField.tintColor = COLOR_RED_EA0000;
         if (@available(iOS 10.0, *)) {
-            _inputField.keyboardType = UIKeyboardTypeASCIICapableNumberPad;
+            _inputField.keyboardType = UIKeyboardTypeDecimalPad;
         } else {
             // Fallback on earlier versions
         }
@@ -378,7 +419,7 @@
 {
     if (!_withdrawLabel) {
         _withdrawLabel = [UILabel new];
-        _withdrawLabel.text = @"可提现余额：¥1000.00";
+        _withdrawLabel.text = @"可提现余额：¥0.00";
         _withdrawLabel.textColor = COLOR_GRAY_999999;
         _withdrawLabel.textAlignment = NSTextAlignmentLeft;
         _withdrawLabel.font = kFont_Medium(14.f);
@@ -424,13 +465,25 @@
 - (void)selectedWithBank:(UITapGestureRecognizer *)tap
 {
     HPSwitchCardsViewController *cards = [HPSwitchCardsViewController new];
-    cards.cardsDelegate =self;
+    cards.cardsDelegate = self;
     [self.navigationController pushViewController:cards animated:YES];
 }
 
 - (void)onclickWithdrawApply:(UIButton *)button
 {
-    [self.accpetView show:YES];
+    if (self.bankLabel.text.length == 0 || [self.bankLabel.text isEqualToString:@"请选择提现银行卡"]) {
+        [HPProgressHUD alertMessage:@"请选择提现银行卡"];
+        return;
+    }
+    if (_inputField.text.length <= 1) {
+        [HPProgressHUD alertMessage:@"请输入提现金额"];
+        return;
+    }
+    if ([_inputField.text substringFromIndex:1].integerValue < 500) {
+        [HPProgressHUD alertMessage:@"提现金额不得小于5元"];
+        return;
+    }
+    [self getAvailableWithdrawApi];
 }
 
 - (void)onClickBank:(HPSwitchCardsViewController *)cards andCardsModel:(HPCardsInfoModel *)model
@@ -440,5 +493,27 @@
     [self.bankIcon sd_setImageWithURL:[NSURL URLWithString:model.logUrl] placeholderImage:ImageNamed(@"")];
     
     self.bankLabel.text = [NSString stringWithFormat:@"%@(%@)",model.bankName,[model.accountNo substringFromIndex:model.accountNo.length - 4]];
+    
+    self.shareBankCardId = model.shareBankCardId;
+}
+
+- (void)getAvailableWithdrawApi
+{
+    [self.inputField resignFirstResponder];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"amount"] = [self.inputField.text substringFromIndex:1];
+    dic[@"shareBankCardId"] = self.model.shareBankCardId;
+
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/account/withdrawDeposits" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+//            [HPProgressHUD alertMessage:@"提现成功"];
+            [self.accpetView show:YES];
+            
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 @end

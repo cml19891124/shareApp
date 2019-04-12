@@ -34,6 +34,20 @@
     }];
     
     [self.bgView addSubview:self.kownBtn];
+    
+    [self.kownBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.bgView);
+        make.height.mas_equalTo(getWidth(50.f));
+    }];
+}
+
+- (UIView *)bgView
+{
+    if (!_bgView) {
+        _bgView = [UIView new];
+        _bgView.backgroundColor = COLOR_GRAY_FFFFFF;
+    }
+    return _bgView;
 }
 
 - (UILabel *)confirmLabel
@@ -65,5 +79,10 @@
     if (self.kownBlock) {
         self.kownBlock();
     }
+}
+
+- (void)onTapModalOutSide
+{
+    [self show:NO];
 }
 @end

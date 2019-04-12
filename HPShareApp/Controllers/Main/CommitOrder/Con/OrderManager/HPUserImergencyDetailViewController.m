@@ -272,6 +272,8 @@
         _priceListBtn.image = ImageNamed(@"arrow_down");
         [_priceListBtn setText:@"明细"];
         [_priceListBtn setColor:COLOR_GRAY_999999];
+        _priceListBtn.font = kFont_Medium(14.f);
+
         [_priceListBtn addTarget:self action:@selector(onClickOrderListBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _priceListBtn;
@@ -868,7 +870,7 @@
 {
     if (!_consumerBtn) {
         _consumerBtn = [HPRightImageButton new];
-        [_consumerBtn setColor:UIColor.greenColor];
+        [_consumerBtn setColor:COLOR_GREEN_2DC22A];
         [_consumerBtn setText:@"在线客服"];
         [_consumerBtn setFont:kFont_Bold(14.f)];
         [_consumerBtn setImage:ImageNamed(@"communicate_serve")];

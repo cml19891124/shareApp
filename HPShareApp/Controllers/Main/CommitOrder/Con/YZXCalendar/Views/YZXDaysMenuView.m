@@ -124,6 +124,9 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 - (void)operationLastHasOrderArray:(NSNotification *)noti
 {
     NSArray *dates = noti.userInfo[@"lastArray"];
+    if (dates.count == 1 && [dates.firstObject isEqualToString:@""]) {
+        return;
+    }
     for (int i = 0; i < dates.count; i ++) {
         NSString *date = [HPTimeString noPortraitLineToDateStr:dates[i]];
         if (![self.lastHasOrderArray containsObject:date]) {

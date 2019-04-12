@@ -75,8 +75,8 @@
 {
     if (!_priceLabel) {
         _priceLabel = [UILabel new];
-        _priceLabel.text = @"¥ 99.00";
-        _priceLabel.textColor = COLOR_RED_EA0000;
+        _priceLabel.text = @"¥ 0.00";
+        _priceLabel.textColor = COLOR_RED_FF2F46;
         _priceLabel.textAlignment = NSTextAlignmentRight;
         _priceLabel.font = kFont_Medium(14.f);
     }

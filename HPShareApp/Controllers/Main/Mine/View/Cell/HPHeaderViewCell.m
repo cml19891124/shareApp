@@ -79,7 +79,7 @@
     }];
     
     [self.iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(getWidth(50.f));
+        make.width.height.mas_equalTo(50.f);
         make.left.mas_equalTo(getWidth(16.f));
         make.top.mas_equalTo(getWidth(46.f) + g_statusBarHeight);
     }];
@@ -94,7 +94,7 @@
     
     [self.identifiLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(kScreenWidth/3);
-        make.left.mas_equalTo(self.iconImageView.mas_right).offset(getWidth(11.f));
+        make.left.mas_equalTo(self.phoneBtn);
         make.top.mas_equalTo(self.phoneBtn.mas_bottom).offset(getWidth(9.f));
         make.height.mas_equalTo(self.identifiLabel.font.pointSize);
     }];
@@ -169,7 +169,7 @@
     if (!_iconImageView) {
         _iconImageView = [UIImageView new];
         _iconImageView.userInteractionEnabled = YES;
-        _iconImageView.layer.cornerRadius = getWidth(50.f)/2;
+        _iconImageView.layer.cornerRadius = 50.f/2;
         _iconImageView.layer.masksToBounds = YES;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapHeaderView:)];
         [_iconImageView addGestureRecognizer:tap];
@@ -206,7 +206,7 @@
 {
     if (!_editBtn) {
         _editBtn = [UIButton new];
-        [_editBtn setBackgroundImage:ImageNamed(@"me_business_edit") forState:UIControlStateNormal];
+        [_editBtn setBackgroundImage:ImageNamed(@"collection_edit") forState:UIControlStateNormal];
         [_editBtn addTarget:self action:@selector(onClickedEditProfileInfo:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _editBtn;

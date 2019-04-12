@@ -71,6 +71,8 @@
 		7A09A2F32258643D00A68FBD /* HPOwnnerItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2F22258643D00A68FBD /* HPOwnnerItemView.m */; };
 		7A09A2F622587D3100A68FBD /* HPUserHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2F522587D3100A68FBD /* HPUserHeaderView.m */; };
 		7A09A2F92258B6D900A68FBD /* HPUserNewOrderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2F82258B6D900A68FBD /* HPUserNewOrderView.m */; };
+		7A345518226026C20013AF4C /* HPOperationNumberTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A345517226026C20013AF4C /* HPOperationNumberTool.m */; };
+		7A34551B22608D5B0013AF4C /* HPAreaPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A34551A22608D5B0013AF4C /* HPAreaPickerView.m */; };
 		7A54483F21BAD9B2001301F3 /* HPAreaModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54483E21BAD9B2001301F3 /* HPAreaModel.m */; };
 		7A54485721C169AE001301F3 /* HPPartyCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485621C169AE001301F3 /* HPPartyCenterController.m */; };
 		7A54485A21C16A48001301F3 /* HPPartyCenterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485921C16A48001301F3 /* HPPartyCenterModel.m */; };
@@ -663,6 +665,10 @@
 		7A09A2F522587D3100A68FBD /* HPUserHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUserHeaderView.m; sourceTree = "<group>"; };
 		7A09A2F72258B6D900A68FBD /* HPUserNewOrderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPUserNewOrderView.h; sourceTree = "<group>"; };
 		7A09A2F82258B6D900A68FBD /* HPUserNewOrderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUserNewOrderView.m; sourceTree = "<group>"; };
+		7A345516226026C20013AF4C /* HPOperationNumberTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOperationNumberTool.h; sourceTree = "<group>"; };
+		7A345517226026C20013AF4C /* HPOperationNumberTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOperationNumberTool.m; sourceTree = "<group>"; };
+		7A34551922608D5B0013AF4C /* HPAreaPickerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaPickerView.h; sourceTree = "<group>"; };
+		7A34551A22608D5B0013AF4C /* HPAreaPickerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAreaPickerView.m; sourceTree = "<group>"; };
 		7A54483D21BAD9B2001301F3 /* HPAreaModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaModel.h; sourceTree = "<group>"; };
 		7A54483E21BAD9B2001301F3 /* HPAreaModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAreaModel.m; sourceTree = "<group>"; };
 		7A54485521C169AE001301F3 /* HPPartyCenterController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPartyCenterController.h; sourceTree = "<group>"; };
@@ -1753,6 +1759,7 @@
 		7A04216D225CB6E500CBEC7E /* Wallet */ = {
 			isa = PBXGroup;
 			children = (
+				7A345515226026700013AF4C /* Tool */,
 				7A042184225DEB4700CBEC7E /* Model */,
 				7A042172225CB8E800CBEC7E /* View */,
 				7A042171225CB8DC00CBEC7E /* Con */,
@@ -1801,6 +1808,8 @@
 				7A04219B225F2EED00CBEC7E /* HPAccountItemView.m */,
 				7A0421A9225F69FC00CBEC7E /* HPAcceptView.h */,
 				7A0421AA225F69FC00CBEC7E /* HPAcceptView.m */,
+				7A34551922608D5B0013AF4C /* HPAreaPickerView.h */,
+				7A34551A22608D5B0013AF4C /* HPAreaPickerView.m */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -1842,6 +1851,15 @@
 				7A09A2C122535BCA00A68FBD /* HPOwnnerOrderModel.m */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		7A345515226026700013AF4C /* Tool */ = {
+			isa = PBXGroup;
+			children = (
+				7A345516226026C20013AF4C /* HPOperationNumberTool.h */,
+				7A345517226026C20013AF4C /* HPOperationNumberTool.m */,
+			);
+			path = Tool;
 			sourceTree = "<group>";
 		};
 		7A54483C21BAD97F001301F3 /* Model */ = {
@@ -4493,6 +4511,7 @@
 				E693E90D21E834E20063797A /* HPRouteTypeMenu.m in Sources */,
 				E622A9C421C34E1C007C35BC /* HPClearCacheTool.m in Sources */,
 				E622A9BC21C33989007C35BC /* YYLRefreshRequestErrorView.m in Sources */,
+				7A345518226026C20013AF4C /* HPOperationNumberTool.m in Sources */,
 				E629AAD12249AEBF00CF0378 /* HPBaseNavTextInputController.m in Sources */,
 				69165CF121C10A2600593D25 /* HPSearchPOICell.m in Sources */,
 				E68A76FB21F2D2F200083A90 /* JCHATStringUtils.m in Sources */,
@@ -4592,6 +4611,7 @@
 				7AAFF3C521EA3ACF0049D175 /* HPIdeaDetailViewController.m in Sources */,
 				69165D0B21C4AC5D00593D25 /* HPSortSelectModalView.m in Sources */,
 				E6E89D202212A08A00D04F34 /* NSObject+AvoidCrash.m in Sources */,
+				7A34551B22608D5B0013AF4C /* HPAreaPickerView.m in Sources */,
 				7A54485D21C16BF3001301F3 /* HPPartyCenterCell.m in Sources */,
 				E670840722410AF6005CC8E4 /* MD5.m in Sources */,
 				E661B12821A28E8500C86CF5 /* JTCalendarManager.m in Sources */,

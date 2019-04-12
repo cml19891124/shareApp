@@ -98,7 +98,7 @@ static NSString *orderCell = @"orderCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self.view setBackgroundColor:COLOR_GRAY_EEEEEE];
+    [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     
     self.status = @(0);
     _model = self.param[@"order"];
@@ -116,18 +116,6 @@ static NSString *orderCell = @"orderCell";
     [self setUpListSubviews];
     
     [self setUpListSubviesMasonry];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    //  创建需要的毛玻璃特效类型
-//    UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-//    //  毛玻璃view 视图
-//    UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-//    //添加到要有毛玻璃特效的控件中
-//    effectView.frame = self.orderItemView.bounds;
-//    [self.orderItemView addSubview:effectView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -309,9 +297,8 @@ static NSString *orderCell = @"orderCell";
 }
 
 - (void)setupShadowOfPanel:(UIView *)view {
-    [view.layer setShadowColor:COLOR_GRAY_D5D5D5.CGColor];
+    [view.layer setShadowColor:COLOR_GRAY_A5B9CE.CGColor];
     [view.layer setShadowOffset:CGSizeMake(0.f, 6.f)];
-//    [view.layer setShadowRadius:6.f];
     [view.layer setShadowOpacity:0.1f];
     [view setBackgroundColor:UIColor.whiteColor];
 }
@@ -338,12 +325,12 @@ static NSString *orderCell = @"orderCell";
     [self.orderItemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.left.mas_equalTo(self.view);
         make.top.mas_equalTo(g_statusBarHeight + 44.f);
-        make.height.mas_equalTo(getWidth(50.f));
+        make.height.mas_equalTo(getWidth(45.f));
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.orderItemView.mas_bottom).offset(getWidth(0.f));
+        make.top.mas_equalTo(self.orderItemView.mas_bottom).offset(getWidth(6.f));
     }];
 }
 

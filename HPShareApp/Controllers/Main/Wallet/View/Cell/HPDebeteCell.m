@@ -95,7 +95,7 @@
         _iconView.layer.borderColor = COLOR_GRAY_FFFFFF.CGColor;
         _iconView.layer.borderWidth = 3.5;
         _iconView.layer.masksToBounds = YES;
-        _iconView.image = ImageNamed(@"mingxi");
+        _iconView.image = ImageNamed(@"shouru");
         
     }
     return _iconView;
@@ -149,5 +149,20 @@
 - (void)setModel:(HPAccountInfoModel *)model
 {
     _model = model;
+    
+    self.nameLabel.text = model.title;
+    
+    if (model.type.integerValue == 1) {
+        self.iconView.image = ImageNamed(@"shouru");
+        self.nameSubLabel.text = @"场地收入";
+        self.amountLabel.text = [NSString stringWithFormat:@"+¥%@",model.transactionAmount];
+    }else{
+        self.iconView.image = ImageNamed(@"zhichu");
+        self.nameSubLabel.text = @"支出提现";
+        self.amountLabel.text = [NSString stringWithFormat:@"-¥%@",model.transactionAmount];
+
+    }
+    
+    self.amountSubLabel.text = [NSString stringWithFormat:@"余额：¥%@",model.balanceAfter];
 }
 @end

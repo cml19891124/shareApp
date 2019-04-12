@@ -12,19 +12,19 @@
 
 @class HPSwitchCardsViewController;
 
-@protocol CardsInfoDelegate  <NSObject>
+@protocol BankCardsInfoDelegate  <NSObject>
 
 /**
  选择提现银行的信息
  */
-- (void)onClickBank:(HPSwitchCardsViewController *)cards andCardsModel:(HPCardsInfoModel *)model;
+- (void)onClickBank:(HPSwitchCardsViewController *_Nullable)cards andCardsModel:(HPCardsInfoModel *_Nullable)model;
 
 @end;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HPSwitchCardsViewController : HPBaseViewController
 
-@property (nonatomic, weak) id<CardsInfoDelegate> cardsDelegate;
+@property (nonatomic, weak) id<BankCardsInfoDelegate> cardsDelegate;
 
 @end
 

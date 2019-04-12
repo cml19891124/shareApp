@@ -355,13 +355,24 @@
     NSString *end = self.daysArray.lastObject;
     NSArray * orderArray = [_model.order.days componentsSeparatedByString:@","];
     NSString *days = [NSString stringWithFormat:@"拼租日期(共%ld天)",orderArray.count];
+    CGFloat rentStartW = BoundWithSize([[HPTimeString noPortraitLineToDateStr:start] substringFromIndex:5], kScreenWidth, 14.f).size.width;
+
     if (orderArray.count == 1) {
         self.rentStartDayLabel.text = [[HPTimeString noPortraitLineToDateStr:start] substringFromIndex:5];
         self.rentLineLabel.hidden = YES;
         self.rentEndDayLabel.hidden = YES;
+        [self.rentStartDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(rentStartW);
+        }];
     }else{
         self.rentStartDayLabel.text = [[HPTimeString noPortraitLineToDateStr:start] substringFromIndex:5];
         self.rentEndDayLabel.text = [[HPTimeString noPortraitLineToDateStr:end] substringFromIndex:5];
+        [self.rentStartDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(rentStartW);
+        }];
+        [self.rentEndDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(rentStartW);
+        }];
     }
     
     self.rentDaysLabel.text = days;

@@ -163,7 +163,7 @@ static NSString *totalFeeCell = @"HPTotalFeeCell";
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.separatorColor = UIColor.clearColor;
+        _tableView.separatorColor = COLOR_GRAY_F8F8F8;
 //        [_tableView setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
 //        _tableView.contentInset = UIEdgeInsetsMake(0, 0, getWidth(-60.f), 0);
         _tableView.scrollEnabled = YES;

@@ -317,7 +317,7 @@
     
     NSString *lefttime = [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime];
     if ([lefttime isEqualToString:@"剩余:00:00"]) {
-//        [kNotificationCenter postNotificationName:topaytimeout object:nil];
+
     }
     
     _daysArray = [_model.order.days componentsSeparatedByString:@","];
@@ -328,13 +328,25 @@
     NSString *end = self.daysArray.lastObject;
     NSArray * orderArray = [_model.order.days componentsSeparatedByString:@","];
     NSString *days = [NSString stringWithFormat:@"拼租日期(共%ld天)",orderArray.count];
+    CGFloat rentStartW = BoundWithSize([[HPTimeString noPortraitLineToDateStr:start] substringFromIndex:5], kScreenWidth, 14.f).size.width;
+
     if (orderArray.count == 1) {
         self.rentStartDayLabel.text = [[HPTimeString noPortraitLineToDateStr:start] substringFromIndex:5];
         self.rentLineLabel.hidden = YES;
         self.rentEndDayLabel.hidden = YES;
+
+        [self.rentStartDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(rentStartW);
+        }];
     }else{
         self.rentStartDayLabel.text = [[HPTimeString noPortraitLineToDateStr:start] substringFromIndex:5];
         self.rentEndDayLabel.text = [[HPTimeString noPortraitLineToDateStr:end] substringFromIndex:5];
+        [self.rentEndDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(rentStartW);
+        }];
+        [self.rentStartDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(rentStartW);
+        }];
     }
     
     self.rentDaysLabel.text = days;
@@ -1354,6 +1366,7 @@
         [_priceListBtn setText:@"明细"];
         [_priceListBtn setColor:COLOR_GRAY_999999];
         [_priceListBtn setRightSpace: getWidth(-30.f)];
+        _priceListBtn.font = kFont_Medium(14.f);
         [_priceListBtn addTarget:self action:@selector(onClickOrderListBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _priceListBtn;

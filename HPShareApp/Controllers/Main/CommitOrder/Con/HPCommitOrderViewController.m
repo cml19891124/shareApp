@@ -178,13 +178,27 @@
             weakSelf.orderListView.dayRent = weakSelf.model.rent;
 
             weakSelf.rentStartDayLabel.text = [startDate substringFromIndex:5];
+            
+            CGFloat rentStartW = BoundWithSize([startDate substringFromIndex:5], kScreenWidth, 14.f).size.width;
+
             if (endDate) {
                 weakSelf.rentEndDayLabel.text = [endDate substringFromIndex:5];
                 weakSelf.rentLineLabel.hidden = NO;
                 weakSelf.rentEndDayLabel.hidden = NO;
+                
+                [weakSelf.rentStartDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(rentStartW);
+                }];
             }else{
                 weakSelf.rentLineLabel.hidden = YES;
                 weakSelf.rentEndDayLabel.hidden = YES;
+                
+                [weakSelf.rentStartDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(rentStartW);
+                }];
+                [weakSelf.rentEndDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(rentStartW);
+                }];
             }            
         };
     }
@@ -271,8 +285,11 @@
     
     self.locationLabel.text = [NSString stringWithFormat:@"拼租位置:%@",_model.rentPlace?_model.rentPlace:@"--"];
 
-    [self.storeView sd_setImageWithURL:[NSURL URLWithString:_model.pictures[0].url] placeholderImage:ImageNamed(@"loading_logo_small")];
-    
+    if (_model.pictures.count == 0||!_model.pictures) {
+        self.storeView.image = ImageNamed(@"loading_logo_small");
+    }else{
+        [self.storeView sd_setImageWithURL:[NSURL URLWithString:_model.pictures[0].url] placeholderImage:ImageNamed(@"loading_logo_small")];
+    }
     self.addressLabel.text = [NSString stringWithFormat:@"地址:%@",_model.address];
     
     self.ownnerField.delegate = self;
@@ -1200,6 +1217,7 @@
         _priceListBtn.image = ImageNamed(@"arrow_down");
         [_priceListBtn setText:@"明细"];
         [_priceListBtn setColor:COLOR_GRAY_999999];
+        _priceListBtn.font = kFont_Medium(14.f);
 
         [_priceListBtn setRightSpace: getWidth(-20.f)];
         [_priceListBtn addTarget:self action:@selector(onClickOrderListBtn:) forControlEvents:UIControlEventTouchUpInside];

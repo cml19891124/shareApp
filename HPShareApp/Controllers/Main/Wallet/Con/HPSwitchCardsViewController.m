@@ -112,7 +112,7 @@ static NSString *banksInfoCell = @"banksInfoCell";
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(getWidth(20.f));
+        make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.tipView.mas_bottom);
         make.bottom.mas_equalTo(getWidth(-74.f));
     }];
@@ -242,9 +242,14 @@ static NSString *banksInfoCell = @"banksInfoCell";
 
 - (void)onclickConfirmBtn:(UIButton *)button
 {
-    
+    if (!self.model) {
+        self.model = self.banksCardArray[0];
+    }else{
+        
+    }
+
     if ([self.cardsDelegate respondsToSelector:@selector(onClickBank:andCardsModel:)]) {
-        [self.cardsDelegate onClickBank:self andCardsModel:self.selectedModel];
+        [self.cardsDelegate onClickBank:self andCardsModel:self.model];
         [self.navigationController popViewControllerAnimated:YES];
     }
 }

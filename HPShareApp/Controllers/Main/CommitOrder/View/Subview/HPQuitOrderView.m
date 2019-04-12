@@ -139,6 +139,7 @@
     if (!_holderBtn) {
         _holderBtn = [UIButton new];
         [_holderBtn setTitle:@"暂不取消" forState:UIControlStateNormal];
+        _holderBtn.titleLabel.font = kFont_Regular(14.f);
         _holderBtn.backgroundColor = COLOR_RED_EA0000;
         [_holderBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
         [_holderBtn addTarget:self action:@selector(onClickHolderBtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -155,7 +156,8 @@
         _quitBtn.backgroundColor = COLOR_GRAY_FFFFFF;
         [_quitBtn setTitleColor:COLOR_RED_EA0000 forState:UIControlStateNormal];
         _quitBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-        
+        _quitBtn.titleLabel.font = kFont_Regular(14.f);
+
         [_quitBtn addTarget:self action:@selector(onClickQuitBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _quitBtn;

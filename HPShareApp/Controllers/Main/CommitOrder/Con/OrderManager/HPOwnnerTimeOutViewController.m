@@ -15,6 +15,8 @@
 
 #import "HPAttributeLabel.h"
 
+#import "HPRightImageButton.h"
+
 @interface HPOwnnerTimeOutViewController ()<UIScrollViewDelegate>
 /**
  室内、室外
@@ -50,7 +52,7 @@
 
 @property (nonatomic, strong) UIView *contactLine;
 
-@property (nonatomic, strong) UIButton *consumerBtn;
+@property (nonatomic, strong) HPRightImageButton *consumerBtn;
 
 @property (nonatomic, strong) UIButton *phoneBtn;
 
@@ -124,7 +126,6 @@
         _timeoutLabel = [UILabel new];
         _timeoutLabel.text = @"支付超时，交易关闭。";
         _timeoutLabel.font = kFont_Bold(14.f);
-        _timeoutLabel.textColor = COLOR_BLACK_333333;
         _timeoutLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _timeoutLabel;
@@ -485,18 +486,11 @@
     }];
     
     [self.consumerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(10.f));
-        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-10.f));
-        make.left.mas_equalTo(getWidth(40.f));
-        make.width.mas_equalTo(getWidth(345.f)/3);
+        make.top.mas_equalTo(self.contactLine.mas_bottom);
+        make.bottom.mas_equalTo(self.communicateView.mas_bottom);
+        make.left.mas_equalTo(getWidth(15.f));
+        make.right.mas_equalTo(getWidth(-15.f));
         
-    }];
-    
-    [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-10.f));
-        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(10.f));
-        make.right.mas_equalTo(getWidth(-40.f));
-        make.width.mas_equalTo(getWidth(345.f)/3);
     }];
     
     [self.ownnerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -813,15 +807,14 @@
     return _contactLine;
 }
 
-- (UIButton *)consumerBtn
+- (HPRightImageButton *)consumerBtn
 {
     if (!_consumerBtn) {
-        _consumerBtn = [UIButton new];
-        [_consumerBtn setTitle:@"联系客服" forState:UIControlStateNormal];
-        _consumerBtn.titleLabel.font = kFont_Medium(14.f);
-        [_consumerBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
-        [_consumerBtn setImage:ImageNamed(@"communicate_serve") forState:UIControlStateNormal];
-        [_consumerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, getWidth(6.f), 0, 0)];
+        _consumerBtn = [HPRightImageButton new];
+        [_consumerBtn setColor:COLOR_GREEN_2DC22A];
+        [_consumerBtn setText:@"在线客服"];
+        [_consumerBtn setFont:kFont_Bold(14.f)];
+        [_consumerBtn setImage:ImageNamed(@"communicate_serve")];
         _consumerBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [_consumerBtn addTarget:self action:@selector(onClickConsumerBtn:) forControlEvents:UIControlEventTouchUpInside];
     }

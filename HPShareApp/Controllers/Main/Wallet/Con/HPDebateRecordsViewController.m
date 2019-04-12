@@ -12,9 +12,19 @@
 
 #import "HPAccountItemView.h"
 
-@interface HPDebateRecordsViewController ()<UITableViewDelegate,UITableViewDataSource>
+#import "HPShareListParam.h"
+
+@interface HPDebateRecordsViewController ()<UITableViewDelegate,UITableViewDataSource,YYLRefreshNoDataViewDelegate>
+
+@property (strong, nonatomic) HPShareListParam *shareListParam;
 
 @property (strong, nonatomic) HPAccountItemView *accountView;
+
+
+/**
+ 收入为1，支出为0，全部不传
+ */
+@property (copy, nonatomic) NSString *type;
 
 @property (nonatomic, strong) UIButton *backBtn;
 
@@ -35,19 +45,91 @@ static NSString *debeteCell = @"HPDebeteCell";
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     
+    self.type = @"";
+    
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        
+        self.shareListParam.page = 1;
+        [self getAccountInfoApi:YES];
+    }];
+    
+    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        [self getAccountInfoApi:NO];
+    }];
+
+    
     self.accountArray = [NSMutableArray array];
     
     [self setUpDebetaSubviews];
     
     [self setUpDebetaSubviewsMasonry];
     
-    [self getAccountInfoApi];
+    [self getAccountInfoApi:YES];
+
 }
 
 #pragma mark - 获取账务明细
-- (void)getAccountInfoApi
+- (void)getAccountInfoApi:(BOOL)isReload
 {
+    self.shareListParam = [HPShareListParam new];
     
+    self.shareListParam.page = 1;
+    
+    self.shareListParam.pageSize = 20;
+    
+    if (isReload) {
+        _shareListParam.page = 1;
+    }
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"isIncome"] = self.type;
+    dic[@"page"] = @(self.shareListParam.page);
+    dic[@"pageSize"] = @(self.shareListParam.pageSize);
+
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/userAccountLog/list" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        NSArray *listArray = [HPAccountInfoModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
+
+        if (listArray) {
+            if (isReload) {
+                [self.accountArray removeAllObjects];
+            }
+            
+            [self.accountArray addObjectsFromArray:listArray];
+        }
+        
+        if ([responseObject[@"data"][@"total"] integerValue] == 0 || self.accountArray.count == 0) {
+            
+            self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
+            self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"queshengtu");
+            self.tableView.refreshNoDataView.tipLabel.text = @"列表空空如也，快去逛逛吧~";
+            [self.tableView.refreshNoDataView.tipBtn setTitle:@"去逛逛" forState:UIControlStateNormal];
+            [self.tableView.refreshNoDataView.tipBtn setTitleColor:COLOR_RED_FF1213 forState:UIControlStateNormal];
+            self.tableView.refreshNoDataView.tipBtn.backgroundColor = COLOR_GRAY_FFFFFF;
+            self.tableView.refreshNoDataView.tipBtn.layer.cornerRadius = 6;
+            self.tableView.refreshNoDataView.tipBtn.layer.masksToBounds = YES;
+            self.tableView.refreshNoDataView.tipBtn.layer.borderColor = COLOR_RED_FF1213.CGColor;
+            self.tableView.refreshNoDataView.tipBtn.layer.borderWidth = 1;
+            self.tableView.refreshNoDataView.delegate = self;
+            self.tableView.refreshNoDataView.hidden = NO;
+            
+        }
+        
+        if (listArray.count < 10) {
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            [self.tableView.mj_header endRefreshing];
+        }
+        else {
+            self.tableView.refreshNoDataView.hidden = YES;
+            
+            [self.tableView.mj_footer endRefreshing];
+            [self.tableView.mj_header endRefreshing];
+            self.shareListParam.page ++;
+        }
+        
+        [self.tableView reloadData];
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 - (void)setUpDebetaSubviews
@@ -118,13 +200,18 @@ static NSString *debeteCell = @"HPDebeteCell";
         _accountView.accountBlock = ^(NSInteger accountIndex) {
             switch (accountIndex) {
                 case HPAccountItemIndexAll:
-                    [weakSelf getAccountInfoApi];
+                    weakSelf.type  = @"";
+                    [weakSelf getAccountInfoApi:YES];
                     break;
                 case HPAccountItemIndexOutcome:
-                    [weakSelf getAccountInfoApi];
+                    weakSelf.type  = @"0";
+
+                    [weakSelf getAccountInfoApi:YES];
                     break;
                 case HPAccountItemIndexIncome:
-                    [weakSelf getAccountInfoApi];
+                    weakSelf.type  = @"1";
+
+                    [weakSelf getAccountInfoApi:YES];
                     break;
                 default:
                     break;
@@ -161,7 +248,7 @@ static NSString *debeteCell = @"HPDebeteCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5.f;
+    return self.accountArray.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -171,16 +258,18 @@ static NSString *debeteCell = @"HPDebeteCell";
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    HPAccountInfoModel *model = self.accountArray[indexPath.row];
+    HPAccountInfoModel *model = self.accountArray[indexPath.row];
     HPDebeteCell *cell = [tableView dequeueReusableCellWithIdentifier:debeteCell];
-//    cell.model = model;
+    cell.model = model;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        [self pushVCByClassName:@"HPRecordsDetailViewController"];
+    HPAccountInfoModel *model = self.accountArray[indexPath.row];
+
+    [self pushVCByClassName:@"HPRecordsDetailViewController" withParam:@{@"model":model}];
     
 }
 

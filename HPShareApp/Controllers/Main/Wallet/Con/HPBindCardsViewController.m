@@ -20,6 +20,8 @@
 
 #import "HPBotomPickerModalView.h"
 
+#import "HPAreaPickerView.h"
+
 typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
     HPChooseItemIndexUserInfo = 5100,
     HPChooseItemIndexBank,
@@ -29,7 +31,9 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
 
 @interface HPBindCardsViewController ()<BanksInfoDelegate>
 
-@property (nonatomic, weak) HPBotomPickerModalView *areaPickerView;
+//@property (nonatomic, weak) HPBotomPickerModalView *areaPickerView;
+
+@property (strong, nonatomic) HPAreaPickerView *areaPickerView;
 
 @property (nonatomic, strong) UIImageView *headerView;
 
@@ -53,15 +57,29 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
 
 @property (strong, nonatomic) HPBanksListModel *model;
 
+
+/**
+ 本地省市区数组列表
+ */
+@property (strong, nonatomic) NSArray *areaArray;
 @end
 
 @implementation HPBindCardsViewController
+- (HPAreaPickerView *)areaPickerView
+{
+    if (!_areaPickerView) {
+        _areaPickerView = [HPAreaPickerView new];
+    }
+    return _areaPickerView;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
 
+    
+    
     [self setUpWalletSubviews];
     
     [self setUpWalletSubviewsMasonry];
@@ -255,6 +273,7 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
 
 - (void)callAlertView:(UIButton *)button
 {
+    /*
     if (!_areaPickerView) {
         HPLinkageData *data = [[HPLinkageData alloc] initWithModels:[HPCommonData getAreaData]];
         [data setChildNameKey:@"name"];
@@ -274,7 +293,53 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
         _areaPickerView = areaPickerView;
     }
     
-    [_areaPickerView show:YES];
+    [_areaPickerView show:YES];*/
+//    NSMutableArray *objectsArray = [NSMutableArray array];
+//    NSMutableArray *keysArray = [NSMutableArray array];
+//    NSMutableArray *valuesArray = [NSMutableArray array];
+//    NSMutableDictionary *keyValueDic = [NSMutableDictionary dictionary];
+//    for (NSDictionary *objects in self.areaArray) {
+//
+//        [keysArray addObjectsFromArray:objects.allKeys];
+//        [valuesArray addObjectsFromArray:objects.allValues];
+//    }
+//
+//    for (int i = 0;i < keysArray.count; i++) {
+//        CDZPickerComponentObject *province = [[CDZPickerComponentObject alloc]initWithText:keysArray[i]];
+//        if (![objectsArray containsObject:province]) {
+//            [objectsArray addObject:province];
+//        }
+//
+//        for (int i = 0;i < valuesArray.count; i++) {
+//            CDZPickerComponentObject *city = [[CDZPickerComponentObject alloc]initWithText:valuesArray[i]];
+//        }
+//    }
+    
+    
+//    CDZPickerComponentObject *city = [[CDZPickerComponentObject alloc]initWithText:@"海珠区"];
+//
+//    CDZPickerComponentObject *province = [[CDZPickerComponentObject alloc]initWithText:@"广州市"];
+//    province.subArray = [NSMutableArray arrayWithObjects:haizhu,yuexiu, nil];
+    
+//    CDZPickerBuilder *builder = [CDZPickerBuilder new];
+//    builder.showMask = YES;
+//    builder.cancelTextColor = COLOR_GRAY_BBBBBB;
+//    builder.confirmTextColor = COLOR_RED_EA0000;
+//    kWEAKSELF
+//    [CDZPicker showLinkagePickerInView:self.view withBuilder:builder components:province confirm:^(NSArray<NSString *> * _Nonnull strings, NSArray<NSNumber *> * _Nonnull indexs) {
+//
+//        [weakSelf.chooseAreaBtn setTitle:[strings componentsJoinedByString:@","] forState:UIControlStateNormal];
+//        CGFloat stringsW = BoundWithSize([strings componentsJoinedByString:@","], kScreenWidth, 14).size.width + 20;
+//        [weakSelf.chooseAreaBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.width.mas_equalTo(stringsW);
+//        }];
+//    } cancel:^{
+//
+//    }];
+    [self.areaPickerView show:YES];
+    self.areaPickerView.areaBlock = ^(NSString * _Nullable province, NSString * _Nullable city) {
+        
+    };
 }
 
 //银行卡号

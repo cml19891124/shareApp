@@ -304,9 +304,6 @@
     self.desField.text = _model.spaceDetail.remark;
 
     NSString *lefttime = [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime];
-    if ([lefttime isEqualToString:@"剩余:00:00"]) {
-//        [kNotificationCenter postNotificationName:topaytimeout object:nil];
-    }
     
     NSString *start = [[_model.order.days componentsSeparatedByString:@","]firstObject];
     NSString *end = [[_model.order.days componentsSeparatedByString:@","]lastObject];

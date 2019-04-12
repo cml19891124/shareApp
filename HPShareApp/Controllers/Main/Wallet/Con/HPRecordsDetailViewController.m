@@ -8,7 +8,11 @@
 
 #import "HPRecordsDetailViewController.h"
 
+#import "HPAccountInfoModel.h"
+
 @interface HPRecordsDetailViewController ()<UIScrollViewDelegate>
+
+@property (strong, nonatomic) HPAccountInfoModel *model;
 
 @property (nonatomic, strong) UIButton *backBtn;
 
@@ -70,9 +74,47 @@
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     
+    self.model = self.param[@"model"];
+    
     [self setUpRecordsSubviews];
     
     [self setUpRecordsSubviewsMasonry];
+
+    [self loadDetailData];
+}
+
+- (void)loadDetailData
+{
+    if (self.model.type.integerValue == 1) {
+        self.moneyBtn.selected = NO;
+        [self.moneyBtn setTitle:[NSString stringWithFormat:@"+ %@",_model.transactionAmount] forState:UIControlStateNormal];
+        self.amountSubLabel.text = [NSString stringWithFormat:@"+%@",_model.transactionAmount];
+
+    }else{
+        self.moneyBtn.selected = YES;
+        [self.moneyBtn setTitle:[NSString stringWithFormat:@"- %@",_model.transactionAmount] forState:UIControlStateNormal];
+        self.amountSubLabel.text = [NSString stringWithFormat:@"-%@",_model.transactionAmount];
+    }
+    
+    self.moneySubLabel.text = [NSString stringWithFormat:@"余额：¥%@",_model.balanceAfter];
+    
+    self.nameSubLabel.text = self.model.title;
+    
+    HPDescriptionModel *desModel = [HPDescriptionModel mj_objectWithKeyValues:_model.desc];
+    
+    self.rentDaySubLabel.text = desModel.days;
+    
+    if ([desModel.tenantName isEqualToString:@""] || !desModel.tenantName) {
+        self.renterSubLabel.text = @"--";
+    }else{
+        self.renterSubLabel.text = desModel.tenantName;
+    }
+    
+    self.orderSubLabel.text = desModel.orderNo;
+    
+    self.serverSubLabel.text = [NSString stringWithFormat:@"-%@",_model.serviceCharge];
+
+    self.totalSubLabel.text = [NSString stringWithFormat:@"+%ld",(_model.serviceCharge.integerValue - _model.serviceCharge.integerValue)];
 
 }
 
@@ -272,7 +314,7 @@
     
     [self.totalSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(getWidth(-15.f));
-        make.top.mas_equalTo(self.totalLabel.mas_bottom).offset(getWidth(22.f));
+        make.top.mas_equalTo(self.serverSubLabel.mas_bottom).offset(getWidth(22.f));
         make.width.mas_equalTo(kScreenWidth/3);
         make.height.mas_equalTo(self.totalSubLabel.font.pointSize);
     }];
@@ -483,14 +525,14 @@
 
 - (UILabel *)serverSubLabel
 {
-    if (!_serverLabel) {
-        _serverLabel = [UILabel new];
-        _serverLabel.textColor = COLOR_GRAY_666666;
-        _serverLabel.font = kFont_Medium(16.f);
-        _serverLabel.textAlignment = NSTextAlignmentRight;
-        _serverLabel.text = @"-¥1.00";
+    if (!_serverSubLabel) {
+        _serverSubLabel = [UILabel new];
+        _serverSubLabel.textColor = COLOR_GRAY_666666;
+        _serverSubLabel.font = kFont_Medium(16.f);
+        _serverSubLabel.textAlignment = NSTextAlignmentRight;
+        _serverSubLabel.text = @"-¥1.00";
     }
-    return _serverLabel;
+    return _serverSubLabel;
 }
 
 - (UILabel *)totalLabel

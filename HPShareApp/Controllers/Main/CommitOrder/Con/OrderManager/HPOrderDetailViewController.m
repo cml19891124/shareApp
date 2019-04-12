@@ -707,7 +707,7 @@
 {
     if (!_consumerBtn) {
         _consumerBtn = [HPRightImageButton new];
-        [_consumerBtn setTintColor:UIColor.greenColor];
+        [_consumerBtn setTintColor:COLOR_GREEN_2DC22A];
         [_consumerBtn setText:@"联系客服"];
         [_consumerBtn setFont:kFont_Bold(14.f)];
         [_consumerBtn setImage:ImageNamed(@"communicate_serve")];
