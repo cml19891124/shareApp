@@ -12,7 +12,25 @@
 
 #import "HPAlignCenterButton.h"
 
-@interface HPManagerBoardViewController ()
+#import "TZImagePickerController.h"
+
+#import "HPUploadImageHandle.h"
+
+#import "HPAlertSheet.h"
+
+
+@interface HPManagerBoardViewController ()<UINavigationBarDelegate,UIImagePickerControllerDelegate,TZImagePickerControllerDelegate>
+
+@property (nonatomic, weak) TZImagePickerController *imagePicker;
+
+/**
+ 营业执照图片路径
+ */
+@property (nonatomic, copy) NSString *photoUrl;
+
+@property (nonatomic, copy) NSString *pictureId;
+
+@property (nonatomic, weak) HPAlertSheet *alertSheet;
 
 @property (nonatomic, strong) UIButton *backBtn;
 
@@ -46,9 +64,15 @@
 
 @property (nonatomic, strong) UIView *upView;
 
+@property (nonatomic, strong) UIImageView *portView;
+
 @property (nonatomic, strong) HPAlignCenterButton *uploadBtn;
 
 @property (nonatomic, strong) UIButton *confirmBtn;
+
+@property (strong, nonatomic) UIImage *photo;
+
+@property (nonatomic, strong) UIImagePickerController *photoPicker;
 
 @end
 
@@ -68,13 +92,51 @@
         self.scrollView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
         
     }
+    [self setConfig];
 
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     
     [self setUpBoardSubviews];
     
     [self setUpBoardSubviewsMasonry];
+    
+    kWeakSelf(weakSelf);
+    HPAlertSheet *alertSheet = [[HPAlertSheet alloc] init];
+    HPAlertAction *photoAction = [[HPAlertAction alloc] initWithTitle:@"拍照" completion:^{
+        [weakSelf onClickAlbumOrPhotoSheetWithTag:0];
+    }];
+    [alertSheet addAction:photoAction];
+    HPAlertAction *albumAction = [[HPAlertAction alloc] initWithTitle:@"从手机相册选择" completion:^{
+        [weakSelf onClickAlbumOrPhotoSheetWithTag:1];
+    }];
+    [alertSheet addAction:albumAction];
+    self.alertSheet = alertSheet;
+}
 
+- (void)setConfig
+{
+
+}
+
+#pragma mark - 添加营业执照信息认证 auditStatus: 0审核未通过，1通过，2审核中
+- (void)getPassportAddIdentifyApi
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"name"] = self.compriseField.text;
+    dic[@"number"] = self.boardField.text;
+    dic[@"pictureId"] = self.pictureId;
+    dic[@"pictureUrl"] = self.photoUrl;
+
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/business/addBusinessLicense" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:@"操作成功"];
+            [self.navigationController popViewControllerAnimated:YES];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 - (void)setUpBoardSubviews
@@ -107,6 +169,8 @@
     
     [self.scrollView addSubview:self.boardField];
     
+    [kNotificationCenter addObserver:self selector:@selector(didTextFieldChange:) name:UITextFieldTextDidChangeNotification object:self.boardField];
+    
     [self.scrollView addSubview:self.lineBoard];
     
     [self.scrollView addSubview:self.boardPhoto];
@@ -119,10 +183,44 @@
 
     [self.scrollView addSubview:self.upView];
 
+    [self.upView addSubview:self.portView];
+
     [self.upView addSubview:self.uploadBtn];
 
     [self.view addSubview:self.confirmBtn];
 
+}
+
+#pragma mark - NSNotification
+
+- (void)didTextFieldChange:(NSNotification *)notification {
+    UITextField *textField = (UITextField *)notification.object;
+    if (textField == self.boardField) {
+        // text field 的内容
+        NSString *contentText = textField.text;
+        
+        // 获取高亮内容的范围
+        UITextRange *selectedRange = [textField markedTextRange];
+        // 这行代码 可以认为是 获取高亮内容的长度
+        NSInteger markedTextLength = [textField offsetFromPosition:selectedRange.start toPosition:selectedRange.end];
+        // 没有高亮内容时,对已输入的文字进行操作
+        if (markedTextLength == 0) {
+            // 如果 text field 的内容长度大于我们限制的内容长度
+            if (contentText.length > 18) {
+                // 截取从前面开始maxLength长度的字符串
+                //            textField.text = [contentText substringToIndex:maxLength];
+                // 此方法用于在字符串的一个range范围内，返回此range范围内完整的字符串的range
+                NSRange rangeRange = [contentText rangeOfComposedCharacterSequencesForRange:NSMakeRange(0, 18)];
+                textField.text = [contentText substringWithRange:rangeRange];
+                [HPProgressHUD alertMessage:@"营业执照号码不得超过18位"];
+            }
+        }
+        
+    }
+}
+
+- (void)dealloc{
+    [kNotificationCenter removeObserver:self];
 }
 
 - (void)setUpBoardSubviewsMasonry
@@ -238,9 +336,13 @@
         make.top.mas_equalTo(self.boardCheckLabel.mas_bottom).offset(getWidth(24.f));
     }];
     
+    [self.portView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
+    
     [self.uploadBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.upView);
-        make.size.mas_equalTo(CGSizeMake(getWidth(100.f), getWidth(40.f)));
+        make.size.mas_equalTo(CGSizeMake(getWidth(50.f), getWidth(40.f)));
         make.top.mas_equalTo(getWidth(50.f));
     }];
     
@@ -249,6 +351,15 @@
         make.size.mas_equalTo(CGSizeMake(getWidth(330.f), getWidth(44.f)));
         make.top.mas_equalTo(self.view.mas_bottom).offset(getWidth(-54.f));
     }];
+}
+
+- (UIImageView *)portView
+{
+    if(!_portView){
+        _portView = [UIImageView new];
+        _portView.image = ImageNamed(@"");
+    }
+    return _portView;
 }
 
 - (UIButton *)backBtn
@@ -437,7 +548,6 @@
     if (!_uploadBtn) {
         _uploadBtn = [[HPAlignCenterButton alloc] initWithImage:ImageNamed(@"upload")];
         _uploadBtn.text = @"点此上传";
-        _uploadBtn.backgroundColor = COLOR_GRAY_EEEEEE;
         _uploadBtn.textFont = kFont_Medium(12.f);
         _uploadBtn.textColor = COLOR_GRAY_999999;
         [_uploadBtn addTarget:self action:@selector(onClickUploadBtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -449,7 +559,7 @@
 {
     if (!_confirmBtn) {
         _confirmBtn = [UIButton new];
-        [_confirmBtn setTitle:@"确定" forState:UIControlStateNormal];
+        [_confirmBtn setTitle:@"提交" forState:UIControlStateNormal];
         [_confirmBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
         _confirmBtn.backgroundColor = COLOR_RED_EA0000;
         _confirmBtn.layer.cornerRadius = 6.f;
@@ -462,11 +572,95 @@
 
 - (void)conClickConfirmBtn:(UIButton *)button
 {
+    if(self.boardField.text.length == 0){
+        [HPProgressHUD alertMessage:@"请输入营业执照号码"];
+        return;
+    }
+    if(self.compriseField.text.length == 0){
+        [HPProgressHUD alertMessage:@"请输入企业名称"];
+        return;
+    }
     
+    if (self.photoUrl.length == 0 || !self.photoUrl) {
+        [HPProgressHUD alertMessage:@"请选择营业执照图片"];
+        return;
+    }
+    [self getPassportAddIdentifyApi];
 }
 
 - (void)onClickUploadBtn:(UIButton *)button
 {
+    [self.alertSheet show:YES];
+
+}
+
+#pragma mark - UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
+    UIImage *photo = info[UIImagePickerControllerOriginalImage];
+    _photo = photo;
+    self.portView.image = photo;
+    [self dismissViewControllerAnimated:self.photoPicker completion:nil];
+    [self uploadLocalImageGetAvatarUrl];
+}
+
+#pragma mark - TZImagePickerControllerDelegate
+
+- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
+    picker.allowCrop = YES;
+    UIImage *photo = photos[0];
+    _photo = photo;
+    self.portView.image = photo;
+    [self uploadLocalImageGetAvatarUrl];
+}
+
+#pragma  mark - 上传一张图片
+- (void)uploadLocalImageGetAvatarUrl
+{
+    NSString *url = [NSString stringWithFormat:@"%@/v1/file/uploadPicture",kBaseUrl];//放上传图片的网址
+    NSString *historyTime = [HPTimeString getNowTimeTimestamp];
+    [HPUploadImageHandle sendPOSTWithUrl:url withLocalImage:_photo isNeedToken:YES parameters:@{@"file":historyTime} success:^(id data) {
+        NSString *url = [data[@"data"]firstObject][@"url"]?:@"";
+        NSString *pictureId = [data[@"data"]firstObject][@"pictureId"]?:@"";
+        self.pictureId = pictureId;
+        if (url) {
+            self.photoUrl = url;
+        }
+    } fail:^(NSError *error) {
+        ErrorNet
+    }];
     
 }
+
+- (void)onClickAlbumOrPhotoSheetWithTag:(NSInteger)tag {
+    if (tag == 0) {
+        if (self.photoPicker == nil) {
+            UIImagePickerController *photoPicker = [[UIImagePickerController alloc] init];
+            [photoPicker setSourceType:UIImagePickerControllerSourceTypeCamera];
+            [photoPicker setDelegate:self];
+            photoPicker.allowsEditing = YES;
+            self.photoPicker = photoPicker;
+        }
+        
+        [self presentViewController:self.photoPicker animated:YES completion:nil];
+    }
+    else if (tag == 1) {
+        if (self.imagePicker == nil) {
+            TZImagePickerController *imagePicker = [[TZImagePickerController alloc] initWithMaxImagesCount:4 delegate:self];
+            [imagePicker setNaviBgColor:COLOR_RED_FF3C5E];
+            [imagePicker setNaviTitleColor:UIColor.whiteColor];
+            [imagePicker setIconThemeColor:COLOR_RED_FF3C5E];
+            [imagePicker setOKButtonTitleColorNormal:COLOR_RED_FF3C5E];
+            [imagePicker setOKButtonTitleColorDisabled:COLOR_GRAY_999999];
+            [imagePicker.view setNeedsDisplay];
+            imagePicker.maxImagesCount = 1;
+            self.imagePicker = imagePicker;
+        }
+        
+        [self presentViewController:self.imagePicker animated:YES completion:nil];
+    }
+}
+
+#pragma mark - 识别身份证
+
 @end

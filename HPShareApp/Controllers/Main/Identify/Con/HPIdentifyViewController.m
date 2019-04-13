@@ -5,6 +5,7 @@
 //  Created by HP on 2019/3/25.
 //  Copyright © 2019 Shenzhen Qianhai Hepai technology co.,ltd. All rights reserved.
 //
+#import "HPPassportModel.h"
 
 #import "HPIdentifyViewController.h"
 
@@ -12,7 +13,13 @@
 
 #import "HPGradientUtil.h"
 
+#import "HPIdentifyModel.h"
+
 @interface HPIdentifyViewController ()
+
+@property (strong, nonatomic) UILabel *boardSubLabel;
+
+@property (strong, nonatomic) HPPassportModel *portModel;
 
 @property (nonatomic, strong) UIImageView *headView;
 
@@ -26,11 +33,25 @@
 
 @property (nonatomic, strong) UILabel *nameSubLabel;
 
+@property (strong, nonatomic) UILabel *nameidenLabel;
+
+@property (strong, nonatomic) HPRightImageButton *realNameBtn;
+
+@property (strong, nonatomic) HPRightImageButton *boardBtn;
+
+@property (strong, nonatomic) UILabel *idLabel;
+
 @property (nonatomic, strong) UIView *bgview;
 
 @property (strong, nonatomic) UIButton *identifyBtn;
 
 @property (strong, nonatomic) UIButton *passportBtn;
+
+@property (strong, nonatomic) HPIdentifyModel *model;
+
+@property (strong, nonatomic) UIView *nameRow;
+
+@property (strong, nonatomic) UILabel *portLabel;
 
 @end
 
@@ -43,6 +64,115 @@
     
     [self setUpSubviewsMasonry];
 
+    [self getIdentifyApi];
+    
+    [self getPassportIdentifyApi];
+}
+
+#pragma mark - 查询营业执照认证信息 auditStatus: 0审核未通过，1通过，2审核中
+- (void)getPassportIdentifyApi
+{
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/business/queyBusinessLicense" paraments:@{} needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            self.portModel = [HPPassportModel mj_objectWithKeyValues:responseObject[@"data"]];
+            [HPProgressHUD alertMessage:MSG];
+            if (self.portModel) {
+                [self setPassPortInfo];
+
+            }else{
+                [self setPassPortInfo];
+            }
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+            [self setPassPortInfo];
+
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
+- (void)setPassPortInfo
+{
+    
+    self.passportBtn.hidden = NO;
+    
+    if (self.portModel.auditStatus.integerValue == 0) {
+        self.boardBtn.text = @"审核未通过";
+        
+        self.boardBtn.image = ImageNamed(@"shouye_gengduo");
+    }else if (self.portModel.auditStatus.integerValue == 1){
+        self.portLabel.text = @"已认证";
+
+        self.boardBtn.text =  @"已认证";
+        
+        self.boardBtn.image = ImageNamed(@"");
+
+        NSString *portNumber = [self.portModel.number stringByReplacingCharactersInRange:NSMakeRange(3, self.portModel.number.length - 6) withString:@"********"];
+        
+        self.boardSubLabel.text = [NSString stringWithFormat:@"营业执照代码：%@",portNumber];
+    }else{
+        self.portLabel.text = @"已认证";
+
+        self.boardBtn.text =  @"审核中";
+        
+        self.boardBtn.image = ImageNamed(@"shouye_gengduo");
+    }
+}
+
+- (void)setUserIdentifyInfo
+{
+    if (self.model) {
+        self.nameLabel.text = @"身份信息";
+        NSString *name = self.model.realName?self.model.realName:@"--";
+        self.idLabel.text = [NSString stringWithFormat:@"姓名：%@",name];
+        self.nameSubLabel.text = [NSString stringWithFormat:@"身份证号：%@",self.model.idCard?self.model.idCard:@"--"];
+        self.identifyBtn.hidden = NO;
+        self.nameidenLabel.text = @"已认证";
+        self.realNameBtn.text = @"已认证";
+        self.realNameBtn.image = ImageNamed(@"");
+        [self.nameRow mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(getWidth(114));
+        }];
+    }else{
+        self.nameLabel.text = @"实名认证";
+        self.nameSubLabel.text = [NSString stringWithFormat:@"认证信息将严格保密"];
+        self.identifyBtn.hidden = YES;
+        self.nameidenLabel.hidden = YES;
+        [self.idLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(getWidth(0));
+        }];
+        
+        [self.nameSubLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.idLabel.mas_bottom).offset(getWidth(-10));
+        }];
+        
+        [self.nameRow mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(getWidth(80));
+        }];
+        
+        self.realNameBtn.text = @"去认证";
+        self.realNameBtn.image = ImageNamed(@"shouye_gengduo");
+    }
+}
+
+- (void)getIdentifyApi
+{
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/IdCard/queryIdCard" paraments:@{} needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            self.model = [HPIdentifyModel mj_objectWithKeyValues:responseObject[@"data"]];
+            if (self.model) {
+                [self setUserIdentifyInfo];
+            }else{
+                [self setUserIdentifyInfo];
+            }
+        }else{
+
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 - (void)onClickBack:(UIButton *)UIButton
@@ -199,15 +329,13 @@
     return _subTitleLabel;
 }
 
-
 - (void)setUpIdentifyView:(UIView *)bgview
 {
-    CGFloat identifyH = 0.00;
-    identifyH = getWidth(114.f);//getWidth(81.f);
-    UIView *nameRow = [self addRowOfParentView:bgview withHeight:identifyH margin:0.f isEnd:NO];
+
+    UIView *nameRow = [self addRowOfParentView:bgview withHeight:getWidth(114.f) margin:0.f isEnd:NO];
     
-//    [self noIdentifySelf:nameRow];
-    
+    self.nameRow = nameRow;
+
     [self hasIdentifySelf:nameRow];
 
     //营业执照
@@ -236,6 +364,7 @@
     idenLabel.textColor = COLOR_GRAY_999999;
     idenLabel.font = kFont_Medium(12.f);
     [passportRow addSubview:idenLabel];
+    self.portLabel = idenLabel;
     
     [idenLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.passportBtn.mas_right).with.offset(getWidth(5.f));
@@ -244,6 +373,7 @@
     
     UILabel *boardSubLabel = [self setupTitleLabelWithTitle:@"上传营业执照交易更有保障"];
     [passportRow addSubview:boardSubLabel];
+    self.boardSubLabel = boardSubLabel;
     [boardSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(passportRow).with.offset(18.f * g_rateWidth);
         make.bottom.mas_equalTo(passportRow.mas_bottom).offset(getWidth(-10.f));
@@ -252,6 +382,7 @@
     HPRightImageButton *boardBtn = [self setupGotoBtnWithTitle:@"去认证"];
     [boardBtn setTag:4701];
     [passportRow addSubview:boardBtn];
+    self.boardBtn = boardBtn;
     
     [boardBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(passportRow).with.offset(-15.f * g_rateWidth);
@@ -263,60 +394,6 @@
     [nameRow addSubview:lineBoardV];
     [lineBoardV mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(passportRow);
-        make.height.mas_equalTo(1);
-    }];
-}
-
-- (void)noIdentifySelf:(UIView *)nameRow
-{
-    _nameLabel = [self setupTitleLabelWithTitle:@"实名认证"];
-    _nameLabel.textColor = COLOR_BLACK_333333;
-    _nameLabel.font = kFont_Bold(16.f);
-    [nameRow addSubview:self.nameLabel];
-    
-    [nameRow addSubview:self.identifyBtn];
-    
-    [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(nameRow).with.offset(18.f * g_rateWidth);
-        make.top.mas_equalTo(getWidth(20.f));
-    }];
-    
-    [self.identifyBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.nameLabel.mas_right).with.offset(getWidth(5.f));
-        make.centerY.mas_equalTo(self.nameLabel);
-    }];
-    
-    UILabel *nameidenLabel = [self setupTitleLabelWithTitle:@"已认证"];
-    nameidenLabel.textColor = COLOR_GRAY_999999;
-    nameidenLabel.font = kFont_Medium(12.f);
-    [nameRow addSubview:nameidenLabel];
-    nameidenLabel.hidden = YES;
-    [nameidenLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.identifyBtn.mas_right).with.offset(getWidth(5.f));
-        make.centerY.mas_equalTo(self.nameLabel);
-    }];
-    
-    _nameSubLabel = [self setupTitleLabelWithTitle:@"认证信息将严格保密"];
-    [nameRow addSubview:self.nameSubLabel];
-    [self.nameSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(nameRow).with.offset(18.f * g_rateWidth);
-        make.bottom.mas_equalTo(nameRow.mas_bottom).offset(getWidth(-10.f));
-    }];
-    
-    HPRightImageButton *realNameBtn = [self setupGotoBtnWithTitle:@"去认证"];
-    [realNameBtn setTag:4700];
-    [nameRow addSubview:realNameBtn];
-    
-    [realNameBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(nameRow).with.offset(-15.f * g_rateWidth);
-        make.centerY.equalTo(nameRow);
-    }];
-    
-    UIView *lineNameV = [UIView new];
-    lineNameV.backgroundColor = COLOR_GRAY_EEEEEE;
-    [nameRow addSubview:lineNameV];
-    [lineNameV mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(nameRow);
         make.height.mas_equalTo(1);
     }];
 }
@@ -346,32 +423,37 @@
     nameidenLabel.textColor = COLOR_GRAY_999999;
     nameidenLabel.font = kFont_Medium(12.f);
     [nameRow addSubview:nameidenLabel];
+    self.nameidenLabel = nameidenLabel;
     
     [nameidenLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.identifyBtn.mas_right).with.offset(getWidth(5.f));
         make.centerY.mas_equalTo(self.nameLabel);
     }];
     
-    UILabel *idLabel = [self setupTitleLabelWithTitle:@"姓名：xxx"];
+    NSString *realName = [self.model.realName stringByReplacingCharactersInRange:NSMakeRange(1, self.model.realName.length - 1) withString:@"***"];
+    UILabel *idLabel = [self setupTitleLabelWithTitle:[NSString stringWithFormat:@"姓名：%@", realName]];
     idLabel.textColor = COLOR_GRAY_999999;
     idLabel.font = kFont_Medium(12.f);
     [nameRow addSubview:idLabel];
+    self.idLabel = idLabel;
     
     [idLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.nameLabel);
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(getWidth(20.f));
     }];
     
-    _nameSubLabel = [self setupTitleLabelWithTitle:@"身份证号：4307231994****5818"];
+    _nameSubLabel = [self setupTitleLabelWithTitle:[NSString stringWithFormat:@"身份证号：%@",self.model.idCard]];
     [nameRow addSubview:self.nameSubLabel];
     [self.nameSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(nameRow).with.offset(18.f * g_rateWidth);
-        make.top.mas_equalTo(idLabel.mas_bottom).offset(getWidth(15.f));
+        make.top.mas_equalTo(idLabel.mas_bottom).offset(getWidth(10.f));
     }];
     
-    HPRightImageButton *realNameBtn = [self setupGotoBtnWithTitle:@"去认证"];
+    HPRightImageButton *realNameBtn = [self setupGotoBtnWithTitle:@"已认证"];
     [realNameBtn setTag:4700];
+    realNameBtn.image = ImageNamed(@"");
     [nameRow addSubview:realNameBtn];
+    self.realNameBtn = realNameBtn;
     
     [realNameBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(nameRow).with.offset(-15.f * g_rateWidth);

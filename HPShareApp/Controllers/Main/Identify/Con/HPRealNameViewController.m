@@ -10,6 +10,10 @@
 
 #import "HPGradientUtil.h"
 
+#import "IDInfoViewController.h"
+#import "JYBDBankCardVC.h"
+#import "JYBDIDCardVC.h"
+
 @interface HPRealNameViewController ()
 
 @property (nonatomic, strong) UIView *navTitleView;
@@ -35,6 +39,9 @@
 @property (nonatomic, strong) UITextField *IDField;
 
 @property (nonatomic, strong) UIView *lineID;
+
+@property (nonatomic, strong) UIButton *confirmBtn;
+
 @end
 
 @implementation HPRealNameViewController
@@ -52,8 +59,31 @@
 
 }
 
+- (void)getIdentifyUserSelfApi
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"idCard"] = self.IDField.text;
+    dic[@"realName"] = self.nameField.text;
+
+    [HPHTTPSever HPPostServerWithMethod:@"/v1/IdCard/bindingIdCard" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            [HPProgressHUD alertMessage:@"操作成功"];
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
+}
+
 - (void)setUpSubviews
 {
+    [kNotificationCenter addObserver:self selector:@selector(didTextFieldChange:) name:UITextFieldTextDidChangeNotification object:_nameField];
+
+    [kNotificationCenter addObserver:self selector:@selector(didTextFieldChange:) name:UITextFieldTextDidChangeNotification object:_IDField];
+
     [self.view addSubview:self.titleLabel];
     
     CGSize btnSize = CGSizeMake(getWidth(60.f), getWidth(3.f));
@@ -83,6 +113,8 @@
     [self.view addSubview:self.IDField];
 
     [self.view addSubview:self.lineID];
+
+    [self.view addSubview:self.confirmBtn];
 
 }
 
@@ -165,6 +197,28 @@
         make.height.mas_equalTo(1);
         make.top.mas_equalTo(self.IDField.mas_bottom);
     }];
+    
+    [self.confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(getWidth(330.f), getWidth(44.f)));
+        make.top.mas_equalTo(self.view.mas_bottom).offset(getWidth(-54.f));
+    }];
+}
+
+
+- (UIButton *)confirmBtn
+{
+    if (!_confirmBtn) {
+        _confirmBtn = [UIButton new];
+        [_confirmBtn setTitle:@"确定" forState:UIControlStateNormal];
+        [_confirmBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
+        _confirmBtn.backgroundColor = COLOR_RED_EA0000;
+        _confirmBtn.layer.cornerRadius = 6.f;
+        _confirmBtn.layer.masksToBounds = YES;
+        _confirmBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        [_confirmBtn addTarget:self action:@selector(onClickIdentifyBtn:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _confirmBtn;
 }
 
 - (UILabel *)titleLabel
@@ -294,6 +348,93 @@
 
 - (void)onClickScanBtn:(UIButton *)button
 {
+    __weak __typeof__(self) weakSelf = self;
     
+    JYBDIDCardVC *AVCaptureVC = [[JYBDIDCardVC alloc] init];
+    
+    AVCaptureVC.finish = ^(JYBDCardIDInfo *info, UIImage *image)
+    {
+        IDInfoViewController *infoM = [[IDInfoViewController alloc]init];
+        infoM.IDInfo = info;
+        infoM.IDImage = image;
+        [weakSelf.navigationController pushViewController:infoM animated:YES];
+        self.IDField.text = info.num;
+        self.nameField.text = info.name;
+    };
+    
+    
+    [self.navigationController pushViewController:AVCaptureVC animated:YES];
 }
+
+- (void)onClickIdentifyBtn:(UIButton *)button
+{
+    if(self.IDField.text.length == 0){
+        [HPProgressHUD alertMessage:@"请输入18位身份证号"];
+        return;
+    }
+    
+    if(self.nameField.text.length == 0){
+        [HPProgressHUD alertMessage:@"请输入真实姓名"];
+        return;
+    }
+    [self getIdentifyUserSelfApi];
+
+}
+
+#pragma mark - NSNotification
+
+- (void)didTextFieldChange:(NSNotification *)notification {
+    UITextField *textField = (UITextField *)notification.object;
+    if (textField == _nameField) {
+        // text field 的内容
+        NSString *contentText = textField.text;
+        
+        // 获取高亮内容的范围
+        UITextRange *selectedRange = [textField markedTextRange];
+        // 这行代码 可以认为是 获取高亮内容的长度
+        NSInteger markedTextLength = [textField offsetFromPosition:selectedRange.start toPosition:selectedRange.end];
+        // 没有高亮内容时,对已输入的文字进行操作
+        if (markedTextLength == 0) {
+            // 如果 text field 的内容长度大于我们限制的内容长度
+            if (contentText.length > 10) {
+                // 截取从前面开始maxLength长度的字符串
+                //            textField.text = [contentText substringToIndex:maxLength];
+                // 此方法用于在字符串的一个range范围内，返回此range范围内完整的字符串的range
+                NSRange rangeRange = [contentText rangeOfComposedCharacterSequencesForRange:NSMakeRange(0, 10)];
+                textField.text = [contentText substringWithRange:rangeRange];
+                [HPProgressHUD alertMessage:@"姓名不得超过10位"];
+            }
+        }
+        
+    }else{
+        // text field 的内容
+        NSString *contentText = textField.text;
+        
+        // 获取高亮内容的范围
+        UITextRange *selectedRange = [textField markedTextRange];
+        // 这行代码 可以认为是 获取高亮内容的长度
+        NSInteger markedTextLength = [textField offsetFromPosition:selectedRange.start toPosition:selectedRange.end];
+        // 没有高亮内容时,对已输入的文字进行操作
+        if (markedTextLength == 0) {
+            // 如果 text field 的内容长度大于我们限制的内容长度
+            if (contentText.length > 21) {
+                // 截取从前面开始maxLength长度的字符串
+                //            textField.text = [contentText substringToIndex:maxLength];
+                // 此方法用于在字符串的一个range范围内，返回此range范围内完整的字符串的range
+                NSRange rangeRange = [contentText rangeOfComposedCharacterSequencesForRange:NSMakeRange(0, contentText.length)];
+                textField.text = [contentText substringWithRange:rangeRange];
+                [HPProgressHUD alertMessage:@"身份照号不得超过18位"];
+            }
+        }
+        
+    }
+}
+
+- (void)dealloc
+{
+    [kNotificationCenter removeObserver:self name:UITextFieldTextDidChangeNotification object:_nameField];
+    [kNotificationCenter removeObserver:self name:UITextFieldTextDidChangeNotification object:_IDField];
+
+}
+
 @end

@@ -102,7 +102,7 @@ static NSString *walletCell = @"walletCell";
             NSNumber *balance = (NSNumber *)[NSString stringWithFormat:@"%@",responseObject[@"data"][@"balance"]];
             self.balance = [HPOperationNumberTool separateNumberUseCommaWith:[NSString stringWithFormat:@"%ld",[balance integerValue]]];
             
-            self.balanceLabel.text = [NSString stringWithFormat:@"%@.00元",self.balance];
+            self.balanceLabel.text = [NSString stringWithFormat:@"%@元",self.balance];
         }else{
             [HPProgressHUD alertMessage:MSG];
         }

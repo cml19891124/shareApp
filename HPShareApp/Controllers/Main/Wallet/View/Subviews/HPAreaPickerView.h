@@ -41,6 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSMutableArray *allArray;
 
 @property (strong, nonatomic) UIButton *btn;
+
+@property (strong, nonatomic) NSMutableDictionary *valuesDict;
+
 @end
 
 NS_ASSUME_NONNULL_END

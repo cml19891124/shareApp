@@ -73,6 +73,38 @@
 		7A09A2F92258B6D900A68FBD /* HPUserNewOrderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2F82258B6D900A68FBD /* HPUserNewOrderView.m */; };
 		7A345518226026C20013AF4C /* HPOperationNumberTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A345517226026C20013AF4C /* HPOperationNumberTool.m */; };
 		7A34551B22608D5B0013AF4C /* HPAreaPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A34551A22608D5B0013AF4C /* HPAreaPickerView.m */; };
+		7A34552822616E650013AF4C /* CZHAddressPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A34552022616E650013AF4C /* CZHAddressPickerView.m */; };
+		7A34552922616E650013AF4C /* city.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7A34552522616E650013AF4C /* city.plist */; };
+		7A34552A22616E650013AF4C /* UIView+CZHExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A34552622616E650013AF4C /* UIView+CZHExtension.m */; };
+		7A34552B22616E650013AF4C /* UIButton+CZHExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A34552722616E650013AF4C /* UIButton+CZHExtension.m */; };
+		7A34552F226173970013AF4C /* HPIdentifyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A34552E226173970013AF4C /* HPIdentifyModel.m */; };
+		7A3455322261B2050013AF4C /* HPPassportModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3455312261B2050013AF4C /* HPPassportModel.m */; };
+		7A34556B2261BCC90013AF4C /* UIImage+IDCardExtend.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3455382261BCC90013AF4C /* UIImage+IDCardExtend.m */; };
+		7A34556C2261BCC90013AF4C /* UIAlertController+IDCardExtend.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3455392261BCC90013AF4C /* UIAlertController+IDCardExtend.m */; };
+		7A34556D2261BCC90013AF4C /* JYBDScanCardBaseVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A34553D2261BCC90013AF4C /* JYBDScanCardBaseVC.m */; };
+		7A34556E2261BCC90013AF4C /* JYBDIDCardVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A34553F2261BCC90013AF4C /* JYBDIDCardVC.m */; };
+		7A34556F2261BCC90013AF4C /* JYBDBankCardVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3455402261BCC90013AF4C /* JYBDBankCardVC.m */; };
+		7A3455702261BCC90013AF4C /* JYBDScanCardManage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3455442261BCC90013AF4C /* JYBDScanCardManage.m */; };
+		7A3455712261BCC90013AF4C /* JYBDBankCardSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3455452261BCC90013AF4C /* JYBDBankCardSearch.m */; };
+		7A3455722261BCC90013AF4C /* JYBDScanCardManageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3455462261BCC90013AF4C /* JYBDScanCardManageBase.m */; };
+		7A3455732261BCC90013AF4C /* JYBDBankCardInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3455502261BCC90013AF4C /* JYBDBankCardInfo.m */; };
+		7A3455742261BCC90013AF4C /* JYBDCardIDInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3455512261BCC90013AF4C /* JYBDCardIDInfo.m */; };
+		7A3455752261BCC90013AF4C /* JYBDNewFormeScaningV.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3455552261BCC90013AF4C /* JYBDNewFormeScaningV.m */; };
+		7A3455772261BCC90013AF4C /* libexbankcardios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A3455592261BCC90013AF4C /* libexbankcardios.a */; };
+		7A3455782261BCC90013AF4C /* libbexbankcard.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A34555A2261BCC90013AF4C /* libbexbankcard.a */; };
+		7A3455792261BCC90013AF4C /* IDCardRectManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A34555C2261BCC90013AF4C /* IDCardRectManager.m */; };
+		7A34557A2261BCC90013AF4C /* zocr0.lib in Resources */ = {isa = PBXBuildFile; fileRef = 7A34555F2261BCC90013AF4C /* zocr0.lib */; };
+		7A34557B2261BCC90013AF4C /* scaningline@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3455612261BCC90013AF4C /* scaningline@2x.png */; };
+		7A34557C2261BCC90013AF4C /* scaningline@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3455622261BCC90013AF4C /* scaningline@3x.png */; };
+		7A34557D2261BCC90013AF4C /* idcard_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3455632261BCC90013AF4C /* idcard_back.png */; };
+		7A34557E2261BCC90013AF4C /* flashlightscan@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3455642261BCC90013AF4C /* flashlightscan@3x.png */; };
+		7A34557F2261BCC90013AF4C /* flashlightscan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3455652261BCC90013AF4C /* flashlightscan@2x.png */; };
+		7A3455802261BCC90013AF4C /* flashlightscan.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3455662261BCC90013AF4C /* flashlightscan.png */; };
+		7A3455812261BCC90013AF4C /* scaningbgimage.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3455672261BCC90013AF4C /* scaningbgimage.png */; };
+		7A3455822261BCC90013AF4C /* scaningbgimage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3455682261BCC90013AF4C /* scaningbgimage@2x.png */; };
+		7A3455832261BCC90013AF4C /* scaningbgimage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A3455692261BCC90013AF4C /* scaningbgimage@3x.png */; };
+		7A3455842261BCC90013AF4C /* scaningline.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A34556A2261BCC90013AF4C /* scaningline.png */; };
+		7A3455872261BD8B0013AF4C /* IDInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3455862261BD8B0013AF4C /* IDInfoViewController.m */; };
 		7A54483F21BAD9B2001301F3 /* HPAreaModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54483E21BAD9B2001301F3 /* HPAreaModel.m */; };
 		7A54485721C169AE001301F3 /* HPPartyCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485621C169AE001301F3 /* HPPartyCenterController.m */; };
 		7A54485A21C16A48001301F3 /* HPPartyCenterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54485921C16A48001301F3 /* HPPartyCenterModel.m */; };
@@ -669,6 +701,63 @@
 		7A345517226026C20013AF4C /* HPOperationNumberTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOperationNumberTool.m; sourceTree = "<group>"; };
 		7A34551922608D5B0013AF4C /* HPAreaPickerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaPickerView.h; sourceTree = "<group>"; };
 		7A34551A22608D5B0013AF4C /* HPAreaPickerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAreaPickerView.m; sourceTree = "<group>"; };
+		7A34552022616E650013AF4C /* CZHAddressPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CZHAddressPickerView.m; sourceTree = "<group>"; };
+		7A34552122616E650013AF4C /* AddressPickerHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressPickerHeader.h; sourceTree = "<group>"; };
+		7A34552222616E650013AF4C /* UIView+CZHExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+CZHExtension.h"; sourceTree = "<group>"; };
+		7A34552322616E650013AF4C /* UIButton+CZHExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+CZHExtension.h"; sourceTree = "<group>"; };
+		7A34552422616E650013AF4C /* CZHAddressPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CZHAddressPickerView.h; sourceTree = "<group>"; };
+		7A34552522616E650013AF4C /* city.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = city.plist; sourceTree = "<group>"; };
+		7A34552622616E650013AF4C /* UIView+CZHExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+CZHExtension.m"; sourceTree = "<group>"; };
+		7A34552722616E650013AF4C /* UIButton+CZHExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+CZHExtension.m"; sourceTree = "<group>"; };
+		7A34552D226173970013AF4C /* HPIdentifyModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPIdentifyModel.h; sourceTree = "<group>"; };
+		7A34552E226173970013AF4C /* HPIdentifyModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPIdentifyModel.m; sourceTree = "<group>"; };
+		7A3455302261B2050013AF4C /* HPPassportModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPassportModel.h; sourceTree = "<group>"; };
+		7A3455312261B2050013AF4C /* HPPassportModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPPassportModel.m; sourceTree = "<group>"; };
+		7A3455372261BCC90013AF4C /* UIAlertController+IDCardExtend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertController+IDCardExtend.h"; sourceTree = "<group>"; };
+		7A3455382261BCC90013AF4C /* UIImage+IDCardExtend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+IDCardExtend.m"; sourceTree = "<group>"; };
+		7A3455392261BCC90013AF4C /* UIAlertController+IDCardExtend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertController+IDCardExtend.m"; sourceTree = "<group>"; };
+		7A34553A2261BCC90013AF4C /* UIImage+IDCardExtend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+IDCardExtend.h"; sourceTree = "<group>"; };
+		7A34553C2261BCC90013AF4C /* JYBDIDCardVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYBDIDCardVC.h; sourceTree = "<group>"; };
+		7A34553D2261BCC90013AF4C /* JYBDScanCardBaseVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYBDScanCardBaseVC.m; sourceTree = "<group>"; };
+		7A34553E2261BCC90013AF4C /* JYBDBankCardVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYBDBankCardVC.h; sourceTree = "<group>"; };
+		7A34553F2261BCC90013AF4C /* JYBDIDCardVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYBDIDCardVC.m; sourceTree = "<group>"; };
+		7A3455402261BCC90013AF4C /* JYBDBankCardVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYBDBankCardVC.m; sourceTree = "<group>"; };
+		7A3455412261BCC90013AF4C /* JYBDScanCardBaseVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYBDScanCardBaseVC.h; sourceTree = "<group>"; };
+		7A3455432261BCC90013AF4C /* JYBDScanCardManageBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYBDScanCardManageBase.h; sourceTree = "<group>"; };
+		7A3455442261BCC90013AF4C /* JYBDScanCardManage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYBDScanCardManage.m; sourceTree = "<group>"; };
+		7A3455452261BCC90013AF4C /* JYBDBankCardSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYBDBankCardSearch.m; sourceTree = "<group>"; };
+		7A3455462261BCC90013AF4C /* JYBDScanCardManageBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYBDScanCardManageBase.m; sourceTree = "<group>"; };
+		7A3455472261BCC90013AF4C /* JYBDBankCardSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYBDBankCardSearch.h; sourceTree = "<group>"; };
+		7A3455482261BCC90013AF4C /* JYBDScanCardManage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYBDScanCardManage.h; sourceTree = "<group>"; };
+		7A34554A2261BCC90013AF4C /* exbankcardcore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exbankcardcore.h; sourceTree = "<group>"; };
+		7A34554B2261BCC90013AF4C /* commondef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commondef.h; sourceTree = "<group>"; };
+		7A34554C2261BCC90013AF4C /* exbankcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exbankcard.h; sourceTree = "<group>"; };
+		7A34554D2261BCC90013AF4C /* excards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = excards.h; sourceTree = "<group>"; };
+		7A34554E2261BCC90013AF4C /* BankCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BankCard.h; sourceTree = "<group>"; };
+		7A3455502261BCC90013AF4C /* JYBDBankCardInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYBDBankCardInfo.m; sourceTree = "<group>"; };
+		7A3455512261BCC90013AF4C /* JYBDCardIDInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYBDCardIDInfo.m; sourceTree = "<group>"; };
+		7A3455522261BCC90013AF4C /* JYBDBankCardInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYBDBankCardInfo.h; sourceTree = "<group>"; };
+		7A3455532261BCC90013AF4C /* JYBDCardIDInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYBDCardIDInfo.h; sourceTree = "<group>"; };
+		7A3455552261BCC90013AF4C /* JYBDNewFormeScaningV.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYBDNewFormeScaningV.m; sourceTree = "<group>"; };
+		7A3455562261BCC90013AF4C /* JYBDNewFormeScaningV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYBDNewFormeScaningV.h; sourceTree = "<group>"; };
+		7A3455582261BCC90013AF4C /* libexidcardios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libexidcardios.a; sourceTree = "<group>"; };
+		7A3455592261BCC90013AF4C /* libexbankcardios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libexbankcardios.a; sourceTree = "<group>"; };
+		7A34555A2261BCC90013AF4C /* libbexbankcard.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbexbankcard.a; sourceTree = "<group>"; };
+		7A34555C2261BCC90013AF4C /* IDCardRectManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDCardRectManager.m; sourceTree = "<group>"; };
+		7A34555D2261BCC90013AF4C /* IDCardRectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDCardRectManager.h; sourceTree = "<group>"; };
+		7A34555F2261BCC90013AF4C /* zocr0.lib */ = {isa = PBXFileReference; lastKnownFileType = file; path = zocr0.lib; sourceTree = "<group>"; };
+		7A3455612261BCC90013AF4C /* scaningline@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scaningline@2x.png"; sourceTree = "<group>"; };
+		7A3455622261BCC90013AF4C /* scaningline@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scaningline@3x.png"; sourceTree = "<group>"; };
+		7A3455632261BCC90013AF4C /* idcard_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = idcard_back.png; sourceTree = "<group>"; };
+		7A3455642261BCC90013AF4C /* flashlightscan@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flashlightscan@3x.png"; sourceTree = "<group>"; };
+		7A3455652261BCC90013AF4C /* flashlightscan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flashlightscan@2x.png"; sourceTree = "<group>"; };
+		7A3455662261BCC90013AF4C /* flashlightscan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flashlightscan.png; sourceTree = "<group>"; };
+		7A3455672261BCC90013AF4C /* scaningbgimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scaningbgimage.png; sourceTree = "<group>"; };
+		7A3455682261BCC90013AF4C /* scaningbgimage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scaningbgimage@2x.png"; sourceTree = "<group>"; };
+		7A3455692261BCC90013AF4C /* scaningbgimage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scaningbgimage@3x.png"; sourceTree = "<group>"; };
+		7A34556A2261BCC90013AF4C /* scaningline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scaningline.png; sourceTree = "<group>"; };
+		7A3455852261BD8B0013AF4C /* IDInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDInfoViewController.h; sourceTree = "<group>"; };
+		7A3455862261BD8B0013AF4C /* IDInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDInfoViewController.m; sourceTree = "<group>"; };
 		7A54483D21BAD9B2001301F3 /* HPAreaModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaModel.h; sourceTree = "<group>"; };
 		7A54483E21BAD9B2001301F3 /* HPAreaModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPAreaModel.m; sourceTree = "<group>"; };
 		7A54485521C169AE001301F3 /* HPPartyCenterController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPPartyCenterController.h; sourceTree = "<group>"; };
@@ -1604,6 +1693,7 @@
 				E67EFE2E221BA187008BDA1D /* libcrypto.a in Frameworks */,
 				E6F14A3D21E5CF4C00631005 /* UserNotifications.framework in Frameworks */,
 				E6F14A3B21E5CF4100631005 /* AdSupport.framework in Frameworks */,
+				7A3455782261BCC90013AF4C /* libbexbankcard.a in Frameworks */,
 				E6F14A3921E5CF3800631005 /* libz.tbd in Frameworks */,
 				E6F14A3721E5CF2A00631005 /* Security.framework in Frameworks */,
 				E6F14A3521E5CF2100631005 /* UIKit.framework in Frameworks */,
@@ -1612,6 +1702,7 @@
 				E6F14A2F21E5CF0500631005 /* SystemConfiguration.framework in Frameworks */,
 				E6F14A2D21E5CEFA00631005 /* CoreTelephony.framework in Frameworks */,
 				E6F14A2B21E5CEED00631005 /* CoreFoundation.framework in Frameworks */,
+				7A3455772261BCC90013AF4C /* libexbankcardios.a in Frameworks */,
 				E6F14A2921E5CEE100631005 /* CFNetwork.framework in Frameworks */,
 				CAA2DAE424EC650C0D26D3DA /* Pods_HPShareApp.framework in Frameworks */,
 			);
@@ -1802,6 +1893,7 @@
 		7A042173225CB8EF00CBEC7E /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				7A34551F22616E650013AF4C /* AddressPickerView */,
 				7A04217B225DD16100CBEC7E /* HPTextFieldPlaceholderRight.h */,
 				7A04217C225DD16100CBEC7E /* HPTextFieldPlaceholderRight.m */,
 				7A04219A225F2EED00CBEC7E /* HPAccountItemView.h */,
@@ -1860,6 +1952,180 @@
 				7A345517226026C20013AF4C /* HPOperationNumberTool.m */,
 			);
 			path = Tool;
+			sourceTree = "<group>";
+		};
+		7A34551F22616E650013AF4C /* AddressPickerView */ = {
+			isa = PBXGroup;
+			children = (
+				7A34552022616E650013AF4C /* CZHAddressPickerView.m */,
+				7A34552122616E650013AF4C /* AddressPickerHeader.h */,
+				7A34552222616E650013AF4C /* UIView+CZHExtension.h */,
+				7A34552322616E650013AF4C /* UIButton+CZHExtension.h */,
+				7A34552422616E650013AF4C /* CZHAddressPickerView.h */,
+				7A34552522616E650013AF4C /* city.plist */,
+				7A34552622616E650013AF4C /* UIView+CZHExtension.m */,
+				7A34552722616E650013AF4C /* UIButton+CZHExtension.m */,
+			);
+			path = AddressPickerView;
+			sourceTree = "<group>";
+		};
+		7A34552C226173870013AF4C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7A34552D226173970013AF4C /* HPIdentifyModel.h */,
+				7A34552E226173970013AF4C /* HPIdentifyModel.m */,
+				7A3455302261B2050013AF4C /* HPPassportModel.h */,
+				7A3455312261B2050013AF4C /* HPPassportModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		7A3455332261BCB60013AF4C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7A3455342261BCC90013AF4C /* JYBD_IDCardRecognition */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7A3455342261BCC90013AF4C /* JYBD_IDCardRecognition */ = {
+			isa = PBXGroup;
+			children = (
+				7A3455352261BCC90013AF4C /* Classes */,
+				7A34555E2261BCC90013AF4C /* dicts */,
+				7A3455602261BCC90013AF4C /* Resources */,
+			);
+			path = JYBD_IDCardRecognition;
+			sourceTree = "<group>";
+		};
+		7A3455352261BCC90013AF4C /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				7A3455362261BCC90013AF4C /* Category */,
+				7A34553B2261BCC90013AF4C /* Controller */,
+				7A3455422261BCC90013AF4C /* JYBD_OCR_Bank */,
+				7A3455492261BCC90013AF4C /* libexidcard */,
+				7A34554F2261BCC90013AF4C /* Model */,
+				7A3455542261BCC90013AF4C /* View */,
+				7A3455572261BCC90013AF4C /* exbankcardcore */,
+				7A34555B2261BCC90013AF4C /* Tool */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		7A3455362261BCC90013AF4C /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				7A3455372261BCC90013AF4C /* UIAlertController+IDCardExtend.h */,
+				7A3455382261BCC90013AF4C /* UIImage+IDCardExtend.m */,
+				7A3455392261BCC90013AF4C /* UIAlertController+IDCardExtend.m */,
+				7A34553A2261BCC90013AF4C /* UIImage+IDCardExtend.h */,
+			);
+			path = Category;
+			sourceTree = "<group>";
+		};
+		7A34553B2261BCC90013AF4C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7A3455852261BD8B0013AF4C /* IDInfoViewController.h */,
+				7A3455862261BD8B0013AF4C /* IDInfoViewController.m */,
+				7A34553C2261BCC90013AF4C /* JYBDIDCardVC.h */,
+				7A34553D2261BCC90013AF4C /* JYBDScanCardBaseVC.m */,
+				7A34553E2261BCC90013AF4C /* JYBDBankCardVC.h */,
+				7A34553F2261BCC90013AF4C /* JYBDIDCardVC.m */,
+				7A3455402261BCC90013AF4C /* JYBDBankCardVC.m */,
+				7A3455412261BCC90013AF4C /* JYBDScanCardBaseVC.h */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		7A3455422261BCC90013AF4C /* JYBD_OCR_Bank */ = {
+			isa = PBXGroup;
+			children = (
+				7A3455432261BCC90013AF4C /* JYBDScanCardManageBase.h */,
+				7A3455442261BCC90013AF4C /* JYBDScanCardManage.m */,
+				7A3455452261BCC90013AF4C /* JYBDBankCardSearch.m */,
+				7A3455462261BCC90013AF4C /* JYBDScanCardManageBase.m */,
+				7A3455472261BCC90013AF4C /* JYBDBankCardSearch.h */,
+				7A3455482261BCC90013AF4C /* JYBDScanCardManage.h */,
+			);
+			path = JYBD_OCR_Bank;
+			sourceTree = "<group>";
+		};
+		7A3455492261BCC90013AF4C /* libexidcard */ = {
+			isa = PBXGroup;
+			children = (
+				7A34554A2261BCC90013AF4C /* exbankcardcore.h */,
+				7A34554B2261BCC90013AF4C /* commondef.h */,
+				7A34554C2261BCC90013AF4C /* exbankcard.h */,
+				7A34554D2261BCC90013AF4C /* excards.h */,
+				7A34554E2261BCC90013AF4C /* BankCard.h */,
+			);
+			path = libexidcard;
+			sourceTree = "<group>";
+		};
+		7A34554F2261BCC90013AF4C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7A3455502261BCC90013AF4C /* JYBDBankCardInfo.m */,
+				7A3455512261BCC90013AF4C /* JYBDCardIDInfo.m */,
+				7A3455522261BCC90013AF4C /* JYBDBankCardInfo.h */,
+				7A3455532261BCC90013AF4C /* JYBDCardIDInfo.h */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		7A3455542261BCC90013AF4C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7A3455552261BCC90013AF4C /* JYBDNewFormeScaningV.m */,
+				7A3455562261BCC90013AF4C /* JYBDNewFormeScaningV.h */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7A3455572261BCC90013AF4C /* exbankcardcore */ = {
+			isa = PBXGroup;
+			children = (
+				7A3455582261BCC90013AF4C /* libexidcardios.a */,
+				7A3455592261BCC90013AF4C /* libexbankcardios.a */,
+				7A34555A2261BCC90013AF4C /* libbexbankcard.a */,
+			);
+			path = exbankcardcore;
+			sourceTree = "<group>";
+		};
+		7A34555B2261BCC90013AF4C /* Tool */ = {
+			isa = PBXGroup;
+			children = (
+				7A34555C2261BCC90013AF4C /* IDCardRectManager.m */,
+				7A34555D2261BCC90013AF4C /* IDCardRectManager.h */,
+			);
+			path = Tool;
+			sourceTree = "<group>";
+		};
+		7A34555E2261BCC90013AF4C /* dicts */ = {
+			isa = PBXGroup;
+			children = (
+				7A34555F2261BCC90013AF4C /* zocr0.lib */,
+			);
+			path = dicts;
+			sourceTree = "<group>";
+		};
+		7A3455602261BCC90013AF4C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7A3455612261BCC90013AF4C /* scaningline@2x.png */,
+				7A3455622261BCC90013AF4C /* scaningline@3x.png */,
+				7A3455632261BCC90013AF4C /* idcard_back.png */,
+				7A3455642261BCC90013AF4C /* flashlightscan@3x.png */,
+				7A3455652261BCC90013AF4C /* flashlightscan@2x.png */,
+				7A3455662261BCC90013AF4C /* flashlightscan.png */,
+				7A3455672261BCC90013AF4C /* scaningbgimage.png */,
+				7A3455682261BCC90013AF4C /* scaningbgimage@2x.png */,
+				7A3455692261BCC90013AF4C /* scaningbgimage@3x.png */,
+				7A34556A2261BCC90013AF4C /* scaningline.png */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		7A54483C21BAD97F001301F3 /* Model */ = {
@@ -2400,6 +2666,8 @@
 		E629AABF2248C6E000CF0378 /* Identify */ = {
 			isa = PBXGroup;
 			children = (
+				7A3455332261BCB60013AF4C /* View */,
+				7A34552C226173870013AF4C /* Model */,
 				E629AAC02248C6EA00CF0378 /* Con */,
 			);
 			path = Identify;
@@ -4136,32 +4404,41 @@
 				E661B13021A28E8500C86CF5 /* README.md in Resources */,
 				E68A77D621F321BD00083A90 /* JCHATPhotoBrowserViewController.xib in Resources */,
 				E68A76D921F2CBFD00083A90 /* JCHATSelectFriendsCtl.xib in Resources */,
+				7A3455802261BCC90013AF4C /* flashlightscan.png in Resources */,
 				E68A76B121F2C6D100083A90 /* JCHATDetailTableViewCell.xib in Resources */,
 				E61E27A721C8D68000CD5288 /* EBBannerViewController.xib in Resources */,
 				E68A77D421F321BD00083A90 /* JCHATPhotoPickerViewController.xib in Resources */,
 				E68A77D921F321BD00083A90 /* JCHATAlbumViewController.xib in Resources */,
 				E657A2E521F6B670008198C9 /* JCHATConversationListViewController.xib in Resources */,
+				7A3455822261BCC90013AF4C /* scaningbgimage@2x.png in Resources */,
 				E68A773221F31C4C00083A90 /* JCHATMoreView.xib in Resources */,
 				E68A77E321F321BD00083A90 /* ThumbImageCollectionViewCell.xib in Resources */,
+				7A34557E2261BCC90013AF4C /* flashlightscan@3x.png in Resources */,
+				7A34557B2261BCC90013AF4C /* scaningline@2x.png in Resources */,
 				E68A77E421F321BD00083A90 /* JCHATPhotoBrowserCollectionViewCell.xib in Resources */,
 				E6292141219AA83A00BEF16C /* LaunchScreen.storyboard in Resources */,
 				E61E27A621C8D68000CD5288 /* EBBannerView.xib in Resources */,
 				E68A76BB21F2C6D100083A90 /* JCHATFrIendDetailMessgeCell.xib in Resources */,
 				E68A77D121F321BD00083A90 /* image_no_picked@3x.png in Resources */,
+				7A34552922616E650013AF4C /* city.plist in Resources */,
 				E68A781221F327DB00083A90 /* JCHATFootTableViewCell.xib in Resources */,
 				E68A77D021F321BD00083A90 /* image_no_picked.png in Resources */,
 				E68A780D21F327A000083A90 /* JCHATFootTableCollectionReusableView.xib in Resources */,
 				E629216B219AAAB900BEF16C /* Default-568h@2x.png in Resources */,
+				7A3455832261BCC90013AF4C /* scaningbgimage@3x.png in Resources */,
 				E68A76CF21F2C84200083A90 /* JCHATGroupPersonView.xib in Resources */,
 				E68A77D221F321BD00083A90 /* image_picked@2x.png in Resources */,
+				7A34557D2261BCC90013AF4C /* idcard_back.png in Resources */,
 				E622A9C021C33989007C35BC /* RefreshTableView.bundle in Resources */,
 				E68A76BE21F2C6D100083A90 /* JCHATGroupMemberCollectionViewCell.xib in Resources */,
+				7A34557A2261BCC90013AF4C /* zocr0.lib in Resources */,
 				E68A76B921F2C6D100083A90 /* JCHATConversationListCell.xib in Resources */,
 				E629AB15224A014600CF0378 /* YZXCalendarCollectionViewCell.xib in Resources */,
 				E633529E21F1C99300999BE7 /* HPContactsInfoCell.xib in Resources */,
 				E629213E219AA83A00BEF16C /* Assets.xcassets in Resources */,
 				E629213C219AA83100BEF16C /* Main.storyboard in Resources */,
 				E63352A121F1C99300999BE7 /* YXTableViewIndexView.xib in Resources */,
+				7A3455842261BCC90013AF4C /* scaningline.png in Resources */,
 				E68A772521F31A6200083A90 /* JCHATConversationViewController.xib in Resources */,
 				E68A772921F31B9F00083A90 /* JCHATToolBar.xib in Resources */,
 				E63352A621F1C99300999BE7 /* HPAddressBookViewController.xib in Resources */,
@@ -4169,6 +4446,8 @@
 				E68A77D521F321BD00083A90 /* JCHATPhotoSelectViewController.xib in Resources */,
 				E68A770921F2D61E00083A90 /* JCHATPersonInfoCell.xib in Resources */,
 				E661B12321A28E8500C86CF5 /* LICENSE in Resources */,
+				7A3455812261BCC90013AF4C /* scaningbgimage.png in Resources */,
+				7A34557F2261BCC90013AF4C /* flashlightscan@2x.png in Resources */,
 				E68A77E021F321BD00083A90 /* JCHATAlbumTableViewCell.xib in Resources */,
 				E68A77BA21F321BD00083A90 /* MJPhotoBrowser.bundle in Resources */,
 				E68A780921F3276C00083A90 /* JCHATGroupDetailFooterReusableView.xib in Resources */,
@@ -4176,6 +4455,7 @@
 				E68A77D321F321BD00083A90 /* image_picked@3x.png in Resources */,
 				E68A780421F325F100083A90 /* JCHATGroupDetailViewController.xib in Resources */,
 				E629AB16224A014600CF0378 /* YZXCalendarCollectionViewHeaderView.xib in Resources */,
+				7A34557C2261BCC90013AF4C /* scaningline@3x.png in Resources */,
 				E68A77FE21F322AE00083A90 /* JCHATPersonViewController.xib in Resources */,
 				E68A76B421F2C6D100083A90 /* JCHATSetDisturbTableViewCell.xib in Resources */,
 				E68A770421F2D54000083A90 /* JCHATFriendDetailViewController.xib in Resources */,
@@ -4298,6 +4578,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E679B84F22422A5D004A2CFA /* HPRelationViewCell.m in Sources */,
+				7A3455322261B2050013AF4C /* HPPassportModel.m in Sources */,
 				E61E27A821C8D68000CD5288 /* EBBannerWindow.m in Sources */,
 				E61B5EAE21CC790700DC8A59 /* HPAreaButton.m in Sources */,
 				6993AD3321C79B100019506C /* HPShareAnnotation.m in Sources */,
@@ -4379,6 +4660,7 @@
 				7A042199225F2BC400CBEC7E /* HPAccountInfoModel.m in Sources */,
 				E661B0AA219C1AE800C86CF5 /* HPBaseModalView.m in Sources */,
 				7A54485721C169AE001301F3 /* HPPartyCenterController.m in Sources */,
+				7A3455742261BCC90013AF4C /* JYBDCardIDInfo.m in Sources */,
 				E67B778E21CDEEB1007AC636 /* HPRentAmountItemView.m in Sources */,
 				E67EFE40221BE214008BDA1D /* HPSearchBar.m in Sources */,
 				E620646721DEFC5700E37568 /* HPInfoModel.m in Sources */,
@@ -4396,6 +4678,7 @@
 				E61E27A521C8D68000CD5288 /* EBEmptyWindow.m in Sources */,
 				E68A77E121F321BD00083A90 /* ThumbImageCollectionViewCell.m in Sources */,
 				E68A771D21F2FCA000083A90 /* NSObject+TimeConvert.m in Sources */,
+				7A34552B22616E650013AF4C /* UIButton+CZHExtension.m in Sources */,
 				E61B5EA821CC739200DC8A59 /* HPStoreItemButton.m in Sources */,
 				E661B0E2219D7BA100C86CF5 /* HPOwnerCardDefineController.m in Sources */,
 				E6830E4E21D20364000E0F39 /* HPTopMenuItemCell.m in Sources */,
@@ -4421,6 +4704,7 @@
 				E661B0D0219D24A500C86CF5 /* HPSelectTable.m in Sources */,
 				6993AD4021CA45240019506C /* HPImageButton.m in Sources */,
 				7A09A2C222535BCA00A68FBD /* HPOwnnerOrderModel.m in Sources */,
+				7A34556C2261BCC90013AF4C /* UIAlertController+IDCardExtend.m in Sources */,
 				7A04219C225F2EED00CBEC7E /* HPAccountItemView.m in Sources */,
 				E68A770A21F2D61E00083A90 /* JCHATPersonInfoCell.m in Sources */,
 				E661B13321A2C4F500C86CF5 /* HPCalendarView.m in Sources */,
@@ -4442,6 +4726,7 @@
 				E67EFE52221BEF8C008BDA1D /* HPHistoryViewCell.m in Sources */,
 				E6D75F5C21B119BC00B2067C /* HPBaseShareListController.m in Sources */,
 				E6D75F3621AE250300B2067C /* HPKeepController.m in Sources */,
+				7A3455732261BCC90013AF4C /* JYBDBankCardInfo.m in Sources */,
 				E6E89D232212A08A00D04F34 /* NSAttributedString+AvoidCrash.m in Sources */,
 				E61B5EB421CCB7F100DC8A59 /* HPJudgingLoginView.m in Sources */,
 				E6801FC02236558C002B1133 /* HPPayResultViewController.m in Sources */,
@@ -4450,6 +4735,7 @@
 				E6BC6001220153FC0075C744 /* HPHomeBannerView.m in Sources */,
 				E683295921E4559400C119FE /* HPQueryproductersModel.m in Sources */,
 				7A042193225F25CF00CBEC7E /* HPDebateRecordsViewController.m in Sources */,
+				7A34552F226173970013AF4C /* HPIdentifyModel.m in Sources */,
 				E68C856A21E9EC2B00AF259C /* HPHeaderCell.m in Sources */,
 				E63352A321F1C99300999BE7 /* PPGetAddressBook.m in Sources */,
 				E6D75F7921B54E7900B2067C /* HPShareShopListController.m in Sources */,
@@ -4477,6 +4763,7 @@
 				E61E27AB21C8D68000CD5288 /* EBBannerView+Categories.m in Sources */,
 				E629AB12224A014600CF0378 /* YZXCustomDateBottomView.m in Sources */,
 				7A09A2F02256302D00A68FBD /* MyTextView.m in Sources */,
+				7A34556B2261BCC90013AF4C /* UIImage+IDCardExtend.m in Sources */,
 				E6D75F1721A811E500B2067C /* HPWhatIsShareSpaceController.m in Sources */,
 				E69E0E8E21F95F2D0094837A /* HPAttributeLabel.m in Sources */,
 				7A09A2ED22562A1B00A68FBD /* HPCommentViewController.m in Sources */,
@@ -4494,6 +4781,7 @@
 				7A09A2F92258B6D900A68FBD /* HPUserNewOrderView.m in Sources */,
 				E661B0B3219C2B1300C86CF5 /* HPTextDialogView.m in Sources */,
 				E661B09A219BADB200C86CF5 /* HPInteractiveController.m in Sources */,
+				7A3455702261BCC90013AF4C /* JYBDScanCardManage.m in Sources */,
 				E6A4F9082245C2E600ED71A4 /* HPCancelViewController.m in Sources */,
 				E66F1CB221D3481D00C2DEEF /* HPGamesCell.m in Sources */,
 				E61FE0B021BA816D00555F3F /* HPUserTool.m in Sources */,
@@ -4501,11 +4789,13 @@
 				E629AB27224A274D00CF0378 /* HPOrderInfoListView.m in Sources */,
 				E67EFE34221BA187008BDA1D /* ApiXml.mm in Sources */,
 				E6D75F1321A78AD300B2067C /* HPSharePersonCard.m in Sources */,
+				7A3455752261BCC90013AF4C /* JYBDNewFormeScaningV.m in Sources */,
 				6993AD3D21C9E97D0019506C /* HPShareIdeaModel.m in Sources */,
 				E661B0E6219E53A500C86CF5 /* HPTagDialogView.m in Sources */,
 				E629AB0E224A014600CF0378 /* SJPageNavigationView.m in Sources */,
 				E629218A219AC19D00BEF16C /* HPMainTabBarController.m in Sources */,
 				E670840422410AF6005CC8E4 /* AES.m in Sources */,
+				7A3455712261BCC90013AF4C /* JYBDBankCardSearch.m in Sources */,
 				E68A76E921F2D1D400083A90 /* JCHATAudioPlayerHelper.m in Sources */,
 				E68A76FC21F2D2F200083A90 /* JCHATSendMsgController.m in Sources */,
 				E693E90D21E834E20063797A /* HPRouteTypeMenu.m in Sources */,
@@ -4513,7 +4803,9 @@
 				E622A9BC21C33989007C35BC /* YYLRefreshRequestErrorView.m in Sources */,
 				7A345518226026C20013AF4C /* HPOperationNumberTool.m in Sources */,
 				E629AAD12249AEBF00CF0378 /* HPBaseNavTextInputController.m in Sources */,
+				7A34556F2261BCC90013AF4C /* JYBDBankCardVC.m in Sources */,
 				69165CF121C10A2600593D25 /* HPSearchPOICell.m in Sources */,
+				7A34556D2261BCC90013AF4C /* JYBDScanCardBaseVC.m in Sources */,
 				E68A76FB21F2D2F200083A90 /* JCHATStringUtils.m in Sources */,
 				E6D75F2E21AD6AF800B2067C /* HPThirdPartReturnController.m in Sources */,
 				E6292182219ABE6500BEF16C /* HPImageUtil.m in Sources */,
@@ -4526,9 +4818,11 @@
 				E6BB366C223357A600DD7C9F /* HPPayStyleCell.m in Sources */,
 				E61FE09D21B9F94500555F3F /* iCarousel.m in Sources */,
 				E661B0D3219D3BF500C86CF5 /* HPSelectTableLayout.m in Sources */,
+				7A3455872261BD8B0013AF4C /* IDInfoViewController.m in Sources */,
 				6993AD4621CB37360019506C /* HPShareReleaseParam.m in Sources */,
 				E61FE0B121BA816D00555F3F /* HPLoginModel.m in Sources */,
 				E661B12A21A28E8500C86CF5 /* JTCalendarWeekDayView.m in Sources */,
+				7A34556E2261BCC90013AF4C /* JYBDIDCardVC.m in Sources */,
 				6993AD4921CE97B40019506C /* HPShareTempHumanController.m in Sources */,
 				E6F551D821B8C9480086094F /* HPValidatePhone.m in Sources */,
 				E68A76FA21F2D2F200083A90 /* JCHATSendMsgManager.m in Sources */,
@@ -4538,10 +4832,12 @@
 				E685895E222E5426009C38BA /* HPShareDialView.m in Sources */,
 				69165CCE21BE402E00593D25 /* HPTimePicker.m in Sources */,
 				6993AD4C21CE97D40019506C /* HPShareTempGoodsController.m in Sources */,
+				7A3455792261BCC90013AF4C /* IDCardRectManager.m in Sources */,
 				6993AD2B21C688B30019506C /* HPSubTableView.m in Sources */,
 				7A8C807222525D0000E275EB /* HPRentDuringView.m in Sources */,
 				E67199F0224B254D002A4288 /* HPOrderManagerViewController.m in Sources */,
 				E68A77FA21F3226D00083A90 /* JCHATGroupSettingCtl.m in Sources */,
+				7A34552822616E650013AF4C /* CZHAddressPickerView.m in Sources */,
 				E6E89D1F2212A08A00D04F34 /* NSMutableString+AvoidCrash.m in Sources */,
 				E68A76B021F2C6D100083A90 /* JCHATSelectFriendCell.m in Sources */,
 				E61F710D21C1328400932708 /* HPSystemNotiModel.m in Sources */,
@@ -4561,6 +4857,7 @@
 				E677C7CB21FAA1910099E2C9 /* HPMenuItemCell.m in Sources */,
 				E661B12C21A28E8500C86CF5 /* JTCalendarWeekView.m in Sources */,
 				E6E89D1E2212A08A00D04F34 /* NSMutableDictionary+AvoidCrash.m in Sources */,
+				7A34552A22616E650013AF4C /* UIView+CZHExtension.m in Sources */,
 				7A09A2EA2255DA4100A68FBD /* HPUserImergencyDetailViewController.m in Sources */,
 				E6B4CEDE21C5286F00429C11 /* SDCollectionViewCell.m in Sources */,
 				E61B5EC721CCF70800DC8A59 /* CDZPicker.m in Sources */,
@@ -4700,6 +4997,7 @@
 				69165CE121BFA0EE00593D25 /* HPPersonCenterModel.m in Sources */,
 				E67C688522374A8100CF2297 /* HPReturnModel.m in Sources */,
 				E661B0A0219BC59E00C86CF5 /* HPAlignCenterButton.m in Sources */,
+				7A3455722261BCC90013AF4C /* JYBDScanCardManageBase.m in Sources */,
 				E62C84D121C20CBA00D7DFB3 /* HPSignInfoController.m in Sources */,
 				E661B0BA219C2C6300C86CF5 /* HPCheckDialogLayout.m in Sources */,
 				E68A77DB21F321BD00083A90 /* JCHATPhotoPickerViewController.m in Sources */,
@@ -4813,8 +5111,9 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
+				ENABLE_TESTABILITY = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -4872,6 +5171,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -4901,6 +5201,8 @@
 				COPY_PHASE_STRIP = YES;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = V5T6X5QWH2;
+				ENABLE_BITCODE = NO;
+				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/AlipaySDK-iOS/AlipaySDk",
@@ -4923,6 +5225,7 @@
 					"$(PROJECT_DIR)/Pods/JPush",
 					"$(PROJECT_DIR)/HPShareApp/OrderPay(订单支付)/Alipay",
 					"$(PROJECT_DIR)/Pods/WechatOpenSDK/WeChatSDK1.8.4",
+					"$(PROJECT_DIR)/HPShareApp/Controllers/Main/Identify/View/JYBD_IDCardRecognition/Classes/exbankcardcore",
 				);
 				OTHER_CFLAGS = (
 					"$(inherited)",
@@ -4972,6 +5275,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = V5T6X5QWH2;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/AlipaySDK-iOS/AlipaySDk",
@@ -4994,6 +5298,7 @@
 					"$(PROJECT_DIR)/Pods/JPush",
 					"$(PROJECT_DIR)/HPShareApp/OrderPay(订单支付)/Alipay",
 					"$(PROJECT_DIR)/Pods/WechatOpenSDK/WeChatSDK1.8.4",
+					"$(PROJECT_DIR)/HPShareApp/Controllers/Main/Identify/View/JYBD_IDCardRecognition/Classes/exbankcardcore",
 				);
 				OTHER_CFLAGS = (
 					"$(inherited)",
