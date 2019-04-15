@@ -76,6 +76,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.banksCardArray = [NSMutableArray array];
     
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
@@ -92,7 +93,9 @@
     [HPHTTPSever HPPostServerWithMethod:@"/v1/bankCard/queryBankCard" paraments:@{} needToken:YES complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [self.banksCardArray removeAllObjects];
+            
             NSArray *cardsArray = [HPCardsInfoModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"]];
+            
             [self.banksCardArray addObjectsFromArray:cardsArray];
             
             HPCardsInfoModel *model = self.banksCardArray[0];
@@ -465,7 +468,9 @@
 - (void)selectedWithBank:(UITapGestureRecognizer *)tap
 {
     HPSwitchCardsViewController *cards = [HPSwitchCardsViewController new];
+    
     cards.cardsDelegate = self;
+    
     [self.navigationController pushViewController:cards animated:YES];
 }
 

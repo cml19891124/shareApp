@@ -348,7 +348,7 @@
 
 - (void)onClickScanBtn:(UIButton *)button
 {
-    __weak __typeof__(self) weakSelf = self;
+    kWEAKSELF
     
     JYBDIDCardVC *AVCaptureVC = [[JYBDIDCardVC alloc] init];
     

@@ -699,7 +699,7 @@ static int selectBtn_tag = -1;
     }else if ([model.rentType containsString:@"月"]){
         rentType = @"3";
     }else if ([model.rentType containsString:@"年"]){
-        rentType = @"4";
+        rentType = @"3";
     }
     self.shareReleaseParam.rentType = rentType;
     self.shareReleaseParam.shareTime = model.time;

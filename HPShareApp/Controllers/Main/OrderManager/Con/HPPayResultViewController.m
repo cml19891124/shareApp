@@ -194,7 +194,7 @@
         _congulationLabel = [UILabel new];
         _congulationLabel.textColor = COLOR_GRAY_999999;
         _congulationLabel.textAlignment = NSTextAlignmentCenter;
-        _congulationLabel.font = kFont_Bold(16.f);
+        _congulationLabel.font = kFont_Medium(14.f);
         _congulationLabel.text = @"请在指定日期前往拼租，祝您拼租愉快！";
     }
     return _congulationLabel;

@@ -86,15 +86,14 @@
     [phoneNumTextField setKeyboardType:UIKeyboardTypeAlphabet];
     phoneNumTextField.delegate = self;
     self.phoneNumTextField = phoneNumTextField;
-    NSMutableAttributedString *phoneNumPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"手机号/用户名"];
+    NSMutableAttributedString *phoneNumPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"手机号"];
     [phoneNumPlaceholder addAttribute:NSForegroundColorAttributeName
                                 value:COLOR_GRAY_CCCCCC
-                                range:NSMakeRange(0, 5)];
+                                range:NSMakeRange(0, 3)];
     [phoneNumPlaceholder addAttribute:NSFontAttributeName
                                 value:[UIFont fontWithName:FONT_MEDIUM size:16.f]
-                                range:NSMakeRange(0, 5)];
+                                range:NSMakeRange(0, 3)];
     [phoneNumTextField setAttributedPlaceholder:phoneNumPlaceholder];
-//    phoneNumTextField.text = @"15817479363";
     [self.view addSubview:phoneNumTextField];
     [phoneNumTextField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(titleLabel);
@@ -261,7 +260,7 @@
     }else if (self.passwordTextField.text.length < 6){
         [HPProgressHUD alertMessage:@"请输入6位验证码"];
     }
-    if (self.phoneNumTextField.text.length == 11&&self.passwordTextField.text.length == 6) {
+    if (self.phoneNumTextField.text.length >= 6 && self.passwordTextField.text.length == 6) {
         [self isCanLogin];
     }
 }
@@ -314,7 +313,6 @@
 }
 
 - (void)onClickForgetBtn:(UIButton *)btn {
-//    [self pushVCByClassName:@"HPForgetPasswordController"];
     [self pushVCByClassName:@"HPForgetPasswordController" withParam:@{@"isForget":@"0"}];
 
 }
@@ -346,8 +344,14 @@
     if (textField == self.phoneNumTextField) {
         if (textField.text.length < 11) {
             [HPProgressHUD alertMessage:@"请输入11位手机号"];
+            
         }else{
-            self.phoneNumTextField.text = [textField.text substringToIndex:11];
+//            BOOL isnull = [self isNum:self.phoneNumTextField.text];
+//            if (!isnull) {//为空，都为数字
+                self.phoneNumTextField.text = [textField.text substringToIndex:11];
+//            }else{//用户名
+//                self.phoneNumTextField.text = [textField.text substringToIndex:11];
+//            }
         }
     }else if (textField == self.passwordTextField){
         if (textField.text.length < 6) {
@@ -362,23 +366,36 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     if (textField == self.phoneNumTextField) {
-        if (textField.text.length >= 11) {
+        if (textField.text.length > 10) {
             //            [HPProgressHUD alertMessage:@"请输入11位手机号"];
-            self.phoneNumTextField.text = [textField.text substringToIndex:10];
-            //[textField resignFirstResponder];
-            //            [self.codeTextField becomeFirstResponder];
-            _isValidate = [HPValidatePhone validateContactNumber:textField.text];
+            
+//            BOOL isnull = [self isNum:self.phoneNumTextField.text];
+//            if (!isnull) {//为空，都为数字
+//                self.phoneNumTextField.text = [textField.text substringToIndex:11];
+            [HPProgressHUD alertMessage:@"请输入11位手机号"];
+            return NO;
+//            }else{//用户名
+//                self.phoneNumTextField.text = [textField.text substringToIndex:11];
+//            }
+//            _isValidate = [HPValidatePhone validateContactNumber:textField.text];
             
             return YES;
         }
     }else if (textField == self.passwordTextField){
-        if (textField.text.length >= 6) {
-            //            [HPProgressHUD alertMessage:@"请输入6位验证码"];
-            self.passwordTextField.text = [textField.text substringToIndex:6];
-            //            [textField resignFirstResponder];
+        if (textField.text.length >= 12) {
+            self.passwordTextField.text = [textField.text substringToIndex:12];
             return YES;
         }
     }
     return YES;
 }
+
+- (BOOL)isNum:(NSString *)checkedNumString {
+    checkedNumString = [checkedNumString stringByTrimmingCharactersInSet:[NSCharacterSet decimalDigitCharacterSet]];
+    if(checkedNumString.length > 0) {
+        return NO;
+    }
+    return YES;
+}
+
 @end

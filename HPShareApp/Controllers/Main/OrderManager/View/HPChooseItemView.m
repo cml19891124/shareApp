@@ -53,7 +53,7 @@
             make.left.mas_equalTo(getWidth(5.f) + (itemW + getWidth(35.f)) * i);
             make.top.mas_equalTo(self);
             make.width.mas_equalTo(itemW + getWidth(35.f));
-            make.height.mas_equalTo(getWidth(45.f));
+            make.height.mas_equalTo(getWidth(43.f));
         }];
         
         self.bottomView = [UIView new];

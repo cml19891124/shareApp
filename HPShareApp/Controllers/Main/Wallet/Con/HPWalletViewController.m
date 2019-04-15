@@ -64,7 +64,7 @@ static NSString *walletCell = @"walletCell";
     
     self.imageArray = @[@"mingxi",@"bangding"];
     
-    self.titleArray = @[@"账单明细",@"绑定银行卡"];
+    self.titleArray = @[@"账单明细",@"我的银行卡"];
     
     self.banksCardArray = [NSMutableArray array];
     

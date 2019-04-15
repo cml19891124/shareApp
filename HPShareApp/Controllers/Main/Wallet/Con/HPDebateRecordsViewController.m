@@ -64,6 +64,10 @@ static NSString *debeteCell = @"HPDebeteCell";
     
     [self setUpDebetaSubviewsMasonry];
     
+    self.shareListParam.page = 1;
+    
+    self.shareListParam.pageSize = 20;
+    
     [self getAccountInfoApi:YES];
 
 }
@@ -72,10 +76,6 @@ static NSString *debeteCell = @"HPDebeteCell";
 - (void)getAccountInfoApi:(BOOL)isReload
 {
     self.shareListParam = [HPShareListParam new];
-    
-    self.shareListParam.page = 1;
-    
-    self.shareListParam.pageSize = 20;
     
     if (isReload) {
         _shareListParam.page = 1;
@@ -87,6 +87,9 @@ static NSString *debeteCell = @"HPDebeteCell";
     dic[@"pageSize"] = @(self.shareListParam.pageSize);
 
     [HPHTTPSever HPGETServerWithMethod:@"/v1/userAccountLog/list" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+        
+        [self.accountArray removeAllObjects];
+
         NSArray *listArray = [HPAccountInfoModel mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];
 
         if (listArray) {
@@ -97,30 +100,23 @@ static NSString *debeteCell = @"HPDebeteCell";
             [self.accountArray addObjectsFromArray:listArray];
         }
         
-        if ([responseObject[@"data"][@"total"] integerValue] == 0 || self.accountArray.count == 0) {
-            
+        if ([responseObject[@"data"][@"total"] integerValue] == 0 || self.accountArray.count == 0 || [self.accountArray isEqual:@[]]) {
+            self.tableView.refreshNoDataView.hidden = NO;
+
             self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
             self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"queshengtu");
-            self.tableView.refreshNoDataView.tipLabel.text = @"列表空空如也，快去逛逛吧~";
-            [self.tableView.refreshNoDataView.tipBtn setTitle:@"去逛逛" forState:UIControlStateNormal];
-            [self.tableView.refreshNoDataView.tipBtn setTitleColor:COLOR_RED_FF1213 forState:UIControlStateNormal];
-            self.tableView.refreshNoDataView.tipBtn.backgroundColor = COLOR_GRAY_FFFFFF;
-            self.tableView.refreshNoDataView.tipBtn.layer.cornerRadius = 6;
-            self.tableView.refreshNoDataView.tipBtn.layer.masksToBounds = YES;
-            self.tableView.refreshNoDataView.tipBtn.layer.borderColor = COLOR_RED_FF1213.CGColor;
-            self.tableView.refreshNoDataView.tipBtn.layer.borderWidth = 1;
-            self.tableView.refreshNoDataView.delegate = self;
-            self.tableView.refreshNoDataView.hidden = NO;
-            
+            self.tableView.refreshNoDataView.tipLabel.text = @"暂无明细";
+            self.tableView.refreshNoDataView.tipBtn.hidden = YES;
         }
         
-        if (listArray.count < 10) {
+        if (self.accountArray.count < 10 && self.accountArray.count > 0) {
+            self.tableView.refreshNoDataView.hidden = YES;
+
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
             [self.tableView.mj_header endRefreshing];
         }
-        else {
+        else if (self.accountArray.count > 10){
             self.tableView.refreshNoDataView.hidden = YES;
-            
             [self.tableView.mj_footer endRefreshing];
             [self.tableView.mj_header endRefreshing];
             self.shareListParam.page ++;
@@ -271,6 +267,13 @@ static NSString *debeteCell = @"HPDebeteCell";
 
     [self pushVCByClassName:@"HPRecordsDetailViewController" withParam:@{@"model":model}];
     
+}
+
+#pragma mark - YYLRefreshNoDataViewDelegate
+
+- (void)clickToCheckSTHForRequirments
+{
+    HPLog(@"scan");
 }
 
 @end

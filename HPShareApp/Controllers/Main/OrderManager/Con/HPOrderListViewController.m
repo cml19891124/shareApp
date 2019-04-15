@@ -147,6 +147,7 @@ static NSString *orderCell = @"orderCell";
         add = 4;
         self.status = @(11);
     }
+    
     [self.orderItemView scrolling:2200 + add];
     [self getOrderListApiReload:YES];
 }
@@ -181,8 +182,8 @@ static NSString *orderCell = @"orderCell";
                 [self.orderArray addObjectsFromArray:listArray];
             }
             
-            if ([responseObject[@"data"][@"total"] integerValue] == 0 || self.orderArray.count == 0) {
-
+            if ([responseObject[@"data"][@"total"] integerValue] == 0 || self.orderArray.count == 0 || [self.orderArray isEqual:@[]]) {
+                self.tableView.refreshNoDataView.hidden = NO;
                 self.tableView.loadErrorType = YYLLoadErrorTypeNoData;
                 self.tableView.refreshNoDataView.tipImageView.image = ImageNamed(@"queshengtu");
                 self.tableView.refreshNoDataView.tipLabel.text = @"列表空空如也，快去逛逛吧~";
@@ -194,15 +195,15 @@ static NSString *orderCell = @"orderCell";
                 self.tableView.refreshNoDataView.tipBtn.layer.borderColor = COLOR_RED_FF1213.CGColor;
                 self.tableView.refreshNoDataView.tipBtn.layer.borderWidth = 1;
                 self.tableView.refreshNoDataView.delegate = self;
-                self.tableView.refreshNoDataView.hidden = NO;
-
             }
             
-            if (listArray.count < 10) {
+            if (self.orderArray.count > 0 && self.orderArray.count < 10) {
+                self.tableView.refreshNoDataView.hidden = YES;
+
                 [self.tableView.mj_footer endRefreshingWithNoMoreData];
                 [self.tableView.mj_header endRefreshing];
             }
-            else {
+            else if(self.orderArray.count > 10){
                 self.tableView.refreshNoDataView.hidden = YES;
 
                 [self.tableView.mj_footer endRefreshing];
@@ -255,6 +256,7 @@ static NSString *orderCell = @"orderCell";
                 
                 weakSelf.status = @(11);
             }
+
             [weakSelf.orderItemView scrolling:menuItem];
             [weakSelf getOrderListApiReload:YES];
         };

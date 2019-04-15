@@ -85,9 +85,9 @@
     }];
     
     [self.leftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(getWidth(7.5f));
-        make.width.height.mas_equalTo(getWidth(20.f));
-        make.left.mas_equalTo(self.contentView).offset(getWidth(15.f));;
+        make.top.mas_equalTo(getWidth(10.f));
+        make.width.height.mas_equalTo(getWidth(13.f));
+        make.left.mas_equalTo(self.bgView).offset(getWidth(15.f));;
         
     }];
     
@@ -215,7 +215,7 @@
         _shopNamebtn.color = COLOR_GRAY_666666;
         _shopNamebtn.text = @"小女当家";
         _shopNamebtn.image = ImageNamed(@"shouye_gengduo");
-        _shopNamebtn.font = kFont_Medium(14.f);
+        _shopNamebtn.font = kFont_Medium(12.f);
     }
     return _shopNamebtn;
 }
@@ -604,17 +604,17 @@
     [attr addAttribute:NSForegroundColorAttributeName value:COLOR_RED_FF1213 range:NSMakeRange(3, _totalLabel.text.length - 3)];
     _totalLabel.attributedText = attr;
     
-    if ([HPSingleton sharedSingleton].identifyTag == 0) {
-        [self.leftIcon mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(0);
-        }];
-    }else{
-
-        [self.leftIcon mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.height.mas_equalTo(getWidth(20.f));
-            
-        }];
-    }
+//    if ([HPSingleton sharedSingleton].identifyTag == 0) {
+//        [self.leftIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.width.mas_equalTo(0);
+//        }];
+//    }else{
+//
+//        [self.leftIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.width.height.mas_equalTo(getWidth(20.f));
+//
+//        }];
+//    }
     
     if ([model.order.status integerValue] == 1) {
         self.waitingReceiveLabel.text = @"等待商家接单";

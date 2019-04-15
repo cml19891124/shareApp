@@ -78,7 +78,8 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
  */
 @property (nonatomic, strong) HPRightImageButton *addBtn;
 
-
+//专属顾问详情view
+@property (strong, nonatomic) UIView *detailPanel;
 /**
  顾问头像
  */
@@ -112,6 +113,9 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 
 @property (nonatomic, weak) HPUpdateVersionView *updateView;
 
+@property (strong, nonatomic) UIView *professDetailRow;
+
+@property (strong, nonatomic) UIButton *callBtn;
 @end
 
 @implementation HPConfigCenterController
@@ -192,7 +196,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     CGSize btnSize = CGSizeMake(getWidth(60.f), getWidth(3.f));
     UIGraphicsBeginImageContextWithOptions(btnSize, NO, 0.f);
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
-    [HPGradientUtil drawGradientColor:contextRef rect:CGRectMake(0.f, 0.f, btnSize.width, btnSize.height) startPoint:CGPointMake(0.f,0.f) endPoint:CGPointMake(btnSize.width, btnSize.height) options:kCGGradientDrawsBeforeStartLocation startColor:COLOR_ORANGE_EB0303 endColor:UIColor.clearColor];
+    [HPGradientUtil drawGradientColor:contextRef rect:CGRectMake(0.f, 0.f, btnSize.width, btnSize.height) startPoint:CGPointMake(0.f,0.f) endPoint:CGPointMake(btnSize.width, btnSize.height) options:kCGGradientDrawsBeforeStartLocation startColor:COLOR(235, 3, 3, 1) endColor:COLOR(235, 3, 3, 0)];
     UIImage *bgImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
@@ -209,38 +213,62 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     
     //账号管理
     UIView *accountInfoPanel = [[UIView alloc] init];
-    [self setupShadowOfPanel:accountInfoPanel];
+//    [self setupShadowOfPanel:accountInfoPanel];
+    accountInfoPanel.layer.borderColor = COLOR_GRAY_EEEEEE.CGColor;
+    accountInfoPanel.layer.borderWidth = 1;
     [scrollView addSubview:accountInfoPanel];
     self.accountInfoPanel = accountInfoPanel;
     [accountInfoPanel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(colorBtn.mas_bottom ).with.offset(getWidth(30.f));
         make.centerX.equalTo(scrollView);
-        make.width.mas_equalTo(345.f * g_rateWidth);
+        make.width.mas_equalTo(kScreenWidth);
     }];
     [self setupAccountInfoPanel:accountInfoPanel];
     
     //专属顾问
     UIView *professionalPanel = [[UIView alloc] init];
-    [self setupShadowOfPanel:professionalPanel];
+//    [self setupShadowOfPanel:professionalPanel];
     [scrollView addSubview:professionalPanel];
     [professionalPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.accountInfoPanel.mas_bottom).with.offset(15.f * g_rateWidth);
+        make.top.equalTo(self.accountInfoPanel.mas_bottom).with.offset(1);
+        make.left.equalTo(self.accountInfoPanel);
+        make.width.mas_equalTo(kScreenWidth);
+        make.height.mas_equalTo(180.f * g_rateWidth);
+    }];
+    
+    [self setupThirdAccountProfessionalPanel:professionalPanel];
+    
+    //专属顾问详情view
+    UIView *detailPanel = [[UIView alloc] init];
+    [scrollView addSubview:detailPanel];
+    self.detailPanel = detailPanel;
+
+    [detailPanel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(professionalPanel.mas_bottom).with.offset(1);
         make.left.equalTo(self.accountInfoPanel);
         make.width.mas_equalTo(345.f * g_rateWidth);
-        make.height.mas_equalTo(244.f * g_rateWidth);
+        make.height.mas_equalTo(64.f * g_rateWidth);
     }];
-    [self setupProfessionalPanel:professionalPanel];
+    [self setUpGuWenView:detailPanel];
+    
+    [self.detailPanel addSubview:self.professDetailRow];
+    
+    [self.professDetailRow mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
     
     //版本控制
     UIView *versionPanel = [[UIView alloc] init];
-    [self setupShadowOfPanel:versionPanel];
+//    [self setupShadowOfPanel:versionPanel];
+    versionPanel.layer.borderWidth = 1;
+    versionPanel.layer.borderColor = COLOR_GRAY_EEEEEE.CGColor;
     [scrollView addSubview:versionPanel];
     _versionPanel = versionPanel;
     [versionPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        MASConstraint *versionTop = make.top.equalTo(professionalPanel.mas_bottom).with.offset(15.f * g_rateWidth);
+        MASConstraint *versionTop = make.top.equalTo(self.detailPanel.mas_bottom).with.offset(1);
         self.versionTop = versionTop;
         make.centerX.equalTo(scrollView);
-        make.width.mas_equalTo(345.f * g_rateWidth);
+        make.width.mas_equalTo(kScreenWidth);
     }];
     [self setupVersionPanel:versionPanel];
     
@@ -251,7 +279,6 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [switchBtn setTitleColor:COLOR_ORANGE_EB0404 forState:UIControlStateNormal];
     [switchBtn setTitle:@"退出登录" forState:UIControlStateNormal];
     switchBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-//    [switchBtn setBackgroundColor:COLOR_RED_EA0000];
     [switchBtn addTarget:self action:@selector(swithAccountOfOthers:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:switchBtn];
     [switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -262,8 +289,66 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     }];
 }
 
-#pragma mark - 专属顾问view
-- (void)setupProfessionalPanel:(UIView *)panel
+//专属顾问详情view
+- (void)setUpGuWenView:(UIView *)rowView
+{
+    //专属顾问详情
+    UIView *professDetailRow = [self addRowOfParentView:rowView withHeight:64.f * g_rateWidth margin:0.f isEnd:NO];
+    professDetailRow.backgroundColor = COLOR_GRAY_F9F9F9;
+    UIImageView *userIcon = [UIImageView new];
+    userIcon.image = ImageNamed(@"my_business_card_default_head_image");
+    [professDetailRow addSubview:userIcon];
+    self.userIcon = userIcon;
+    [userIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(getWidth(6.f));
+        make.width.height.mas_equalTo(getWidth(38.f));
+        make.centerY.mas_equalTo(professDetailRow);
+    }];
+    
+    UILabel *fessionnameLabel = [UILabel new];
+    fessionnameLabel.font = kFont_Medium(16.f);
+    fessionnameLabel.textColor = COLOR_BLACK_444444;
+    fessionnameLabel.textAlignment = NSTextAlignmentLeft;
+    fessionnameLabel.text = @"--";
+    [professDetailRow addSubview:fessionnameLabel];
+    self.fessionnameLabel = fessionnameLabel;
+    [fessionnameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(12.f));
+        make.top.mas_equalTo(getWidth(16.f));
+        make.width.mas_equalTo(kScreenWidth/3);
+        make.height.mas_equalTo(fessionnameLabel.font.pointSize);
+    }];
+    
+    UILabel *fessionInfoLabel = [UILabel new];
+    fessionInfoLabel.font = kFont_Medium(12.f);
+    fessionInfoLabel.textColor = COLOR_GRAY_999999;
+    fessionInfoLabel.textAlignment = NSTextAlignmentLeft;
+    fessionInfoLabel.text = @"专属顾问为您提供免费咨询服务";
+    [professDetailRow addSubview:fessionInfoLabel];
+    self.fessionInfoLabel = fessionInfoLabel;
+    [fessionInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(12.f));
+        make.bottom.mas_equalTo(userIcon.mas_bottom);
+        make.right.mas_equalTo(professDetailRow).offset(getWidth(-65.f));
+        make.height.mas_equalTo(fessionnameLabel.font.pointSize);
+    }];
+    
+    UIButton *callBtn = [UIButton new];
+    [callBtn setBackgroundImage:ImageNamed(@"call") forState:UIControlStateNormal];
+    [callBtn addTarget:self action:@selector(callProfessional:) forControlEvents:UIControlEventTouchUpInside];
+    [professDetailRow addSubview:callBtn];
+    self.callBtn= callBtn;
+    [callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(getWidth(30.f), getWidth(30.f)));
+        make.right.mas_equalTo(getWidth(-18.f));
+        make.centerY.mas_equalTo(professDetailRow);
+    }];
+    self.professDetailRow = professDetailRow;
+
+}
+
+#pragma mark - 第三方账号+专属顾问标题view
+- (void)setupThirdAccountProfessionalPanel:(UIView *)panel
 {
     HPLoginModel *account = [HPUserTool account];
     UIView *phoneNumRow = [self addRowOfParentView:panel withHeight:45.f * g_rateWidth margin:0.f isEnd:NO];
@@ -335,57 +420,6 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(professionalRow).offset(getWidth(-17.f));
         make.centerY.equalTo(professionalLabel);
-    }];
-    
-    //专属顾问详情
-    UIView *professDetailRow = [self addRowOfParentView:panel withHeight:64.f * g_rateWidth margin:0.f isEnd:NO];
-    professDetailRow.backgroundColor = COLOR_GRAY_F9F9F9;
-    UIImageView *userIcon = [UIImageView new];
-    userIcon.image = ImageNamed(@"my_business_card_default_head_image");
-    [professDetailRow addSubview:userIcon];
-    self.userIcon = userIcon;
-    [userIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(getWidth(6.f));
-        make.width.height.mas_equalTo(getWidth(38.f));
-        make.centerY.mas_equalTo(professDetailRow);
-    }];
-    
-    UILabel *fessionnameLabel = [UILabel new];
-    fessionnameLabel.font = kFont_Medium(16.f);
-    fessionnameLabel.textColor = COLOR_BLACK_444444;
-    fessionnameLabel.textAlignment = NSTextAlignmentLeft;
-    fessionnameLabel.text = @"--";
-    [professDetailRow addSubview:fessionnameLabel];
-    self.fessionnameLabel = fessionnameLabel;
-    [fessionnameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(12.f));
-        make.top.mas_equalTo(getWidth(16.f));
-        make.width.mas_equalTo(kScreenWidth/3);
-        make.height.mas_equalTo(fessionnameLabel.font.pointSize);
-    }];
-    
-    UILabel *fessionInfoLabel = [UILabel new];
-    fessionInfoLabel.font = kFont_Medium(12.f);
-    fessionInfoLabel.textColor = COLOR_GRAY_999999;
-    fessionInfoLabel.textAlignment = NSTextAlignmentLeft;
-    fessionInfoLabel.text = @"专属顾问为您提供免费咨询服务";
-    [professDetailRow addSubview:fessionInfoLabel];
-    self.fessionInfoLabel = fessionInfoLabel;
-    [fessionInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(userIcon.mas_right).offset(getWidth(12.f));
-        make.bottom.mas_equalTo(userIcon.mas_bottom);
-        make.right.mas_equalTo(professDetailRow).offset(getWidth(-65.f));
-        make.height.mas_equalTo(fessionnameLabel.font.pointSize);
-    }];
-    
-    UIButton *callBtn = [UIButton new];
-    [callBtn setBackgroundImage:ImageNamed(@"call") forState:UIControlStateNormal];
-    [callBtn addTarget:self action:@selector(callProfessional:) forControlEvents:UIControlEventTouchUpInside];
-    [professDetailRow addSubview:callBtn];
-    [callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(getWidth(30.f), getWidth(30.f)));
-        make.right.mas_equalTo(getWidth(-18.f));
-        make.centerY.mas_equalTo(professDetailRow);
     }];
 }
 
@@ -619,8 +653,9 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 }
 
 - (void)setupVersionPanel:(UIView *)view {
-    UIView *versionRow = [self addRowOfParentView:view withHeight:45.f * g_rateWidth margin:10.f * g_rateWidth isEnd:NO];
     
+    UIView *versionRow = [self addRowOfParentView:view withHeight:45.f * g_rateWidth margin:10.f * g_rateWidth isEnd:NO];
+
     UILabel *versionLabel = [self setupTitleLabelWithTitle:@"版本信息"];
     [versionRow addSubview:versionLabel];
     [versionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -629,7 +664,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     }];
     
     HPRightImageButton *versionGotoBtn = [self setupGotoBtnWithTitle:kAppVersion?[NSString stringWithFormat:@"V%@",kAppVersion]:@"V1.0.0"];
-//    HPLog(@"%@",kAppVersion);
+
     [versionGotoBtn setTag:HPConfigGotoVersion];
     [versionRow addSubview:versionGotoBtn];
     _versionGotoBtn = versionGotoBtn;
@@ -844,10 +879,14 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 更改详情顾问 约束
 - (void)layoutProfessionFrame
 {
-    [self.versionPanel mas_updateConstraints:^(MASConstraintMaker *make) {
-        [self.versionTop uninstall];
-        make.top.mas_equalTo(self.professDetailPanel.mas_bottom).offset(getWidth(15.f));
+    [self.detailPanel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(0);
     }];
+    self.fessionnameLabel.hidden = YES;
+    self.userIcon.hidden = YES;
+    self.fessionInfoLabel.hidden = YES;
+    self.callBtn.hidden = YES;
+
 }
 
 #pragma mark - 确定清除缓存数据

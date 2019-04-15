@@ -61,7 +61,7 @@
     [phoneNumTextField setTextColor:COLOR_BLACK_333333];
     [phoneNumTextField setTintColor:COLOR_RED_FF3C5E];
     [phoneNumTextField setKeyboardType:UIKeyboardTypeNumberPad];
-    phoneNumTextField.text = @"15817479363";
+    phoneNumTextField.text = @"";
 
     NSMutableAttributedString *phoneNumPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"请输入手机号"];
     [phoneNumPlaceholder addAttribute:NSForegroundColorAttributeName

@@ -178,7 +178,7 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
     _openAccountField = (HPTextFieldPlaceholderRight *)[self setupTextFieldWithPlaceholder:@"请输入开户人姓名" ofView:view rightTo:view];
     _openAccountField.font = kFont_Regular(14.f);
     _openAccountField.tintColor = COLOR_RED_EA0000;
-
+    _openAccountField.delegate = self;
     [_openAccountField setValue:COLOR_GRAY_999999 forKeyPath:@"_placeholderLabel.textColor"];
     _openAccountField.textAlignment = NSTextAlignmentRight;
     [kNotificationCenter addObserver:self selector:@selector(didTextFieldChange:) name:UITextFieldTextDidChangeNotification object:_openAccountField];
@@ -520,8 +520,7 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
     [HPHTTPSever HPPostServerWithMethod:@"/v1/bankCard/bindingBankCard" paraments:dic needToken:YES complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:MSG];
-            [self pushVCByClassName:@"HPCardsListViewController"];
-
+            [self.navigationController popViewControllerAnimated:YES];
         }else
         {
             [HPProgressHUD alertMessage:MSG];
@@ -537,5 +536,12 @@ typedef NS_ENUM(NSInteger, HPChooseItemIndex) {
 {
     [self.chooseBankBtn setTitle:model.bankName forState:UIControlStateNormal];
     self.model = model;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (self.openAccountField == textField) {
+        [self.openAccountField resignFirstResponder];
+    }
 }
 @end

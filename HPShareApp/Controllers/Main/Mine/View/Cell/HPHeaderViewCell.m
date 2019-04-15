@@ -84,7 +84,10 @@
         make.top.mas_equalTo(getWidth(46.f) + g_statusBarHeight);
     }];
 
-    CGFloat phoneW = BoundWithSize(@"15817479363", kScreenWidth, 18.f).size.width + 10;
+    CGFloat phoneW = BoundWithSize(self.phoneBtn.currentTitle, kScreenWidth, 18.f).size.width + 30;
+    
+    self.phoneBtn.titleEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 10);
+    
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(phoneW);
         make.left.mas_equalTo(self.iconImageView.mas_right).offset(getWidth(11.f));
@@ -171,6 +174,7 @@
         _iconImageView.userInteractionEnabled = YES;
         _iconImageView.layer.cornerRadius = 50.f/2;
         _iconImageView.layer.masksToBounds = YES;
+        _iconImageView.contentMode = UIViewContentModeScaleAspectFill;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapHeaderView:)];
         [_iconImageView addGestureRecognizer:tap];
     }
@@ -181,7 +185,7 @@
 {
     if (!_phoneBtn) {
         _phoneBtn = [UIButton new];
-        [_phoneBtn setTitle:@"" forState:UIControlStateNormal];
+        [_phoneBtn setTitle:@"-----------" forState:UIControlStateNormal];
         [_phoneBtn setTitleColor:COLOR_GRAY_FFFFFF forState:UIControlStateNormal];
         [_phoneBtn addTarget:self action:@selector(onClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
         _phoneBtn.titleLabel.font = kFont_Medium(18.f);

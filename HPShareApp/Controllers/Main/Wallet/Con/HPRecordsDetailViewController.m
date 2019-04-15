@@ -114,7 +114,7 @@
     
     self.serverSubLabel.text = [NSString stringWithFormat:@"-%@",_model.serviceCharge];
 
-    self.totalSubLabel.text = [NSString stringWithFormat:@"+%ld",(_model.serviceCharge.integerValue - _model.serviceCharge.integerValue)];
+    self.totalSubLabel.text = [NSString stringWithFormat:@"+%ld",(_model.transactionAmount.integerValue - _model.serviceCharge.integerValue)];
 
 }
 
@@ -215,18 +215,19 @@
         make.width.mas_equalTo(kScreenWidth);
     }];
     
+    CGFloat nameW = BoundWithSize(self.nameLabel.text, kScreenWidth, 14.f).size.width+10;
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(getWidth(25.f));
         make.top.mas_equalTo(getWidth(20.f));
         make.height.mas_equalTo(self.nameLabel.font.pointSize);
-        make.width.mas_equalTo(kScreenWidth/3);
+        make.width.mas_equalTo(nameW);
     }];
 
     [self.nameSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(getWidth(-15.f));
         make.top.mas_equalTo(getWidth(20.f));
         make.height.mas_equalTo(self.nameSubLabel.font.pointSize);
-        make.width.mas_equalTo(kScreenWidth/3);
+        make.left.mas_equalTo(self.nameLabel.mas_right).offset(getWidth(10.f));
     }];
     
     [self.rentDayLabel mas_makeConstraints:^(MASConstraintMaker *make) {

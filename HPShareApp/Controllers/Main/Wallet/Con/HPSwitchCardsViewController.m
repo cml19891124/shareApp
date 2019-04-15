@@ -249,7 +249,7 @@ static NSString *banksInfoCell = @"banksInfoCell";
     }
 
     if ([self.cardsDelegate respondsToSelector:@selector(onClickBank:andCardsModel:)]) {
-        [self.cardsDelegate onClickBank:self andCardsModel:self.model];
+        [self.cardsDelegate onClickBank:self andCardsModel:self.selectedModel];
         [self.navigationController popViewControllerAnimated:YES];
     }
 }

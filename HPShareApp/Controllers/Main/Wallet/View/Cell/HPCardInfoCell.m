@@ -182,6 +182,47 @@
 //    }
     self.typeLabel.text = @"储蓄卡";
 
-    self.cardLabel.text = model.accountNo;
+    self.cardLabel.text = [self jointWithString:model.accountNo];
+}
+
+#pragma mark - 拼接成中间有空格的字符串
+- (NSString *)jointWithString:(NSString *)str
+{
+    NSString *getString = @"";
+    
+    int a = (int)str.length/4;
+    int b = (int)str.length%4;
+    int c = a;
+    if (b>0)
+    {
+        c = a+1;
+    }
+    else
+    {
+        c = a;
+    }
+    for (int i = 0 ; i<c; i++)
+    {
+        NSString *string = @"";
+        
+        if (i == (c-1))
+        {
+            if (b>0)
+            {
+                string = [str substringWithRange:NSMakeRange(4*(c-1), b)];
+            }
+            else
+            {
+                string = [str substringWithRange:NSMakeRange(4*i, 4)];
+            }
+            
+        }
+        else
+        {
+            string = [str substringWithRange:NSMakeRange(4*i, 4)];
+        }
+        getString = [NSString stringWithFormat:@"%@ %@",getString,string];
+    }
+    return getString;
 }
 @end

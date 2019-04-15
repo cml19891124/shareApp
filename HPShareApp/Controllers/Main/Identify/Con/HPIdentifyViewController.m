@@ -95,11 +95,11 @@
 - (void)setPassPortInfo
 {
     
-    self.passportBtn.hidden = NO;
-    
     if (self.portModel.auditStatus.integerValue == 0) {
         self.boardBtn.text = @"审核未通过";
+        self.portLabel.hidden = YES;
         
+        self.passportBtn.hidden = YES;
         self.boardBtn.image = ImageNamed(@"shouye_gengduo");
     }else if (self.portModel.auditStatus.integerValue == 1){
         self.portLabel.text = @"已认证";
@@ -112,7 +112,7 @@
         
         self.boardSubLabel.text = [NSString stringWithFormat:@"营业执照代码：%@",portNumber];
     }else{
-        self.portLabel.text = @"已认证";
+        self.portLabel.text = @"待认证";
 
         self.boardBtn.text =  @"审核中";
         
@@ -167,6 +167,7 @@
                 [self setUserIdentifyInfo];
             }
         }else{
+            [self setUserIdentifyInfo];
 
             [HPProgressHUD alertMessage:MSG];
         }
@@ -321,7 +322,7 @@
 {
     if (!_subTitleLabel) {
         _subTitleLabel = [UILabel new];
-        [_subTitleLabel setFont:kFont_Medium(12.f)];
+        [_subTitleLabel setFont:kFont_Medium(14.f)];
         [_subTitleLabel setTextColor:COLOR_GRAY_FFFFFF];
         _subTitleLabel.textAlignment = NSTextAlignmentCenter;
         [_subTitleLabel setText:@"证照信息认证，交易保障全面升级"];
@@ -362,7 +363,7 @@
     
     UILabel *idenLabel = [self setupTitleLabelWithTitle:@"已认证"];
     idenLabel.textColor = COLOR_GRAY_999999;
-    idenLabel.font = kFont_Medium(12.f);
+    idenLabel.font = kFont_Medium(14.f);
     [passportRow addSubview:idenLabel];
     self.portLabel = idenLabel;
     
@@ -372,6 +373,7 @@
     }];
     
     UILabel *boardSubLabel = [self setupTitleLabelWithTitle:@"上传营业执照交易更有保障"];
+    boardSubLabel.font = kFont_Medium(14.f);
     [passportRow addSubview:boardSubLabel];
     self.boardSubLabel = boardSubLabel;
     [boardSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -433,7 +435,7 @@
     NSString *realName = [self.model.realName stringByReplacingCharactersInRange:NSMakeRange(1, self.model.realName.length - 1) withString:@"***"];
     UILabel *idLabel = [self setupTitleLabelWithTitle:[NSString stringWithFormat:@"姓名：%@", realName]];
     idLabel.textColor = COLOR_GRAY_999999;
-    idLabel.font = kFont_Medium(12.f);
+    idLabel.font = kFont_Medium(14.f);
     [nameRow addSubview:idLabel];
     self.idLabel = idLabel;
     
@@ -443,6 +445,8 @@
     }];
     
     _nameSubLabel = [self setupTitleLabelWithTitle:[NSString stringWithFormat:@"身份证号：%@",self.model.idCard]];
+    _nameSubLabel.font = kFont_Medium(14.f);
+
     [nameRow addSubview:self.nameSubLabel];
     [self.nameSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(nameRow).with.offset(18.f * g_rateWidth);
