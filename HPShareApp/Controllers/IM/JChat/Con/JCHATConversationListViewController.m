@@ -62,6 +62,7 @@
     self.title = @"会话";
     
     _titleLabel.text = @"会话";
+    _titleLabel.textColor = COLOR_BLACK_333333;
     _titleActivity.hidden = YES;
     [_titleActivity startAnimating];
     self.navigationItem.titleView = myTitleView;
@@ -69,7 +70,7 @@
     UIButton *leftBtn =[UIButton buttonWithType:UIButtonTypeCustom];
     [leftBtn setFrame:kNavigationLeftButtonRect];
     [leftBtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
-    [leftBtn setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+    [leftBtn setImage:[UIImage imageNamed:@"fanhui"] forState:UIControlStateNormal];
     [leftBtn setImageEdgeInsets:kGoBackBtnImageOffset];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftBtn];//为导航栏添加右侧按钮
     

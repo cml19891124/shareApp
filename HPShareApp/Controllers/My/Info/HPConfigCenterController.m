@@ -104,7 +104,10 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 @property (nonatomic, strong) UIImagePickerController *photoPicker;
 
 @property (nonatomic, weak) TZImagePickerController *imagePicker;
+
 @property (nonatomic, weak) HPAlertSheet *alertSheet;
+
+@property (nonatomic, weak) HPAlertSheet *outLoginSheet;
 
 /**
  获取到的图片
@@ -141,8 +144,9 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     // Do any additional setup after loading the view.
     [self setupUI];
     
-    kWeakSelf(weakSelf);
+    kWEAKSELF
     HPAlertSheet *alertSheet = [[HPAlertSheet alloc] init];
+    
     HPAlertAction *photoAction = [[HPAlertAction alloc] initWithTitle:@"拍照" completion:^{
         [weakSelf onClickAlbumOrPhotoSheetWithTag:0];
     }];
@@ -151,7 +155,15 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
         [weakSelf onClickAlbumOrPhotoSheetWithTag:1];
     }];
     [alertSheet addAction:albumAction];
+
     self.alertSheet = alertSheet;
+    
+    HPAlertSheet *outLoginSheet = [[HPAlertSheet alloc] init];
+     HPAlertAction *outLoginAction = [[HPAlertAction alloc] initWithTitle:@"退出登录" completion:^{
+        [weakSelf onClickOutLoginSheetWithTag:3];
+    }];
+    [outLoginSheet addAction:outLoginAction];
+    self.outLoginSheet = outLoginSheet;
 }
 
 - (void)onClickBack:(UIButton *)UIButton
@@ -161,7 +173,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 
 - (void)setupUI {
     [self.view setBackgroundColor:COLOR_GRAY_F7F7F7];
-//    UIView *navigationView = [self setupNavigationBarWithTitle:@"设置中心"];
+
     UIButton *backBtn = [UIButton new];
     [backBtn setImage:ImageNamed(@"fanhui") forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(onClickBack:) forControlEvents:UIControlEventTouchUpInside];
@@ -284,7 +296,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     [switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(versionPanel.mas_bottom).with.offset(35.f * g_rateWidth);
         make.left.mas_equalTo(getWidth(18.f));
-        make.size.mas_equalTo(CGSizeMake(kScreenWidth/2, 15.f * g_rateWidth));
+        make.size.mas_equalTo(CGSizeMake(kScreenWidth/2,getWidth(50.f)));
         make.bottom.equalTo(scrollView).with.offset(-30.f * g_rateWidth);
     }];
 }
@@ -440,7 +452,20 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
 #pragma mark - 切换账号
 - (void)swithAccountOfOthers:(UIButton *)button
 {
-    [self switchAccount];
+    
+    [self.outLoginSheet setCancelTextColor:COLOR_BLACK_333333];
+    [self.outLoginSheet setCancelTextFont:kFont_Medium(16.f)];
+    
+    [self.outLoginSheet show:YES];
+
+}
+
+- (void)onClickOutLoginSheetWithTag:(NSInteger)tag
+{
+    if (tag == 3) {
+        [self switchAccount];
+
+    }
 }
 
 - (void)switchAccount
@@ -781,6 +806,7 @@ typedef NS_ENUM(NSInteger, HPConfigGoto) {
     switch (ctrl.tag) {
         case HPConfigGotoPortrait:
             HPLog(@"HPConfigGotoPortrait");
+            
             [self.alertSheet show:YES];
             break;
             

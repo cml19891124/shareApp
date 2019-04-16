@@ -43,6 +43,12 @@
 
 #define topaytimeout @"topaytimeout"
 @interface HPImergencyManagerViewController ()
+/**
+ 新订单的要求预订的日期
+ */
+@property (strong, nonatomic) NSMutableArray *orderNewArray;
+
+@property (strong, nonatomic) NSArray *daysArray;
 
 @property (strong, nonatomic) NSMutableArray *orderArray;
 
@@ -215,6 +221,11 @@
     [self.view addSubview:self.calenderView];
     
     [self.calenderView show:YES];
+    
+    if (self.orderNewArray.count) {
+        [kNotificationCenter postNotificationName:carlenderhasOrderArrayName object:nil userInfo:@{@"array":self.orderNewArray}];
+        
+    }
 }
 
 #pragma mark - 获取已经预定的订单
@@ -243,6 +254,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.orderArray = [NSMutableArray array];
+
+    self.orderNewArray = [NSMutableArray array];
 
     [self.view setBackgroundColor:COLOR_GRAY_F9FAFD];
     
@@ -303,18 +316,63 @@
     
     self.desField.text = _model.spaceDetail.remark;
 
-    NSString *lefttime = [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime];
+//    NSString *lefttime = [HPTimeString gettimeInternalFromPassedTimeToNowDate:_model.order.admitTime];
+    self.daysArray = [_model.order.days componentsSeparatedByString:@","];
     
-    NSString *start = [[_model.order.days componentsSeparatedByString:@","]firstObject];
-    NSString *end = [[_model.order.days componentsSeparatedByString:@","]lastObject];
+    [self p_sortingTheSelectedArray];
+    
+    NSString *start = self.daysArray.firstObject;
+    NSString *end = self.daysArray.lastObject;
+//    NSString *start = [[_model.order.days componentsSeparatedByString:@","]firstObject];
+//    NSString *end = [[_model.order.days componentsSeparatedByString:@","]lastObject];
+    
+    CGFloat rentStartW = BoundWithSize([[HPTimeString noPortraitLineToDateStr:start] substringFromIndex:5], kScreenWidth, 14.f).size.width;
+
     NSArray * orderArray = [_model.order.days componentsSeparatedByString:@","];
     NSString *days = [NSString stringWithFormat:@"拼租日期(共%ld天)",orderArray.count];
-    self.rentStartDayLabel.text = start;
-    self.rentEndDayLabel.text = end;
+    
+    [self.orderNewArray addObjectsFromArray:orderArray];
+
+    if (orderArray.count == 1) {
+        self.rentStartDayLabel.text = [[HPTimeString noPortraitLineToDateStr:start] substringFromIndex:5];
+        self.rentLineLabel.hidden = YES;
+        self.rentEndDayLabel.hidden = YES;
+        
+        [self.rentStartDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(rentStartW);
+        }];
+    }else{
+        self.rentStartDayLabel.text = [[HPTimeString noPortraitLineToDateStr:start] substringFromIndex:5];
+        self.rentEndDayLabel.text = [[HPTimeString noPortraitLineToDateStr:end] substringFromIndex:5];
+        [self.rentEndDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(rentStartW);
+        }];
+        [self.rentStartDayLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(rentStartW);
+        }];
+    }
+//    self.rentStartDayLabel.text = start;
+//    self.rentEndDayLabel.text = end;
     self.rentDaysLabel.text = days;
     self.priceLabel.text = [NSString stringWithFormat:@"¥%@",self.model.order.totalFee];
     self.orderListView.model = self.model;
 
+}
+
+//对选中的selectedArray中的数据排序
+- (void)p_sortingTheSelectedArray
+{
+    //对数组进行排序
+    
+    NSArray *result = [self.daysArray sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        HPLog(@"%@~%@",obj1,obj2); //3~4 2~1 3~1 3~2
+        
+        return [obj2 compare:obj1]; //升序
+        
+    }];
+    self.daysArray = result;
+        self.daysArray = [[[[self.daysArray copy] reverseObjectEnumerator] allObjects] mutableCopy];
 }
 
 - (void)setUpCommitSubviews
@@ -726,7 +784,7 @@
     [self.priceListBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.bottomView);
         make.right.mas_equalTo(self.predictBtn.mas_left).offset(getWidth(-15.f));
-        make.width.mas_equalTo(kScreenWidth/5);
+        make.width.mas_equalTo(kScreenWidth/4);
         make.height.mas_equalTo(getWidth(30));
 
     }];
@@ -1367,7 +1425,7 @@
         [_communicateBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, getWidth(6.f))];
         _communicateBtn.titleLabel.font = kFont_Medium(12.f);
         _communicateBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-        [_communicateBtn addTarget:self action:@selector(onClickFreeCommicateBtn:) forControlEvents:UIControlEventTouchUpInside];
+        [_communicateBtn addTarget:self action:@selector(createConversationWithFriend:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _communicateBtn;
 }

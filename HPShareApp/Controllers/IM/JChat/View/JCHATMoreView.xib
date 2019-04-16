@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,14 +16,15 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XW3-Sc-UxH">
-                    <rect key="frame" x="10" y="11" width="50" height="80"/>
+                    <rect key="frame" x="30" y="17" width="62" height="62"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="50" id="7Y1-39-JbT"/>
-                        <constraint firstAttribute="height" constant="80" id="nM6-O2-yaN"/>
+                        <constraint firstAttribute="width" constant="62" id="7Y1-39-JbT"/>
+                        <constraint firstAttribute="height" constant="62" id="nM6-O2-yaN"/>
                     </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="9"/>
                     <inset key="titleEdgeInsets" minX="-50" minY="60" maxX="0.0" maxY="0.0"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="-19" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" title="图片" image="photo_24.png">
+                    <state key="normal" backgroundImage="photo_24">
                         <color key="titleColor" red="0.43529411764705883" green="0.44313725490196076" blue="0.47450980392156861" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
@@ -32,14 +33,15 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Juz-wz-A0c">
-                    <rect key="frame" x="73" y="11" width="50" height="80"/>
+                    <rect key="frame" x="115" y="17" width="62" height="62"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="80" id="BWQ-8l-kr5"/>
-                        <constraint firstAttribute="width" constant="50" id="DcW-ml-W6P"/>
+                        <constraint firstAttribute="height" constant="62" id="BWQ-8l-kr5"/>
+                        <constraint firstAttribute="width" constant="62" id="DcW-ml-W6P"/>
                     </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="9"/>
                     <inset key="titleEdgeInsets" minX="-50" minY="60" maxX="0.0" maxY="0.0"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="-19" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" title="拍照" image="camera_35.png">
+                    <state key="normal" backgroundImage="camera_35">
                         <color key="titleColor" red="0.43529411764705883" green="0.44313725490196076" blue="0.47450980392156861" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
@@ -47,15 +49,16 @@
                         <action selector="cameraBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="FfB-f9-GNg"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zWd-v0-DU4">
-                    <rect key="frame" x="136" y="11" width="50" height="80"/>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zWd-v0-DU4">
+                    <rect key="frame" x="190" y="11" width="50" height="80"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="50" id="A5z-rk-zTn"/>
                         <constraint firstAttribute="height" constant="80" id="VF0-h9-eBz"/>
                     </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="9"/>
                     <inset key="titleEdgeInsets" minX="-50" minY="60" maxX="0.0" maxY="0.0"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="-19" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" title="名片" image="camera_35.png">
+                    <state key="normal" title="视频聊天" image="shipinliaotian">
                         <color key="titleColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
@@ -64,15 +67,55 @@
                         <action selector="cardInfoBtnClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="ymV-b6-G62"/>
                     </connections>
                 </button>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cN4-hD-8uj">
+                    <rect key="frame" x="253" y="11" width="50" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="GCy-aw-KwF"/>
+                        <constraint firstAttribute="width" constant="50" id="Knc-x9-xUD"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                    <inset key="titleEdgeInsets" minX="-50" minY="60" maxX="0.0" maxY="0.0"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="-19" maxX="0.0" maxY="0.0"/>
+                    <state key="normal" title="地址" image="dizhi">
+                        <color key="titleColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="图片" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8xW-vO-lF0">
+                    <rect key="frame" x="30" y="84" width="62" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="QN0-CJ-Md3"/>
+                        <constraint firstAttribute="width" constant="62" id="SfY-Il-sJz"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" red="0.7213471531867981" green="0.72533100843429565" blue="0.73768985271453857" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="拍照" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S5p-iM-rqa">
+                    <rect key="frame" x="115" y="84" width="62" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="62" id="umI-EA-WwN"/>
+                        <constraint firstAttribute="height" constant="16" id="v54-be-1xK"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" red="0.72134715319999998" green="0.72533100839999998" blue="0.73768985269999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="zWd-v0-DU4" firstAttribute="leading" secondItem="Juz-wz-A0c" secondAttribute="trailing" constant="13" id="10O-hf-XZr"/>
-                <constraint firstItem="XW3-Sc-UxH" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="11" id="GS3-t6-Ems"/>
+                <constraint firstItem="8xW-vO-lF0" firstAttribute="top" secondItem="XW3-Sc-UxH" secondAttribute="bottom" constant="5" id="1qT-pb-acZ"/>
+                <constraint firstItem="XW3-Sc-UxH" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="17" id="GS3-t6-Ems"/>
                 <constraint firstItem="zWd-v0-DU4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="11" id="KFF-k3-AmD"/>
-                <constraint firstItem="Juz-wz-A0c" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="11" id="LNu-RF-PNN"/>
-                <constraint firstItem="Juz-wz-A0c" firstAttribute="leading" secondItem="XW3-Sc-UxH" secondAttribute="trailing" constant="13" id="Yyq-6y-RQ8"/>
-                <constraint firstItem="XW3-Sc-UxH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="gM1-Ec-Ovo"/>
+                <constraint firstItem="Juz-wz-A0c" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="17" id="LNu-RF-PNN"/>
+                <constraint firstItem="cN4-hD-8uj" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="11" id="N5z-cA-KUt"/>
+                <constraint firstItem="S5p-iM-rqa" firstAttribute="leading" secondItem="Juz-wz-A0c" secondAttribute="leading" id="Y0d-vT-a2I"/>
+                <constraint firstItem="Juz-wz-A0c" firstAttribute="leading" secondItem="XW3-Sc-UxH" secondAttribute="trailing" constant="23" id="Yyq-6y-RQ8"/>
+                <constraint firstItem="XW3-Sc-UxH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="30" id="gM1-Ec-Ovo"/>
+                <constraint firstItem="S5p-iM-rqa" firstAttribute="top" secondItem="Juz-wz-A0c" secondAttribute="bottom" constant="5" id="neF-2k-7g0"/>
+                <constraint firstItem="8xW-vO-lF0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="30" id="uJx-56-k6r"/>
+                <constraint firstItem="cN4-hD-8uj" firstAttribute="leading" secondItem="zWd-v0-DU4" secondAttribute="trailing" constant="13" id="xpk-MP-oZc"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>
@@ -86,7 +129,9 @@
         </view>
     </objects>
     <resources>
-        <image name="camera_35.png" width="50" height="50"/>
-        <image name="photo_24.png" width="50" height="50"/>
+        <image name="camera_35" width="62" height="62"/>
+        <image name="dizhi" width="62" height="62"/>
+        <image name="photo_24" width="62" height="62"/>
+        <image name="shipinliaotian" width="62" height="62"/>
     </resources>
 </document>

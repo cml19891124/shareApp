@@ -92,16 +92,17 @@
     imageV.image = self.IDImage;
     [hearView addSubview:imageV];
     self.tableView.tableHeaderView = hearView;
-    
+    self.tableView.tableFooterView = [UIView new];
+
     if (self.IDInfo)
     {
-       [self.dataArr addObject:[NSString stringWithFormat:@"卡号: %@",_IDInfo.num]];
-        [self.dataArr addObject:[NSString stringWithFormat:@"姓名: %@",_IDInfo.name]];
-        [self.dataArr addObject:[NSString stringWithFormat:@"性别: %@",_IDInfo.gender]];
-        [self.dataArr addObject:[NSString stringWithFormat:@"民族: %@",_IDInfo.nation]];
-        [self.dataArr addObject:[NSString stringWithFormat:@"地址: %@",_IDInfo.address]];
-        [self.dataArr addObject:[NSString stringWithFormat:@"签发机关: %@",_IDInfo.issue]];
-        [self.dataArr addObject:[NSString stringWithFormat:@"有效期: %@",_IDInfo.valid]];
+        [self.dataArr addObject:[NSString stringWithFormat:@"卡号: %@",_IDInfo.num?_IDInfo.num:@"--"]];
+        [self.dataArr addObject:[NSString stringWithFormat:@"姓名: %@",_IDInfo.name?_IDInfo.name:@"--"]];
+        [self.dataArr addObject:[NSString stringWithFormat:@"性别: %@",_IDInfo.gender?_IDInfo.gender:@"--"]];
+        [self.dataArr addObject:[NSString stringWithFormat:@"民族: %@",_IDInfo.nation?_IDInfo.nation:@"--"]];
+        [self.dataArr addObject:[NSString stringWithFormat:@"地址: %@",_IDInfo.address?_IDInfo.address:@"--"]];
+//        [self.dataArr addObject:[NSString stringWithFormat:@"签发机关: %@",_IDInfo.issue]];
+//        [self.dataArr addObject:[NSString stringWithFormat:@"有效期: %@",_IDInfo.valid]];
     }
     
     if (self.cardInfo)

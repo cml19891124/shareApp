@@ -25,22 +25,15 @@
  */
 @property (nonatomic, strong) MASConstraint *bottomConstraint;
 
-/**
- 已添加的HPAlertAction数组
- */
-@property (nonatomic, strong) NSMutableArray *alertActions;
+
 
 @end
 
 @implementation HPAlertSheet
 
-/*
- // Only override drawRect: if you perform custom drawing.
- // An empty implementation adversely affects performance during animation.
- - (void)drawRect:(CGRect)rect {
- // Drawing code
- }
- */
+- (void)onTapModalOutSide{
+    [self show:NO];
+}
 
 - (instancetype)init {
     _rowHeight = 50.f;
@@ -72,6 +65,7 @@
     [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
     [cancelBtn addTarget:self action:@selector(onClickSheetBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:cancelBtn];
+    self.cancelBtn = cancelBtn;
     [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.width.equalTo(view);
         make.bottom.equalTo(view);
@@ -149,5 +143,23 @@
     }
 }
 
+- (void)setCancelTextColor:(UIColor *)cancelTextColor
+{
+    _cancelTextColor = cancelTextColor;
+    [self.cancelBtn setTitleColor:cancelTextColor forState:UIControlStateNormal];
+}
+
+- (void)setCancelTextFont:(UIFont *)cancelTextFont
+{
+    _cancelTextFont = cancelTextFont;
+    self.cancelBtn.titleLabel.font = cancelTextFont;
+
+}
+
+- (void)setSeparatorColor:(UIColor *)separatorColor
+{
+    _separatorColor = separatorColor;
+    [_separator setBackgroundColor:separatorColor];
+}
 @end
 

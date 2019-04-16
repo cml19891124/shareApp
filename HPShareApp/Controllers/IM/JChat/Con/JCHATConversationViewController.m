@@ -64,6 +64,7 @@
     _imgDataArr = [NSMutableArray array];
     HPLog(@"Action - viewDidLoad");
     self.title = _conversation.title;
+    [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     [self setupView];
     [self addNotification];
     [self addDelegate];
@@ -165,39 +166,40 @@
   _messageTableView.delegate = self;
   _messageTableView.dataSource = self;
   _messageTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-  _messageTableView.backgroundColor = messageTableColor;
-  
+  _messageTableView.backgroundColor = COLOR_GRAY_EEEEEE;
+    [_moreViewContainer.superview setBackgroundColor:COLOR_GRAY_EEEEEE];
+    _moreViewContainer.backgroundColor = COLOR_GRAY_EEEEEE;
   _moreViewContainer.moreView.delegate = self;
-  _moreViewContainer.moreView.backgroundColor = messageTableColor;
+  _moreViewContainer.moreView.backgroundColor = COLOR_GRAY_EEEEEE;
 }
 
 - (void)setupNavigation {
   self.navigationController.navigationBar.translucent = YES;
-    [self.navigationController.navigationBar setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_EA0000] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_GRAY_FFFFFF] forBarMetrics:UIBarMetricsDefault];
     // 底部分割线
     [self.navigationController.navigationBar setShadowImage:[UIImage new]];
 
 
   _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
   [_rightBtn setFrame:navigationRightButtonRect];
-  if (_conversation.conversationType == kJMSGConversationTypeSingle) {
-    [_rightBtn setImage:[UIImage imageNamed:@"userDetail"] forState:UIControlStateNormal];
-  } else {
-      [_rightBtn setImage:[UIImage imageNamed:@"groupDetail"] forState:UIControlStateNormal];
-      [self updateGroupConversationTittle:nil];
-    if ([((JMSGGroup *)_conversation.target) isMyselfGroupMember]) {
-      _rightBtn.hidden = YES;
-    }
-  }
+//  if (_conversation.conversationType == kJMSGConversationTypeSingle) {
+//    [_rightBtn setImage:[UIImage imageNamed:@"userDetail"] forState:UIControlStateNormal];
+//  } else {
+//      [_rightBtn setImage:[UIImage imageNamed:@"groupDetail"] forState:UIControlStateNormal];
+//      [self updateGroupConversationTittle:nil];
+//    if ([((JMSGGroup *)_conversation.target) isMyselfGroupMember]) {
+//      _rightBtn.hidden = YES;
+//    }
+//  }
   
   [_conversation clearUnreadCount];
   
-  [_rightBtn addTarget:self action:@selector(addFriends) forControlEvents:UIControlEventTouchUpInside];
-  self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_rightBtn];//为导航栏添加右侧按钮
+//  [_rightBtn addTarget:self action:@selector(addFriends) forControlEvents:UIControlEventTouchUpInside];
+//  self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_rightBtn];//为导航栏添加右侧按钮
     
   UIButton *leftBtn =[UIButton buttonWithType:UIButtonTypeCustom];
   [leftBtn setFrame:kNavigationLeftButtonRect];
-  [leftBtn setImage:[UIImage imageNamed:@"icon_back"] forState:UIControlStateNormal];
+  [leftBtn setImage:[UIImage imageNamed:@"fanhui"] forState:UIControlStateNormal];
   [leftBtn setImageEdgeInsets:kGoBackBtnImageOffset];
 
   [leftBtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];

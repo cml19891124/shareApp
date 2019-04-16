@@ -17,6 +17,10 @@
 
 #import "HPQuitOrderView.h"
 
+#import <JMessage/JMessage.h>
+
+#import "JCHATConversationViewController.h"
+
 @interface HPOrderDetailViewController ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -121,6 +125,12 @@
 - (void)onClickBack:(UIButton *)UIButton
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (void)viewDidLoad {
@@ -711,9 +721,35 @@
         [_consumerBtn setText:@"联系客服"];
         [_consumerBtn setFont:kFont_Bold(14.f)];
         [_consumerBtn setImage:ImageNamed(@"communicate_serve")];
-        [_consumerBtn addTarget:self action:@selector(onClickConsumerBtn:) forControlEvents:UIControlEventTouchUpInside];
+        [_consumerBtn addTarget:self action:@selector(createConversationWithFriend:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _consumerBtn;
+}
+
+#pragma mark - 开启会话
+- (void)createConversationWithFriend:(UIButton *)button
+{
+    __block JCHATConversationViewController *sendMessageCtl = [[JCHATConversationViewController alloc] init];
+    sendMessageCtl.superViewController = self;
+    sendMessageCtl.hidesBottomBarWhenPushed = YES;
+    [HUD HUDNotHidden:@"正在添加用户..."];
+    
+    NSString *storeOwnner = [NSString stringWithFormat:@"hepai%@",_model.order.userId];
+    kWEAKSELF
+    [JMSGConversation createSingleConversationWithUsername:storeOwnner appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
+        
+        if (error == nil) {
+            kSTRONGSELF
+            sendMessageCtl.conversation = resultObject;
+            
+            [strongSelf.navigationController pushViewController:sendMessageCtl animated:YES];
+            [HUD HUDHidden];
+        } else {
+            HPLog(@"createSingleConversationWithUsername fail");
+            [HUD HUDWithString:@"用户不存在" Delay:2.0];
+            
+        }
+    }];
 }
 
 - (UIButton *)phoneBtn

@@ -124,6 +124,8 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
 - (void)operationLastHasOrderArray:(NSNotification *)noti
 {
     NSArray *dates = noti.userInfo[@"lastArray"];
+    self.totalFee = noti.userInfo[@"totalFee"];
+
     if (dates.count == 1 && [dates.firstObject isEqualToString:@""]) {
         return;
     }
@@ -154,7 +156,13 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     YZXCalendarCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:collectionViewCellIdentify forIndexPath:indexPath];
     [cell layoutContentViewOfCollectionViewCellWithCellIndxePath:indexPath
                                                            model:self.collectionViewData[indexPath.section]];
-    cell.userActivity = self.userActivity;
+    cell.priceLabel.text = [NSString stringWithFormat:@"¥%ld",self.totalFee.integerValue/30];
+
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:cell.priceLabel.text];
+    [attr addAttribute:NSFontAttributeName value:kFont_Regular(8.f) range:NSMakeRange(0, 1)];
+    [attr addAttribute:NSFontAttributeName value:kFont_Regular(11.f) range:NSMakeRange(1, cell.priceLabel.text.length - 1)];
+    cell.priceLabel.attributedText = attr;
+    
     //默认情况下显示的状态
     if (cell.day.text.length) {
         cell.isHidden = NO;

@@ -47,10 +47,11 @@
         [self addSubview:btn];
         [self.buttonArray addObject:btn];
         self.btn = btn;
-        
-        float itemW = (kScreenWidth - getWidth(30.f) - getWidth(35.f) * 4)/5;
+//        [self.btn setTitleEdgeInsets:UIEdgeInsetsMake(0, -10.f, 0, 0)];
+
+        float itemW = (kScreenWidth - getWidth(35.f) - getWidth(35.f) * 4)/5;
         [btn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(getWidth(5.f) + (itemW + getWidth(35.f)) * i);
+            make.left.mas_equalTo((itemW + getWidth(30.f)) * i);
             make.top.mas_equalTo(self);
             make.width.mas_equalTo(itemW + getWidth(35.f));
             make.height.mas_equalTo(getWidth(43.f));
@@ -63,7 +64,7 @@
             make.bottom.mas_equalTo(self);
             make.height.mas_equalTo(2);
             make.width.mas_equalTo(getWidth(15.f));
-            make.centerX.mas_equalTo(self.btn);
+            make.centerX.mas_equalTo(btn);
         }];
         
         [self layoutIfNeeded];
@@ -82,7 +83,7 @@
                 make.width.mas_equalTo(itemW);
                 make.bottom.mas_equalTo(self);
                 make.height.mas_equalTo(2);
-                make.centerX.mas_equalTo(btn);
+                make.centerX.mas_equalTo(self.btn);
             }];
 
             btn.selected = YES;

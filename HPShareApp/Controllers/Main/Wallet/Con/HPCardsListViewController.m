@@ -62,7 +62,7 @@ static NSString *cardInfoCell = @"HPCardInfoCell";
     alertSheet.textColor = COLOR_BLACK_333333;
 
     HPAlertAction *albumAction = [[HPAlertAction alloc] initWithTitle:@"解除绑定" completion:^{
-        [weakSelf onClickCancelSheet:1];
+        [weakSelf onClickUnlockSheet:1];
     }];
     [alertSheet addAction:albumAction];
     self.alertSheet = alertSheet;
@@ -214,7 +214,7 @@ static NSString *cardInfoCell = @"HPCardInfoCell";
     [self pushVCByClassName:@"HPBindCardsViewController"];
 }
 
-- (void)onClickCancelSheet:(NSInteger)tag
+- (void)onClickUnlockSheet:(NSInteger)tag
 {
     if (tag == 0) {
         [self.alertSheet show:NO];

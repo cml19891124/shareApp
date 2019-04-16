@@ -25,6 +25,10 @@
 
 #import "YYLRefreshNoDataView.h"
 
+#import <JMessage/JMessage.h>
+
+#import "JCHATConversationViewController.h"
+
 typedef NS_ENUM(NSInteger, HPOrderType) {
     HPOrderTypeRentCreateOrder = 4901,//租客下单，等待商家确认
     HPOrderTypeOwnnerConfirmOrder,//商家确认，等待租客确认
@@ -433,7 +437,7 @@ static NSString *orderCell = @"orderCell";
         if ([HPSingleton sharedSingleton].identifyTag == 1) {
             return getWidth(154.f);
 
-        }else{
+        }else if ([HPSingleton sharedSingleton].identifyTag == 0){
             return getWidth(200.f);
 
         }
@@ -451,7 +455,7 @@ static NSString *orderCell = @"orderCell";
             [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
 
         }else if(model.order.status.integerValue == 2){
-            [self pushVCByClassName:@"HPImergencyManagerViewController" withParam:@{@"model":model}];
+            [self pushVCByClassName:@"HPOrderDetailViewController" withParam:@{@"model":model}];
             
         }else if(model.order.status.integerValue == 12 || model.order.status.integerValue == 13){
             [self pushVCByClassName:@"HPCancelOrderManagerViewController" withParam:@{@"model":model}];
@@ -505,6 +509,8 @@ static NSString *orderCell = @"orderCell";
 - (void)onClickCell:(HPOrderCell *)cell toImergencyOrderBtn:(UIButton *)imergencyButton andModel:(HOOrderListModel *)model
 {
     HPLog(@"催单");
+    [self createConversation:model];
+
 }
 
 - (void)onClickCell:(HPOrderCell *)cell toCreateAnotherOrderBtn:(UIButton *)createButton andModel:(HOOrderListModel *)model
@@ -532,24 +538,55 @@ static NSString *orderCell = @"orderCell";
         [self pushVCByClassName:@"HPCommentViewController" withParam:@{@"model":model}];
 
     }else{
-        [HPProgressHUD alertMessage:@"改订单还没有评价哦~"];
+        [HPProgressHUD alertMessage:@"该订单还没有评价哦~"];
     }
 
 }
 
 - (void)onClickCell:(HPOrderCell *)cell toWarnRenterToPayOrderBtn:(UIButton *)warnButton andModel:(HOOrderListModel *)model
 {
-    [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
+//    [self pushVCByClassName:@"HPUserImergencyDetailViewController" withParam:@{@"model":model}];
+    [self createConversation:model];
+}
 
+- (void)createConversation:(HOOrderListModel *)model
+{
+    __block JCHATConversationViewController *sendMessageCtl = [[JCHATConversationViewController alloc] init];
+    sendMessageCtl.superViewController = self;
+    sendMessageCtl.hidesBottomBarWhenPushed = YES;
+    [HUD HUDNotHidden:@"正在添加用户..."];
+    
+    NSString *storeOwnner = [NSString stringWithFormat:@"hepai%@",model.order.userId];
+    kWEAKSELF
+    [JMSGConversation createSingleConversationWithUsername:storeOwnner appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
+        
+        if (error == nil) {
+            kSTRONGSELF
+            sendMessageCtl.conversation = resultObject;
+            
+            [strongSelf.navigationController pushViewController:sendMessageCtl animated:YES];
+            [HUD HUDHidden];
+        } else {
+            HPLog(@"createSingleConversationWithUsername fail");
+            [HUD HUDWithString:@"用户不存在" Delay:2.0];
+            
+        }
+    }];
 }
 
 #pragma mark - 确认删除订单
 - (void)getConfirmDeleteOrderApi:(HOOrderListModel *)model
 {
+    NSString *method;
+    if ([HPSingleton sharedSingleton].identifyTag == 0) {
+        method = @"/v1/order/delete";//租客删除
+    }else{
+        method = @"/v1/order/bossCancel";//店主删除
+    }
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"isBoss"] = @([HPSingleton sharedSingleton].identifyTag);
     dic[@"orderId"] = model.order.orderId;
-    [HPHTTPSever HPGETServerWithMethod:@"/v1/order/delete" isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
+    [HPHTTPSever HPGETServerWithMethod:method isNeedToken:YES paraments:dic complete:^(id  _Nonnull responseObject) {
         if (CODE == 200) {
             [HPProgressHUD alertMessage:MSG];
             [self.navigationController popViewControllerAnimated:YES];

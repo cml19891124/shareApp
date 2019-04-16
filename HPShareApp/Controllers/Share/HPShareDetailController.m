@@ -870,7 +870,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 #pragma mark - 开启会话
 - (void)createConversationWithFriend:(UIButton *)button
 {
-//    [[JCHATAlertViewWait ins] showInView];
+
     __block JCHATConversationViewController *sendMessageCtl = [[JCHATConversationViewController alloc] init];
     sendMessageCtl.superViewController = self;
     sendMessageCtl.hidesBottomBarWhenPushed = YES;
@@ -881,9 +881,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     NSString *storeOwnner = [NSString stringWithFormat:@"hepai%@",model.userId];
     kWEAKSELF
     [JMSGConversation createSingleConversationWithUsername:storeOwnner appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
-        
-//        [[JCHATAlertViewWait ins] hidenAll];
-        
+                
         if (error == nil) {
             kSTRONGSELF
             sendMessageCtl.conversation = resultObject;

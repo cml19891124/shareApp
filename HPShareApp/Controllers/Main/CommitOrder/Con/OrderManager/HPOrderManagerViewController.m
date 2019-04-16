@@ -1439,7 +1439,7 @@
         [_communicateBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, getWidth(6.f))];
         _communicateBtn.titleLabel.font = kFont_Medium(12.f);
         _communicateBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-        [_communicateBtn addTarget:self action:@selector(onClickFreeCommicateBtn:) forControlEvents:UIControlEventTouchUpInside];
+        [_communicateBtn addTarget:self action:@selector(createConversationWithFriend:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _communicateBtn;
 }
@@ -1467,6 +1467,7 @@
 - (void)onClickFreeCommicateBtn:(UIButton *)button
 {
     HPLog(@"free");
+    
 }
 
 - (void)onClickPhoneUser:(UIButton *)button

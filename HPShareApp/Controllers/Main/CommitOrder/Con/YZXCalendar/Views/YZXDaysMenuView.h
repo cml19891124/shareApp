@@ -49,4 +49,9 @@
 
 @property (strong, nonatomic) NSArray *hasOrderNewArray;
 
+/**
+ 总价格
+ */
+@property (nonatomic, copy) NSString *totalFee;
+
 @end

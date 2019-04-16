@@ -17,6 +17,10 @@
 
 #import "HPRightImageButton.h"
 
+#import <JMessage/JMessage.h>
+
+#import "JCHATConversationViewController.h"
+
 @interface HPOwnnerTimeOutViewController ()<UIScrollViewDelegate>
 /**
  室内、室外
@@ -41,6 +45,11 @@
  联系商家的view
  */
 @property (nonatomic, strong) UIView *communicateView;
+
+/**
+ 即时通讯线
+ */
+@property (strong, nonatomic) UIView *contactView;
 
 @property (nonatomic, strong) UIImageView *thumbView;
 
@@ -147,7 +156,7 @@
 {
     if (!_timeOutView) {
         _timeOutView = [UIView new];
-        _timeOutView.backgroundColor = COLOR_GRAY_FFFFFF;
+//        _timeOutView.backgroundColor = COLOR_GRAY_FFFFFF;
         
     }
     return _timeOutView;
@@ -158,7 +167,6 @@
     if (!_timeOutImageView) {
         _timeOutImageView = [UIImageView new];
         _timeOutImageView.image = ImageNamed(@"timeout_pic");
-        _timeOutImageView.backgroundColor = COLOR_GRAY_CCCCCC;
     }
     return _timeOutImageView;
 }
@@ -167,6 +175,12 @@
 - (void)onClickBack:(UIButton *)UIButton
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (void)viewDidLoad {
@@ -326,9 +340,11 @@
     
     [self.communicateView addSubview:self.contactLine];
     
-    [self.communicateView addSubview:self.consumerBtn];
+    [self.scrollView addSubview:self.contactView];
+
+    [self.contactView addSubview:self.consumerBtn];
     
-    [self.communicateView addSubview:self.phoneBtn];
+//    [self.communicateView addSubview:self.phoneBtn];
     
     [self.scrollView addSubview:self.ownnerView];
     
@@ -429,7 +445,7 @@
     [self.communicateView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.scrollView);
         make.width.mas_equalTo(getWidth(345.f));
-        make.height.mas_equalTo(getWidth(133.f));
+        make.height.mas_equalTo(getWidth(118.f));
         make.top.mas_equalTo(self.timeOutView.mas_bottom).offset(getWidth(15.f));
     }];
     
@@ -479,22 +495,22 @@
         make.right.mas_equalTo(getWidth(-15.f));
     }];
     
-    [self.contactLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.thumbView.mas_bottom).offset(getWidth(13.f));
-        make.height.mas_equalTo(1);
-        make.right.left.mas_equalTo(self.communicateView);
+    [self.contactView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.scrollView);
+        make.width.mas_equalTo(getWidth(345.f));
+        make.height.mas_equalTo(getWidth(45.f));
+        make.top.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(15.f));
     }];
     
     [self.consumerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contactLine.mas_bottom);
-        make.bottom.mas_equalTo(self.communicateView.mas_bottom);
+        make.centerY.mas_equalTo(self.contactView);
         make.left.mas_equalTo(getWidth(15.f));
         make.right.mas_equalTo(getWidth(-15.f));
-        
+        make.height.mas_equalTo(getWidth(30.f));
     }];
     
     [self.ownnerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(15.f));
+        make.top.mas_equalTo(self.contactView.mas_bottom).offset(getWidth(15.f));
         make.left.width.mas_equalTo(self.communicateView);
         make.height.mas_equalTo(getWidth(77.f));
     }];
@@ -763,6 +779,17 @@
         _communicateView.layer.masksToBounds = YES;
     }
     return _communicateView;
+}
+
+- (UIView *)contactView
+{
+    if (!_contactView) {
+        _contactView = [UIView new];
+        _contactView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _contactView.layer.cornerRadius = 2.f;
+        _contactView.layer.masksToBounds = YES;
+    }
+    return _contactView;
 }
 
 - (UIImageView *)thumbView
@@ -1089,7 +1116,7 @@
 
 - (void)onClickConsumerBtn:(UIButton *)button
 {
-    
+    [self createConversation:self.model];
 }
 
 - (void)onClickLoundBtn:(UIButton *)button
@@ -1141,6 +1168,30 @@
     
 }
 
+- (void)createConversation:(HOOrderListModel *)model
+{
+    __block JCHATConversationViewController *sendMessageCtl = [[JCHATConversationViewController alloc] init];
+    sendMessageCtl.superViewController = self;
+    sendMessageCtl.hidesBottomBarWhenPushed = YES;
+    [HUD HUDNotHidden:@"正在添加用户..."];
+    
+    NSString *storeOwnner = [NSString stringWithFormat:@"hepai%@",model.order.userId];
+    kWEAKSELF
+    [JMSGConversation createSingleConversationWithUsername:storeOwnner appKey:JPushAppKey completionHandler:^(id resultObject, NSError *error) {
+        
+        if (error == nil) {
+            kSTRONGSELF
+            sendMessageCtl.conversation = resultObject;
+            
+            [strongSelf.navigationController pushViewController:sendMessageCtl animated:YES];
+            [HUD HUDHidden];
+        } else {
+            HPLog(@"createSingleConversationWithUsername fail");
+            [HUD HUDWithString:@"用户不存在" Delay:2.0];
+            
+        }
+    }];
+}
 
 #pragma mark - 取消下拉  允许上拉
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

@@ -42,10 +42,6 @@
     self.originalColor = self.priceLabel.textColor;
     self.originalFont = self.priceLabel.font;
     
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:self.priceLabel.text];
-    [attr addAttribute:NSFontAttributeName value:kFont_Regular(8.f) range:NSMakeRange(0, 1)];
-    [attr addAttribute:NSFontAttributeName value:kFont_Regular(11.f) range:NSMakeRange(1, self.priceLabel.text.length - 1)];
-    self.priceLabel.attributedText = attr;
     
     self.day.layer.cornerRadius = 2;
     self.day.layer.masksToBounds = YES;

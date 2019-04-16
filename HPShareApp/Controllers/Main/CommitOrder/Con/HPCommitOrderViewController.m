@@ -40,6 +40,8 @@
 
 @interface HPCommitOrderViewController ()
 
+@property (nonatomic,copy) NSString *totalFee;
+
 @property (strong, nonatomic) NSMutableArray *rentDaysArray;
 
 @property (strong, nonatomic) NSMutableArray *hasOrderArray;
@@ -226,6 +228,8 @@
 
     [self.calenderView show:YES];
     
+    [kNotificationCenter postNotificationName:lastCarlenderhasOrderArrayName object:nil userInfo:@{@"lastArray":self.hasOrderArray,@"totalFee":self.model.rent}];
+
 }
 
 #pragma mark - 获取已经预定的订单
@@ -243,7 +247,7 @@
             if (orderArray.count == 0) {
                 HPLog(@"暂无已预订的数据");
             }else{
-                [kNotificationCenter postNotificationName:lastCarlenderhasOrderArrayName object:nil userInfo:@{@"lastArray":self.hasOrderArray}];
+                [kNotificationCenter postNotificationName:lastCarlenderhasOrderArrayName object:nil userInfo:@{@"lastArray":self.hasOrderArray,@"totalFee":self.totalFee}];
 
             }
         }else{
@@ -302,7 +306,15 @@
     
     self.ownnerField.text = account.userInfo.username;
 
-    self.priceLabel.text = [NSString stringWithFormat:@"¥ %@",_model.rent];
+    
+    if (_model.rentType == 1) {//元/小时
+        self.totalFee = [NSString stringWithFormat:@"%.02f",_model.rent.floatValue * 24];
+    }else if (_model.rentType == 2) {//元/天
+        self.totalFee = _model.rent;
+    }else if (_model.rentType == 3) {//元/月
+        self.totalFee = [NSString stringWithFormat:@"%.02f",_model.rent.floatValue/30];
+    }
+    self.priceLabel.text = [NSString stringWithFormat:@"¥ %@",self.totalFee];
     if (_model.area && ![_model.area isEqualToString:@"0"]) {
         if ([_model.areaRange intValue] == 1) {
             [self.spaceInfoLabel setText:[NSString stringWithFormat:@"场地规格:%@",@"不限"]];
@@ -329,6 +341,7 @@
         self.rentOutsideLabel.text = @"室外";
     }
 }
+
 - (void)setUpCommitSubviews
 {
     [self.view addSubview:self.scrollView];

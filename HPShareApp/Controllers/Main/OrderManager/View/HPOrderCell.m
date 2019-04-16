@@ -473,7 +473,7 @@
             if ([self.delegate respondsToSelector:@selector(onClickCell:toImergencyOrderBtn:andModel:)]) {
                 [self.delegate onClickCell:self toImergencyOrderBtn:self.topayBtn andModel:self.model];
             }
-        }else if([button.currentTitle isEqualToString:@"再来一单"]){
+        }else if([button.currentTitle isEqualToString:@"再来一单"] || [button.currentTitle isEqualToString:@"重新下单"]){
             if ([self.delegate respondsToSelector:@selector(onClickCell:toCreateAnotherOrderBtn:andModel:)]) {
                 [self.delegate onClickCell:self toCreateAnotherOrderBtn:self.topayBtn andModel:self.model];
             }

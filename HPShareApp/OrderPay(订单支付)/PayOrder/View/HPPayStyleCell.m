@@ -17,8 +17,8 @@
 - (void)createCustomSubviews
 {
     
-    self.imageArr = @[@"wechatPay",@"alipay"];
-    self.titleArr = @[@"微信支付",@"支付宝支付"];
+    self.imageArr = @[@"wechatPay"];//,@"alipay"
+    self.titleArr = @[@"微信支付"];//,@"支付宝支付"
     
     [self.contentView addSubview:self.imaV];
 

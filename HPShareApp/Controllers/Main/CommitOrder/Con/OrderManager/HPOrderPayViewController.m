@@ -90,8 +90,8 @@ static NSString *payStyleCell = @"payStyleCell";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAliPayReturn:) name:notice_AliPayReturnData object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleWXPayReturn:) name:notice_WXPayReturnData object:nil];
     
-    self.imageArr = @[@"weixin_pay",@"zhifubao"];
-    self.titleArr = @[@"微信支付",@"支付宝支付"];
+    self.imageArr = @[@"weixin_pay"];//,@"zhifubao"
+    self.titleArr = @[@"微信支付"];//,@"支付宝支付"
     self.Status = 1;
     
 }
@@ -308,9 +308,11 @@ static NSString *payStyleCell = @"payStyleCell";
         
         if (indexPath.row == payWeChat) {//微信支付
             self.payType = kPayTypeWeChat;
-        }else if (indexPath.row == payAlipay) {//支付宝支付
-            self.payType = kPayTypeAlipay;
         }
+//        else if (indexPath.row == payAlipay) {//支付宝支付
+//            self.payType = kPayTypeAlipay;
+//            [HPProgressHUD alertMessage:@""];
+//        }
     }
 }
 

@@ -56,6 +56,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) UIFont *textFont;
 
+@property (strong, nonatomic) UIButton *cancelBtn;
+
+/**
+ 已添加的HPAlertAction数组
+ */
+@property (nonatomic, strong) NSMutableArray *alertActions;
 /**
  添加选项
 
