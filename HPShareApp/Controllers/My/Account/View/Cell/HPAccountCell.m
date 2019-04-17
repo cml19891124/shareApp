@@ -42,6 +42,7 @@
     [self.contentView addSubview:self.titleLabel];
     
     [self.contentView addSubview:self.bindBtn];
+    
 }
 
 - (void)setUpAccountSubviewsMasonry
@@ -71,6 +72,7 @@
 {
     if (!_icon) {
         _icon = [UIButton new];
+        
     }
     return _icon;
 }
@@ -94,6 +96,7 @@
         [_bindBtn setTitle:@"已绑定" forState:UIControlStateSelected];
         [_bindBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];
         [_bindBtn setTitleColor:COLOR_GRAY_666666 forState:UIControlStateSelected];
+        _bindBtn.titleLabel.font = kFont_Medium(13.f);
         _bindBtn.backgroundColor = COLOR_GRAY_FFFFFF;
         _bindBtn.layer.cornerRadius = 4.f;
         _bindBtn.layer.masksToBounds = YES;
@@ -105,22 +108,32 @@
     return _bindBtn;
 }
 
-- (void)onClickBindAccountBtn:(UIButton *)button
+- (void)setIsSelected:(BOOL)isSelected
 {
-    button.selected = !button.selected;
-    
-    if (button.selected) {
+    _isSelected = isSelected;
+    if (isSelected) {
         self.bindBtn.backgroundColor = COLOR_GRAY_F2F2F2;
         self.bindBtn.layer.cornerRadius = 4.f;
         self.bindBtn.layer.masksToBounds = YES;
         self.bindBtn.layer.borderColor = UIColor.clearColor.CGColor;
         self.bindBtn.layer.borderWidth = 1.f;
+        self.bindBtn.selected = YES;
+        self.bindBtn.userInteractionEnabled = NO;
     }else{
         self.bindBtn.layer.cornerRadius = 4.f;
         self.bindBtn.layer.masksToBounds = YES;
         self.bindBtn.layer.borderColor = COLOR_BLACK_333333.CGColor;
         self.bindBtn.layer.borderWidth = 1.f;
+        self.bindBtn.userInteractionEnabled = YES;
+        self.bindBtn.selected = NO;
+
     }
+}
+
+- (void)onClickBindAccountBtn:(UIButton *)button
+{
+    button.selected = !button.selected;
+
     if (self.bindBlock) {
         self.bindBlock();
     }

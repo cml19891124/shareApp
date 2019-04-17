@@ -3544,6 +3544,11 @@
 	<dict>
 		<key>海南省</key>
 		<dict>
+			<key>20</key>
+			<dict>
+				<key>三沙市</key>
+				<array/>
+			</dict>
 			<key>0</key>
 			<dict>
 				<key>海口市</key>
@@ -4397,7 +4402,7 @@
 			</dict>
 			<key>1</key>
 			<dict>
-				<key>昌都地区</key>
+				<key>昌都市</key>
 				<array>
 					<string>昌都县</string>
 					<string>江达县</string>
@@ -4414,7 +4419,7 @@
 			</dict>
 			<key>2</key>
 			<dict>
-				<key>山南地区</key>
+				<key>山南市</key>
 				<array>
 					<string>乃东县</string>
 					<string>扎囊县</string>
@@ -4432,7 +4437,7 @@
 			</dict>
 			<key>3</key>
 			<dict>
-				<key>日喀则地区</key>
+				<key>日喀则市</key>
 				<array>
 					<string>日喀则市</string>
 					<string>南木林县</string>
@@ -4501,6 +4506,11 @@
 	<dict>
 		<key>陕西省</key>
 		<dict>
+			<key>10</key>
+			<dict>
+				<key>商洛市</key>
+				<array/>
+			</dict>
 			<key>0</key>
 			<dict>
 				<key>西安市</key>
@@ -4849,6 +4859,16 @@
 	<dict>
 		<key>青海省</key>
 		<dict>
+			<key>8</key>
+			<dict>
+				<key>海南藏族自治州</key>
+				<array/>
+			</dict>
+			<key>7</key>
+			<dict>
+				<key>玉树藏族自治州</key>
+				<array/>
+			</dict>
 			<key>0</key>
 			<dict>
 				<key>西宁市</key>
@@ -4864,7 +4884,7 @@
 			</dict>
 			<key>1</key>
 			<dict>
-				<key>海东地区</key>
+				<key>海东市</key>
 				<array>
 					<string>平安县</string>
 					<string>民和回族土族自治县</string>

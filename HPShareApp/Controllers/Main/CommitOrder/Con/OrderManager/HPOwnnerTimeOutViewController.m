@@ -1157,7 +1157,7 @@
 {
     HPLog(@"重新下单");
     if ([button.currentTitle isEqualToString:@"重新下单"]) {
-        [self pushVCByClassName:@"HPShareShopListController"];
+        [self pushVCByClassName:@"HPCommitOrderViewController" withParam:@{@"model":_model}];
 
     }
 }

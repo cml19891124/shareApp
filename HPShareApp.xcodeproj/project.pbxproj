@@ -71,6 +71,7 @@
 		7A09A2F32258643D00A68FBD /* HPOwnnerItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2F22258643D00A68FBD /* HPOwnnerItemView.m */; };
 		7A09A2F622587D3100A68FBD /* HPUserHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2F522587D3100A68FBD /* HPUserHeaderView.m */; };
 		7A09A2F92258B6D900A68FBD /* HPUserNewOrderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A09A2F82258B6D900A68FBD /* HPUserNewOrderView.m */; };
+		7A0F3B0B2266C1C10059F467 /* HPReCommitOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A0F3B0A2266C1C10059F467 /* HPReCommitOrderViewController.m */; };
 		7A345518226026C20013AF4C /* HPOperationNumberTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A345517226026C20013AF4C /* HPOperationNumberTool.m */; };
 		7A34551B22608D5B0013AF4C /* HPAreaPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A34551A22608D5B0013AF4C /* HPAreaPickerView.m */; };
 		7A34552822616E650013AF4C /* CZHAddressPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A34552022616E650013AF4C /* CZHAddressPickerView.m */; };
@@ -697,6 +698,8 @@
 		7A09A2F522587D3100A68FBD /* HPUserHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUserHeaderView.m; sourceTree = "<group>"; };
 		7A09A2F72258B6D900A68FBD /* HPUserNewOrderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPUserNewOrderView.h; sourceTree = "<group>"; };
 		7A09A2F82258B6D900A68FBD /* HPUserNewOrderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPUserNewOrderView.m; sourceTree = "<group>"; };
+		7A0F3B092266C1C10059F467 /* HPReCommitOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPReCommitOrderViewController.h; sourceTree = "<group>"; };
+		7A0F3B0A2266C1C10059F467 /* HPReCommitOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPReCommitOrderViewController.m; sourceTree = "<group>"; };
 		7A345516226026C20013AF4C /* HPOperationNumberTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPOperationNumberTool.h; sourceTree = "<group>"; };
 		7A345517226026C20013AF4C /* HPOperationNumberTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPOperationNumberTool.m; sourceTree = "<group>"; };
 		7A34551922608D5B0013AF4C /* HPAreaPickerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPAreaPickerView.h; sourceTree = "<group>"; };
@@ -2700,8 +2703,6 @@
 			children = (
 				E67199ED224B254D002A4288 /* OrderManager */,
 				E629AAD3224A014600CF0378 /* YZXCalendar */,
-				E629AAC92248E68300CF0378 /* HPCommitOrderViewController.h */,
-				E629AACA2248E68300CF0378 /* HPCommitOrderViewController.m */,
 			);
 			path = Con;
 			sourceTree = "<group>";
@@ -3302,6 +3303,8 @@
 		E67199ED224B254D002A4288 /* OrderManager */ = {
 			isa = PBXGroup;
 			children = (
+				E629AAC92248E68300CF0378 /* HPCommitOrderViewController.h */,
+				E629AACA2248E68300CF0378 /* HPCommitOrderViewController.m */,
 				E67199EE224B254D002A4288 /* HPOrderManagerViewController.h */,
 				E67199EF224B254D002A4288 /* HPOrderManagerViewController.m */,
 				E67199F4224B767A002A4288 /* HPOrderDetailViewController.h */,
@@ -3316,6 +3319,8 @@
 				7A09A2E92255DA4100A68FBD /* HPUserImergencyDetailViewController.m */,
 				7A04216A225C49CA00CBEC7E /* HPCancelOrderManagerViewController.h */,
 				7A04216B225C49CB00CBEC7E /* HPCancelOrderManagerViewController.m */,
+				7A0F3B092266C1C10059F467 /* HPReCommitOrderViewController.h */,
+				7A0F3B0A2266C1C10059F467 /* HPReCommitOrderViewController.m */,
 			);
 			path = OrderManager;
 			sourceTree = "<group>";
@@ -4948,6 +4953,7 @@
 				69165CF721C221C000593D25 /* HPCommonData.m in Sources */,
 				E68A76CC21F2C84200083A90 /* JCHATMessageTableView.m in Sources */,
 				7A54489E21C6304C001301F3 /* HPCardHeaderView.m in Sources */,
+				7A0F3B0B2266C1C10059F467 /* HPReCommitOrderViewController.m in Sources */,
 				E67EFE46221BE256008BDA1D /* BigSizeButton.m in Sources */,
 				E679B8522243260D004A2CFA /* UIView+Corner.m in Sources */,
 				E68A76B521F2C6D100083A90 /* JCHATConversationListCell.m in Sources */,

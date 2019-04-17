@@ -92,7 +92,6 @@
         self.scrollView.contentInsetAdjustmentBehavior= UIScrollViewContentInsetAdjustmentNever;
         
     }
-    [self setConfig];
 
     [self.view setBackgroundColor:COLOR_GRAY_FFFFFF];
     
@@ -111,11 +110,6 @@
     }];
     [alertSheet addAction:albumAction];
     self.alertSheet = alertSheet;
-}
-
-- (void)setConfig
-{
-
 }
 
 #pragma mark - 添加营业执照信息认证 auditStatus: 0审核未通过，1通过，2审核中
@@ -150,7 +144,7 @@
     CGSize btnSize = CGSizeMake(getWidth(60.f), getWidth(3.f));
     UIGraphicsBeginImageContextWithOptions(btnSize, NO, 0.f);
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
-    [HPGradientUtil drawGradientColor:contextRef rect:CGRectMake(0.f, 0.f, btnSize.width, btnSize.height) startPoint:CGPointMake(0.f,0.f) endPoint:CGPointMake(btnSize.width, btnSize.height) options:kCGGradientDrawsBeforeStartLocation startColor:COLOR(235, 33, 1, 0) endColor:COLOR(235, 33, 1, 1)];
+    [HPGradientUtil drawGradientColor:contextRef rect:CGRectMake(0.f, 0.f, btnSize.width, btnSize.height) startPoint:CGPointMake(0.f,0.f) endPoint:CGPointMake(btnSize.width, btnSize.height) options:kCGGradientDrawsBeforeStartLocation startColor:COLOR(253, 3, 3, 1) endColor:COLOR(253, 3, 3, 0)];
     UIImage *bgImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     

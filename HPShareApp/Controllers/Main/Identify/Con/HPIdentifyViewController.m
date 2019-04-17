@@ -132,7 +132,7 @@
         self.realNameBtn.text = @"已认证";
         self.realNameBtn.image = ImageNamed(@"");
         [self.nameRow mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(getWidth(114));
+            make.height.mas_equalTo(getWidth(125.f));
         }];
     }else{
         self.nameLabel.text = @"实名认证";
@@ -333,7 +333,7 @@
 - (void)setUpIdentifyView:(UIView *)bgview
 {
 
-    UIView *nameRow = [self addRowOfParentView:bgview withHeight:getWidth(114.f) margin:0.f isEnd:NO];
+    UIView *nameRow = [self addRowOfParentView:bgview withHeight:getWidth(125.f) margin:0.f isEnd:NO];
     
     self.nameRow = nameRow;
 
@@ -413,7 +413,7 @@
     
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(nameRow).with.offset(18.f * g_rateWidth);
-        make.top.mas_equalTo(getWidth(20.f));
+        make.top.mas_equalTo(getWidth(18.f));
     }];
     
     [self.identifyBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -450,7 +450,7 @@
     [nameRow addSubview:self.nameSubLabel];
     [self.nameSubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(nameRow).with.offset(18.f * g_rateWidth);
-        make.top.mas_equalTo(idLabel.mas_bottom).offset(getWidth(10.f));
+        make.top.mas_equalTo(idLabel.mas_bottom).offset(getWidth(15.f));
     }];
     
     HPRightImageButton *realNameBtn = [self setupGotoBtnWithTitle:@"已认证"];

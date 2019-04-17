@@ -1,7 +1,7 @@
 
 
 #import <Foundation/Foundation.h>
-@class HPCardInfo,HPUserInfo,HPSalesman;
+@class HPCardInfo,HPUserInfo,HPSalesman,HPExtra;
 @interface HPLoginModel : NSObject<NSCoding>
 
 @property (nonatomic, copy) NSString *token;
@@ -11,6 +11,8 @@
 @property (nonatomic, strong) HPCardInfo *cardInfo;
 
 @property (nonatomic, strong) HPUserInfo *userInfo;
+
+@property (strong, nonatomic) HPExtra *extra;
 
 +(instancetype)AccountStatusWithDict:(NSMutableDictionary *)dict;
 
@@ -55,5 +57,20 @@
 @property (nonatomic, copy) NSString *avatar;
 
 +(instancetype)SalesmanInfoWithDict:(NSDictionary *)dict;
+
+@end
+
+@interface HPExtra : NSObject<NSCoding>
+@property (nonatomic, copy) NSString *openid;
+@property (nonatomic, copy) NSString *nickname;
+@property (nonatomic, copy) NSString *sex;
+@property (nonatomic, copy) NSString *province;
+@property (nonatomic, copy) NSString *city;
+@property (nonatomic, copy) NSString *country;
+@property (nonatomic, copy) NSString *headimgurl;
+@property (nonatomic, copy) NSString *privilege;
+@property (nonatomic, copy) NSString *unionid;
+
++(instancetype)ExtraInfoWithDict:(NSDictionary *)dict;
 
 @end

@@ -144,7 +144,7 @@ static NSString *collectionViewHeaderIdentify = @"calendarHeader";
     NSArray *dates = noti.userInfo[@"array"];
     for (int i = 0; i < dates.count; i ++) {
         NSString *date = [HPTimeString noPortraitLineToDateStr:dates[i]];
-        if (![self.hasOrderArray containsObject:date]) {
+        if (![self.hasOrderArray containsObject:date] && ![date isEqualToString:@""]) {
             [self.hasOrderArray addObject:date];
         }
         [self.collectionView reloadData];

@@ -176,3 +176,42 @@
 }
 
 @end
+
+@implementation HPExtra
+
++(instancetype)ExtraInfoWithDict:(NSDictionary *)dict
+{
+    HPExtra *account = [HPExtra mj_objectWithKeyValues:dict];
+    return account;
+}
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    unsigned int count = 0;
+    Ivar *ivarList =  class_copyIvarList(HPExtra.class, &count);
+    for (int i = 0; i < count; i ++) {
+        Ivar ivar = ivarList[i];
+        NSString *key = [NSString stringWithUTF8String:ivar_getName(ivar)];
+        [aCoder encodeObject:[self valueForKey:key] forKey:key];
+    }
+    free(ivarList);
+    
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if(self = [super init]){
+        unsigned int count = 0;
+        Ivar *ivarList =  class_copyIvarList(HPExtra.class, &count);
+        for (int i = 0; i < count; i ++) {
+            Ivar ivar = ivarList[i];
+            NSString *key = [NSString stringWithUTF8String:ivar_getName(ivar)];
+            id value = [aDecoder decodeObjectForKey:key];
+            [self setValue:value forKey:key];
+        }
+        free(ivarList);
+        
+    }
+    return self;
+}
+
+@end

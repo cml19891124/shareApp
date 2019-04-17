@@ -516,7 +516,7 @@ static NSString *orderCell = @"orderCell";
 - (void)onClickCell:(HPOrderCell *)cell toCreateAnotherOrderBtn:(UIButton *)createButton andModel:(HOOrderListModel *)model
 {
     HPLog(@"再来-单");
-    [self pushVCByClassName:@"HPShareShopListController"];
+    [self pushVCByClassName:@"HPReCommitOrderViewController" withParam:@{@"model":model}];
 
 }
 

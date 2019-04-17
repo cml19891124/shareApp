@@ -753,7 +753,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
 
 #pragma mark - 底部联系人 view
 - (void)setupContactRegion:(UIView *)view {
-    UIImageView *portrait = [[UIImageView alloc] init];
+    /*UIImageView *portrait = [[UIImageView alloc] init];
     [portrait.layer setMasksToBounds:YES];
     [portrait.layer setCornerRadius:20.f * g_rateWidth];
     portrait.userInteractionEnabled = YES;
@@ -767,24 +767,26 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     }];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(MyCardVC:)];
     [portrait addGestureRecognizer:tap];
-    
+    */
     UIButton *orderBtn = [[UIButton alloc] init];
     [orderBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:18.f]];
+    orderBtn.backgroundColor = COLOR_RED_FF1213;
     [orderBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [orderBtn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_FF531E] forState:UIControlStateNormal];
-    [orderBtn setTitle:@"下单" forState:UIControlStateNormal];
+//    [orderBtn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_FF531E] forState:UIControlStateNormal];
+    [orderBtn setImage:ImageNamed(@"yuding") forState:UIControlStateNormal];
+    [orderBtn setTitle:@"场地预订" forState:UIControlStateNormal];
     [orderBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 10.f, 0.f, 10.f)];
     orderBtn.titleLabel.font = kFont_Medium(14.f);
     [orderBtn addTarget:self action:@selector(createOrder:) forControlEvents:UIControlEventTouchUpInside];
-    orderBtn.layer.cornerRadius = 2.f;
+    orderBtn.layer.cornerRadius = 4.f;
     orderBtn.layer.masksToBounds = YES;
     [view addSubview:orderBtn];
     [orderBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(view).offset(getWidth(-14.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(50.f), getWidth(40.f)));
+        make.right.mas_equalTo(view).offset(getWidth(-15.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(120.f), getWidth(40.f)));
         make.centerY.mas_equalTo(view);
     }];
-    
+    /*
     UIButton *phoneBtn = [[UIButton alloc] init];
     [phoneBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:18.f]];
     [phoneBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
@@ -801,20 +803,37 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         make.right.mas_equalTo(orderBtn.mas_left).offset(getWidth(-12.f));
         make.size.mas_equalTo(CGSizeMake(getWidth(80.f), getWidth(40.f)));
         make.centerY.mas_equalTo(view);
+    }];*/
+    
+   
+    UIButton *messageBtn = [[UIButton alloc] init];
+    messageBtn.backgroundColor = COLOR_YELLOW_FFB400;
+    [messageBtn setImage:ImageNamed(@"menu_25") forState:UIControlStateNormal];
+    messageBtn.titleLabel.font = kFont_Medium(14.f);
+    [messageBtn setTitle:@"在线沟通" forState:UIControlStateNormal];
+    messageBtn.layer.cornerRadius = 4.f;
+    messageBtn.layer.masksToBounds = YES;
+    [messageBtn addTarget:self action:@selector(createConversationWithFriend:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:messageBtn];
+
+    [messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(view);
+        make.right.equalTo(orderBtn.mas_left).offset(getWidth(-15.f));
+        make.size.mas_equalTo(CGSizeMake(getWidth(120.f), getWidth(40.f)));
     }];
     
     UIButton *keepBtn = [[UIButton alloc] init];
-    [keepBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:18.f]];
+    [keepBtn.titleLabel setFont:[UIFont fontWithName:FONT_MEDIUM size:16.f]];
     [keepBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [keepBtn setTitleColor:COLOR_RED_912D01 forState:UIControlStateSelected];
-    [keepBtn setImage:ImageNamed(@"shared_shop_details_calendar_collection") forState:UIControlStateNormal];
+    [keepBtn setImage:ImageNamed(@"shoucang_w") forState:UIControlStateNormal];
     [keepBtn setImage:ImageNamed(@"shared_shop_details_calendar_collection_selected") forState:UIControlStateSelected];
-    [keepBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.f, 10.f, 0.f, 10.f)];
-    [keepBtn setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_YELLOW_FFBA15] forState:UIControlStateNormal];
     [keepBtn setTitle:@"收藏" forState:UIControlStateNormal];
-    keepBtn.titleLabel.font = kFont_Medium(14.f);
+    keepBtn.titleLabel.font = kFont_Medium(16.f);
     [keepBtn setTitle:@"已收藏" forState:UIControlStateSelected];
     [keepBtn setTitle:@"已收藏" forState:UIControlStateSelected|UIControlStateHighlighted];
+    [keepBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateNormal];//|UIControlStateSelected|UIControlStateHighlighted
+    [keepBtn setTitleColor:COLOR_BLACK_333333 forState:UIControlStateSelected];
     keepBtn.layer.cornerRadius = 2.f;
     keepBtn.layer.masksToBounds = YES;
     [view addSubview:keepBtn];
@@ -822,27 +841,13 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
     [keepBtn addTarget:self action:@selector(addOrCancelCollection:) forControlEvents:UIControlEventTouchUpInside];
     [keepBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(view);
-        make.right.equalTo(phoneBtn.mas_left).offset(getWidth(-12.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(80.f), getWidth(40.f)));
+        make.left.mas_equalTo(view);
+        make.height.mas_equalTo(getWidth(40.f));
+        make.right.mas_equalTo(messageBtn.mas_left).offset(getWidth(-15.f));
+        
     }];
     
-    UIButton *messageBtn = [[UIButton alloc] init];
-
-    [messageBtn setImage:ImageNamed(@"menu_25") forState:UIControlStateNormal];
-
-    [messageBtn setImage:ImageNamed(@"menu_23") forState:UIControlStateSelected|UIControlStateHighlighted];
-
-    messageBtn.layer.cornerRadius = 2.f;
-    messageBtn.layer.masksToBounds = YES;
-    [messageBtn addTarget:self action:@selector(createConversationWithFriend:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:messageBtn];
-
-    [messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(view);
-        make.right.equalTo(keepBtn.mas_left).offset(getWidth(-12.f));
-        make.size.mas_equalTo(CGSizeMake(getWidth(80.f), getWidth(40.f)));
-    }];
-    
+    /*
     UILabel *userNameLabel = [[UILabel alloc] init];
     [userNameLabel setFont:[UIFont fontWithName:FONT_BOLD size:16.f]];
     [userNameLabel setTextColor:COLOR_BLACK_333333];
@@ -853,7 +858,7 @@ typedef NS_ENUM(NSInteger, HPShareDetailGoto) {
         make.left.equalTo(portrait.mas_right).with.offset(14.f * g_rateWidth);
         make.right.equalTo(messageBtn.mas_left);
         make.centerY.equalTo(view);
-    }];
+    }];*/
 }
 
 - (void)createOrder:(UIButton *)button

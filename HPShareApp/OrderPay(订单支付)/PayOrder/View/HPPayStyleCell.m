@@ -42,9 +42,9 @@
 {
     if (!_titleLabel) {
         _titleLabel = [UILabel new];
-        _titleLabel.textAlignment = NSTextAlignmentCenter;
+        _titleLabel.textAlignment = NSTextAlignmentLeft;
         _titleLabel.textColor = COLOR_BLACK_333333;
-        _titleLabel.font = kFont_Medium(14.f);
+        _titleLabel.font = kFont_Medium(16.f);
     }
     return _titleLabel;
 }

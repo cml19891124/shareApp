@@ -574,6 +574,10 @@ typedef NS_ENUM(NSInteger, HPMyCardType) {
     NSMutableDictionary *dict = param.mj_keyValues;
     
     [HPHTTPSever HPGETServerWithMethod:@"/v1/space/myList" isNeedToken:YES paraments:dict complete:^(id  _Nonnull responseObject) {
+        if (CODE == 401) {
+            [HPProgressHUD alertMessage:@"网络错误"];
+            return ;
+        }
         NSArray<HPShareListModel *> *models = [HPShareListModel mj_objectArrayWithKeyValuesArray:DATA[@"list"]];
         
         if (models.count < self.shareListParam.pageSize) {
