@@ -184,6 +184,23 @@
         if (CODE == 200) {
             [HPProgressHUD alertMessage:@"绑定成功"];
             
+            [self getPramfromWechatApi:self.code];
+        }else{
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        [HPProgressHUD alertMessage:@"网络错误"];
+    }];
+}
+
+#pragma mark - 微信登录
+- (void)getPramfromWechatApi:(NSString *)code
+{
+    [HPHTTPSever HPGETServerWithMethod:@"/v1/wechatUser/login" isNeedToken:NO paraments:@{@"code":code} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            HPLoginModel *model = [HPLoginModel mj_objectWithKeyValues:responseObject[@"data"]];
+            
+            [HPUserTool saveAccount:model];
             //⭐️5.iOS 11 style (iOS 11 样式)
             EBBannerView *banner = [EBBannerView bannerWithBlock:^(EBBannerViewMaker *make) {
                 make.style = 11;
@@ -197,14 +214,14 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.navigationController popToRootViewControllerAnimated:YES];
             });
+            
         }else{
             [HPProgressHUD alertMessage:MSG];
         }
     } Failure:^(NSError * _Nonnull error) {
-        [HPProgressHUD alertMessage:@"网络错误"];
+        ErrorNet
     }];
 }
-
 
 - (void)onClickCodeBtn:(UIButton *)btn {
     HPLog(@"onClickCodeBtn");

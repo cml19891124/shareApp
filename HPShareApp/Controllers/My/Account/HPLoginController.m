@@ -36,8 +36,8 @@
 
 - (void)wxAuthSucceed:(NSString *)code
 {//access_token
-    [self getAccess_tokenApi:code];
-//    [self getPramfromWechatApi:code];
+//    [self getAccess_tokenApi:code];
+    [self getPramfromWechatApi:code];
 }
 
 - (void)getAccess_tokenApi:(NSString *)code
@@ -79,6 +79,10 @@
             
         }else{
             [HPProgressHUD alertMessage:MSG];
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            dic[@"code"] = code;
+            dic[@"login"] = @"wx";
+            [self pushVCByClassName:@"HPThirdPartReturnController" withParam:dic];
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
