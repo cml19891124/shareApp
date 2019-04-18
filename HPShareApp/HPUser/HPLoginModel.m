@@ -17,6 +17,9 @@
     
     HPSalesman *salesman = [HPSalesman SalesmanInfoWithDict:dict[@"salesman"]];
     account.salesman = salesman;
+    
+    HPExtra *extra = [HPExtra ExtraInfoWithDict:dict[@"extra"]];
+    account.extra = extra;
     return account;
 }
 
