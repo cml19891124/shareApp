@@ -55,7 +55,7 @@
 
 - (void)setupNavigation {
     self.navigationController.navigationBar.translucent = YES;
-    [self.navigationController.navigationBar setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_RED_EA0000] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[HPImageUtil createImageWithColor:COLOR_GRAY_FFFFFF] forBarMetrics:UIBarMetricsDefault];
     // 底部分割线
     [self.navigationController.navigationBar setShadowImage:[UIImage new]];
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
@@ -239,7 +239,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
-    
+
     if (!self.isDBMigrating) {
         [self getConversationList];
     } else {

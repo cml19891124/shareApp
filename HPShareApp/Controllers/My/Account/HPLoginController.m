@@ -36,7 +36,23 @@
 
 - (void)wxAuthSucceed:(NSString *)code
 {//access_token
+//    [self getAccess_tokenApi:code];
     [self getPramfromWechatApi:code];
+}
+
+- (void)getAccess_tokenApi:(NSString *)code
+{
+    NSString *method = [NSString stringWithFormat:@"https://api.weixin.qq.com/sns/oauth2/access_token?appid=%@&secret=%@&code=%@&grant_type=authorization_code",WeiXinKey,WeiXinAppSecret,code];
+    [HPHTTPSever HPGETServerWithMethodNoAppendingUrl:method isNeedToken:NO paraments:@{} complete:^(id  _Nonnull responseObject) {
+        if (CODE == 200) {
+            
+        }else
+        {
+            [HPProgressHUD alertMessage:MSG];
+        }
+    } Failure:^(NSError * _Nonnull error) {
+        ErrorNet
+    }];
 }
 
 #pragma mark - 微信登录
@@ -63,6 +79,10 @@
             
         }else{
             [HPProgressHUD alertMessage:MSG];
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            dic[@"code"] = code;
+            dic[@"login"] = @"wx";
+            [self pushVCByClassName:@"HPThirdPartReturnController" withParam:dic];
         }
     } Failure:^(NSError * _Nonnull error) {
         ErrorNet
@@ -296,6 +316,7 @@
 - (void)setupThirdPartView:(UIView *)view {
     UIButton *qqBtn = [[UIButton alloc] init];
     [qqBtn setTag:0];
+    qqBtn.hidden = YES;
     [qqBtn setImage:[UIImage imageNamed:@"my_qq_icon"] forState:UIControlStateNormal];
     [qqBtn addTarget:self action:@selector(onClickThirdPartBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:qqBtn];
@@ -310,13 +331,15 @@
     [wechatBtn addTarget:self action:@selector(onClickThirdPartBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:wechatBtn];
     [wechatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(qqBtn.mas_right).with.offset(40.f * g_rateWidth);
+//        make.left.equalTo(qqBtn.mas_right).with.offset(40.f * g_rateWidth);
+        make.centerX.mas_equalTo(view);
         make.top.and.bottom.equalTo(view);
         make.size.mas_equalTo(CGSizeMake(36.f, 36.f));
     }];
     
     UIButton *sinaBtn = [[UIButton alloc] init];
     [sinaBtn setTag:2];
+    sinaBtn.hidden = YES;
     [sinaBtn setImage:[UIImage imageNamed:@"my_sina_icon"] forState:UIControlStateNormal];
     [sinaBtn addTarget:self action:@selector(onClickThirdPartBtn:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:sinaBtn];
