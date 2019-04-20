@@ -66,6 +66,8 @@
 
 @property (nonatomic, strong) UIView *contactLine;
 
+@property (strong, nonatomic) UIView *contactView;
+
 @property (nonatomic, strong) HPRightImageButton *consumerBtn;
 
 @property (nonatomic, strong) UIButton *phoneBtn;
@@ -131,6 +133,18 @@
 @end
 
 @implementation HPUserImergencyDetailViewController
+
+
+- (UIView *)contactView
+{
+    if (!_contactView) {
+        _contactView = [UIView new];
+        _contactView.backgroundColor = COLOR_GRAY_FFFFFF;
+        _contactView.layer.cornerRadius = 2.f;
+        _contactView.layer.masksToBounds = YES;
+    }
+    return _contactView;
+}
 
 - (HPUserReceiveView *)receiveView
 {
@@ -347,8 +361,10 @@
     [self.communicateView addSubview:self.addressLabel];
     
     [self.communicateView addSubview:self.contactLine];
+    
+    [self.scrollView addSubview:self.contactView];
 
-    [self.communicateView addSubview:self.consumerBtn];
+    [self.contactView addSubview:self.consumerBtn];
     
     [self.communicateView addSubview:self.phoneBtn];
 
@@ -471,12 +487,12 @@
     [self.communicateView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.scrollView);
         make.width.mas_equalTo(getWidth(345.f));
-        make.height.mas_equalTo(getWidth(133.f));
+        make.height.mas_equalTo(getWidth(118.f));
         make.top.mas_equalTo(self.headerView.mas_bottom).offset(getWidth(15.f));
     }];
     
     [self.thumbView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(getWidth(65.f));
+        make.width.height.mas_equalTo(getWidth(85.f));
         make.top.left.mas_equalTo(getWidth(15.f));
     }];
     
@@ -503,23 +519,30 @@
     }];
     
     [self.addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.rentDaysLabel.mas_bottom).offset(getWidth(15.f));
+        make.bottom.mas_equalTo(self.thumbView.mas_bottom);
         make.height.mas_equalTo(self.duringDayslabel.font.pointSize);
         make.left.mas_equalTo(self.rentDaysLabel);
         make.right.mas_equalTo(getWidth(-15.f));
     }];
     
-    [self.contactLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.thumbView.mas_bottom).offset(getWidth(13.f));
-        make.height.mas_equalTo(1);
-        make.right.left.mas_equalTo(self.communicateView);
+//    [self.contactLine mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.thumbView.mas_bottom).offset(getWidth(13.f));
+//        make.height.mas_equalTo(1);
+//        make.right.left.mas_equalTo(self.communicateView);
+//    }];
+    
+    [self.contactView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.scrollView);
+        make.width.mas_equalTo(getWidth(345.f));
+        make.height.mas_equalTo(getWidth(45.f));
+        make.top.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(15.f));
     }];
     
     [self.consumerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contactLine.mas_bottom).offset(getWidth(10.f));
-        make.bottom.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(-10.f));
+        make.centerY.mas_equalTo(self.contactView);
         make.left.mas_equalTo(getWidth(15.f));
         make.right.mas_equalTo(getWidth(-15.f));
+        make.height.mas_equalTo(getWidth(30.f));
     }];
     
 //    [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -530,7 +553,7 @@
 //    }];
     
     [self.ownnerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.communicateView.mas_bottom).offset(getWidth(15.f));
+        make.top.mas_equalTo(self.contactView.mas_bottom).offset(getWidth(15.f));
         make.left.width.mas_equalTo(self.communicateView);
         make.height.mas_equalTo(getWidth(77.f));
     }];
